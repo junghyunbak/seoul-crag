@@ -1,0 +1,25 @@
+{
+  "name": "seoul-crag",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\" \"npm run proxy\"",
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "npm run start:dev --prefix backend",
+    "proxy": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

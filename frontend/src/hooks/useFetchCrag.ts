@@ -1,0 +1,45 @@
+import { useQuery } from '@tanstack/react-query';
+
+import { api } from '@/api/axios';
+
+import { cragsScheme, cragScheme } from '@/schemas';
+
+export function useFetchCrags() {
+  const { data: crags } = useQuery({
+    queryKey: ['crags'],
+    queryFn: async () => {
+      const { data } = await api.get('/gyms');
+
+      const crags = cragsScheme.parse(data);
+
+      return crags;
+    },
+  });
+
+  return { crags };
+}
+
+export function useFetchCrag({
+  cragId,
+  enabled = false,
+  initialData,
+}: {
+  cragId: string;
+  enabled?: boolean;
+  initialData: Crag;
+}) {
+  const { data: crag } = useQuery({
+    queryKey: ['crag', cragId],
+    queryFn: async () => {
+      const { data } = await api.get(`/gyms/${cragId}`);
+
+      const crag = cragScheme.parse(data);
+
+      return crag;
+    },
+    enabled,
+    initialData,
+  });
+
+  return { crag };
+}
