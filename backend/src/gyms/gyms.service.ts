@@ -46,12 +46,4 @@ export class GymsService {
 
     return this.gymRepo.save(gym);
   }
-
-  async saveImage(gymId: string, url: string, type: GymImageType) {
-    const gym = await this.gymRepo.findOneByOrFail({ id: gymId });
-
-    const image = this.imageRepo.create({ gym, url, type });
-
-    return this.imageRepo.save(image);
-  }
 }

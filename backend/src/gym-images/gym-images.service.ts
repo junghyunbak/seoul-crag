@@ -41,7 +41,7 @@ export class GymImagesService {
     return this.imageRepo.save(image);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.imageRepo.delete(id);
   }
 }

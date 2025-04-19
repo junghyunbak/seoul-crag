@@ -10,8 +10,8 @@ import { GymImageType } from 'src/gym-images/gym-images.type';
 
 @Entity('gym_images')
 export class GymImage {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Gym, (gym) => gym.images, { onDelete: 'CASCADE' })
   gym: Gym;

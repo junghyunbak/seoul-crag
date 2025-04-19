@@ -6,9 +6,6 @@ import {
   Param,
   Post,
   Body,
-  UploadedFile,
-  UseInterceptors,
-  ParseIntPipe,
 } from '@nestjs/common';
 
 import { GymsService } from './gyms.service';
@@ -20,14 +17,6 @@ import { RolesGuard } from 'src/auth/roles/roles.guard';
 
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 import { UpdateGymDto } from 'src/gyms/dto/update-gym.dto';
-
-import { FileInterceptor } from '@nestjs/platform-express';
-
-import { diskStorage } from 'multer';
-
-import { extname } from 'path';
-
-import { UploadImageDto } from '../gym-images/dto/upload-image.dto';
 
 @Controller('gyms')
 export class GymsController {
@@ -55,30 +44,5 @@ export class GymsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateGymDto) {
     return this.gymsService.update(id, dto);
-  }
-
-  @Post(':gymId/images')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-
-          const ext = extname(file.originalname);
-
-          cb(null, `${unique}${ext}`);
-        },
-      }),
-    }),
-  )
-  async uploadImage(
-    @Param('gymId', ParseIntPipe) gymId: string,
-    @UploadedFile() file: Express.Multer.File,
-    @Body() dto: UploadImageDto,
-  ) {
-    const imageUrl = `/uploads/${file.filename}`;
-
-    return this.gymsService.saveImage(gymId, imageUrl, dto.type);
   }
 }
