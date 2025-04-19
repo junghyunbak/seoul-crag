@@ -1,3 +1,4 @@
+// src/gym-images/gym-image.entity.ts (order 컬럼 추가)
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,7 +7,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Gym } from '../gyms/gyms.entity';
-import { GymImageType } from 'src/gym-images/gym-images.type';
+import { GymImageType } from './gym-images.type';
 
 @Entity('gym_images')
 export class GymImage {
@@ -22,6 +23,9 @@ export class GymImage {
   @Column({ type: 'varchar' })
   type: GymImageType;
 
+  @Column({ type: 'int', default: 0 })
+  order: number;
+
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 }

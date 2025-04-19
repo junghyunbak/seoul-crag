@@ -13,8 +13,12 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+
 import { UploadImageDto } from './dto/upload-image.dto';
+
 import { GymImagesService } from './gym-images.service';
+import { GymImageType } from 'src/gym-images/gym-images.type';
+
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
@@ -22,7 +26,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 // [ ]: 업로드 권한 테스트
 @Roles('gym_admin', 'partner_admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('gyms/:gymId/images')
+@Controller('gym-images/:gymId/images')
 export class GymImagesController {
   constructor(private readonly gymImagesService: GymImagesService) {}
 
@@ -67,14 +71,25 @@ export class GymImagesController {
   @Get(':type')
   async getImagesByType(
     @Param('gymId', ParseUUIDPipe) gymId: string,
-    @Param('type') type: string,
+    @Param('type') type: GymImageType,
   ) {
-    return this.gymImagesService.findByGymAndType(gymId, type as any);
+    return this.gymImagesService.findByGymAndType(gymId, type);
   }
 
   @Delete(':imageId')
   async deleteImage(@Param('imageId') imageId: string) {
     await this.gymImagesService.delete(imageId);
+    return { success: true };
+  }
+
+  @Post('reorder')
+  async reorderImages(
+    @Param('gymId', ParseUUIDPipe) gymId: string,
+    @Body() dto: { type: GymImageType; orderedIds: string[] },
+  ) {
+    console.log(dto);
+
+    await this.gymImagesService.reorderImages(gymId, dto.type, dto.orderedIds);
     return { success: true };
   }
 }

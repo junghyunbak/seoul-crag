@@ -1,10 +1,11 @@
 export const GYM_IMAGE_TYPES = [
-  'THUMBNAIL',
-  'SHOWER',
-  'TOILET',
-  'INTERIOR',
-  'EXTERIOR',
-  'MAP',
+  'interior',
+  'exterior',
+  'shower',
+  'toilet',
+  'thumbnail',
+  'wall',
+  'calendar',
 ] as const;
 
 export type GymImageType = (typeof GYM_IMAGE_TYPES)[number];

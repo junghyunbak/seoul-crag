@@ -24,7 +24,7 @@ export class GymImagesService {
 
   async findThumbnail(gymId: string): Promise<GymImage | null> {
     return this.imageRepo.findOne({
-      where: { gym: { id: gymId }, type: 'THUMBNAIL' },
+      where: { gym: { id: gymId }, type: 'thumbnail' },
     });
   }
 
@@ -33,15 +33,37 @@ export class GymImagesService {
     url: string,
     type: GymImageType,
   ): Promise<GymImage> {
+    const last = await this.imageRepo.findOne({
+      where: { gym: { id: gymId }, type },
+      order: { order: 'DESC' },
+    });
+
+    const order = last ? last.order + 1 : 0;
+
     const image = this.imageRepo.create({
       gym: { id: gymId },
       url,
       type,
+      order,
     });
+
     return this.imageRepo.save(image);
   }
 
   async delete(id: string): Promise<void> {
     await this.imageRepo.delete(id);
+  }
+
+  async reorderImages(
+    gymId: string,
+    type: GymImageType,
+    orderedIds: string[],
+  ): Promise<void> {
+    for (let index = 0; index < orderedIds.length; index++) {
+      await this.imageRepo.update(
+        { id: orderedIds[index], gym: { id: gymId }, type },
+        { order: index },
+      );
+    }
   }
 }

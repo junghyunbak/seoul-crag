@@ -13,6 +13,14 @@ app.use(
   })
 );
 
+app.use(
+  "/uploads",
+  createProxyMiddleware({
+    target: "http://localhost:3000/uploads",
+    changeOrigin: true,
+  })
+);
+
 // 나머지 → 프론트엔드 (5173)
 app.use(
   "/",

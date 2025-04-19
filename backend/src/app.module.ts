@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -23,6 +25,10 @@ import { GymImagesModule } from 'src/gym-images/gym-images.module';
       validationSchema: envValidationSchema,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfig),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     AuthModule,
     UserModule,
     RoleModule,
