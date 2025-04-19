@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 
 import { Polygon, Marker } from '@/components/map/overlay';
+import { ImageUploader } from '@/components/ImageUploader';
 
 const MAX_AREA_VALUE = 1000;
 const MIN_AREA_VALUE = 10;
@@ -27,9 +28,12 @@ export function Crags() {
 
       {/**
        * 정렬 기준이 변경되면 순서가 달라져서 고정 필요
+       *
+       * // [ ]: 한번에 하나의 요소만 렌더링 하도록 구현
        */}
       {crags
         .sort((a, b) => (a.id < b.id ? -1 : 1))
+        .slice(0, 1)
         .map((crag) => {
           return <CragEditForm key={crag.id} initialCrag={crag} />;
         })}
@@ -153,8 +157,9 @@ function CragEditForm({ initialCrag }: CragEditFormProps) {
       <AccordionSummary>{crag.name}</AccordionSummary>
 
       <AccordionDetails>
-        <Stack>
+        <Stack gap={1}>
           <EditableText value={crag.name} onSave={handleTextFieldUpdate} />
+
           <EditableText
             placeholder="암장 크기 (단위: 평, 최소: 10, 최대: 1000)"
             value={crag.area?.toString() || ''}
@@ -163,6 +168,10 @@ function CragEditForm({ initialCrag }: CragEditFormProps) {
             min={MIN_AREA_VALUE}
             max={MAX_AREA_VALUE}
           />
+
+          <Typography variant="h6">암장 내부 이미지</Typography>
+          <ImageUploader imageType="interior" crag={crag} />
+          <Typography variant="caption">jpeg, jpg, png 확장자만 업로드 가능합니다.</Typography>
 
           <Button variant={mapEnabled ? 'contained' : 'outlined'} onClick={handleMapLocChangeButtonClick}>
             {mapEnabled ? '수정 완료' : '위치 수정'}
