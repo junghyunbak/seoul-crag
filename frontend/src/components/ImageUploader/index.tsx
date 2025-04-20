@@ -120,8 +120,6 @@ export function ImageUploader({ crag, imageType = 'interior' }: ImageUploaderPro
   };
 
   const handleRemoveImage = async (id: string) => {
-    console.log('삭제!!');
-
     await api.delete(`/gym-images/${crag.id}/images/${id}`);
 
     queryClient.invalidateQueries({ queryKey: ['images', imageType, crag.id] });

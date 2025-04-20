@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider, useLocation, useNavigate } from 'react-router';
 
 import { QueryClientProvider, QueryClient, QueryCache, DefaultOptions } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -8,12 +8,26 @@ import { Main, ManagePage, NotFound } from '@/pages';
 
 import { AxiosError } from 'axios';
 
-import './App.css';
 import { User } from '@/pages/manage/User';
 import { Users } from '@/pages/manage/Users';
 import { Crags } from '@/pages/manage/Crags';
 import { Dashboard } from '@/pages/manage/Dashboard';
 import { NewCrag } from '@/pages/manage/NewCrag';
+
+import { QueryParamProvider, type PartialLocation, type QueryParamAdapterComponent } from 'use-query-params';
+
+export const ReactRouter7Adapter: QueryParamAdapterComponent = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return children({
+    location,
+    push: ({ search, state }: PartialLocation) => navigate({ search }, { state }),
+    replace: ({ search, state }: PartialLocation) => navigate({ search }, { replace: true, state }),
+  });
+};
+
+import './App.css';
 
 const defaultQueriesCommonOptions: DefaultOptions['queries'] = {
   refetchOnWindowFocus: false,
@@ -58,10 +72,12 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <QueryClientProvider client={mainServiceQueryClient}>
-        <Main />
-        {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
-      </QueryClientProvider>
+      <QueryParamProvider adapter={ReactRouter7Adapter}>
+        <QueryClientProvider client={mainServiceQueryClient}>
+          <Main />
+          {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+        </QueryClientProvider>
+      </QueryParamProvider>
     ),
   },
   {

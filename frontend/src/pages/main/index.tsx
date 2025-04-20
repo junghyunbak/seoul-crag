@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { Box, Button, Stack } from '@mui/material';
 import { CalendarIcon } from '@mui/x-date-pickers';
 import { AccessTime } from '@mui/icons-material';
@@ -22,7 +24,7 @@ import { Map } from '@/components/map/Map';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
+import { StoryPortal } from '@/components/portals/StoryPortal';
 
 export function Main() {
   const { selectDate } = useSelectDate();
@@ -68,6 +70,8 @@ export function Main() {
       <Filter />
       <Menu />
       <Controller />
+
+      <StoryPortal imageType="interior" />
 
       <AngularEdgeMarkers
         markers={Object.values(cragMap).map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))}
