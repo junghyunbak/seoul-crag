@@ -1,6 +1,6 @@
 export const SELECT_DATE = 'selectDate';
 
-export const SELECT_CRAG_ID = 'sci';
+export const SELECT_CRAG = 'sc';
 
 export const STORY_INTERIOR = 'si';
 export const STORY_SHOWER = 'ss';

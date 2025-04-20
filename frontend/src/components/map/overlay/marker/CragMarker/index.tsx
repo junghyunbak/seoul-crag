@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
+import { Shower, AccessTime, PhotoLibrary } from '@mui/icons-material';
 
-import { useCrag, useModifyCrag } from '@/hooks';
+import { useCrag } from '@/hooks';
 
-import { RadialMenu } from '@/components/map/overlay/marker/CragInfoMarker';
-import { SIZE } from '@/constants';
+import { useQueryParam, StringParam } from 'use-query-params';
+
+import { motion, AnimatePresence } from 'framer-motion';
+
+import { SIZE, QUERY_STRING } from '@/constants';
 
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
   const MIN_AREA = minArea;
@@ -28,6 +31,15 @@ function getMarkerSizeFromArea(area: number | null | undefined, minArea: number,
   return MIN_SIZE + ratio * (MAX_SIZE - MIN_SIZE);
 }
 
+const BASE_ANGLE = -135;
+
+const RADIUS = 80;
+
+type Feature = {
+  icon: React.ReactNode;
+  callback: () => void;
+};
+
 interface CragMarkerProps {
   map: naver.maps.Map | null;
   crag: Crag;
@@ -35,9 +47,12 @@ interface CragMarkerProps {
 }
 
 export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
-  const { selectCragId, cragArea } = useCrag();
+  const markerRef = useRef<HTMLDivElement>(null);
 
-  const { updateSelectCragId } = useModifyCrag();
+  const { cragArea } = useCrag();
+
+  const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [_, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
@@ -45,13 +60,16 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
    * 마커 초기화
    */
   useEffect(() => {
-    if (!map) {
+    if (!map || !markerRef.current) {
       return function cleanup() {};
     }
 
     const cragMarker = new naver.maps.Marker({
       map,
       position: new naver.maps.LatLng(crag.latitude, crag.longitude),
+      icon: {
+        content: markerRef.current,
+      },
     });
 
     setMarker(cragMarker);
@@ -65,22 +83,37 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
     };
   }, [crag, map, onCreate]);
 
-  /**
-   * 마커 아이콘 렌더링
-   */
-  useEffect(() => {
-    if (!marker) {
-      return;
-    }
+  const features = useMemo<Feature[]>(() => {
+    const ret = [...[''], ...(crag.imageTypes || [])].map<Feature>((type) => {
+      switch (type) {
+        case 'interior':
+          return {
+            icon: <PhotoLibrary />,
+            callback: () => {
+              setInteriorStory(crag.id);
+            },
+          };
+        case 'shower':
+          return { icon: <Shower />, callback: () => {} };
+        default:
+          return { icon: <AccessTime />, callback: () => {} };
+      }
+    });
 
-    const el = document.createElement('div');
+    return ret;
+  }, [crag, setInteriorStory]);
 
-    const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
+  const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
 
-    createRoot(el).render(
-      <Box sx={{ position: 'absolute', transform: 'translate(-50%, -100%)' }}>
-        <RadialMenu crag={crag} />
-
+  return (
+    <Box ref={markerRef} sx={{ position: 'absolute', transform: 'translate(-50%, -100%)' }}>
+      <Box
+        onClick={() => {
+          setSelectCragId(crag.id);
+          map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+        }}
+        sx={{ position: 'relative' }}
+      >
         <svg width={`${markerWidth}px`} viewBox="0 0 71 53" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -99,55 +132,63 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
           />
         </svg>
 
-        <Box
+        <AnimatePresence>
+          {crag.id === selectCragId &&
+            features.map((feature, index) => {
+              const angleRad = ((BASE_ANGLE + index * 45) * Math.PI) / 180;
+              const x = RADIUS * Math.cos(angleRad);
+              const y = RADIUS * Math.sin(angleRad);
+
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ x: 0, y: 0, opacity: 0 }}
+                  animate={{ x, y, opacity: 1 }}
+                  exit={{ x: 0, y: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      bgcolor: 'white',
+                      boxShadow: 2,
+                      width: 40,
+                      height: 40,
+                      '&:hover': { bgcolor: 'grey.100' },
+                    }}
+                    onClick={feature.callback}
+                  >
+                    {feature.icon}
+                  </IconButton>
+                </motion.div>
+              );
+            })}
+        </AnimatePresence>
+      </Box>
+
+      <Box
+        sx={{
+          /**
+           * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
+           */
+          position: 'absolute',
+          transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
+        }}
+      >
+        <Typography
+          variant="h5"
+          fontWeight="bold"
           sx={{
-            position: 'absolute',
-            transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
+            userSelect: 'none',
+            textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
           }}
         >
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            sx={{
-              userSelect: 'none',
-              textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
-            }}
-          >
-            {crag.name}
-          </Typography>
-        </Box>
+          {crag.name}
+        </Typography>
       </Box>
-    );
-
-    marker.setIcon({
-      content: el,
-    });
-  }, [crag, cragArea, marker]);
-
-  /**
-   * 마커 이벤트 등록
-   */
-  useEffect(() => {
-    if (!marker) {
-      return;
-    }
-
-    const listener = marker.addListener('click', () => {
-      updateSelectCragId(crag.id);
-      map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
-    });
-
-    return function cleanup() {
-      marker.removeListener(listener);
-    };
-  }, [map, marker, crag, updateSelectCragId]);
-
-  /*
-  return (
-    <>
-      <CragInfoMarker crag={crag} />
-    </>
+    </Box>
   );
-  */
-  return <div />;
 }

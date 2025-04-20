@@ -2,12 +2,16 @@ import { useEffect } from 'react';
 
 import { Box } from '@mui/material';
 
-import { useMap, useModifyCrag, useSetupMap } from '@/hooks';
+import { useMap, useSetupMap } from '@/hooks';
+
+import { useQueryParam, StringParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
 
 export function Map() {
   const { mapRef, map } = useMap();
 
-  const { updateSelectCragId } = useModifyCrag();
+  const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   useSetupMap();
 
@@ -17,13 +21,13 @@ export function Map() {
     }
 
     const mapClickListener = map.addListener('click', () => {
-      updateSelectCragId(null);
+      setSelectCragId(null);
     });
 
     return function cleanup() {
       map.removeListener(mapClickListener);
     };
-  }, [map, updateSelectCragId]);
+  }, [map, setSelectCragId]);
 
   return <Box ref={mapRef} sx={{ width: '100%', height: '100%' }} />;
 }

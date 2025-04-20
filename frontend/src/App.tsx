@@ -71,6 +71,7 @@ const manageServiceQueryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: '/',
+
     element: (
       <QueryParamProvider adapter={ReactRouter7Adapter}>
         <QueryClientProvider client={mainServiceQueryClient}>
@@ -90,10 +91,15 @@ const router = createBrowserRouter([
           </div>
         }
       >
-        <QueryClientProvider client={manageServiceQueryClient}>
-          <ManagePage />
-          {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
-        </QueryClientProvider>
+        {/**
+         * // [ ]: queryClientProvider 하나만 사용하기
+         */}
+        <QueryParamProvider adapter={ReactRouter7Adapter}>
+          <QueryClientProvider client={manageServiceQueryClient}>
+            <ManagePage />
+            {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+          </QueryClientProvider>
+        </QueryParamProvider>
       </ErrorBoundary>
     ),
     children: [

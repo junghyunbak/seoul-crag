@@ -41,7 +41,10 @@ export function Main() {
 
   /**
    * 앱 시작 시 랜덤으로 하나 선택
+   *
+   * // [ ]: 쿼리스트링 설정하고, 위치로 이동하기
    */
+  /*
   useEffect(() => {
     const crags = Object.values(cragMap);
 
@@ -54,6 +57,7 @@ export function Main() {
     updateSelectCragId(crag.id);
     map?.setCenter(new naver.maps.LatLng(crag.latitude, crag.longitude));
   }, [cragMap, updateSelectCragId, map]);
+  */
 
   const handleChangeDateButtonClick = () => {
     updateIsFilterSheetOpen(true);
@@ -77,9 +81,15 @@ export function Main() {
         markers={Object.values(cragMap).map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))}
       />
 
-      {Object.values(cragMap).map((crag) => (
-        <Marker.CragMarker crag={crag} map={map} key={crag.id} />
-      ))}
+      <div
+        style={{
+          display: 'none',
+        }}
+      >
+        {Object.values(cragMap).map((crag) => (
+          <Marker.CragMarker crag={crag} map={map} key={crag.id} />
+        ))}
+      </div>
 
       <Stack
         direction="row"

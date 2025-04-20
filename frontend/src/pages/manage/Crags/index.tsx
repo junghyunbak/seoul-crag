@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { EditableText } from '@/components/EditableText';
 
-import { useFetchCrag, useFetchCrags } from '@/hooks';
+import { useFetchCrag, useFetchCrags, useModifyCrag } from '@/hooks';
 
 import { Box, Accordion, AccordionDetails, AccordionSummary, Typography, Button, Stack } from '@mui/material';
 
@@ -17,6 +17,19 @@ const MIN_AREA_VALUE = 10;
 
 export function Crags() {
   const { crags } = useFetchCrags();
+
+  const { updateCragMap } = useModifyCrag();
+
+  /**
+   * // [ ]: 초기화 안해도 평균값 구할 수 있게 마커의 인터페이스로 넣기
+   */
+  useEffect(() => {
+    if (!crags) {
+      return;
+    }
+
+    updateCragMap(crags);
+  }, [crags, updateCragMap]);
 
   if (!crags) {
     return null;
