@@ -19,8 +19,8 @@ export function StoryPortal({ imageType }: StoryPortalProps) {
     switch (imageType) {
       case 'interior':
         return QUERY_STRING.STORY_INTERIOR;
-      case 'thumbnail':
-        return 'test';
+      case 'shower':
+        return QUERY_STRING.STORY_SHOWER;
     }
   }, [imageType]);
 

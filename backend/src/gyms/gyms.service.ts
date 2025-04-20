@@ -5,10 +5,21 @@ import { Repository } from 'typeorm';
 
 import { Gym } from './gyms.entity';
 import { GymImage } from '../gym-images/gym-images.entity';
-import { GymImageType } from '../gym-images/gym-images.type';
 
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 import { UpdateGymDto } from 'src/gyms/dto/update-gym.dto';
+
+type GymField = {
+  [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
+};
+
+type ImageType = { imageTypes: string[] };
+
+type GymWithImageTypes = (GymField & ImageType)[];
+
+type JoinGymWithImageType = {
+  [P in keyof GymField as `gym_${P}`]: GymField[P];
+} & ImageType;
 
 @Injectable()
 export class GymsService {
@@ -16,11 +27,45 @@ export class GymsService {
     @InjectRepository(Gym)
     private readonly gymRepo: Repository<Gym>,
     @InjectRepository(GymImage)
-    private readonly imageRepo: Repository<GymImage>,
+    private readonly gymImageRepo: Repository<GymImage>,
   ) {}
 
-  async findAll(): Promise<Gym[]> {
-    return this.gymRepo.find();
+  async findAll(): Promise<GymField[]> {
+    const gymWithImageTypes: GymField[] = [];
+
+    const rawGyms = await this.gymRepo
+      .createQueryBuilder('gym')
+      .select('gym')
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(`ARRAY_AGG(DISTINCT i.type)`)
+            .from(GymImage, 'i')
+            .where('i.gymId = gym.id'),
+        'imageTypes',
+      )
+      .getRawMany<JoinGymWithImageType>();
+
+    rawGyms.forEach((row) => {
+      const gymWithImageType: GymWithImageTypes[number] = {
+        id: row.gym_id,
+        name: row.gym_name,
+        description: row.gym_description,
+        thumbnail_url: row.gym_thumbnail_url,
+        latitude: row.gym_latitude,
+        longitude: row.gym_longitude,
+        area: row.gym_area,
+        created_at: row.gym_created_at,
+        updated_at: row.gym_updated_at,
+        images: row.gym_images,
+        imageTypes: row.imageTypes,
+      };
+
+      gymWithImageTypes.push(gymWithImageType);
+    });
+
+    return gymWithImageTypes;
   }
 
   async findOne(id: string): Promise<Gym> {
