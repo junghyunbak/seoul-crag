@@ -87,8 +87,6 @@ export class GymImagesController {
     @Param('gymId', ParseUUIDPipe) gymId: string,
     @Body() dto: { type: GymImageType; orderedIds: string[] },
   ) {
-    console.log(dto);
-
     await this.gymImagesService.reorderImages(gymId, dto.type, dto.orderedIds);
     return { success: true };
   }
