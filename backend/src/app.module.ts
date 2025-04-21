@@ -17,6 +17,7 @@ import { RoleModule } from 'src/role/role.module';
 import { UserRoleModule } from 'src/user-role/user-role.module';
 import { GymsModule } from 'src/gyms/gyms.module';
 import { GymImagesModule } from 'src/gym-images/gym-images.module';
+import { GymScheduleModule } from 'src/gym-schedules/gym-schedules.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { GymImagesModule } from 'src/gym-images/gym-images.module';
     UserRoleModule,
     GymsModule,
     GymImagesModule,
+    GymScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

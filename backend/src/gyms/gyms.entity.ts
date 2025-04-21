@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { GymImage } from 'src/gym-images/gym-images.entity';
+import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 
 @Entity('gyms')
 export class Gym {
@@ -39,4 +40,7 @@ export class Gym {
 
   @OneToMany(() => GymImage, (image) => image.gym)
   images: GymImage[];
+
+  @OneToMany(() => GymSchedule, (schedule) => schedule.gym)
+  schedules: GymSchedule[];
 }

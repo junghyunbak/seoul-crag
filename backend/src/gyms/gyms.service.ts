@@ -59,6 +59,7 @@ export class GymsService {
         created_at: row.gym_created_at,
         updated_at: row.gym_updated_at,
         images: row.gym_images,
+        schedules: row.gym_schedules,
         imageTypes: row.imageTypes,
       };
 
