@@ -1,32 +1,38 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { useMap } from '../hooks/useMap';
 import { useModifyMap } from '../hooks/useModifyMap';
+import { useNaverMap } from '../hooks/useNaverMap';
 
 export function useSetupMap() {
   const { mapRef, boundary } = useMap();
-  const { updateMap } = useModifyMap();
 
-  useEffect(() => {
-    if (!mapRef.current) {
-      return;
-    }
-
-    const bounds = new naver.maps.LatLngBounds(
-      new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
-      new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
-    );
-
-    const map = new naver.maps.Map(mapRef.current, {
-      // @ts-expect-error
+  const { map } = useNaverMap(
+    () => ({
       gl: true,
       customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
       zoom: 12,
       minZoom: 10,
-      maxBounds: bounds,
-    });
+      maxBounds: new naver.maps.LatLngBounds(
+        new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
+        new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
+      ),
+    }),
+    [boundary],
+    mapRef
+  );
+
+  const { updateMap } = useModifyMap();
+
+  useEffect(() => {
+    if (!mapRef.current || !map) {
+      return;
+    }
 
     updateMap(map);
-  }, [updateMap, mapRef, boundary]);
+
+    return function cleanup() {
+      map.destroy();
+    };
+  }, [updateMap, map, mapRef, boundary]);
 }

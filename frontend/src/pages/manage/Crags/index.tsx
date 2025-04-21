@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { EditableText } from '@/components/EditableText';
 
-import { useFetchCrag, useFetchCrags, useModifyCrag } from '@/hooks';
+import { useFetchCrag, useFetchCrags, useModifyCrag, useNaverMap } from '@/hooks';
 
 import { Box, Accordion, AccordionDetails, AccordionSummary, Typography, Button, Stack } from '@mui/material';
 
@@ -46,7 +46,7 @@ export function Crags() {
        */}
       {crags
         .sort((a, b) => (a.id < b.id ? -1 : 1))
-        .slice(0, 1)
+        .slice(0, 3)
         .map((crag) => {
           return <CragEditForm key={crag.id} initialCrag={crag} />;
         })}
@@ -61,32 +61,27 @@ interface CragEditFormProps {
 function CragEditForm({ initialCrag }: CragEditFormProps) {
   const queryClient = useQueryClient();
 
-  const mapRef = useRef<HTMLDivElement>(null);
-
-  const [map, setMap] = useState<naver.maps.Map | null>(null);
   const [queryEnabled, setQueryEnabled] = useState(false);
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
+
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const { map } = useNaverMap(
+    () => ({
+      zoom: 15,
+    }),
+    [],
+    mapRef
+  );
+
+  console.log(map);
 
   const { crag } = useFetchCrag({
     cragId: initialCrag.id,
     enabled: queryEnabled,
     initialData: initialCrag,
   });
-
-  useEffect(() => {
-    if (!mapRef.current) {
-      return;
-    }
-
-    const map = new naver.maps.Map(mapRef.current, {
-      // @ts-expect-error
-      gl: true,
-      zoom: 15,
-    });
-
-    setMap(map);
-  }, []);
 
   useEffect(() => {
     if (!map) {

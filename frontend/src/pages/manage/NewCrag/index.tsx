@@ -1,34 +1,24 @@
-import { api } from '@/api/axios';
-import { Stack, TextField, Box, Button } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import { api } from '@/api/axios';
+
+import { Stack, TextField, Box, Button } from '@mui/material';
+
+import { useMutation } from '@tanstack/react-query';
+
+import { useNaverMap } from '@/hooks';
+
 // [ ]: react-hook-form 도입
 export function NewCrag() {
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const { map } = useNaverMap(() => ({}), [], mapRef);
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-
-  const [map, setMap] = useState<naver.maps.Map | null>(null);
-
-  const mapRef = useRef<HTMLDivElement>(null);
-
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
-
-  useEffect(() => {
-    if (!mapRef.current) {
-      return function cleanup() {};
-    }
-
-    const newMap = new naver.maps.Map(mapRef.current, {
-      // @ts-expect-error
-      gl: true,
-    });
-
-    setMap(newMap);
-  }, []);
 
   useEffect(() => {
     if (!map) {

@@ -8,6 +8,7 @@ export * from './useMap';
 export * from './useExerciseTimeRange';
 export * from './useCragList';
 export * from './useMenu';
+export * from './useNaverMap';
 
 /**
  * setup
