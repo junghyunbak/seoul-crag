@@ -31,7 +31,7 @@ export class GymsService {
   ) {}
 
   async findAll(): Promise<GymField[]> {
-    const gymWithImageTypes: GymField[] = [];
+    const gymWithImages: GymField[] = [];
 
     const rawGyms = await this.gymRepo
       .createQueryBuilder('gym')
@@ -47,36 +47,64 @@ export class GymsService {
       )
       .getRawMany<JoinGymWithImageType>();
 
-    rawGyms.forEach((row) => {
-      const gymWithImageType: GymWithImageTypes[number] = {
-        id: row.gym_id,
-        name: row.gym_name,
-        description: row.gym_description,
-        thumbnail_url: row.gym_thumbnail_url,
-        latitude: row.gym_latitude,
-        longitude: row.gym_longitude,
-        area: row.gym_area,
-        created_at: row.gym_created_at,
-        updated_at: row.gym_updated_at,
-        images: row.gym_images,
-        schedules: row.gym_schedules,
-        imageTypes: row.imageTypes,
+    rawGyms.forEach((raw) => {
+      const gymWithImage: GymWithImageTypes[number] = {
+        id: raw.gym_id,
+        name: raw.gym_name,
+        description: raw.gym_description,
+        thumbnail_url: raw.gym_thumbnail_url,
+        latitude: raw.gym_latitude,
+        longitude: raw.gym_longitude,
+        area: raw.gym_area,
+        created_at: raw.gym_created_at,
+        updated_at: raw.gym_updated_at,
+        images: raw.gym_images,
+        schedules: raw.gym_schedules,
+        imageTypes: raw.imageTypes,
       };
 
-      gymWithImageTypes.push(gymWithImageType);
+      gymWithImages.push(gymWithImage);
     });
 
-    return gymWithImageTypes;
+    return gymWithImages;
   }
 
-  async findOne(id: string): Promise<Gym> {
-    const gym = await this.gymRepo.findOneBy({ id });
+  async findOne(id: string): Promise<GymField> {
+    const rawGym = await this.gymRepo
+      .createQueryBuilder('gym')
+      .select('gym')
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(`ARRAY_AGG(DISTINCT i.type)`)
+            .from(GymImage, 'i')
+            .where('i.gymId = gym.id'),
+        'imageTypes',
+      )
+      .where(`gym.id = :id`, { id })
+      .getRawOne<JoinGymWithImageType>();
 
-    if (!gym) {
+    if (!rawGym) {
       throw new NotFoundException('해당 암장을 찾을 수 없습니다.');
     }
 
-    return gym;
+    const gymWithImage: GymWithImageTypes[number] = {
+      id: rawGym.gym_id,
+      name: rawGym.gym_name,
+      description: rawGym.gym_description,
+      thumbnail_url: rawGym.gym_thumbnail_url,
+      latitude: rawGym.gym_latitude,
+      longitude: rawGym.gym_longitude,
+      area: rawGym.gym_area,
+      created_at: rawGym.gym_created_at,
+      updated_at: rawGym.gym_updated_at,
+      images: rawGym.gym_images,
+      schedules: rawGym.gym_schedules,
+      imageTypes: rawGym.imageTypes,
+    };
+
+    return gymWithImage;
   }
 
   async create(dto: CreateGymDto): Promise<Gym> {

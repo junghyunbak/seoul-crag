@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, IconButton, styled } from '@mui/material';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+
+import { Typography, Box, IconButton, styled } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+
 import {
   DndContext,
   closestCenter,
@@ -12,10 +14,16 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
-import { SortableImage } from './SortableImage';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+
+import { useQuery } from '@tanstack/react-query';
+
 import { api } from '@/api/axios';
+
 import { imagesScheme } from '@/schemas/image';
+
+import { SortableImage } from './SortableImage';
 
 const ScrollContainer = styled(Box)({
   overflowX: 'auto',
@@ -32,21 +40,18 @@ const ImageWrapper = styled(Box)({
   overflow: 'hidden',
   position: 'relative',
 });
-
-interface ImageUploaderProps {
-  crag: Crag;
+interface CragImagesFieldProps {
   imageType?: ImageType;
 }
 
-// [ ]: api 요청 시 호출할 함수 인터페이스 추가 (crag 쿼리 업데이트 위함.)
-export function ImageUploader({ crag, imageType = 'interior' }: ImageUploaderProps) {
+export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps) {
+  const { crag, revalidateCrag } = useContext(cragFormContext);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [images, setImages] = useState<(File | Image)[]>([]);
 
-  const queryClient = useQueryClient();
-
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['images', imageType, crag.id],
     queryFn: async () => {
       const { data } = await api.get(`/gym-images/${crag.id}/images/${imageType}`);
@@ -96,7 +101,8 @@ export function ImageUploader({ crag, imageType = 'interior' }: ImageUploaderPro
         await api.post(`/gym-images/${crag.id}/images`, form);
       }
 
-      queryClient.invalidateQueries({ queryKey: ['images', imageType, crag.id] });
+      refetch();
+      revalidateCrag();
     }
   };
 
@@ -116,53 +122,59 @@ export function ImageUploader({ crag, imageType = 'interior' }: ImageUploaderPro
         orderedIds: nextItems.filter((image) => 'id' in image).map((image) => image.id),
       });
 
-      queryClient.invalidateQueries({ queryKey: ['images', imageType, crag.id] });
+      refetch();
+      revalidateCrag();
     }
   };
 
   const handleRemoveImage = async (id: string) => {
     await api.delete(`/gym-images/${crag.id}/images/${id}`);
 
-    queryClient.invalidateQueries({ queryKey: ['images', imageType, crag.id] });
+    refetch();
+    revalidateCrag();
   };
 
   return (
-    <ScrollContainer px={1} py={2}>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToHorizontalAxis]}
-      >
-        <SortableContext
-          items={images.map((image) => (image instanceof File ? image.name : image.id))}
-          strategy={horizontalListSortingStrategy}
+    <Box>
+      <Typography variant="h6">암장 내부 이미지</Typography>
+      <Typography variant="caption">jpeg, jpg, png 확장자만 업로드 가능합니다.</Typography>
+      <ScrollContainer px={1} py={2}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToHorizontalAxis]}
         >
-          <Box display="flex" gap={2} minWidth="fit-content">
-            {images.map((image) => {
-              if (image instanceof File) {
-                return <SortableImage key={image.name} id={image.name} file={image} />;
-              } else {
-                return <SortableImage key={image.id} id={image.id} url={image.url} onDelete={handleRemoveImage} />;
-              }
-            })}
+          <SortableContext
+            items={images.map((image) => (image instanceof File ? image.name : image.id))}
+            strategy={horizontalListSortingStrategy}
+          >
+            <Box display="flex" gap={2} minWidth="fit-content">
+              {images.map((image) => {
+                if (image instanceof File) {
+                  return <SortableImage key={image.name} id={image.name} file={image} />;
+                } else {
+                  return <SortableImage key={image.id} id={image.id} url={image.url} onDelete={handleRemoveImage} />;
+                }
+              })}
 
-            <ImageWrapper display="flex" alignItems="center" justifyContent="center" border="2px dashed #ccc">
-              <IconButton onClick={handleUploadClick}>
-                <AddPhotoAlternateIcon />
-              </IconButton>
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-              />
-            </ImageWrapper>
-          </Box>
-        </SortableContext>
-      </DndContext>
-    </ScrollContainer>
+              <ImageWrapper display="flex" alignItems="center" justifyContent="center" border="2px dashed #ccc">
+                <IconButton onClick={handleUploadClick}>
+                  <AddPhotoAlternateIcon />
+                </IconButton>
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+              </ImageWrapper>
+            </Box>
+          </SortableContext>
+        </DndContext>
+      </ScrollContainer>
+    </Box>
   );
 }

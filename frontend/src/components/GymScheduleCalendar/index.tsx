@@ -44,13 +44,7 @@ const typeLabels: Record<Schedule['type'], string> = {
   etc: '기타',
 };
 
-export default function GymScheduleCalendar({
-  schedules,
-  onCreate,
-  onUpdate,
-  onDelete,
-  readOnly = false,
-}: CalendarProps) {
+export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, readOnly = false }: CalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selected, setSelected] = useState<Schedule | null>(null);
 

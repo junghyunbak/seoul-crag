@@ -185,7 +185,7 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
            * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
            */
           position: 'absolute',
-          transform: `translate(${markerWidth}px, -100%)`,
+          transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
         }}
       >
         <Typography

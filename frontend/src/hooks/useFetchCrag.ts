@@ -28,7 +28,7 @@ export function useFetchCrag({
   enabled?: boolean;
   initialData: Crag;
 }) {
-  const { data: crag } = useQuery({
+  const { data: crag, refetch } = useQuery({
     queryKey: ['crag', cragId],
     queryFn: async () => {
       const { data } = await api.get(`/gyms/${cragId}`);
@@ -41,5 +41,5 @@ export function useFetchCrag({
     initialData,
   });
 
-  return { crag };
+  return { crag, refetch };
 }
