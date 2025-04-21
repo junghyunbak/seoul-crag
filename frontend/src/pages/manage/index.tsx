@@ -8,8 +8,6 @@ import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Ter
 
 import { useFetchMe } from '@/hooks';
 
-import { StoryPortal } from '@/components/portals/StoryPortal';
-
 export function ManagePage() {
   const location = useLocation();
 
@@ -94,8 +92,6 @@ export function ManagePage() {
 
         <Outlet />
       </Box>
-
-      <StoryPortal imageType="interior" />
     </Box>
   );
 }

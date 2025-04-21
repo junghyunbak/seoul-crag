@@ -22,7 +22,6 @@ import { Map } from '@/components/map/Map';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 
 import dayjs from 'dayjs';
-import { StoryPortal } from '@/components/portals/StoryPortal';
 
 export function Main() {
   const { selectDate } = useSelectDate();
@@ -72,8 +71,6 @@ export function Main() {
       <Filter />
       <Menu />
       <Controller />
-
-      <StoryPortal imageType="interior" />
 
       <AngularEdgeMarkers
         markers={Object.values(cragMap).map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))}
