@@ -10,6 +10,10 @@ import { Polygon, Marker } from '@/components/map/overlay';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
+import { QUERY_STRING } from '@/constants';
+
+import { useQueryParam, StringParam } from 'use-query-params';
+
 export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
@@ -17,6 +21,8 @@ export function CragPositionField() {
 
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
+
+  const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { map } = useNaverMap(
     () => ({
@@ -51,14 +57,18 @@ export function CragPositionField() {
       return;
     }
 
-    const listener = map.addListener('center_changed', () => {
+    const centerChangeListener = map.addListener('center_changed', () => {
       locMarker?.setPosition(map.getCenter());
     });
 
+    const clickListener = map.addListener('click', () => {
+      setSelectCragId(null);
+    });
+
     return function cleanup() {
-      map.removeListener(listener);
+      map.removeListener([centerChangeListener, clickListener]);
     };
-  }, [map, locMarker]);
+  }, [map, locMarker, setSelectCragId]);
 
   const handleMapLocChangeButtonClick = async () => {
     if (mapEnabled && map) {

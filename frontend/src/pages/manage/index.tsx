@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Outlet, useLocation } from 'react-router';
+import { Outlet, useLocation, Link } from 'react-router';
+
+import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
 import { Box, IconButton, Typography } from '@mui/material';
 import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Terrain } from '@mui/icons-material';
 
-import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
-
-import { Link } from 'react-router';
 import { useFetchMe } from '@/hooks';
+
+import { StoryPortal } from '@/components/portals/StoryPortal';
 
 export function ManagePage() {
   const location = useLocation();
@@ -93,6 +94,8 @@ export function ManagePage() {
 
         <Outlet />
       </Box>
+
+      <StoryPortal imageType="interior" />
     </Box>
   );
 }
