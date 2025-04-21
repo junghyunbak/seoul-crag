@@ -5,8 +5,8 @@
 import { useState, useEffect, useMemo } from 'react';
 
 type StyleEditorMapOptions = {
-  gl?: boolean;
-  customStyleId?: string;
+  gl: boolean;
+  customStyleId: string;
 };
 
 export function useNaverMap(

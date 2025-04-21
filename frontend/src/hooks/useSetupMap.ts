@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 import { useMap } from '../hooks/useMap';
 import { useModifyMap } from '../hooks/useModifyMap';

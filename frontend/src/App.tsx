@@ -16,6 +16,7 @@ import { NewCrag } from '@/pages/manage/NewCrag';
 
 import { QueryParamProvider, type PartialLocation, type QueryParamAdapterComponent } from 'use-query-params';
 
+// https://github.com/pbeshai/use-query-params/issues/295
 export const ReactRouter7Adapter: QueryParamAdapterComponent = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();

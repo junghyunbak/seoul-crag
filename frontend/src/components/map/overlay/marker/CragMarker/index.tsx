@@ -122,7 +122,7 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
           setSelectCragId(crag.id);
           map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
         }}
-        sx={{ position: 'relative', color: isSelect ? 'black' : '#52634A' }}
+        sx={{ position: 'relative', color: isSelect ? 'black' : '#52634A', display: 'flex' }}
       >
         <svg width={`${markerWidth}px`} viewBox="0 0 71 53" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -185,11 +185,11 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
            * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
            */
           position: 'absolute',
-          transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
+          transform: `translate(${markerWidth}px, -100%)`,
         }}
       >
         <Typography
-          variant="h5"
+          variant="h6"
           fontWeight="bold"
           sx={{
             userSelect: 'none',
