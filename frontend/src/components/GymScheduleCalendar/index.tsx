@@ -169,10 +169,16 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
                         bgcolor: typeColors[s.type],
                         color: 'white',
                         flexShrink: 0,
-                        px: 1,
+                        px: {
+                          md: 1,
+                          xs: 0.5,
+                        },
                         py: 0.3,
                         borderRadius: 1,
-                        fontSize: 12,
+                        fontSize: {
+                          md: 12,
+                          xs: 8,
+                        },
                         cursor: readOnly ? 'default' : 'pointer',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
