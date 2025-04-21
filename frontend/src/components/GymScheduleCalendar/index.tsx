@@ -125,6 +125,7 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
                 height: 100,
                 position: 'relative',
                 p: 0.5,
+                pb: 0,
                 display: 'flex',
                 flexDirection: 'column',
               }}
@@ -147,7 +148,7 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
                 {format(day, 'd')}
               </Typography>
 
-              <Stack mt={0.5} maxHeight={60} sx={{ flex: 1, overflow: 'hidden' }}>
+              <Stack mt={0.5} sx={{ flex: 1, overflow: 'hidden' }}>
                 <Box
                   sx={{
                     display: 'flex',
@@ -162,7 +163,7 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
                     },
                   }}
                 >
-                  {combinedSchedules.map((s) => (
+                  {combinedSchedules.map((s, i) => (
                     <Box
                       key={s.id}
                       sx={{
@@ -174,6 +175,7 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
                           xs: 0.5,
                         },
                         py: 0.3,
+                        mb: combinedSchedules.length - 1 === i ? 0.5 : 0,
                         borderRadius: 1,
                         fontSize: {
                           md: 12,
