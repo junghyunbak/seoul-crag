@@ -104,6 +104,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({ images, duration = 500
     >
       <Box
         position="relative"
+        width={isMobile ? '100%' : 'auto'}
         height={isMobile ? '100%' : '95dvh'}
         sx={{
           aspectRatio: isMobile ? 'auto' : '9/16',
