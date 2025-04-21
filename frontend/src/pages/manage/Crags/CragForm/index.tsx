@@ -13,9 +13,11 @@ import { CragAreaField } from '@/pages/manage/Crags/CragForm/CragAreaField';
 
 interface CragFormProps {
   initialCrag: Crag;
+  expanded: boolean;
+  onChange: (isOpen: boolean) => void;
 }
 
-export function CragForm({ initialCrag }: CragFormProps) {
+export function CragForm({ initialCrag, expanded, onChange }: CragFormProps) {
   const [queryEnabled, setQueryEnabled] = useState(false);
 
   const { crag, refetch } = useFetchCrag({
@@ -37,12 +39,26 @@ export function CragForm({ initialCrag }: CragFormProps) {
         },
       }}
     >
-      <Accordion key={crag.id}>
+      <Accordion
+        key={crag.id}
+        expanded={expanded}
+        onChange={(_, isOpen) => {
+          onChange(isOpen);
+        }}
+      >
         <AccordionSummary>{crag.name}</AccordionSummary>
         <AccordionDetails>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%' }}>
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', width: '100%' }}>
-              <CragPositionField />
+              <Box
+                sx={{
+                  display: 'flex',
+                  width: { md: '400px', xs: '100%' },
+                  aspectRatio: '1/1',
+                }}
+              >
+                {expanded && <CragPositionField />}
+              </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, overflow: 'hidden' }}>
                 <CragNameField />
                 <CragAreaField />

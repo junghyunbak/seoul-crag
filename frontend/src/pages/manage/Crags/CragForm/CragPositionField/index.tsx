@@ -90,8 +90,7 @@ export function CragPositionField() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        width: { md: '400px', xs: '100%' },
-        aspectRatio: '1/1',
+        flex: 1,
         gap: 1,
       }}
     >
