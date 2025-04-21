@@ -1,4 +1,5 @@
 import { imageTypeScheme } from '@/schemas/image';
+import { schedulesScheme } from '@/schemas/schedule';
 import { z } from 'zod';
 
 export const cragScheme = z.object({
@@ -9,9 +10,10 @@ export const cragScheme = z.object({
   longitude: z.number(),
   thumbnail_url: z.string().optional(),
   area: z.union([z.number(), z.null()]).optional(),
-  imageTypes: z.union([z.array(imageTypeScheme), z.null()]).optional(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
+  imageTypes: z.union([z.array(imageTypeScheme), z.null()]).optional(),
+  futureSchedules: z.union([schedulesScheme, z.null()]).optional(),
 });
 
 export const cragsScheme = z.array(cragScheme);

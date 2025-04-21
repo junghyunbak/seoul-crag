@@ -8,18 +8,21 @@ import { GymImage } from '../gym-images/gym-images.entity';
 
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 import { UpdateGymDto } from 'src/gyms/dto/update-gym.dto';
+import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 
 type GymField = {
   [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
 };
 
 type ImageType = { imageTypes: string[] };
+type ScheduleType = { futureSchedules: GymSchedule[] };
 
-type GymWithImageTypes = (GymField & ImageType)[];
+type GymJoinedTypes = (GymField & ImageType & ScheduleType)[];
 
 type JoinGymWithImageType = {
   [P in keyof GymField as `gym_${P}`]: GymField[P];
-} & ImageType;
+} & ImageType &
+  ScheduleType;
 
 @Injectable()
 export class GymsService {
@@ -30,10 +33,8 @@ export class GymsService {
     private readonly gymImageRepo: Repository<GymImage>,
   ) {}
 
-  async findAll(): Promise<GymField[]> {
-    const gymWithImages: GymField[] = [];
-
-    const rawGyms = await this.gymRepo
+  getJoinedGymQueryBuilder() {
+    return this.gymRepo
       .createQueryBuilder('gym')
       .select('gym')
       .addSelect(
@@ -45,10 +46,26 @@ export class GymsService {
             .where('i.gymId = gym.id'),
         'imageTypes',
       )
-      .getRawMany<JoinGymWithImageType>();
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(`JSON_AGG(s)`)
+            .from(GymSchedule, 's')
+            .where('s.gymId = gym.id')
+            .andWhere('s.date >= CURRENT_DATE'),
+        'futureSchedules',
+      );
+  }
+
+  async findAll(): Promise<GymField[]> {
+    const gymWithImages: GymField[] = [];
+
+    const rawGyms =
+      await this.getJoinedGymQueryBuilder().getRawMany<JoinGymWithImageType>();
 
     rawGyms.forEach((raw) => {
-      const gymWithImage: GymWithImageTypes[number] = {
+      const gymWithImage: GymJoinedTypes[number] = {
         id: raw.gym_id,
         name: raw.gym_name,
         description: raw.gym_description,
@@ -61,6 +78,7 @@ export class GymsService {
         images: raw.gym_images,
         schedules: raw.gym_schedules,
         imageTypes: raw.imageTypes,
+        futureSchedules: raw.futureSchedules,
       };
 
       gymWithImages.push(gymWithImage);
@@ -70,18 +88,7 @@ export class GymsService {
   }
 
   async findOne(id: string): Promise<GymField> {
-    const rawGym = await this.gymRepo
-      .createQueryBuilder('gym')
-      .select('gym')
-      .addSelect(
-        (qb) =>
-          qb
-            .subQuery()
-            .select(`ARRAY_AGG(DISTINCT i.type)`)
-            .from(GymImage, 'i')
-            .where('i.gymId = gym.id'),
-        'imageTypes',
-      )
+    const rawGym = await this.getJoinedGymQueryBuilder()
       .where(`gym.id = :id`, { id })
       .getRawOne<JoinGymWithImageType>();
 
@@ -89,7 +96,7 @@ export class GymsService {
       throw new NotFoundException('해당 암장을 찾을 수 없습니다.');
     }
 
-    const gymWithImage: GymWithImageTypes[number] = {
+    const gymWithImage: GymJoinedTypes[number] = {
       id: rawGym.gym_id,
       name: rawGym.gym_name,
       description: rawGym.gym_description,
@@ -102,6 +109,7 @@ export class GymsService {
       images: rawGym.gym_images,
       schedules: rawGym.gym_schedules,
       imageTypes: rawGym.imageTypes,
+      futureSchedules: rawGym.futureSchedules,
     };
 
     return gymWithImage;
