@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 import { EditableText } from '@/components/EditableText';
 
@@ -6,11 +6,13 @@ import { useFetchCrag, useFetchCrags, useModifyCrag, useNaverMap } from '@/hooks
 
 import { Box, Accordion, AccordionDetails, AccordionSummary, Typography, Button, Stack } from '@mui/material';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 
 import { Polygon, Marker } from '@/components/map/overlay';
 import { ImageUploader } from '@/components/ImageUploader';
+import GymScheduleCalendar from '@/components/GymScheduleCalendar';
+import { schedulesScheme } from '@/schemas/schedule';
 
 const MAX_AREA_VALUE = 1000;
 const MIN_AREA_VALUE = 10;
@@ -53,6 +55,10 @@ export function Crags() {
     </div>
   );
 }
+
+type ContextValue = { crag: Crag; revalidate: () => void };
+
+const cragEditFormContext = createContext<ContextValue>({} as ContextValue);
 
 interface CragEditFormProps {
   initialCrag: Crag;
@@ -159,42 +165,97 @@ function CragEditForm({ initialCrag }: CragEditFormProps) {
   };
 
   return (
-    <Accordion key={crag.id}>
-      <AccordionSummary>{crag.name}</AccordionSummary>
+    <cragEditFormContext.Provider
+      value={{
+        crag,
+        revalidate: () => {
+          queryClient.invalidateQueries({ queryKey: ['crag', crag.id] });
+        },
+      }}
+    >
+      <Accordion key={crag.id}>
+        <AccordionSummary>{crag.name}</AccordionSummary>
 
-      <AccordionDetails>
-        <Stack gap={1}>
-          <EditableText value={crag.name} onSave={handleTextFieldUpdate} />
+        <AccordionDetails>
+          <Stack gap={1}>
+            <EditableText value={crag.name} onSave={handleTextFieldUpdate} />
 
-          <EditableText
-            placeholder="암장 크기 (단위: 평, 최소: 10, 최대: 1000)"
-            value={crag.area?.toString() || ''}
-            onSave={handleAreaFieldUpdate}
-            numberOnly
-            min={MIN_AREA_VALUE}
-            max={MAX_AREA_VALUE}
-          />
+            <EditableText
+              placeholder="암장 크기 (단위: 평, 최소: 10, 최대: 1000)"
+              value={crag.area?.toString() || ''}
+              onSave={handleAreaFieldUpdate}
+              numberOnly
+              min={MIN_AREA_VALUE}
+              max={MAX_AREA_VALUE}
+            />
 
-          <Typography variant="h6">암장 내부 이미지</Typography>
-          <ImageUploader imageType="interior" crag={crag} />
-          <Typography variant="caption">jpeg, jpg, png 확장자만 업로드 가능합니다.</Typography>
+            <Typography variant="h6">암장 내부 이미지</Typography>
+            <ImageUploader imageType="interior" crag={crag} />
+            <Typography variant="caption">jpeg, jpg, png 확장자만 업로드 가능합니다.</Typography>
 
-          <Button variant={mapEnabled ? 'contained' : 'outlined'} onClick={handleMapLocChangeButtonClick}>
-            {mapEnabled ? '수정 완료' : '위치 수정'}
-          </Button>
+            <Button variant={mapEnabled ? 'contained' : 'outlined'} onClick={handleMapLocChangeButtonClick}>
+              {mapEnabled ? '수정 완료' : '위치 수정'}
+            </Button>
 
-          <Box
-            ref={mapRef}
-            sx={{
-              width: { md: '500px', xs: '100%' },
-              aspectRatio: '1/1',
-            }}
-          >
-            <Marker.CragMarker crag={crag} map={map} onCreate={setLocMarker} />
-            <Polygon.Boundary map={map} />
-          </Box>
-        </Stack>
-      </AccordionDetails>
-    </Accordion>
+            <Box
+              ref={mapRef}
+              sx={{
+                width: { md: '500px', xs: '100%' },
+                aspectRatio: '1/1',
+              }}
+            >
+              <Marker.CragMarker crag={crag} map={map} onCreate={setLocMarker} />
+              <Polygon.Boundary map={map} />
+            </Box>
+
+            <GymScheduleCalenderWrapper />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+    </cragEditFormContext.Provider>
+  );
+}
+
+function GymScheduleCalenderWrapper() {
+  const { crag } = useContext(cragEditFormContext);
+
+  const { data, refetch } = useQuery({
+    queryKey: ['schedules', crag.id],
+    queryFn: async () => {
+      const { data } = await api.get(`/gyms/${crag.id}/schedules`);
+
+      const schedules = schedulesScheme.parse(data);
+
+      return schedules;
+    },
+  });
+
+  return (
+    <GymScheduleCalendar
+      schedules={data || []}
+      onDelete={async (id) => {
+        await api.delete(`/gyms/${crag.id}/schedules/${id}`);
+
+        refetch();
+      }}
+      onUpdate={async ({ id, type, reason }) => {
+        await api.patch(`/gyms/${crag.id}/schedules/${id}`, {
+          type,
+          reason,
+        });
+
+        refetch();
+      }}
+      onCreate={async ({ date, type, reason }) => {
+        await api.post(`/gyms/${crag.id}/schedules`, {
+          gymId: crag.id,
+          date,
+          type,
+          reason,
+        });
+
+        refetch();
+      }}
+    />
   );
 }
