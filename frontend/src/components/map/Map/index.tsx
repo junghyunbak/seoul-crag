@@ -9,6 +9,9 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
 
 export function Map() {
+  /**
+   * 외부에서 의존성 주입
+   */
   const { mapRef, map } = useMap();
 
   const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);

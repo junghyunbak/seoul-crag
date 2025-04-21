@@ -56,6 +56,10 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
+  const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
+
+  const isSelect = crag.id === selectCragId;
+
   /**
    * 마커 초기화
    */
@@ -83,6 +87,14 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
     };
   }, [crag, map, onCreate]);
 
+  useEffect(() => {
+    if (!marker) {
+      return;
+    }
+
+    marker.setZIndex(isSelect ? 1 : 0);
+  }, [marker, isSelect]);
+
   const features = useMemo<Feature[]>(() => {
     const ret = [...[''], ...(crag.imageTypes || [])].map<Feature>((type) => {
       switch (type) {
@@ -103,8 +115,6 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
     return ret;
   }, [crag, setInteriorStory]);
 
-  const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
-
   return (
     <Box ref={markerRef} sx={{ position: 'absolute', transform: 'translate(-50%, -100%)' }}>
       <Box
@@ -112,7 +122,7 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
           setSelectCragId(crag.id);
           map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
         }}
-        sx={{ position: 'relative' }}
+        sx={{ position: 'relative', color: isSelect ? 'black' : '#52634A' }}
       >
         <svg width={`${markerWidth}px`} viewBox="0 0 71 53" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -127,7 +137,7 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
           />
           <path
             d="M35.1868 32.4715L28.6868 23.9715H24.6868C21.0868 24.3715 18.8645 21.8049 18.2033 20.4715M35.1868 32.4715L38.6868 36.9715C39.0201 37.4715 40.3868 38.4715 43.1868 38.4715H44.1868M35.1868 32.4715L43.0618 20.4715M18.2033 20.4715L28.6868 2.97152C29.1868 2.13819 30.5868 1.07152 32.1868 3.47152L43.0618 20.4715M18.2033 20.4715L2.18684 46.9715C1.68684 48.3049 1.88684 50.9715 6.68684 50.9715H65.6868C66.6868 50.9715 68.6868 50.1715 68.6868 46.9715L49.1868 16.4715C48.3534 15.1382 46.4868 13.2715 45.6868 16.4715L43.0618 20.4715M44.1868 38.4715H47.1868C47.0201 38.9715 46.3868 39.7715 45.1868 38.9715L44.1868 38.4715Z"
-            stroke="#52634A"
+            stroke="currentColor"
             strokeWidth="4"
           />
         </svg>

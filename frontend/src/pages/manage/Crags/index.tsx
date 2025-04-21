@@ -75,8 +75,6 @@ function CragEditForm({ initialCrag }: CragEditFormProps) {
     mapRef
   );
 
-  console.log(map);
-
   const { crag } = useFetchCrag({
     cragId: initialCrag.id,
     enabled: queryEnabled,

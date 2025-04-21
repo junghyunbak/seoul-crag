@@ -38,6 +38,7 @@ interface ImageUploaderProps {
   imageType?: ImageType;
 }
 
+// [ ]: api 요청 시 호출할 함수 인터페이스 추가 (crag 쿼리 업데이트 위함.)
 export function ImageUploader({ crag, imageType = 'interior' }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
