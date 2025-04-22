@@ -5,20 +5,20 @@ import { QueryParamProvider } from 'use-query-params';
 import { StoryPortal } from '@/components/portals/StoryPortal';
 
 import { ReactRouter7Adapter } from '@/router';
+import { QueryProvider } from '@/router/QueryProvider';
 
 import { Box } from '@mui/material';
-import { MainServiceQueryProvider } from '@/router/QueryProvider';
 
 export function Layout() {
   return (
     <Box sx={{ width: '100dvw', height: '100dvh' }}>
-      <MainServiceQueryProvider>
+      <QueryProvider>
         <QueryParamProvider adapter={ReactRouter7Adapter}>
           <Outlet />
 
           <StoryPortal imageType="interior" />
         </QueryParamProvider>
-      </MainServiceQueryProvider>
+      </QueryProvider>
     </Box>
   );
 }
