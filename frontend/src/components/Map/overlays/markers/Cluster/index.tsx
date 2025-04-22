@@ -7,6 +7,8 @@ import { CragIcon } from '@/components/CragIcon';
 
 import { Box } from '@mui/material';
 
+import { CRAG_CLUSTER_MARKER_SIZE } from '@/constants/size';
+
 import './markerClustering';
 
 interface ClusterProps {
@@ -23,7 +25,7 @@ export function Cluster({ markers }: ClusterProps) {
       disableClickZoom: false,
       icons: [
         {
-          content: renderToString(<CragIcon width={65} counting />),
+          content: renderToString(<CragIcon width={CRAG_CLUSTER_MARKER_SIZE} counting />),
         },
       ],
       indexGenerator: [0],
