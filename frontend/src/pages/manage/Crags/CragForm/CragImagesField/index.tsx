@@ -17,11 +17,9 @@ import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { useQuery } from '@tanstack/react-query';
-
 import { api } from '@/api/axios';
 
-import { imagesScheme } from '@/schemas/image';
+import { useFetchImages } from '@/hooks';
 
 import { SortableImage } from './SortableImage';
 
@@ -51,26 +49,15 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
 
   const [images, setImages] = useState<(File | Image)[]>([]);
 
-  const { data, refetch } = useQuery({
-    queryKey: ['images', imageType, crag.id],
-    queryFn: async () => {
-      const { data } = await api.get(`/gym-images/${crag.id}/images/${imageType}`);
-
-      const images = imagesScheme.parse(data);
-
-      images.sort((a, b) => (a.order < b.order ? -1 : 1));
-
-      return images;
-    },
-  });
+  const { images: fetchImages, refetch } = useFetchImages(crag.id, imageType);
 
   useEffect(() => {
-    if (!data) {
+    if (!fetchImages) {
       return;
     }
 
-    setImages(data);
-  }, [data]);
+    setImages(fetchImages);
+  }, [fetchImages]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

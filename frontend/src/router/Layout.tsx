@@ -2,12 +2,13 @@ import { Outlet } from 'react-router';
 
 import { QueryParamProvider } from 'use-query-params';
 
-import { StoryPortal } from '@/components/portals/StoryPortal';
+import { ImageStory } from '@/components/ImageStory';
 
 import { ReactRouter7Adapter } from '@/router';
 import { QueryProvider } from '@/router/QueryProvider';
 
 import { Box } from '@mui/material';
+import { ScheduleStory } from '@/components/ScheduleStory';
 
 export function Layout() {
   return (
@@ -16,7 +17,8 @@ export function Layout() {
         <QueryParamProvider adapter={ReactRouter7Adapter}>
           <Outlet />
 
-          <StoryPortal imageType="interior" />
+          <ImageStory imageType="interior" />
+          <ScheduleStory />
         </QueryParamProvider>
       </QueryProvider>
     </Box>

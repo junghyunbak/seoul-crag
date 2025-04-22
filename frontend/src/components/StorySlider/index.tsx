@@ -1,20 +1,29 @@
 import React, { useEffect, useRef, useState, TouchEvent, MouseEvent } from 'react';
+
 import { Box, IconButton, useMediaQuery } from '@mui/material';
 import { ChevronLeft, ChevronRight, Pause, PlayArrow, Close } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+
 import { zIndex } from '@/styles';
 
 interface StorySliderProps {
-  images: string[];
+  contents: React.ReactNode[];
   duration?: number;
   onComplete?: () => void;
   onClose?: () => void;
+  initPaused?: boolean;
 }
 
-export const StorySlider: React.FC<StorySliderProps> = ({ images, duration = 5000, onComplete, onClose }) => {
+export const StorySlider: React.FC<StorySliderProps> = ({
+  contents,
+  duration = 5000,
+  onComplete,
+  onClose,
+  initPaused = false,
+}) => {
   const [index, setIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(initPaused);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -28,7 +37,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({ images, duration = 500
   };
 
   useEffect(() => {
-    if (paused || index >= images.length) return;
+    if (paused || index >= contents.length) return;
 
     resetTimers();
     const start = Date.now();
@@ -44,13 +53,13 @@ export const StorySlider: React.FC<StorySliderProps> = ({ images, duration = 500
     }, duration);
 
     return resetTimers;
-  }, [index, duration, images.length, paused]);
+  }, [index, duration, contents, paused]);
 
   useEffect(() => {
-    if (index === images.length) {
+    if (index === contents.length) {
       onComplete?.();
     }
-  }, [images.length, index, onComplete]);
+  }, [contents, index, onComplete]);
 
   const handlePrev = () => {
     if (index > 0) {
@@ -126,21 +135,12 @@ export const StorySlider: React.FC<StorySliderProps> = ({ images, duration = 500
           }}
           borderRadius={1}
         >
-          <Box
-            component="img"
-            width="100%"
-            src={images[index]}
-            alt={`story-${index}`}
-            sx={{
-              userSelect: 'none',
-              objectFit: 'cover',
-            }}
-          />
+          {contents[index]}
         </Box>
 
         {/* 상단 진행 바 */}
         <Box position="absolute" top={8} left={8} right={8} display="flex" gap={0.5} zIndex={5}>
-          {images.map((_, i) => (
+          {contents.map((_, i) => (
             <Box key={i} flex={1} height={4} borderRadius={4} bgcolor="rgba(255,255,255,0.3)" overflow="hidden">
               <Box
                 height="100%"

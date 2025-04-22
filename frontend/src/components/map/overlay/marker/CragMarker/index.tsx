@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
-import { Shower, AccessTime, PhotoLibrary } from '@mui/icons-material';
+import { Shower, PhotoLibrary, CalendarMonth } from '@mui/icons-material';
 
 import { useCrag } from '@/hooks';
 
@@ -53,6 +53,7 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [_, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
+  const [__, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
@@ -96,24 +97,36 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
   }, [marker, isSelect]);
 
   const features = useMemo<Feature[]>(() => {
-    const ret = [...[''], ...(crag.imageTypes || [])].map<Feature>((type) => {
-      switch (type) {
-        case 'interior':
-          return {
-            icon: <PhotoLibrary />,
-            callback: () => {
-              setInteriorStory(crag.id);
-            },
-          };
-        case 'shower':
-          return { icon: <Shower />, callback: () => {} };
-        default:
-          return { icon: <AccessTime />, callback: () => {} };
-      }
+    const ret: Feature[] = [];
+
+    (crag.imageTypes || []).forEach((type) => {
+      ret.push(
+        (() => {
+          switch (type) {
+            case 'interior':
+              return {
+                icon: <PhotoLibrary />,
+                callback: () => {
+                  setInteriorStory(crag.id);
+                },
+              };
+            case 'shower':
+            default:
+              return { icon: <Shower />, callback: () => {} };
+          }
+        })()
+      );
+    });
+
+    ret.push({
+      icon: <CalendarMonth />,
+      callback: () => {
+        setScheduleStory(crag.id);
+      },
     });
 
     return ret;
-  }, [crag, setInteriorStory]);
+  }, [crag, setInteriorStory, setScheduleStory]);
 
   return (
     <Box ref={markerRef} sx={{ position: 'absolute', transform: 'translate(-50%, -100%)' }}>

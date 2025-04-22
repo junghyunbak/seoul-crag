@@ -117,7 +117,10 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
               xs={1}
               key={`empty-${idx}`}
               sx={{
-                height: 124,
+                height: {
+                  md: 124,
+                  xs: 100,
+                },
                 borderRight: '1px solid #ccc',
                 borderBottom: '1px solid #ccc',
                 p: 0.5,
@@ -155,7 +158,10 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
                 sx={{
                   borderRight: (i + emptyStart) % 7 === 6 ? 'none' : '1px solid #ccc',
                   borderBottom: currentWeek === lastWeek ? 'none' : '1px solid #ccc',
-                  height: 124,
+                  height: {
+                    md: 124,
+                    xs: 100,
+                  },
                   position: 'relative',
                   pt: 0.5,
                   pr: 0.5,

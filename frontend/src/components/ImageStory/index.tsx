@@ -1,20 +1,22 @@
+import { useMemo } from 'react';
+
 import { createPortal } from 'react-dom';
+
+import { Box } from '@mui/material';
 
 import { StringParam, useQueryParam } from 'use-query-params';
 
 import { StorySlider } from '@/components/StorySlider';
 
 import { QUERY_STRING } from '@/constants';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api/axios';
-import { imagesScheme } from '@/schemas/image';
-import { useMemo } from 'react';
 
-interface StoryPortalProps {
+import { useFetchImages } from '@/hooks';
+
+interface ImageStoryProps {
   imageType: ImageType;
 }
 
-export function StoryPortal({ imageType }: StoryPortalProps) {
+export function ImageStory({ imageType }: ImageStoryProps) {
   const queryString = useMemo(() => {
     switch (imageType) {
       case 'interior':
@@ -26,26 +28,23 @@ export function StoryPortal({ imageType }: StoryPortalProps) {
 
   const [cragId, setCragId] = useQueryParam(queryString, StringParam);
 
-  const { data: images } = useQuery({
-    queryKey: ['images', imageType, cragId],
-    queryFn: async () => {
-      if (!cragId) {
-        return null;
-      }
-
-      const { data } = await api.get(`/gym-images/${cragId}/images/${imageType}`);
-
-      const images = imagesScheme.parse(data);
-
-      return images;
-    },
-  });
+  const { images } = useFetchImages(cragId, imageType);
 
   return createPortal(
     <div>
-      {images && (
+      {cragId && images && (
         <StorySlider
-          images={images.map((image) => image.url)}
+          contents={images.map((image) => (
+            <Box
+              component="img"
+              width="100%"
+              src={image.url}
+              sx={{
+                userSelect: 'none',
+                objectFit: 'cover',
+              }}
+            />
+          ))}
           onClose={() => setCragId(null)}
           onComplete={() => setCragId(null)}
         />

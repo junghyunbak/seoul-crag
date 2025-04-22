@@ -4,29 +4,18 @@ import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import { api } from '@/api/axios';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { schedulesScheme } from '@/schemas/schedule';
-
 import { GymScheduleCalendar } from '@/components/GymScheduleCalendar';
+
+import { useFetchSchedules } from '@/hooks';
 
 export function CragScheduleCalenderField() {
   const { crag } = useContext(cragFormContext);
 
-  const { data, refetch } = useQuery({
-    queryKey: ['schedules', crag.id],
-    queryFn: async () => {
-      const { data } = await api.get(`/gyms/${crag.id}/schedules`);
-
-      const schedules = schedulesScheme.parse(data);
-
-      return schedules;
-    },
-  });
+  const { schedules, refetch } = useFetchSchedules(crag.id);
 
   return (
     <GymScheduleCalendar
-      schedules={data || []}
+      schedules={schedules || []}
       onDelete={async (id) => {
         await api.delete(`/gyms/${crag.id}/schedules/${id}`);
 
