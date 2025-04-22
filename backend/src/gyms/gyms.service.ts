@@ -53,7 +53,7 @@ export class GymsService {
             .select(`JSON_AGG(s)`)
             .from(GymSchedule, 's')
             .where('s.gymId = gym.id')
-            .andWhere('s.date >= CURRENT_DATE'),
+            .andWhere(`s.date >= date_trunc('month', CURRENT_DATE)`),
         'futureSchedules',
       );
   }

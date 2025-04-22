@@ -3,6 +3,8 @@ import { subMonths, addMonths } from 'date-fns';
 import { GymScheduleGrid } from './ScheduleGrid';
 import { MonthNavigation } from './MonthNavigation';
 
+import './index.css';
+
 interface CalendarProps {
   schedules: Schedule[];
   onCreate?: (schedule: Schedule) => void;

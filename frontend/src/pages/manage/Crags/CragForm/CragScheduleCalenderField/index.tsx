@@ -9,7 +9,7 @@ import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 import { useFetchSchedules } from '@/hooks';
 
 export function CragScheduleCalenderField() {
-  const { crag } = useContext(cragFormContext);
+  const { crag, revalidateCrag } = useContext(cragFormContext);
 
   const { schedules, refetch } = useFetchSchedules(crag.id);
 
@@ -20,6 +20,7 @@ export function CragScheduleCalenderField() {
         await api.delete(`/gyms/${crag.id}/schedules/${id}`);
 
         refetch();
+        revalidateCrag();
       }}
       onUpdate={async ({ id, type, reason }) => {
         await api.patch(`/gyms/${crag.id}/schedules/${id}`, {
@@ -28,6 +29,7 @@ export function CragScheduleCalenderField() {
         });
 
         refetch();
+        revalidateCrag();
       }}
       onCreate={async ({ date, type, reason }) => {
         await api.post(`/gyms/${crag.id}/schedules`, {
@@ -38,6 +40,7 @@ export function CragScheduleCalenderField() {
         });
 
         refetch();
+        revalidateCrag();
       }}
     />
   );

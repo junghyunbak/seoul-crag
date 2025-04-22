@@ -118,12 +118,14 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
       );
     });
 
-    ret.push({
-      icon: <CalendarMonth />,
-      callback: () => {
-        setScheduleStory(crag.id);
-      },
-    });
+    if (crag.futureSchedules && crag.futureSchedules.length > 0) {
+      ret.push({
+        icon: <CalendarMonth />,
+        callback: () => {
+          setScheduleStory(crag.id);
+        },
+      });
+    }
 
     return ret;
   }, [crag, setInteriorStory, setScheduleStory]);
