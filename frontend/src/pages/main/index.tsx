@@ -10,9 +10,9 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
+import { Map } from '@/components/Map';
 import { Menu } from '@/components/Menu';
 import { Controller } from '@/components/Controller';
-import { Map } from '@/components/Map';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 
 export function Main() {

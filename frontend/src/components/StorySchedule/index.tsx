@@ -35,7 +35,7 @@ function extractFutureYearMonthDates(data: DateObject[]): Date[] {
     .map((ym) => dayjs(`${ym}-01`).toDate());
 }
 
-export function ScheduleStory() {
+export function StorySchedule() {
   const [scheduleStoryCragId, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
   const { schedules } = useFetchSchedules(scheduleStoryCragId);

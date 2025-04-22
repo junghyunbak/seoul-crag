@@ -12,11 +12,11 @@ import { QUERY_STRING } from '@/constants';
 
 import { useFetchImages } from '@/hooks';
 
-interface ImageStoryProps {
+interface StoryImageProps {
   imageType: ImageType;
 }
 
-export function ImageStory({ imageType }: ImageStoryProps) {
+export function StoryImage({ imageType }: StoryImageProps) {
   const queryString = useMemo(() => {
     switch (imageType) {
       case 'interior':
