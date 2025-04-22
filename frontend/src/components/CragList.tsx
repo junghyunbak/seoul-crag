@@ -1,3 +1,4 @@
+/*
 import { Box, Card, CardContent, CardMedia, Stack, Typography } from '@mui/material';
 
 import { useCrag, useExerciseTimeRange, useSelectDate } from '@/hooks';
@@ -59,3 +60,4 @@ function CragItem({ crag }: CragItemProps) {
     </Card>
   );
 }
+*/

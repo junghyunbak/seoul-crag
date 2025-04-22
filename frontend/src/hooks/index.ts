@@ -11,12 +11,6 @@ export * from './useMenu';
 export * from './useNaverMap';
 
 /**
- * setup
- */
-export * from './useSetupMap';
-export * from './useSetupCrag';
-
-/**
  * modify
  */
 export * from './useModifyFilter';

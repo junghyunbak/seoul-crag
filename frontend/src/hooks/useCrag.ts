@@ -1,37 +1,11 @@
-import dayjs, { Dayjs } from 'dayjs';
-
-import { crags } from '@/mocks/crag';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
 import { useMemo } from 'react';
 
-export function useCrag(/*date: Dayjs | null, exerciseTimeRange: [number, number]*/) {
-  const [cragMap] = useStore(useShallow((s) => [s.cragMap]));
-  const [selectCragId] = useStore(useShallow((s) => [s.selectCragId]));
-
-  const filteredCrags = crags.filter((crag) => {
-    /*
-    const isOffDayExist = crag.offDays.some((offday) => dayjs(offday).isSame(date, 'day'));
-
-    const isOpen =
-      !date || exerciseTimeRange[1] - exerciseTimeRange[0] === 24
-        ? true
-        : crag.openingHours[date.day()][0] <= exerciseTimeRange[0] &&
-          exerciseTimeRange[1] <= crag.openingHours[date.day()][1];
-
-    return !isOffDayExist && isOpen;
-    */
-
-    return crag;
-  });
-
-  const openCragCount = filteredCrags.length;
-
+export function useCragArea(crags?: Crag[]) {
   const cragArea = useMemo(() => {
     let maxCragArea = 0;
     let minCragArea = 1000;
 
-    Object.values(cragMap).forEach((crag) => {
+    (crags || []).forEach((crag) => {
       if (!crag.area) {
         return;
       }
@@ -44,7 +18,7 @@ export function useCrag(/*date: Dayjs | null, exerciseTimeRange: [number, number
       minCragArea,
       maxCragArea,
     };
-  }, [cragMap]);
+  }, [crags]);
 
-  return { filteredCrags, openCragCount, cragMap, selectCragId, cragArea };
+  return { cragArea };
 }

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { Shower, CalendarMonth, EventBusy, HideImage, Image } from '@mui/icons-material';
 
-import { useCrag } from '@/hooks';
+import { useCragArea } from '@/hooks';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -44,13 +44,14 @@ type Feature = {
 interface CragMarkerProps {
   map: naver.maps.Map | null;
   crag: Crag;
+  crags?: Crag[];
   onCreate?: (marker: naver.maps.Marker) => void;
 }
 
-export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
+export function CragMarker({ map, crag, crags, onCreate }: CragMarkerProps) {
   const markerRef = useRef<HTMLDivElement>(null);
 
-  const { cragArea } = useCrag();
+  const { cragArea } = useCragArea(crags);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [_, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
