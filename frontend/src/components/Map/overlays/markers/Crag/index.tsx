@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
 import { Shower, CalendarMonth, EventBusy, HideImage, Image } from '@mui/icons-material';
+import { grey } from '@mui/material/colors';
 
 import { useCragArea } from '@/hooks';
 
@@ -10,6 +11,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { SIZE, QUERY_STRING } from '@/constants';
+
 import { mapContext } from '@/components/Map/index.context';
 
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
@@ -83,15 +85,16 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
 
     setMarker(cragMarker);
 
-    if (onCreate) {
-      onCreate(cragMarker);
-    }
+    onCreate?.(cragMarker);
 
     return function cleanup() {
       cragMarker.setMap(null);
     };
   }, [crag, map, onCreate]);
 
+  /**
+   * 선택 여부에 따라 z축 순서 변경
+   */
   useEffect(() => {
     if (!marker) {
       return;
@@ -100,6 +103,9 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
     marker.setZIndex(isSelect ? 1 : 0);
   }, [marker, isSelect]);
 
+  /**
+   * 방사형 메뉴 계산
+   */
   const features = useMemo<Feature[]>(() => {
     const ret: Feature[] = [];
 
@@ -155,15 +161,21 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
     return ret;
   }, [crag, setInteriorStory, setScheduleStory]);
 
+  const handleMarkerClick = () => {
+    setSelectCragId(crag.id);
+
+    map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+  };
+
   return (
     <Box ref={markerRef} sx={{ position: 'absolute', transform: 'translate(-50%, -100%)' }}>
-      <Box
-        onClick={() => {
-          setSelectCragId(crag.id);
-          map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
-        }}
-        sx={{ position: 'relative', color: isSelect ? 'black' : '#52634A', display: 'flex' }}
-      >
+      {/**
+       * 마커
+       */}
+      <Box onClick={handleMarkerClick} sx={{ position: 'relative', display: 'flex' }}>
+        {/**
+         * 아이콘
+         */}
         <svg width={`${markerWidth}px`} viewBox="0 0 71 53" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"
@@ -177,15 +189,19 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
           />
           <path
             d="M35.1868 32.4715L28.6868 23.9715H24.6868C21.0868 24.3715 18.8645 21.8049 18.2033 20.4715M35.1868 32.4715L38.6868 36.9715C39.0201 37.4715 40.3868 38.4715 43.1868 38.4715H44.1868M35.1868 32.4715L43.0618 20.4715M18.2033 20.4715L28.6868 2.97152C29.1868 2.13819 30.5868 1.07152 32.1868 3.47152L43.0618 20.4715M18.2033 20.4715L2.18684 46.9715C1.68684 48.3049 1.88684 50.9715 6.68684 50.9715H65.6868C66.6868 50.9715 68.6868 50.1715 68.6868 46.9715L49.1868 16.4715C48.3534 15.1382 46.4868 13.2715 45.6868 16.4715L43.0618 20.4715M44.1868 38.4715H47.1868C47.0201 38.9715 46.3868 39.7715 45.1868 38.9715L44.1868 38.4715Z"
-            stroke="currentColor"
+            stroke={isSelect ? 'black' : '#52634A'}
             strokeWidth="4"
           />
         </svg>
 
+        {/**
+         * 방사형 메뉴
+         */}
         <AnimatePresence>
           {crag.id === selectCragId &&
             features.map((feature, index) => {
               const angleRad = ((BASE_ANGLE + index * 45) * Math.PI) / 180;
+
               const x = RADIUS * Math.cos(angleRad);
               const y = RADIUS * Math.sin(angleRad);
 
@@ -207,7 +223,7 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
                       boxShadow: 2,
                       width: 40,
                       height: 40,
-                      '&:hover': { bgcolor: 'grey.100' },
+                      '&:hover': { bgcolor: grey[100] },
                     }}
                     onClick={feature.callback}
                     disabled={feature.disabled}
@@ -220,6 +236,9 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
         </AnimatePresence>
       </Box>
 
+      {/**
+       * 제목
+       */}
       <Box
         sx={{
           /**
