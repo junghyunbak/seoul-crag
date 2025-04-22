@@ -8,12 +8,12 @@ export const cragScheme = z.object({
   description: z.string(),
   latitude: z.number(),
   longitude: z.number(),
-  thumbnail_url: z.string().optional(),
+  thumbnail_url: z.union([z.string(), z.null()]).optional(),
   area: z.union([z.number(), z.null()]).optional(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
   imageTypes: z.union([z.array(imageTypeScheme), z.null()]).optional(),
   futureSchedules: z.union([schedulesScheme, z.null()]).optional(),
+  created_at: z.coerce.date(),
+  updated_at: z.coerce.date(),
 });
 
 export const cragsScheme = z.array(cragScheme);
