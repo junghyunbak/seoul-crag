@@ -1,58 +1,95 @@
-import { Box, Button, Stack } from '@mui/material';
-import { CalendarIcon } from '@mui/x-date-pickers';
-import { AccessTime } from '@mui/icons-material';
+import { useEffect } from 'react';
 
-import { useSelectDate, useExerciseTimeRange, useModifyFilter, useMap, useFetchCrags } from '@/hooks';
+import { Box } from '@mui/material';
 
-import { time } from '@/utils';
+import { useFetchCrags } from '@/hooks';
+
+import { useMap, useModifyMap, useNaverMap } from '@/hooks';
+
+import { useQueryParam, StringParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
 
 import { Menu } from '@/components/Menu';
 import { Controller } from '@/components/Controller';
-import { Marker, Polygon } from '@/components/map/overlay';
-import { Map } from '@/components/map/Map';
+import { Map } from '@/components/Map';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 
-import dayjs from 'dayjs';
-
 export function Main() {
-  const { selectDate } = useSelectDate();
-  const { exerciseTimeRange, isUseAllTime } = useExerciseTimeRange();
-  const { map } = useMap();
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+
   const { crags } = useFetchCrags();
 
-  const { updateIsFilterSheetOpen } = useModifyFilter();
+  const { mapRef, boundary } = useMap();
 
-  const handleChangeDateButtonClick = () => {
-    updateIsFilterSheetOpen(true);
-  };
+  const { map } = useNaverMap(
+    () => ({
+      gl: true,
+      customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
+      zoom: 12,
+      minZoom: 10,
+      maxBounds: new naver.maps.LatLngBounds(
+        new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
+        new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
+      ),
+    }),
+    [boundary],
+    mapRef
+  );
 
-  const handleChangeExerciseButtonClick = () => {
-    updateIsFilterSheetOpen(true);
-  };
+  const { updateMap } = useModifyMap();
+
+  /**
+   * 맵 객체 전역 스토어 공유
+   */
+  useEffect(() => {
+    if (!mapRef.current || !map) {
+      return;
+    }
+
+    updateMap(map);
+  }, [updateMap, map, mapRef]);
+
+  /**
+   * 이벤트 등록
+   *
+   * - click
+   */
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const mapClickListener = map.addListener('click', () => {
+      setSelectCragId(null);
+    });
+
+    return function cleanup() {
+      map.removeListener(mapClickListener);
+    };
+  }, [map, setSelectCragId]);
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
-      <Map />
-      <Polygon.Boundary map={map} />
+      <Map map={map} mapRef={mapRef}>
+        <Map.Polygon.Boundary />
+        {crags?.map((crag) => (
+          <Map.Marker.Crag crag={crag} crags={crags} />
+        ))}
+      </Map>
+
       <Menu />
+
       <Controller />
 
       {crags && (
         <AngularEdgeMarkers markers={crags.map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))} />
       )}
+    </Box>
+  );
+}
 
-      {crags && (
-        <div
-          style={{
-            display: 'none',
-          }}
-        >
-          {crags.map((crag) => (
-            <Marker.CragMarker crag={crag} map={map} key={crag.id} />
-          ))}
-        </div>
-      )}
-
+/*
       <Stack
         direction="row"
         sx={{
@@ -80,6 +117,4 @@ export function Main() {
           </Button>
         )}
       </Stack>
-    </Box>
-  );
-}
+      */

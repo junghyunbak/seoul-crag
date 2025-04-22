@@ -1,19 +1,19 @@
 import { useContext, useRef, useState, useEffect } from 'react';
 
+import { useQueryParam, StringParam } from 'use-query-params';
+
 import { Box, Button } from '@mui/material';
 
 import { useNaverMap } from '@/hooks';
 
 import { api } from '@/api/axios';
 
-import { Polygon, Marker } from '@/components/map/overlay';
-
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { cragsContext } from '@/pages/manage/Crags/index.context';
 
-import { QUERY_STRING } from '@/constants';
+import { Map } from '@/components/Map';
 
-import { useQueryParam, StringParam } from 'use-query-params';
+import { QUERY_STRING } from '@/constants';
 
 export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -96,15 +96,10 @@ export function CragPositionField() {
         gap: 1,
       }}
     >
-      <Box
-        ref={mapRef}
-        sx={{
-          flex: 1,
-        }}
-      >
-        <Marker.CragMarker crag={crag} crags={crags} map={map} onCreate={setLocMarker} />
-        <Polygon.Boundary map={map} />
-      </Box>
+      <Map map={map} mapRef={mapRef}>
+        <Map.Polygon.Boundary />
+        <Map.Marker.Crag crag={crag} crags={crags} onCreate={setLocMarker} />
+      </Map>
 
       <Button variant={mapEnabled ? 'contained' : 'outlined'} onClick={handleMapLocChangeButtonClick}>
         {mapEnabled ? '수정 완료' : '위치 수정'}

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { api } from '@/api/axios';
 
@@ -10,17 +9,23 @@ import { useMutation } from '@tanstack/react-query';
 import { useNaverMap } from '@/hooks';
 
 import { PATH } from '@/constants';
+import { Map } from '@/components/Map';
 
 export function NewCrag() {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
   const mapRef = useRef<HTMLDivElement>(null);
 
   const { map } = useNaverMap(() => ({}), [], mapRef);
-  const navigate = useNavigate();
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
+  /**
+   * 맵 이벤트 등록
+   *
+   * - center_changed
+   */
   useEffect(() => {
     if (!map) {
       return;
@@ -34,19 +39,6 @@ export function NewCrag() {
       map.removeListener(listener);
     };
   }, [map, marker]);
-
-  useEffect(() => {
-    if (!map) {
-      return function cleanup() {};
-    }
-
-    const newMarker = new naver.maps.Marker({
-      map,
-      position: map.getCenter(),
-    });
-
-    setMarker(newMarker);
-  }, [map]);
 
   const createCragMutation = useMutation({
     mutationFn: async (
@@ -94,7 +86,16 @@ export function NewCrag() {
         multiline
       />
 
-      <Box ref={mapRef} sx={{ width: { md: '500px', xs: '100%' }, aspectRatio: '1/1' }} />
+      <Box
+        sx={{
+          width: { md: '500px', xs: '100%' },
+          aspectRatio: '1/1',
+        }}
+      >
+        <Map map={map} mapRef={mapRef}>
+          <Map.Marker.Default onCreate={setMarker} />
+        </Map>
+      </Box>
 
       <Button onClick={handleCragAddButtonClick} variant="contained">
         추가

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
 import { Shower, CalendarMonth, EventBusy, HideImage, Image } from '@mui/icons-material';
@@ -10,6 +10,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { SIZE, QUERY_STRING } from '@/constants';
+import { mapContext } from '@/components/Map/index.context';
 
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
   const MIN_AREA = minArea;
@@ -42,16 +43,17 @@ type Feature = {
 };
 
 interface CragMarkerProps {
-  map: naver.maps.Map | null;
   crag: Crag;
   crags?: Crag[];
   onCreate?: (marker: naver.maps.Marker) => void;
 }
 
-export function CragMarker({ map, crag, crags, onCreate }: CragMarkerProps) {
-  const markerRef = useRef<HTMLDivElement>(null);
+export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
+  const { map } = useContext(mapContext);
 
   const { cragArea } = useCragArea(crags);
+
+  const markerRef = useRef<HTMLDivElement>(null);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);

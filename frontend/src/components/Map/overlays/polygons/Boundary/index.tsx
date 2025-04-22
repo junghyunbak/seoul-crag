@@ -1,13 +1,12 @@
 import { useMap } from '@/hooks';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 import seoulGeoData from '@/seoul-geo.json';
 
-interface BoundaryProps {
-  map: naver.maps.Map | null;
-}
+import { mapContext } from '@/components/Map/index.context';
 
-export function Boundary({ map }: BoundaryProps) {
+export function Boundary() {
+  const { map } = useContext(mapContext);
   const { boundary } = useMap();
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export function Boundary({ map }: BoundaryProps) {
     return function cleanup() {
       newPolygon.setMap(null);
     };
-  }, [map]);
+  }, [map, boundary]);
 
   return <div />;
 }
