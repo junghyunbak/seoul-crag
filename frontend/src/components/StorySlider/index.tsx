@@ -21,7 +21,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   onClose,
   initPaused = false,
 }) => {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState({ value: 0 });
   const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(initPaused);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -37,7 +37,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   };
 
   useEffect(() => {
-    if (paused || index >= contents.length) return;
+    if (paused || index.value >= contents.length) return;
 
     resetTimers();
     const start = Date.now();
@@ -49,14 +49,14 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     }, 16);
 
     timeoutRef.current = setTimeout(() => {
-      setIndex((prev) => prev + 1);
+      setIndex({ value: index.value + 1 });
     }, duration);
 
     return resetTimers;
   }, [index, duration, contents, paused]);
 
   useEffect(() => {
-    if (index === contents.length) {
+    if (index.value === contents.length) {
       onComplete?.();
     }
   }, [contents, index, onComplete]);
@@ -73,13 +73,15 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   }, [onClose]);
 
   const handlePrev = () => {
-    if (index > 0) {
-      setIndex(index - 1);
+    if (index.value > 0) {
+      setIndex({ value: index.value - 1 });
+    } else {
+      setIndex({ value: index.value }); // 강제 리렌더링
     }
   };
 
   const handleNext = () => {
-    setIndex(index + 1);
+    setIndex({ value: index.value + 1 });
   };
 
   const handlePauseToggle = () => {
@@ -146,7 +148,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           }}
           borderRadius={1}
         >
-          {contents[index]}
+          {contents[index.value]}
         </Box>
 
         {/* 상단 진행 바 */}
@@ -157,8 +159,8 @@ export const StorySlider: React.FC<StorySliderProps> = ({
                 height="100%"
                 bgcolor="white"
                 sx={{
-                  width: i < index ? '100%' : i === index ? `${progress}%` : '0%',
-                  transition: i === index ? 'width 0.1s linear' : 'none',
+                  width: i < index.value ? '100%' : i === index.value ? `${progress}%` : '0%',
+                  transition: i === index.value ? 'width 0.1s linear' : 'none',
                 }}
               />
             </Box>
