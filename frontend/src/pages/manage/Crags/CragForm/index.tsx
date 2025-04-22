@@ -10,6 +10,8 @@ import { CragScheduleCalenderField } from '@/pages/manage/Crags/CragForm/CragSch
 import { CragNameField } from '@/pages/manage/Crags/CragForm/CragNameField';
 import { CragImagesField } from '@/pages/manage/Crags/CragForm/CragImagesField';
 import { CragAreaField } from '@/pages/manage/Crags/CragForm/CragAreaField';
+import { StringParam, useQueryParam } from 'use-query-params';
+import { QUERY_STRING } from '@/constants';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -19,6 +21,8 @@ interface CragFormProps {
 
 export function CragForm({ initialCrag, expanded, onChange }: CragFormProps) {
   const [queryEnabled, setQueryEnabled] = useState(false);
+
+  const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { crag, refetch } = useFetchCrag({
     cragId: initialCrag.id,
@@ -43,6 +47,10 @@ export function CragForm({ initialCrag, expanded, onChange }: CragFormProps) {
         key={crag.id}
         expanded={expanded}
         onChange={(_, isOpen) => {
+          if (isOpen) {
+            setSelectCragId(crag.id);
+          }
+
           onChange(isOpen);
         }}
       >
