@@ -12,6 +12,7 @@ import {
   Select,
   TextField,
   Stack,
+  Paper,
 } from '@mui/material';
 import Grid from '@mui/material/GridLegacy';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,6 +20,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths } from 'date-fns';
 import holidayData from './holidays.ko.json' assert { type: 'json' };
+
+// [ ]: mui grid legacy 제거하면서 스타일도 제거
+import './index.css';
 
 interface CalendarProps {
   schedules: Schedule[];
@@ -62,13 +66,19 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
 
   const isHoliday = (iso: string, date: Date) => holidays.includes(iso) || getDay(date) === 0;
 
+  const lastWeek = Math.ceil((emptyStart + days.length) / 7);
+
   const handleSave = () => {
-    if (!selected) return;
+    if (!selected) {
+      return;
+    }
+
     if (selected.id === '') {
       onCreate?.(selected);
     } else {
       onUpdate?.(selected);
     }
+
     setSelected(null);
   };
 
@@ -84,137 +94,161 @@ export function GymScheduleCalendar({ schedules, onCreate, onUpdate, onDelete, r
         </IconButton>
       </Box>
 
-      <Grid container columns={7} spacing={0.5}>
-        {dayLabels.map((label, i) => (
-          <Grid item xs={1} key={label}>
-            <Typography align="center" fontWeight={600} sx={{ color: i === 0 ? 'error.main' : undefined }}>
-              {label}
-            </Typography>
-          </Grid>
-        ))}
-
-        {Array.from({ length: emptyStart }).map((_, idx) => (
-          <Grid item xs={1} key={`empty-${idx}`} sx={{ height: 80 }} />
-        ))}
-
-        {days.map((day) => {
-          const iso = format(day, 'yyyy-MM-dd');
-
-          const holidaySchedule = holidays.includes(iso)
-            ? [
-                {
-                  id: `holiday-${iso}`,
-                  date: iso,
-                  type: 'closed',
-                  reason: '공휴일',
-                  is_regular: false,
-                  created_at: new Date(),
-                } satisfies Schedule,
-              ]
-            : [];
-
-          const combinedSchedules = [...holidaySchedule, ...schedules.filter((s) => s.date === iso)];
-
-          return (
+      <Paper>
+        <Grid container columns={7} spacing={0.5}>
+          {dayLabels.map((label, i) => (
             <Grid
               item
               xs={1}
-              key={iso}
+              key={label}
               sx={{
-                border: '1px solid #ccc',
-                height: 100,
-                position: 'relative',
-                p: 0.5,
-                pb: 0,
-                display: 'flex',
-                flexDirection: 'column',
+                borderRight: i === 6 ? 'none' : '1px solid #ccc',
               }}
             >
-              <Typography
-                align="center"
-                variant="body2"
+              <Typography align="center" fontWeight={600} sx={{ color: i === 0 ? 'error.main' : undefined }}>
+                {label}
+              </Typography>
+            </Grid>
+          ))}
+
+          {Array.from({ length: emptyStart }).map((_, idx) => (
+            <Grid
+              item
+              xs={1}
+              key={`empty-${idx}`}
+              sx={{
+                height: 124,
+                borderRight: '1px solid #ccc',
+                borderBottom: '1px solid #ccc',
+                p: 0.5,
+                pl: 0,
+                pb: 0,
+              }}
+            />
+          ))}
+
+          {days.map((day, i) => {
+            const iso = format(day, 'yyyy-MM-dd');
+
+            const holidaySchedule = holidays.includes(iso)
+              ? [
+                  {
+                    id: `holiday-${iso}`,
+                    date: iso,
+                    type: 'closed',
+                    reason: '공휴일',
+                    is_regular: false,
+                    created_at: new Date(),
+                  } satisfies Schedule,
+                ]
+              : [];
+
+            const combinedSchedules = [...holidaySchedule, ...schedules.filter((s) => s.date === iso)];
+
+            const currentWeek = Math.ceil((emptyStart + i + 1) / 7);
+
+            return (
+              <Grid
+                item
+                xs={1}
+                key={iso}
                 sx={{
-                  background: iso === todayIso ? '#1976d2' : undefined,
-                  borderRadius: iso === todayIso ? '50%' : undefined,
-                  color: isHoliday(iso, day) ? 'error.main' : iso === todayIso ? 'white' : undefined,
-                  width: 24,
-                  height: 24,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mx: 'auto',
+                  borderRight: (i + emptyStart) % 7 === 6 ? 'none' : '1px solid #ccc',
+                  borderBottom: currentWeek === lastWeek ? 'none' : '1px solid #ccc',
+                  height: 124,
+                  position: 'relative',
+                  pt: 0.5,
+                  pr: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
                 }}
               >
-                {format(day, 'd')}
-              </Typography>
-
-              <Stack mt={0.5} sx={{ flex: 1, overflow: 'hidden' }}>
-                <Box
+                <Typography
+                  align="center"
+                  variant="body2"
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    height: '100%',
-                    overflowY: 'scroll',
-                    gap: 0.5,
-                    scrollbarWidth: 'none', // Firefox
-                    '&::-webkit-scrollbar': {
-                      display: 'none', // Chrome, Safari
-                    },
+                    background: iso === todayIso ? '#1976d2' : undefined,
+                    borderRadius: iso === todayIso ? '50%' : undefined,
+                    color: isHoliday(iso, day) ? 'error.main' : iso === todayIso ? 'white' : undefined,
+                    width: 24,
+                    height: 24,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
                   }}
                 >
-                  {combinedSchedules.map((s, i) => (
-                    <Box
-                      key={s.id}
-                      sx={{
-                        bgcolor: typeColors[s.type],
-                        color: 'white',
-                        flexShrink: 0,
-                        px: {
-                          md: 1,
-                          xs: 0.5,
-                        },
-                        py: 0.3,
-                        mb: combinedSchedules.length - 1 === i ? 0.5 : 0,
-                        borderRadius: 1,
-                        fontSize: {
-                          md: 12,
-                          xs: 8,
-                        },
-                        cursor: readOnly ? 'default' : 'pointer',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
-                      onClick={() => !readOnly && !s.id.startsWith('holiday-') && setSelected(s)}
-                    >
-                      {s.reason?.trim() ? s.reason : typeLabels[s.type]}
-                    </Box>
-                  ))}
-                </Box>
-              </Stack>
+                  {format(day, 'd')}
+                </Typography>
 
-              {!readOnly && (
-                <IconButton
-                  size="small"
-                  sx={{ position: 'absolute', right: 4, bottom: 4 }}
-                  onClick={() =>
-                    setSelected({
-                      id: '',
-                      date: iso,
-                      type: 'closed',
-                      is_regular: false,
-                      created_at: new Date(),
-                    })
-                  }
-                >
-                  <AddIcon fontSize="small" />
-                </IconButton>
-              )}
-            </Grid>
-          );
-        })}
-      </Grid>
+                <Stack mt={0.5} sx={{ flex: 1, overflow: 'hidden' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%',
+                      height: '100%',
+                      overflowY: 'scroll',
+                      gap: 0.5,
+                      scrollbarWidth: 'none', // Firefox
+                      '&::-webkit-scrollbar': {
+                        display: 'none', // Chrome, Safari
+                      },
+                    }}
+                  >
+                    {combinedSchedules.map((s, i) => (
+                      <Box
+                        key={s.id}
+                        sx={{
+                          bgcolor: typeColors[s.type],
+                          color: 'white',
+                          flexShrink: 0,
+                          px: {
+                            md: 1,
+                            xs: 0.5,
+                          },
+                          py: 0.2,
+                          mb: combinedSchedules.length - 1 === i ? 0.5 : 0,
+                          borderRadius: 0.5,
+                          fontSize: {
+                            md: 12,
+                            xs: 8,
+                          },
+                          cursor: readOnly ? 'default' : 'pointer',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                        onClick={() => !readOnly && !s.id.startsWith('holiday-') && setSelected(s)}
+                      >
+                        {s.reason?.trim() ? s.reason : typeLabels[s.type]}
+                      </Box>
+                    ))}
+                  </Box>
+                </Stack>
+
+                {!readOnly && (
+                  <IconButton
+                    size="small"
+                    sx={{ position: 'absolute', right: 4, bottom: 4, bgcolor: 'white', boxShadow: 2 }}
+                    onClick={() =>
+                      setSelected({
+                        id: '',
+                        date: iso,
+                        type: 'closed',
+                        is_regular: false,
+                        created_at: new Date(),
+                      })
+                    }
+                  >
+                    <AddIcon fontSize="small" />
+                  </IconButton>
+                )}
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Paper>
 
       {!readOnly && selected && (
         <Dialog open onClose={() => setSelected(null)}>
