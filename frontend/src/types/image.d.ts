@@ -1,4 +1,4 @@
-import { imageScheme, imageTypeScheme } from '@/schemas/image';
+import { imageScheme, imageTypeScheme } from '@/schemas';
 
 import { z } from 'zod';
 

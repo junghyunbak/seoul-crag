@@ -1,4 +1,4 @@
-import { roleScheme } from '@/schemas/user';
+import { roleScheme } from '@/schemas';
 
 import { z } from 'zod';
 

@@ -1,4 +1,4 @@
-import { scheduleScheme, scheduleTypeScheme } from '@/schemas/schedule';
+import { scheduleScheme, scheduleTypeScheme } from '@/schemas';
 
 import { z } from 'zod';
 

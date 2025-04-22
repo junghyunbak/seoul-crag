@@ -79,6 +79,7 @@ export class GymsService {
         schedules: raw.gym_schedules,
         imageTypes: raw.imageTypes,
         futureSchedules: raw.futureSchedules,
+        openingHours: raw.gym_openingHours,
       };
 
       gymWithImages.push(gymWithImage);
@@ -110,6 +111,7 @@ export class GymsService {
       schedules: rawGym.gym_schedules,
       imageTypes: rawGym.imageTypes,
       futureSchedules: rawGym.futureSchedules,
+      openingHours: rawGym.gym_openingHours,
     };
 
     return gymWithImage;

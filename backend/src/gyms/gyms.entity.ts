@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { GymImage } from 'src/gym-images/gym-images.entity';
 import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
+import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
 
 @Entity('gyms')
 export class Gym {
@@ -43,4 +44,7 @@ export class Gym {
 
   @OneToMany(() => GymSchedule, (schedule) => schedule.gym)
   schedules: GymSchedule[];
+
+  @OneToMany(() => GymOpeningHour, (openingHour) => openingHour.gym)
+  openingHours: GymOpeningHour[];
 }

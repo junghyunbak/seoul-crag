@@ -12,6 +12,7 @@ import { CragImagesField } from '@/pages/manage/Crags/CragForm/CragImagesField';
 import { CragAreaField } from '@/pages/manage/Crags/CragForm/CragAreaField';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
+import { CragOpeningHoursField } from '@/pages/manage/Crags/CragForm/CragOpeningHoursField';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -74,6 +75,7 @@ export function CragForm({ initialCrag, expanded, onChange }: CragFormProps) {
               </Box>
             </Box>
 
+            <CragOpeningHoursField />
             <CragScheduleCalenderField />
           </Box>
         </AccordionDetails>

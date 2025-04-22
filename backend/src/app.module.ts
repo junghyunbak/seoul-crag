@@ -18,6 +18,7 @@ import { UserRoleModule } from 'src/user-role/user-role.module';
 import { GymsModule } from 'src/gyms/gyms.module';
 import { GymImagesModule } from 'src/gym-images/gym-images.module';
 import { GymScheduleModule } from 'src/gym-schedules/gym-schedules.module';
+import { GymOpeningHoursModule } from 'src/gym-opening-hours/gym-opening-hours.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { GymScheduleModule } from 'src/gym-schedules/gym-schedules.module';
     GymsModule,
     GymImagesModule,
     GymScheduleModule,
+    GymOpeningHoursModule,
   ],
   controllers: [AppController],
   providers: [AppService],
