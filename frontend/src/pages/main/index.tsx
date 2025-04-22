@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -21,6 +21,8 @@ export function Main() {
   const { crags } = useFetchCrags();
 
   const { mapRef, boundary } = useMap();
+
+  const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
 
   const { map } = useNaverMap(
     () => ({
@@ -69,22 +71,35 @@ export function Main() {
     };
   }, [map, setSelectCragId]);
 
+  const handleMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number) => {
+    if (idx === -1) {
+      return;
+    }
+
+    setMarkers((prev) => {
+      const next = [...prev];
+
+      next[idx] = marker;
+
+      return next;
+    });
+  }, []);
+
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
       <Map map={map} mapRef={mapRef}>
         <Map.Polygon.Boundary />
-        {crags?.map((crag) => (
-          <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} />
+        {crags?.map((crag, i) => (
+          <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}
+        <Map.Marker.Cluster markers={markers} />
       </Map>
 
       <Menu />
 
       <Controller />
 
-      {crags && (
-        <AngularEdgeMarkers markers={crags.map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))} />
-      )}
+      {markers && <AngularEdgeMarkers markers={markers} />}
     </Box>
   );
 }

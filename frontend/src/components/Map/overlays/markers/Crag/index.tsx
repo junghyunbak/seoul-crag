@@ -47,10 +47,12 @@ type Feature = {
 interface CragMarkerProps {
   crag: Crag;
   crags?: Crag[];
-  onCreate?: (marker: naver.maps.Marker) => void;
+  onCreate?: (marker: naver.maps.Marker, idx: number) => void;
+  idx?: number;
+  forCluster?: boolean;
 }
 
-export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
+export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMarkerProps) {
   const { map } = useContext(mapContext);
 
   const { cragArea } = useCragArea(crags);
@@ -76,7 +78,7 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
     }
 
     const cragMarker = new naver.maps.Marker({
-      map,
+      map: forCluster ? undefined : map,
       position: new naver.maps.LatLng(crag.latitude, crag.longitude),
       icon: {
         content: markerRef.current,
@@ -85,12 +87,12 @@ export function Crag({ crag, crags, onCreate }: CragMarkerProps) {
 
     setMarker(cragMarker);
 
-    onCreate?.(cragMarker);
+    onCreate?.(cragMarker, idx ?? -1);
 
     return function cleanup() {
       cragMarker.setMap(null);
     };
-  }, [crag, map, onCreate]);
+  }, [crag, map, onCreate, idx, forCluster]);
 
   /**
    * 선택 여부에 따라 z축 순서 변경

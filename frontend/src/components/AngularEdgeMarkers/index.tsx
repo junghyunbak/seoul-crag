@@ -9,11 +9,11 @@ interface AngularIndicator {
   y: number;
   angle: number;
   count: number;
-  latLng: naver.maps.LatLng;
+  latLng: naver.maps.Coord;
 }
 
 interface AngularEdgeMarkersProps {
-  markers: naver.maps.LatLng[];
+  markers: naver.maps.Marker[];
 }
 
 // ✅ 교차점 계산 함수
@@ -57,9 +57,11 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
       const grouped: Record<number, AngularIndicator> = {};
 
       markers.forEach((marker) => {
-        if ('hasLatLng' in bounds && bounds.hasLatLng(marker)) return;
+        const markerCoord = marker.getPosition();
 
-        const point = projection.fromCoordToOffset(marker);
+        if ('hasLatLng' in bounds && bounds.hasLatLng(markerCoord)) return;
+
+        const point = projection.fromCoordToOffset(markerCoord);
         const dx = point.x - centerOffset.x;
         const dy = point.y - centerOffset.y;
 
@@ -85,7 +87,7 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
             y: projected.y,
             angle,
             count: 1,
-            latLng: marker,
+            latLng: markerCoord,
           };
         } else {
           grouped[roundedAngle].count++;
