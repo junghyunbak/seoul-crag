@@ -8,6 +8,8 @@ import { Main, ManagePage, NotFound } from '@/pages';
 
 import { Layout } from '@/router/Layout';
 
+import { PATH } from '@/constants';
+
 import { User } from '@/pages/manage/User';
 import { Users } from '@/pages/manage/Users';
 import { Crags } from '@/pages/manage/Crags';
@@ -31,11 +33,11 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/',
+        path: PATH.MAIN_PAGE_PATH,
         element: <Main />,
       },
       {
-        path: '/manage',
+        path: PATH.MANAGE_PAGE_PATH,
         element: (
           <ErrorBoundary
             fallback={
@@ -53,19 +55,19 @@ export const router = createBrowserRouter([
             element: <User />,
           },
           {
-            path: 'dashboard',
+            path: PATH.MANAGE_PAGE_SUB_PATH_DASHBOARD,
             element: <Dashboard />,
           },
           {
-            path: 'users',
+            path: PATH.MANAGE_PAGE_SUB_PATH_USERS,
             element: <Users />,
           },
           {
-            path: 'new-crag',
+            path: PATH.MANAGE_PAEG_SUB_PATH_NEW_CRAG,
             element: <NewCrag />,
           },
           {
-            path: 'crags',
+            path: PATH.MANAGE_PAGE_SUB_PATH_CRAGS,
             element: <Crags />,
           },
         ],

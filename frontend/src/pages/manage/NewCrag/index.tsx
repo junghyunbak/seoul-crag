@@ -9,6 +9,8 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useNaverMap } from '@/hooks';
 
+import { PATH } from '@/constants';
+
 // [ ]: react-hook-form 도입
 export function NewCrag() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -53,7 +55,7 @@ export function NewCrag() {
       api.post('/gyms', crag);
     },
     onSuccess() {
-      navigate('/manage/crags');
+      navigate(`${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_CRAGS}`);
     },
   });
 

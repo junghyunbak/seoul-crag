@@ -8,6 +8,8 @@ import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Ter
 
 import { useFetchMe } from '@/hooks';
 
+import { PATH } from '@/constants';
+
 export function ManagePage() {
   const location = useLocation();
 
@@ -41,7 +43,11 @@ export function ManagePage() {
             서울 암장
           </Typography>
 
-          <MenuItem icon={<ManageAccounts />} component={<Link to="" />} active={location.pathname === '/manage'}>
+          <MenuItem
+            icon={<ManageAccounts />}
+            component={<Link to={PATH.MANAGE_PAGE_PATH} />}
+            active={location.pathname === PATH.MANAGE_PAGE_PATH}
+          >
             내 정보 수정
           </MenuItem>
 
@@ -49,14 +55,18 @@ export function ManagePage() {
             관리자 메뉴
           </Typography>
 
-          <MenuItem icon={<Terrain />} component={<Link to="crags" />} active={location.pathname === '/manage/crags'}>
+          <MenuItem
+            icon={<Terrain />}
+            component={<Link to={PATH.MANAGE_PAGE_SUB_PATH_CRAGS} />}
+            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_CRAGS}`}
+          >
             내 암장 관리
           </MenuItem>
 
           <MenuItem
             icon={<Dashboard />}
-            component={<Link to="dashboard" />}
-            active={location.pathname === '/dashboard'}
+            component={<Link to={PATH.MANAGE_PAGE_SUB_PATH_DASHBOARD} />}
+            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_DASHBOARD}`}
           >
             대시보드
           </MenuItem>
@@ -67,16 +77,16 @@ export function ManagePage() {
 
           <MenuItem
             icon={<SupervisorAccount />}
-            component={<Link to="users" />}
-            active={location.pathname === '/manage/users'}
+            component={<Link to={PATH.MANAGE_PAGE_SUB_PATH_USERS} />}
+            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_USERS}`}
           >
             사용자 관리
           </MenuItem>
 
           <MenuItem
             icon={<Foundation />}
-            component={<Link to="new-crag" />}
-            active={location.pathname === '/manage/new-crag'}
+            component={<Link to={PATH.MANAGE_PAEG_SUB_PATH_NEW_CRAG} />}
+            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAEG_SUB_PATH_NEW_CRAG}`}
           >
             암장 추가
           </MenuItem>
