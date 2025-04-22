@@ -9,7 +9,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
 
 export function Map() {
-  const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const { mapRef, boundary } = useMap();
   const { map } = useNaverMap(
     () => ({

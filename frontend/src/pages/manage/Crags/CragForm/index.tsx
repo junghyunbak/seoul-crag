@@ -22,7 +22,7 @@ interface CragFormProps {
 export function CragForm({ initialCrag, expanded, onChange }: CragFormProps) {
   const [queryEnabled, setQueryEnabled] = useState(false);
 
-  const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { crag, refetch } = useFetchCrag({
     cragId: initialCrag.id,

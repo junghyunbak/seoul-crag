@@ -24,7 +24,7 @@ export function CragPositionField() {
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
 
-  const [_, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { map } = useNaverMap(
     () => ({

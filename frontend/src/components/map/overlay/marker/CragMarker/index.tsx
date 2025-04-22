@@ -54,8 +54,8 @@ export function CragMarker({ map, crag, crags, onCreate }: CragMarkerProps) {
   const { cragArea } = useCragArea(crags);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
-  const [_, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
-  const [__, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
+  const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
+  const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
