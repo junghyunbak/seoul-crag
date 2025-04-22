@@ -58,7 +58,7 @@ export function NewCrag() {
       api.post('/gyms', crag);
     },
     onSuccess() {
-      navigate(`${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_CRAGS}`);
+      window.location.href = `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_CRAGS}`;
     },
   });
 
