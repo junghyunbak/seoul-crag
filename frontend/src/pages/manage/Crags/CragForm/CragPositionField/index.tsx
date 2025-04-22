@@ -9,6 +9,7 @@ import { api } from '@/api/axios';
 import { Polygon, Marker } from '@/components/map/overlay';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+import { cragsContext } from '@/pages/manage/Crags/index.context';
 
 import { QUERY_STRING } from '@/constants';
 
@@ -16,6 +17,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
+  const { crags } = useContext(cragsContext);
 
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -100,7 +102,7 @@ export function CragPositionField() {
           flex: 1,
         }}
       >
-        <Marker.CragMarker crag={crag} map={map} onCreate={setLocMarker} />
+        <Marker.CragMarker crag={crag} crags={crags} map={map} onCreate={setLocMarker} />
         <Polygon.Boundary map={map} />
       </Box>
 

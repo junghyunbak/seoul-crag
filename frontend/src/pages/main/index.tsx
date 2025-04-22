@@ -2,19 +2,10 @@ import { Box, Button, Stack } from '@mui/material';
 import { CalendarIcon } from '@mui/x-date-pickers';
 import { AccessTime } from '@mui/icons-material';
 
-import {
-  useSelectDate,
-  useCrag,
-  useExerciseTimeRange,
-  useModifyFilter,
-  useSetupCrag,
-  useModifyCrag,
-  useMap,
-} from '@/hooks';
+import { useSelectDate, useExerciseTimeRange, useModifyFilter, useMap, useFetchCrags } from '@/hooks';
 
 import { time } from '@/utils';
 
-import { Filter } from '@/components/Filter';
 import { Menu } from '@/components/Menu';
 import { Controller } from '@/components/Controller';
 import { Marker, Polygon } from '@/components/map/overlay';
@@ -26,35 +17,10 @@ import dayjs from 'dayjs';
 export function Main() {
   const { selectDate } = useSelectDate();
   const { exerciseTimeRange, isUseAllTime } = useExerciseTimeRange();
-  //const { filteredCrags, cragMap } = useCrag(selectDate ? dayjs(selectDate) : null, exerciseTimeRange);
-
   const { map } = useMap();
-  const { cragMap } = useCrag();
+  const { crags } = useFetchCrags();
 
   const { updateIsFilterSheetOpen } = useModifyFilter();
-  const { updateSelectCragId } = useModifyCrag();
-
-  useSetupCrag();
-
-  /**
-   * 앱 시작 시 랜덤으로 하나 선택
-   *
-   * // [ ]: 쿼리스트링 설정하고, 위치로 이동하기
-   */
-  /*
-  useEffect(() => {
-    const crags = Object.values(cragMap);
-
-    if (!cragMap || crags.length === 0) {
-      return;
-    }
-
-    const crag = Object.values(cragMap)[Math.floor(Math.random() * crags.length)];
-
-    updateSelectCragId(crag.id);
-    map?.setCenter(new naver.maps.LatLng(crag.latitude, crag.longitude));
-  }, [cragMap, updateSelectCragId, map]);
-  */
 
   const handleChangeDateButtonClick = () => {
     updateIsFilterSheetOpen(true);
@@ -68,23 +34,24 @@ export function Main() {
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
       <Map />
       <Polygon.Boundary map={map} />
-      <Filter />
       <Menu />
       <Controller />
 
-      <AngularEdgeMarkers
-        markers={Object.values(cragMap).map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))}
-      />
+      {crags && (
+        <AngularEdgeMarkers markers={crags.map((crag) => new naver.maps.LatLng(crag.latitude, crag.longitude))} />
+      )}
 
-      <div
-        style={{
-          display: 'none',
-        }}
-      >
-        {Object.values(cragMap).map((crag) => (
-          <Marker.CragMarker crag={crag} map={map} key={crag.id} />
-        ))}
-      </div>
+      {crags && (
+        <div
+          style={{
+            display: 'none',
+          }}
+        >
+          {crags.map((crag) => (
+            <Marker.CragMarker crag={crag} map={map} key={crag.id} />
+          ))}
+        </div>
+      )}
 
       <Stack
         direction="row"

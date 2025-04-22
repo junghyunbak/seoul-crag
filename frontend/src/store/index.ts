@@ -15,12 +15,6 @@ type StoreState = {
   setMap: (map: naver.maps.Map) => void;
 
   mapRef: React.RefObject<HTMLDivElement | null>;
-
-  cragMap: Record<string, Crag>;
-  setCragMap: (crag: Record<string, Crag>) => void;
-
-  selectCragId: string | null;
-  setSelectCragId: (cragId: string | null) => void;
 };
 
 export const useStore = create<StoreState>()(
@@ -44,16 +38,6 @@ export const useStore = create<StoreState>()(
       },
 
       mapRef: { current: null },
-
-      cragMap: {},
-      setCragMap(cragMap) {
-        set(() => ({ cragMap }));
-      },
-
-      selectCragId: null,
-      setSelectCragId(cragId) {
-        set(() => ({ selectCragId: cragId }));
-      },
     }),
     {
       name: 'zustandStore',

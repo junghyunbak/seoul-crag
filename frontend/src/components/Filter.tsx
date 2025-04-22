@@ -1,3 +1,4 @@
+/*
 import { useLocation } from 'react-router';
 
 import { Slider } from '@mui/material';
@@ -137,3 +138,4 @@ export function Filter() {
     </Sheet>
   );
 }
+*/
