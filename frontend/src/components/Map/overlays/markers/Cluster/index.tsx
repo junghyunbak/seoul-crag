@@ -49,7 +49,7 @@ export function Cluster({ markers }: ClusterProps) {
                 }}
               />
 
-              <svg width="55px" viewBox="0 0 71 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="65px" viewBox="0 0 71 53" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   fillRule="evenodd"
                   clipRule="evenodd"
