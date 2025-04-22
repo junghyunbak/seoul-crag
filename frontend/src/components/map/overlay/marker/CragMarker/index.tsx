@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
-import { Shower, PhotoLibrary, CalendarMonth } from '@mui/icons-material';
+import { Shower, CalendarMonth, EventBusy, HideImage, Image } from '@mui/icons-material';
 
 import { useCrag } from '@/hooks';
 
@@ -38,6 +38,7 @@ const RADIUS = 80;
 type Feature = {
   icon: React.ReactNode;
   callback: () => void;
+  disabled: boolean;
 };
 
 interface CragMarkerProps {
@@ -99,24 +100,38 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
   const features = useMemo<Feature[]>(() => {
     const ret: Feature[] = [];
 
-    (crag.imageTypes || []).forEach((type) => {
-      ret.push(
-        (() => {
-          switch (type) {
-            case 'interior':
-              return {
-                icon: <PhotoLibrary />,
-                callback: () => {
-                  setInteriorStory(crag.id);
-                },
-              };
-            case 'shower':
-            default:
-              return { icon: <Shower />, callback: () => {} };
-          }
-        })()
-      );
-    });
+    if (crag.imageTypes && crag.imageTypes.length > 0) {
+      crag.imageTypes.forEach((type) => {
+        ret.push(
+          (() => {
+            switch (type) {
+              case 'interior':
+                return {
+                  icon: <Image />,
+                  callback: () => {
+                    setInteriorStory(crag.id);
+                  },
+                  disabled: false,
+                };
+              case 'shower':
+              default:
+                return {
+                  icon: <Shower />,
+                  callback: () => {},
+
+                  disabled: false,
+                };
+            }
+          })()
+        );
+      });
+    } else {
+      ret.push({
+        icon: <HideImage />,
+        callback: () => {},
+        disabled: true,
+      });
+    }
 
     if (crag.futureSchedules && crag.futureSchedules.length > 0) {
       ret.push({
@@ -124,6 +139,13 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
         callback: () => {
           setScheduleStory(crag.id);
         },
+        disabled: false,
+      });
+    } else {
+      ret.push({
+        icon: <EventBusy />,
+        callback: () => {},
+        disabled: true,
       });
     }
 
@@ -185,6 +207,7 @@ export function CragMarker({ map, crag, onCreate }: CragMarkerProps) {
                       '&:hover': { bgcolor: 'grey.100' },
                     }}
                     onClick={feature.callback}
+                    disabled={feature.disabled}
                   >
                     {feature.icon}
                   </IconButton>
