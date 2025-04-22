@@ -11,7 +11,6 @@ import { useNaverMap } from '@/hooks';
 
 import { PATH } from '@/constants';
 
-// [ ]: react-hook-form 도입
 export function NewCrag() {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +26,6 @@ export function NewCrag() {
       return;
     }
 
-    // [ ]: 디바운싱
     const listener = map.addListener('center_changed', (coord: naver.maps.Coord) => {
       marker?.setPosition(coord);
     });
@@ -51,7 +49,12 @@ export function NewCrag() {
   }, [map]);
 
   const createCragMutation = useMutation({
-    mutationFn: async (crag: MyOmit<Crag, 'id' | 'created_at' | 'updated_at'>) => {
+    mutationFn: async (
+      crag: MyOmit<
+        Crag,
+        'id' | 'created_at' | 'updated_at' | 'thumbnail_url' | 'area' | 'futureSchedules' | 'imageTypes'
+      >
+    ) => {
       api.post('/gyms', crag);
     },
     onSuccess() {
@@ -60,7 +63,6 @@ export function NewCrag() {
   });
 
   const handleCragAddButtonClick = () => {
-    // [ ]: 유효성 검사에 따른 UI 알림 추가
     if (!map || !name || !description) {
       alert('필드 값 부족');
       return;
@@ -68,8 +70,7 @@ export function NewCrag() {
 
     const { x, y } = map.getCenter();
 
-    // [ ]: 썸네일 필드 추가
-    createCragMutation.mutate({ name, description, latitude: y, longitude: x, thumbnail_url: '' });
+    createCragMutation.mutate({ name, description, latitude: y, longitude: x });
   };
 
   return (
