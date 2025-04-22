@@ -61,6 +61,17 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     }
   }, [contents, index, onComplete]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose?.();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handlePrev = () => {
     if (index > 0) {
       setIndex(index - 1);

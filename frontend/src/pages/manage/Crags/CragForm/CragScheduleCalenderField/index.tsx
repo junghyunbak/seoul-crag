@@ -4,7 +4,7 @@ import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import { api } from '@/api/axios';
 
-import { GymScheduleCalendar } from '@/components/GymScheduleCalendar';
+import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 
 import { useFetchSchedules } from '@/hooks';
 
@@ -14,7 +14,7 @@ export function CragScheduleCalenderField() {
   const { schedules, refetch } = useFetchSchedules(crag.id);
 
   return (
-    <GymScheduleCalendar
+    <ScheduleCalendar
       schedules={schedules || []}
       onDelete={async (id) => {
         await api.delete(`/gyms/${crag.id}/schedules/${id}`);
