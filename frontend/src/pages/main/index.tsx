@@ -74,7 +74,7 @@ export function Main() {
       <Map map={map} mapRef={mapRef}>
         <Map.Polygon.Boundary />
         {crags?.map((crag) => (
-          <Map.Marker.Crag crag={crag} crags={crags} />
+          <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} />
         ))}
       </Map>
 
