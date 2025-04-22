@@ -46,7 +46,7 @@ export function ScheduleStory() {
 
   return createPortal(
     <div>
-      {scheduleStoryCragId && (
+      {scheduleStoryCragId && schedules && (
         // [ ]: dimmed 클릭 시 닫기
         <StorySlider
           contents={futureYearMonthDates.map((date) => (
