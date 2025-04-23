@@ -2,7 +2,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { PATH } from '@/constants';
+import { urlService } from '@/utils';
 
 import { AxiosError } from 'axios';
 
@@ -14,7 +14,7 @@ export const queryClient = new QueryClient({
       throwOnError(error) {
         const pathname = window.location.pathname;
 
-        if (pathname.startsWith(PATH.MANAGE_PAGE_PATH)) {
+        if (pathname.startsWith(urlService.getAbsolutePath('/manage'))) {
           if (error instanceof AxiosError && error.response?.status) {
             return error.response.status >= 400;
           }

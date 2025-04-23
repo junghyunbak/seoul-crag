@@ -8,7 +8,8 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useNaverMap } from '@/hooks';
 
-import { PATH } from '@/constants';
+import { urlService } from '@/utils';
+
 import { Map } from '@/components/Map';
 
 export function NewCrag() {
@@ -50,7 +51,7 @@ export function NewCrag() {
       api.post('/gyms', crag);
     },
     onSuccess() {
-      window.location.href = `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_CRAGS}`;
+      window.location.href = urlService.getAbsolutePath('/manage/crags');
     },
   });
 

@@ -63,12 +63,8 @@ export function CragPositionField() {
       locMarker?.setPosition(map.getCenter());
     });
 
-    const clickListener = map.addListener('click', () => {
-      setSelectCragId(null);
-    });
-
     return function cleanup() {
-      map.removeListener([centerChangeListener, clickListener]);
+      map.removeListener(centerChangeListener);
     };
   }, [map, locMarker, setSelectCragId]);
 

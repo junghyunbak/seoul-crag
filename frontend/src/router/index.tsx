@@ -8,7 +8,7 @@ import { Main, ManagePage, NotFound } from '@/pages';
 
 import { Layout } from '@/router/Layout';
 
-import { PATH } from '@/constants';
+import { urlService } from '@/utils';
 
 import { User } from '@/pages/manage/User';
 import { Users } from '@/pages/manage/Users';
@@ -33,11 +33,11 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: PATH.MAIN_PAGE_PATH,
+        path: urlService.getAbsolutePath('/'),
         element: <Main />,
       },
       {
-        path: PATH.MANAGE_PAGE_PATH,
+        path: urlService.getAbsolutePath('/manage'),
         element: (
           <ErrorBoundary
             fallback={
@@ -55,20 +55,20 @@ export const router = createBrowserRouter([
             element: <User />,
           },
           {
-            path: PATH.MANAGE_PAGE_SUB_PATH_DASHBOARD,
+            path: urlService.getRelativePath('/manage/crags'),
+            element: <Crags />,
+          },
+          {
+            path: urlService.getRelativePath('/manage/dashborad'),
             element: <Dashboard />,
           },
           {
-            path: PATH.MANAGE_PAGE_SUB_PATH_USERS,
+            path: urlService.getRelativePath('/manage/users'),
             element: <Users />,
           },
           {
-            path: PATH.MANAGE_PAEG_SUB_PATH_NEW_CRAG,
+            path: urlService.getRelativePath('/manage/new-crag'),
             element: <NewCrag />,
-          },
-          {
-            path: PATH.MANAGE_PAGE_SUB_PATH_CRAGS,
-            element: <Crags />,
           },
         ],
       },

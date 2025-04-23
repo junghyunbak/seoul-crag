@@ -6,16 +6,63 @@ import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Terrain } from '@mui/icons-material';
 
-import { useFetchMe } from '@/hooks';
+import { urlService } from '@/utils';
 
-import { PATH } from '@/constants';
+type SidebarItem = {
+  icon: React.ReactNode;
+  pathname: string;
+  title: string;
+};
+
+type SidebarList = { title: string; items: SidebarItem[] }[];
+
+const sidebarList: SidebarList = [
+  {
+    title: '사용자 메뉴',
+    items: [
+      {
+        icon: <ManageAccounts />,
+        pathname: urlService.getAbsolutePath('/manage'),
+        title: '내 정보 수정',
+      },
+    ],
+  },
+  {
+    title: '관리자 메뉴',
+    items: [
+      {
+        icon: <Terrain />,
+        pathname: urlService.getAbsolutePath('/manage/crags'),
+        title: '내 암장 관리',
+      },
+      {
+        icon: <Dashboard />,
+        pathname: urlService.getAbsolutePath('/manage/dashborad'),
+        title: '대시보드',
+      },
+    ],
+  },
+  {
+    title: '운영자 메뉴',
+    items: [
+      {
+        icon: <SupervisorAccount />,
+        pathname: urlService.getAbsolutePath('/manage/users'),
+        title: '사용자 관리',
+      },
+      {
+        icon: <Foundation />,
+        pathname: urlService.getAbsolutePath('/manage/new-crag'),
+        title: '암장 추가',
+      },
+    ],
+  },
+];
 
 export function ManagePage() {
   const location = useLocation();
 
   const [toggled, setToggled] = useState(false);
-
-  const { user } = useFetchMe();
 
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex' }}>
@@ -25,7 +72,7 @@ export function ManagePage() {
       <Sidebar breakPoint="xl" toggled={toggled} onBackdropClick={() => setToggled(false)} backgroundColor="white">
         <Menu
           menuItemStyles={{
-            button: ({ level, active, disabled }) => {
+            button: ({ level, active }) => {
               // only apply styles on first level elements of the tree
               if (level === 0)
                 return {
@@ -43,59 +90,46 @@ export function ManagePage() {
             서울 암장
           </Typography>
 
-          <MenuItem
-            icon={<ManageAccounts />}
-            component={<Link to={PATH.MANAGE_PAGE_PATH} />}
-            active={location.pathname === PATH.MANAGE_PAGE_PATH}
-          >
-            내 정보 수정
-          </MenuItem>
+          {sidebarList.map((sidebarItem, i) => {
+            return (
+              <Box key={i}>
+                <Typography fontWeight="bold" sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
+                  {sidebarItem.title}
+                </Typography>
 
-          <Typography fontWeight="bold" sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
-            관리자 메뉴
-          </Typography>
-
-          <MenuItem
-            icon={<Terrain />}
-            component={<Link to={PATH.MANAGE_PAGE_SUB_PATH_CRAGS} />}
-            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_CRAGS}`}
-          >
-            내 암장 관리
-          </MenuItem>
-
-          <MenuItem
-            icon={<Dashboard />}
-            component={<Link to={PATH.MANAGE_PAGE_SUB_PATH_DASHBOARD} />}
-            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_DASHBOARD}`}
-          >
-            대시보드
-          </MenuItem>
-
-          <Typography fontWeight="bold" sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
-            운영자 메뉴
-          </Typography>
-
-          <MenuItem
-            icon={<SupervisorAccount />}
-            component={<Link to={PATH.MANAGE_PAGE_SUB_PATH_USERS} />}
-            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAGE_SUB_PATH_USERS}`}
-          >
-            사용자 관리
-          </MenuItem>
-
-          <MenuItem
-            icon={<Foundation />}
-            component={<Link to={PATH.MANAGE_PAEG_SUB_PATH_NEW_CRAG} />}
-            active={location.pathname === `${PATH.MANAGE_PAGE_PATH}/${PATH.MANAGE_PAEG_SUB_PATH_NEW_CRAG}`}
-          >
-            암장 추가
-          </MenuItem>
+                {sidebarItem.items.map(({ icon, title, pathname }) => {
+                  return (
+                    <MenuItem
+                      key={pathname}
+                      icon={icon}
+                      component={<Link to={pathname} />}
+                      active={location.pathname === pathname}
+                    >
+                      {title}
+                    </MenuItem>
+                  );
+                })}
+              </Box>
+            );
+          })}
         </Menu>
       </Sidebar>
 
-      <Box sx={{ p: '1rem', flex: 1, overflowX: 'hidden', overflowY: 'scroll' }}>
-        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'end' }}>
-          <IconButton onClick={() => setToggled(true)} sx={{ display: { lg: 'none' } }}>
+      <Box sx={{ flex: 1, display: 'flex', overflowX: 'hidden', overflowY: 'scroll' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            right: 0,
+            zIndex: 10,
+
+            display: {
+              lg: 'none',
+            },
+
+            p: 1,
+          }}
+        >
+          <IconButton onClick={() => setToggled(true)} sx={{ background: 'white', boxShadow: 2 }}>
             <MenuOpen sx={{ transform: 'rotate(180deg)' }} />
           </IconButton>
         </Box>
