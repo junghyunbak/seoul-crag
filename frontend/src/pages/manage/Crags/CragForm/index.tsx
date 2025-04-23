@@ -39,7 +39,7 @@ export function CragForm({ initialCrag }: CragFormProps) {
         },
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', p: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', p: 2 }}>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', width: '100%' }}>
           <Box
             sx={{
@@ -56,7 +56,6 @@ export function CragForm({ initialCrag }: CragFormProps) {
             <CragImagesField imageType="interior" />
           </Box>
         </Box>
-
         <CragOpeningHoursField />
         <CragScheduleCalenderField />
       </Box>

@@ -1,5 +1,7 @@
 import { useContext } from 'react';
 
+import { Box, Typography } from '@mui/material';
+
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import { api } from '@/api/axios';
@@ -14,34 +16,38 @@ export function CragScheduleCalenderField() {
   const { schedules, refetch } = useFetchSchedules(crag.id);
 
   return (
-    <ScheduleCalendar
-      schedules={schedules || []}
-      onDelete={async (id) => {
-        await api.delete(`/gyms/${crag.id}/schedules/${id}`);
+    <Box>
+      <Typography variant="h6">운영 일정</Typography>
 
-        refetch();
-        revalidateCrag();
-      }}
-      onUpdate={async ({ id, type, reason }) => {
-        await api.patch(`/gyms/${crag.id}/schedules/${id}`, {
-          type,
-          reason,
-        });
+      <ScheduleCalendar
+        schedules={schedules || []}
+        onDelete={async (id) => {
+          await api.delete(`/gyms/${crag.id}/schedules/${id}`);
 
-        refetch();
-        revalidateCrag();
-      }}
-      onCreate={async ({ date, type, reason }) => {
-        await api.post(`/gyms/${crag.id}/schedules`, {
-          gymId: crag.id,
-          date,
-          type,
-          reason,
-        });
+          refetch();
+          revalidateCrag();
+        }}
+        onUpdate={async ({ id, type, reason }) => {
+          await api.patch(`/gyms/${crag.id}/schedules/${id}`, {
+            type,
+            reason,
+          });
 
-        refetch();
-        revalidateCrag();
-      }}
-    />
+          refetch();
+          revalidateCrag();
+        }}
+        onCreate={async ({ date, type, reason }) => {
+          await api.post(`/gyms/${crag.id}/schedules`, {
+            gymId: crag.id,
+            date,
+            type,
+            reason,
+          });
+
+          refetch();
+          revalidateCrag();
+        }}
+      />
+    </Box>
   );
 }

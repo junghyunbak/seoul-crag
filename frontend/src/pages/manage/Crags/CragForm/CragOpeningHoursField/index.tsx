@@ -1,5 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
+import { Box, Typography } from '@mui/material';
+
 import { useQuery } from '@tanstack/react-query';
 
 import { WeeklyHoursSlider, WeeklyHours, daysOfWeek } from '@/components/WeeklyHoursSilder';
@@ -9,6 +11,7 @@ import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import dayjs from 'dayjs';
 
 import { api } from '@/api/axios';
+
 import { openingHoursScheme } from '@/schemas';
 
 const initialWeeklyHours: WeeklyHours = {
@@ -25,7 +28,7 @@ function minutesToTimeStr(mins: number): string {
   return dayjs().startOf('day').add(mins, 'minute').format('HH:mm');
 }
 
-export function timeStrToMinutes(time: string): number {
+function timeStrToMinutes(time: string): number {
   const [h, m] = time.split(':').map(Number);
   return h * 60 + m;
 }
@@ -45,7 +48,7 @@ export function CragOpeningHoursField() {
     saturday: null,
   });
 
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ['openingHours', crag.id],
     queryFn: async () => {
       const { data } = await api.get(`/gyms/${crag.id}/opening-hours`);
@@ -106,5 +109,10 @@ export function CragOpeningHoursField() {
     });
   };
 
-  return <WeeklyHoursSlider value={hours} onChange={handleWeeklyHoursChange} />;
+  return (
+    <Box>
+      <Typography variant="h6">운영 시간</Typography>
+      <WeeklyHoursSlider value={hours} onChange={handleWeeklyHoursChange} />
+    </Box>
+  );
 }
