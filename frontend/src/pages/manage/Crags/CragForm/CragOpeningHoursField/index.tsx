@@ -14,14 +14,19 @@ import { api } from '@/api/axios';
 
 import { openingHoursScheme } from '@/schemas';
 
+const defaultOpen = 9 * 60;
+const defaultClose = 22 * 60;
+const defaultHolidayOpen = 10 * 60;
+const defaultHoildayClose = 20 * 60;
+
 const initialWeeklyHours: WeeklyHours = {
-  monday: { is_closed: false, open: 9 * 60, close: 22 * 60 },
-  tuesday: { is_closed: false, open: 9 * 60, close: 22 * 60 },
-  wednesday: { is_closed: false, open: 9 * 60, close: 22 * 60 },
-  thursday: { is_closed: false, open: 9 * 60, close: 22 * 60 },
-  friday: { is_closed: false, open: 9 * 60, close: 22 * 60 },
-  saturday: { is_closed: false, open: 10 * 60, close: 20 * 60 },
-  sunday: { is_closed: false, open: 10 * 60, close: 20 * 60 },
+  sunday: { is_closed: false, open: defaultHolidayOpen, close: defaultHoildayClose },
+  monday: { is_closed: false, open: defaultOpen, close: defaultClose },
+  tuesday: { is_closed: false, open: defaultOpen, close: defaultClose },
+  wednesday: { is_closed: false, open: defaultOpen, close: defaultClose },
+  thursday: { is_closed: false, open: defaultOpen, close: defaultClose },
+  friday: { is_closed: false, open: defaultOpen, close: defaultClose },
+  saturday: { is_closed: false, open: defaultHolidayOpen, close: defaultHoildayClose },
 };
 
 function minutesToTimeStr(mins: number): string {
@@ -64,7 +69,12 @@ export function CragOpeningHoursField() {
       return;
     }
 
-    const weeklyHours: WeeklyHours = initialWeeklyHours;
+    /**
+     * 상태 hours의 초기값도 initialWeeklyHours 임.
+     *
+     * initialWeeklyHours을 그대로 초기값으로 사용하면 상태변화를 인식하지 못함.
+     */
+    const weeklyHours: WeeklyHours = { ...initialWeeklyHours };
 
     data.forEach(({ day, open_time, close_time, is_closed }) => {
       if (open_time && close_time) {
@@ -112,7 +122,7 @@ export function CragOpeningHoursField() {
   return (
     <Box>
       <Typography variant="h6">운영 시간</Typography>
-      <WeeklyHoursSlider value={hours} onChange={handleWeeklyHoursChange} />
+      <WeeklyHoursSlider hours={hours} onChange={handleWeeklyHoursChange} />
     </Box>
   );
 }
