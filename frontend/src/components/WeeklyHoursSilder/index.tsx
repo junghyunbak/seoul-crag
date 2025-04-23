@@ -111,7 +111,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
   };
 
   return (
-    <Box width="100%">
+    <Box sx={{ width: '100%' }}>
       <Typography variant="subtitle1" gutterBottom>
         {engDayToKor(day)}
       </Typography>
@@ -131,6 +131,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
         <Box
           sx={{
             flex: 1,
+            px: 2,
           }}
         >
           <Slider
