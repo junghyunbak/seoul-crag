@@ -22,6 +22,8 @@ export function Cluster({ markers }: ClusterProps) {
     const markerCluster = new MarkerClustering({
       map,
       markers,
+      maxZoom: 12,
+      gridSize: 70,
       disableClickZoom: false,
       icons: [
         {

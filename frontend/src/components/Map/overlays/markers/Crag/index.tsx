@@ -264,8 +264,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
         }}
       >
         <Typography
-          variant="h6"
-          fontWeight="bold"
+          fontWeight={600}
           sx={{
             userSelect: 'none',
             textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',

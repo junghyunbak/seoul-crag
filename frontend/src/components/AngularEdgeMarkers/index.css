@@ -40,7 +40,7 @@
   height: 18px;
   background: #7e9468;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  transform: translate(-50%, -200%);
+  transform: translate(-50%, -180%);
   position: absolute;
   top: 0;
   left: 0;
@@ -51,7 +51,7 @@
   height: 21px;
   background: #56654b;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  transform: translate(-50%, -200%);
+  transform: translate(-50%, -180%);
   position: absolute;
   top: 0;
   left: 0;

@@ -135,8 +135,8 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
             className="balloon"
             style={{
               color: '#56654b',
-              width: '60px',
-              height: '50px',
+              width: '50px',
+              height: '46px',
             }}
           >
             <div
@@ -151,7 +151,7 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
                 justifyContent: 'center',
                 alignItems: 'center',
 
-                gap: '0.5rem',
+                gap: '0.25rem',
 
                 zIndex: 10000,
               }}
@@ -165,7 +165,7 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
                 {item.count}
               </p>
 
-              <CragIcon width={20} />
+              <CragIcon width={18} />
             </div>
           </div>
 
