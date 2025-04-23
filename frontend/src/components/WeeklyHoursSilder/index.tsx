@@ -84,12 +84,14 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
       return;
     }
 
+    const [open, close] = newValue;
+
     onChange({
       ...hours,
       [day]: {
         ...hours[day],
-        open: newValue[0],
-        close: newValue[1],
+        open,
+        close,
       },
     });
   };
@@ -133,7 +135,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
         >
           <Slider
             min={0}
-            max={24 * 60}
+            max={23 * 60 + 59}
             step={15}
             disabled={locked}
             value={[open, close]}
