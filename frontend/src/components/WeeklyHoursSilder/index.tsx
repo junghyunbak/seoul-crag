@@ -56,7 +56,7 @@ export const WeeklyHoursSlider: React.FC<WeeklyHoursSliderProps> = ({ hours, onC
 
   return (
     <Box width="100%">
-      <Stack spacing={4} width="100%">
+      <Stack width="100%">
         {daysOfWeek.map((day) => {
           return <SliderContent key={day} hours={hours} onChange={onChange} locked={locked} day={day} />;
         })}
