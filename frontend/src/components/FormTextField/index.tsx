@@ -7,12 +7,20 @@ import { Check, Error } from '@mui/icons-material';
 interface FormTextFieldProps {
   value: string | null | undefined;
   placeholder?: string;
+  multilineCount?: number;
   label?: string;
   helperText?: string;
   onSave: (next: string) => Promise<void>;
 }
 
-export function FormTextField({ value = '', onSave, placeholder, label, helperText }: FormTextFieldProps) {
+export function FormTextField({
+  value = '',
+  onSave,
+  placeholder,
+  label,
+  helperText,
+  multilineCount,
+}: FormTextFieldProps) {
   const [text, setText] = useState(value);
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,6 +73,8 @@ export function FormTextField({ value = '', onSave, placeholder, label, helperTe
       label={label}
       onChange={handleInputChange}
       onBlur={handleBlur}
+      multiline={typeof multilineCount === 'number'}
+      rows={multilineCount}
       error={status === 'error'}
       helperText={status === 'error' ? helperText : undefined}
       InputProps={{
