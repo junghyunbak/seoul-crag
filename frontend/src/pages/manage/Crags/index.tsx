@@ -35,7 +35,7 @@ export function Crags() {
           height: '100%',
         }}
       >
-        <Sidebar breakPoint="xl" style={{ height: '100%' }}>
+        <Sidebar breakPoint="xl" style={{ height: '100%' }} backgroundColor="white">
           <Menu
             menuItemStyles={{
               button: ({ level, active }) => {
