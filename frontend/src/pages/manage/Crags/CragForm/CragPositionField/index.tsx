@@ -33,6 +33,7 @@ export function CragPositionField() {
   const { map } = useNaverMap(
     () => ({
       zoom: 15,
+      keyboardShortcuts: false,
     }),
     [],
     mapRef
