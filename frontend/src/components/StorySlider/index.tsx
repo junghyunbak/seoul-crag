@@ -23,58 +23,113 @@ interface StorySliderProps {
   initPaused?: boolean;
 }
 
-const ProgressBar = React.memo(
+const BarContainer = styled(Box)({
+  position: 'absolute',
+  top: 8,
+  left: 8,
+  right: 8,
+  height: 4,
+  overflow: 'hidden',
+  display: 'flex',
+  gap: 4,
+  zIndex: 5,
+});
+
+const Segment = styled(Box)<{ complete?: boolean }>(({ complete }) => ({
+  flex: 1,
+  height: '100%',
+  backgroundColor: complete ? '#fff' : 'rgba(255,255,255,0.2)',
+  borderRadius: 4,
+  position: 'relative',
+  overflow: 'hidden',
+}));
+
+const Thumb = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  height: '100%',
+  backgroundColor: '#fff',
+  transformOrigin: 'left',
+});
+
+const TranslateBar = React.memo(
   ({
+    index,
     count,
-    activeIndex,
     duration,
     onNext,
     paused,
   }: {
+    index: { value: number };
     count: number;
-    activeIndex: number;
     duration: number;
     onNext: () => void;
     paused: boolean;
   }) => {
     const [progress, setProgress] = useState(0);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const requestRef = useRef<number | null>(null);
+    const elapsedRef = useRef(0);
+    const prevIndexRef = useRef(index);
 
     useEffect(() => {
-      if (activeIndex >= count || paused) return;
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      setProgress(0);
+      if (index !== prevIndexRef.current) {
+        elapsedRef.current = 0;
+        setProgress(0);
+        prevIndexRef.current = index;
+      }
+    }, [index]);
 
-      const start = Date.now();
-      intervalRef.current = setInterval(() => {
-        const elapsed = Date.now() - start;
-        const percent = Math.min((elapsed / duration) * 100, 100);
-        setProgress(percent);
-        if (percent === 100) {
-          clearInterval(intervalRef.current!);
+    useEffect(() => {
+      if (index.value >= count) return;
+
+      if (paused) {
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        return;
+      }
+
+      const start = performance.now() - elapsedRef.current;
+
+      const update = (now: number) => {
+        const elapsed = now - start;
+        const percent = Math.min(elapsed / duration, 1);
+        elapsedRef.current = elapsed;
+
+        if (percent >= 1) {
+          setProgress(0);
+          elapsedRef.current = 0;
           onNext();
+          return;
         }
-      }, 16);
 
-      return () => clearInterval(intervalRef.current!);
-    }, [activeIndex, duration, count, onNext, paused]);
+        setProgress(percent);
+        requestRef.current = requestAnimationFrame(update);
+      };
+
+      requestRef.current = requestAnimationFrame(update);
+
+      return () => {
+        if (requestRef.current !== null) {
+          cancelAnimationFrame(requestRef.current);
+        }
+      };
+    }, [index, count, duration, onNext, paused]);
 
     return (
-      <Box position="absolute" top={8} left={8} right={8} display="flex" gap={0.5} zIndex={5}>
+      <BarContainer>
         {Array.from({ length: count }).map((_, i) => (
-          <Box key={i} flex={1} height={4} borderRadius={4} bgcolor="rgba(255,255,255,0.3)" overflow="hidden">
-            <Box
-              height="100%"
-              bgcolor="white"
-              style={{
-                transform: `scaleX(${i < activeIndex ? 1 : i === activeIndex ? progress / 100 : 0})`,
-                transformOrigin: 'left',
-                transition: i === activeIndex ? 'transform 0.1s linear' : undefined,
-              }}
-            />
-          </Box>
+          <Segment key={i} complete={i < index.value}>
+            {i === index.value && progress < 1 && (
+              <Thumb
+                style={{
+                  width: '100%',
+                  transform: `translateX(${(progress - 1) * 100}%)`,
+                }}
+              />
+            )}
+          </Segment>
         ))}
-      </Box>
+      </BarContainer>
     );
   }
 );
@@ -110,13 +165,11 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   }, [onClose]);
 
   const goPrev = () => {
-    if (index.value >= 0) {
-      setIndex({ value: Math.max(index.value - 1, 0) });
-    }
+    setIndex((prev) => ({ value: Math.max(0, prev.value - 1) }));
   };
 
   const goNext = () => {
-    setIndex({ value: index.value + 1 });
+    setIndex((prev) => ({ value: prev.value + 1 }));
   };
 
   const pauseToggle = () => {
@@ -209,16 +262,10 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             pointerEvents: 'none',
           }}
         >
-          {contents[index.value]}
+          {contents[Math.min(index.value, contents.length - 1)]}
         </Box>
 
-        <ProgressBar
-          count={contents.length}
-          activeIndex={index.value}
-          duration={duration}
-          onNext={goNext}
-          paused={paused}
-        />
+        <TranslateBar index={index} count={contents.length} duration={duration} onNext={goNext} paused={paused} />
 
         <Box position="absolute" top={8} right={8} display="flex" gap={1} zIndex={5}>
           <IconButton
