@@ -199,7 +199,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
            */
           touchAction: 'none',
         }}
-        onClick={isMobile ? handleClickMobile : undefined}
+        onClick={handleClickMobile}
       >
         <Box
           sx={{
