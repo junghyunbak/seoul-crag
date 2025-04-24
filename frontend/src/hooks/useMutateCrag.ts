@@ -61,3 +61,51 @@ export function useMutateCragArea({ onSettled }: MutateOptions<void, DefaultErro
     changeCragAreaMutation,
   };
 }
+
+type ChangeCragOpeningHourMutateParams = {
+  cragId: string;
+  day: OpeningHourDayType;
+  openTime: string;
+  closeTime: string;
+  isClosed: boolean;
+};
+
+export function useMutateCragOpeningHour({
+  onSettled,
+}: MutateOptions<void, DefaultError, ChangeCragOpeningHourMutateParams>) {
+  const changeCragOpeningHourMutation = useMutation<void, DefaultError, ChangeCragOpeningHourMutateParams>({
+    mutationFn: async ({ cragId, day, openTime, closeTime, isClosed }) => {
+      await api.patch(`/gyms/${cragId}/opening-hours`, {
+        day,
+        open_time: openTime,
+        close_time: closeTime,
+        is_closed: isClosed,
+      });
+    },
+    onSettled,
+  });
+
+  return { changeCragOpeningHourMutation };
+}
+
+type ChangeCragLocationMutateParams = {
+  cragId: string;
+  latitude: number;
+  longitude: number;
+};
+
+export function useMutateCragLocation({
+  onSettled,
+}: MutateOptions<void, DefaultError, ChangeCragLocationMutateParams>) {
+  const changeCragLocationMutation = useMutation<void, DefaultError, ChangeCragLocationMutateParams>({
+    mutationFn: async ({ cragId, latitude, longitude }) => {
+      await api.patch(`/gyms/${cragId}`, {
+        latitude,
+        longitude,
+      });
+    },
+    onSettled,
+  });
+
+  return { changeCragLocationMutation };
+}

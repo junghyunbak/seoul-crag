@@ -2,17 +2,13 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-import { useQuery } from '@tanstack/react-query';
-
 import { WeeklyHoursSlider, WeeklyHours, daysOfWeek } from '@/components/WeeklyHoursSilder';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import dayjs from 'dayjs';
 
-import { api } from '@/api/axios';
-
-import { openingHoursScheme } from '@/schemas';
+import { useFetchOpeningHours, useMutateCragOpeningHour } from '@/hooks';
 
 const defaultOpen = 9 * 60;
 const defaultClose = 22 * 60;
@@ -53,19 +49,19 @@ export function CragOpeningHoursField() {
     saturday: null,
   });
 
-  const { data } = useQuery({
-    queryKey: ['openingHours', crag.id],
-    queryFn: async () => {
-      const { data } = await api.get(`/gyms/${crag.id}/opening-hours`);
-
-      const openingHours = openingHoursScheme.parse(data);
-
-      return openingHours;
+  const { changeCragOpeningHourMutation } = useMutateCragOpeningHour({
+    onSettled() {
+      /**
+       * 경합조건 발생 위험이 있어 당장은 서버와 상태 동기화를 하지 않음.
+       */
+      //refetch();
     },
   });
 
+  const { openingHours } = useFetchOpeningHours(crag.id);
+
   useEffect(() => {
-    if (!data) {
+    if (!openingHours) {
       return;
     }
 
@@ -76,7 +72,7 @@ export function CragOpeningHoursField() {
      */
     const weeklyHours: WeeklyHours = { ...initialWeeklyHours };
 
-    data.forEach(({ day, open_time, close_time, is_closed }) => {
+    openingHours.forEach(({ day, open_time, close_time, is_closed }) => {
       if (open_time && close_time) {
         weeklyHours[day] = {
           is_closed,
@@ -87,30 +83,26 @@ export function CragOpeningHoursField() {
     });
 
     setHours(weeklyHours);
-  }, [data]);
+  }, [openingHours]);
 
   const handleWeeklyHoursChange = (next: WeeklyHours) => {
     setHours((prev) => {
-      for (const week of daysOfWeek) {
-        if (prev[week] !== next[week]) {
-          if (timerRef.current[week]) {
-            clearTimeout(timerRef.current[week]);
+      for (const day of daysOfWeek) {
+        if (prev[day] !== next[day]) {
+          if (timerRef.current[day]) {
+            clearTimeout(timerRef.current[day]);
           }
 
-          timerRef.current[week] = setTimeout(async () => {
-            const { open, close, is_closed } = next[week];
+          timerRef.current[day] = setTimeout(async () => {
+            const { open, close, is_closed } = next[day];
 
-            await api.patch(`/gyms/${crag.id}/opening-hours`, {
-              day: week,
-              open_time: minutesToTimeStr(open),
-              close_time: minutesToTimeStr(close),
-              is_closed,
+            changeCragOpeningHourMutation.mutate({
+              cragId: crag.id,
+              day,
+              openTime: minutesToTimeStr(open),
+              closeTime: minutesToTimeStr(close),
+              isClosed: is_closed,
             });
-
-            /**
-             * 경합조건 발생 위험이 있어 당장은 서버와 상태 동기화를 하지 않음.
-             */
-            //refetch();
           }, 1000);
         }
       }

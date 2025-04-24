@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
 
-import { cragsScheme, cragScheme } from '@/schemas';
+import { cragsScheme, cragScheme, openingHoursScheme } from '@/schemas';
 
 export function useFetchCrags() {
   const { data: crags } = useQuery({
@@ -46,4 +46,19 @@ export function useFetchCrag({
   });
 
   return { crag, refetch };
+}
+
+export function useFetchOpeningHours(cragId: string) {
+  const { data: openingHours } = useQuery({
+    queryKey: ['openingHours', cragId],
+    queryFn: async () => {
+      const { data } = await api.get(`/gyms/${cragId}/opening-hours`);
+
+      const openingHours = openingHoursScheme.parse(data);
+
+      return openingHours;
+    },
+  });
+
+  return { openingHours };
 }

@@ -4,9 +4,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { Box, Button } from '@mui/material';
 
-import { useNaverMap } from '@/hooks';
-
-import { api } from '@/api/axios';
+import { useMutateCragLocation, useNaverMap } from '@/hooks';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { cragsContext } from '@/pages/manage/Crags/index.context';
@@ -23,6 +21,12 @@ export function CragPositionField() {
 
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
+
+  const { changeCragLocationMutation } = useMutateCragLocation({
+    onSettled() {
+      revalidateCrag();
+    },
+  });
 
   const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
@@ -72,12 +76,11 @@ export function CragPositionField() {
     if (mapEnabled && map) {
       const { y, x } = map.getCenter();
 
-      await api.patch(`/gyms/${crag.id}`, {
+      changeCragLocationMutation.mutate({
+        cragId: crag.id,
         latitude: y,
         longitude: x,
       });
-
-      revalidateCrag();
     }
 
     setMapEnabled(!mapEnabled);
