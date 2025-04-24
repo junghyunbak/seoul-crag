@@ -122,11 +122,11 @@ export function ManagePage() {
             right: 0,
             zIndex: 10,
 
+            m: 2,
+
             display: {
               lg: 'none',
             },
-
-            p: 1,
           }}
         >
           <IconButton onClick={() => setToggled(true)} sx={{ background: 'white', boxShadow: 2 }}>
