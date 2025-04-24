@@ -2,8 +2,6 @@ import { createBrowserRouter, useLocation, useNavigate } from 'react-router';
 
 import { type PartialLocation, type QueryParamAdapterComponent } from 'use-query-params';
 
-import { ErrorBoundary } from 'react-error-boundary';
-
 import { Main, ManagePage, NotFound } from '@/pages';
 
 import { Layout } from '@/router/Layout';
@@ -38,17 +36,7 @@ export const router = createBrowserRouter([
       },
       {
         path: urlService.getAbsolutePath('/manage'),
-        element: (
-          <ErrorBoundary
-            fallback={
-              <div>
-                401<button onClick={() => (window.location.href = '/?menu=1')}>로그인</button>
-              </div>
-            }
-          >
-            <ManagePage />
-          </ErrorBoundary>
-        ),
+        element: <ManagePage />,
         children: [
           {
             index: true,

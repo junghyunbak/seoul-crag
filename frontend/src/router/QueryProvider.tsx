@@ -4,24 +4,23 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { urlService } from '@/utils';
 
-import { AxiosError } from 'axios';
+function throwOnError() {
+  if (window.location.pathname.startsWith(urlService.getAbsolutePath('/manage'))) {
+    return true;
+  }
 
-export const queryClient = new QueryClient({
+  return false;
+}
+
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
       retry: 0,
-      throwOnError(error) {
-        const pathname = window.location.pathname;
-
-        if (pathname.startsWith(urlService.getAbsolutePath('/manage'))) {
-          if (error instanceof AxiosError && error.response?.status) {
-            return error.response.status >= 400;
-          }
-        }
-
-        return false;
-      },
+      throwOnError,
+    },
+    mutations: {
+      throwOnError,
     },
   },
 });
