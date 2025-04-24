@@ -2,6 +2,8 @@ export const SELECT_DATE = 'selectDate';
 
 export const SELECT_CRAG = 'sc';
 
+export const SELECT_CRAGE_DETAIL = 'scd';
+
 export const STORY_INTERIOR = 'si';
 export const STORY_SHOWER = 'ss';
 export const STORY_SCHEDULE = 'ssc';

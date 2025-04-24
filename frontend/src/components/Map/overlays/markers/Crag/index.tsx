@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
-import { Shower, CalendarMonth, EventBusy, HideImage, Image } from '@mui/icons-material';
+import { Shower, CalendarMonth, EventBusy, HideImage, Image, MoreHoriz } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
 
 import { useCragArea } from '@/hooks';
@@ -63,6 +63,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const markerRef = useRef<HTMLDivElement>(null);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
@@ -163,8 +164,16 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       });
     }
 
+    ret.push({
+      icon: <MoreHoriz />,
+      callback: () => {
+        setSelectCragDetailId(crag.id);
+      },
+      disabled: false,
+    });
+
     return ret;
-  }, [crag, setInteriorStory, setScheduleStory]);
+  }, [crag, setInteriorStory, setScheduleStory, setSelectCragDetailId]);
 
   const handleMarkerClick = () => {
     setSelectCragId(crag.id);
