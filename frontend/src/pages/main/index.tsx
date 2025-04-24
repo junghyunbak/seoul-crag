@@ -16,7 +16,9 @@ import { Controller } from '@/components/Controller';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 
 export function Main() {
-  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+
+  const [initCragId] = useState(selectCragId);
 
   const { crags } = useFetchCrags();
 
@@ -30,6 +32,7 @@ export function Main() {
       customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
       zoom: 12,
       minZoom: 10,
+      center: new naver.maps.LatLng(37.55296695234301, 126.97309961038195),
       maxBounds: new naver.maps.LatLngBounds(
         new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
         new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
@@ -40,6 +43,19 @@ export function Main() {
   );
 
   const { updateMap } = useModifyMap();
+
+  /**
+   * 기존에 선택된 마커가 있다면 이동
+   */
+  useEffect(() => {
+    if (initCragId && map) {
+      const crag = crags?.find(({ id }) => id === initCragId);
+
+      if (crag) {
+        map.setCenter(new naver.maps.LatLng(crag.latitude, crag.longitude));
+      }
+    }
+  }, [initCragId, map, crags]);
 
   /**
    * 맵 객체 전역 스토어 공유
