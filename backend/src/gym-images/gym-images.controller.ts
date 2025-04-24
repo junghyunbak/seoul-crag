@@ -23,13 +23,12 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
-// [ ]: 업로드 권한 테스트
-@Roles('gym_admin', 'partner_admin')
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('gym-images/:gymId/images')
 export class GymImagesController {
   constructor(private readonly gymImagesService: GymImagesService) {}
 
+  @Roles('gym_admin', 'partner_admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -76,12 +75,16 @@ export class GymImagesController {
     return this.gymImagesService.findByGymAndType(gymId, type);
   }
 
+  @Roles('gym_admin', 'partner_admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':imageId')
   async deleteImage(@Param('imageId') imageId: string) {
     await this.gymImagesService.delete(imageId);
     return { success: true };
   }
 
+  @Roles('gym_admin', 'partner_admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('reorder')
   async reorderImages(
     @Param('gymId', ParseUUIDPipe) gymId: string,
