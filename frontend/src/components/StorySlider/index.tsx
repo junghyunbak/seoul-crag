@@ -69,14 +69,17 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    return function cleanup() {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [onClose]);
 
   const handlePrev = () => {
     if (index.value > 0) {
       setIndex({ value: index.value - 1 });
     } else {
-      setIndex({ value: index.value }); // 강제 리렌더링
+      setIndex({ value: index.value });
     }
   };
 
@@ -89,6 +92,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   };
 
   const touchStartX = useRef(0);
+
   const handleTouchStart = (e: TouchEvent) => {
     touchStartX.current = e.changedTouches[0].clientX;
   };
@@ -96,17 +100,24 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   const handleTouchEnd = (e: TouchEvent) => {
     const endX = e.changedTouches[0].clientX;
     const diff = endX - touchStartX.current;
+
     if (Math.abs(diff) > 50) {
-      if (diff > 0) handlePrev();
-      else handleNext();
+      if (diff > 0) {
+        handlePrev();
+      } else {
+        handleNext();
+      }
     }
   };
 
   const handleClickMobile = (e: MouseEvent<HTMLDivElement>) => {
     const x = e.nativeEvent.offsetX;
     const width = (e.target as HTMLDivElement).clientWidth;
-    if (x < width / 2) handlePrev();
-    else handleNext();
+    if (x < width / 2) {
+      handlePrev();
+    } else {
+      handleNext();
+    }
   };
 
   return (
@@ -133,7 +144,6 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           display: 'flex',
           alignItems: 'center',
         }}
-        borderRadius={isMobile ? 0 : 1}
         bgcolor="black"
         boxShadow={isMobile ? undefined : 3}
         onClick={isMobile ? handleClickMobile : undefined}
@@ -145,8 +155,9 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             height: '100%',
             display: 'flex',
             alignItems: 'center',
+            pointerEvents: 'none',
+            borderRadius: isMobile ? 0 : 1,
           }}
-          borderRadius={1}
         >
           {contents[index.value]}
         </Box>
