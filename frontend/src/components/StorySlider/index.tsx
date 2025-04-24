@@ -86,9 +86,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     };
   }, [onClose]);
 
-  const handlePrev: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
-
+  const goPrev = () => {
     if (index.value > 0) {
       setIndex({ value: index.value - 1 });
     } else {
@@ -96,20 +94,16 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     }
   };
 
-  const handleNext: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
-
+  const goNext = () => {
     setIndex({ value: index.value + 1 });
   };
 
-  const handlePauseToggle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
-
+  const pauseToggle = () => {
     setPaused((prev) => !prev);
   };
 
   const bind = useDrag(
-    ({ last, movement: [mx, my], velocity: [vx, vy], direction: [dx, dy], cancel, memo }) => {
+    ({ last, movement: [mx, my], velocity: [, vy], memo }) => {
       // 최초 방향 판단 후 고정
       if (!memo) {
         memo = Math.abs(mx) > Math.abs(my) ? 'x' : 'y';
@@ -117,8 +111,11 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
       if (memo === 'x') {
         if (last) {
-          if (mx > SIZE.SWIPE_THRESHOLD_X) handlePrev();
-          else if (mx < -SIZE.SWIPE_THRESHOLD_X) handleNext();
+          if (mx > SIZE.SWIPE_THRESHOLD_X) {
+            goPrev();
+          } else if (mx < -SIZE.SWIPE_THRESHOLD_X) {
+            goNext();
+          }
         }
       } else if (memo === 'y') {
         const nextY = Math.max(my, 0);
@@ -146,10 +143,11 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   const handleClickMobile = (e: React.MouseEvent<HTMLDivElement>) => {
     const x = e.nativeEvent.offsetX;
     const width = (e.target as HTMLDivElement).clientWidth;
+
     if (x < width / 2) {
-      handlePrev();
+      goPrev();
     } else {
-      handleNext();
+      goNext();
     }
   };
 
@@ -243,7 +241,13 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
         {/* 닫기 + 일시정지 */}
         <Box position="absolute" top={8} right={8} display="flex" gap={1} zIndex={5}>
-          <IconButton onClick={handlePauseToggle} sx={{ color: 'white' }}>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              pauseToggle();
+            }}
+            sx={{ color: 'white' }}
+          >
             {paused ? <PlayArrow /> : <Pause />}
           </IconButton>
           <IconButton onClick={onClose} sx={{ color: 'white' }}>
@@ -253,11 +257,23 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
         {!isMobile && (
           <>
-            <IconButton onClick={handlePrev} sx={{ position: 'absolute', left: '-50px', zIndex: 10, color: 'white' }}>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                goPrev();
+              }}
+              sx={{ position: 'absolute', left: '-50px', zIndex: 10, color: 'white' }}
+            >
               <ChevronLeft />
             </IconButton>
 
-            <IconButton onClick={handleNext} sx={{ position: 'absolute', right: '-50px', zIndex: 10, color: 'white' }}>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                goNext();
+              }}
+              sx={{ position: 'absolute', right: '-50px', zIndex: 10, color: 'white' }}
+            >
               <ChevronRight />
             </IconButton>
           </>
