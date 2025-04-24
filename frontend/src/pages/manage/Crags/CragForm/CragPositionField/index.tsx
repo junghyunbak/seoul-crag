@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -17,8 +17,6 @@ export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
   const { crags } = useContext(cragsContext);
 
-  const mapRef = useRef<HTMLDivElement>(null);
-
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
 
@@ -30,13 +28,12 @@ export function CragPositionField() {
 
   const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
-  const { map } = useNaverMap(
+  const { map, mapRef } = useNaverMap(
     () => ({
       zoom: 15,
       keyboardShortcuts: false,
     }),
-    [],
-    mapRef
+    []
   );
 
   useEffect(() => {

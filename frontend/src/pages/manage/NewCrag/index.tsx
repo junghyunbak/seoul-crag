@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { api } from '@/api/axios';
 
@@ -16,9 +16,7 @@ export function NewCrag() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  const mapRef = useRef<HTMLDivElement>(null);
-
-  const { map } = useNaverMap(() => ({}), [], mapRef);
+  const { map, mapRef } = useNaverMap(() => ({}), []);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 

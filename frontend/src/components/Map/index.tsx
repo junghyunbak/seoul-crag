@@ -27,7 +27,7 @@ function getElementsFromChildren(children: React.ReactNode, type: unknown) {
 
 interface MapProps extends React.PropsWithChildren {
   map: naver.maps.Map | null;
-  mapRef?: React.RefObject<HTMLDivElement | null>;
+  mapRef: React.RefObject<HTMLDivElement | null>;
 }
 
 function MapImpl({ map, mapRef, children }: MapProps) {
@@ -39,7 +39,7 @@ function MapImpl({ map, mapRef, children }: MapProps) {
 
   return (
     <mapContext.Provider value={{ map }}>
-      <Box ref={mapRef} sx={{ width: '100%', height: '100%' }} data-testid="123">
+      <Box ref={mapRef} sx={{ width: '100%', height: '100%' }}>
         <Box sx={{ display: 'none' }}>
           {CragMarkers.map((CragMarker) => CragMarker)}
           {DefaultMarkers.map((DefaultMarker) => DefaultMarker)}
