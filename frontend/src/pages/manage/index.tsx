@@ -71,7 +71,15 @@ export function ManagePage() {
       {/**
        * xl === (mui)lg 1200px
        */}
-      <Sidebar breakPoint="xl" toggled={toggled} onBackdropClick={() => setToggled(false)} backgroundColor="white">
+      <Sidebar
+        breakPoint="xl"
+        toggled={toggled}
+        onBackdropClick={() => setToggled(false)}
+        backgroundColor="white"
+        style={{
+          zIndex: zIndex.menu,
+        }}
+      >
         <Menu
           menuItemStyles={{
             button: ({ level, active }) => {
