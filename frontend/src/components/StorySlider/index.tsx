@@ -86,7 +86,9 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     };
   }, [onClose]);
 
-  const handlePrev = () => {
+  const handlePrev: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+
     if (index.value > 0) {
       setIndex({ value: index.value - 1 });
     } else {
@@ -94,12 +96,15 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     }
   };
 
-  const handleNext = () => {
+  const handleNext: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+
     setIndex({ value: index.value + 1 });
   };
 
   const handlePauseToggle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
+
     setPaused((prev) => !prev);
   };
 
