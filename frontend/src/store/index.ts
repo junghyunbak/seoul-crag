@@ -15,6 +15,12 @@ type StoreState = {
   setMap: (map: naver.maps.Map) => void;
 
   mapRef: React.RefObject<HTMLDivElement | null>;
+
+  lastLat: number;
+  setLastLat: (lat: number) => void;
+
+  lastLng: number;
+  setLastLng: (lng: number) => void;
 };
 
 export const useStore = create<StoreState>()(
@@ -38,13 +44,23 @@ export const useStore = create<StoreState>()(
       },
 
       mapRef: { current: null },
+
+      lastLat: -1,
+      setLastLat(lat) {
+        set(() => ({ lastLat: lat }));
+      },
+
+      lastLng: -1,
+      setLastLng(lng) {
+        set(() => ({ lastLng: lng }));
+      },
     }),
     {
       name: 'zustandStore',
       partialize(state) {
-        const { isFilterSheetOpen } = state;
+        const { isFilterSheetOpen, lastLat, lastLng } = state;
 
-        return { isFilterSheetOpen };
+        return { isFilterSheetOpen, lastLat, lastLng };
       },
     }
   )

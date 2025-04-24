@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -14,6 +14,10 @@ import { Map } from '@/components/Map';
 import { Menu } from '@/components/Menu';
 import { Controller } from '@/components/Controller';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
+import { useStore } from '@/store';
+
+const DEFAULT_LAT = 37.55296695234301;
+const DEFAULT_LNG = 126.97309961038195;
 
 export function Main() {
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
@@ -26,18 +30,24 @@ export function Main() {
 
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const { map } = useNaverMap(
-    () => ({
-      gl: true,
-      customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
-      zoom: 12,
-      minZoom: 10,
-      center: new naver.maps.LatLng(37.55296695234301, 126.97309961038195),
-      maxBounds: new naver.maps.LatLngBounds(
-        new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
-        new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
-      ),
-    }),
+    () => {
+      const { lastLat, lastLng } = useStore.getState();
+
+      return {
+        gl: true,
+        customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
+        zoom: 12,
+        minZoom: 10,
+        center: new naver.maps.LatLng(lastLat !== -1 ? lastLat : DEFAULT_LAT, lastLng !== -1 ? lastLng : DEFAULT_LNG),
+        maxBounds: new naver.maps.LatLngBounds(
+          new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
+          new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
+        ),
+      };
+    },
     [boundary],
     mapRef
   );
@@ -72,6 +82,10 @@ export function Main() {
    * 이벤트 등록
    *
    * - click
+   *    - 선택된 마커 해제
+   *
+   * - center change
+   *    - 마지막 저장위치 기억
    */
   useEffect(() => {
     if (!map) {
@@ -82,8 +96,22 @@ export function Main() {
       setSelectCragId(null);
     });
 
+    const centerChangeListener = map.addListener('center_changed', () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+
+      timerRef.current = setTimeout(() => {
+        const { y, x } = map.getCenter();
+
+        useStore.getState().setLastLat(y);
+        useStore.getState().setLastLng(x);
+      }, 500);
+    });
+
     return function cleanup() {
       map.removeListener(mapClickListener);
+      map.removeListener(centerChangeListener);
     };
   }, [map, setSelectCragId]);
 
