@@ -3,6 +3,7 @@ import { Outlet, useLocation, Link } from 'react-router';
 
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
+import { grey } from '@mui/material/colors';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Terrain } from '@mui/icons-material';
 
@@ -139,7 +140,15 @@ export function ManagePage() {
             },
           }}
         >
-          <IconButton onClick={() => setToggled(true)} sx={{ background: 'white', boxShadow: 2 }}>
+          <IconButton
+            onClick={() => setToggled(true)}
+            sx={{
+              background: 'white',
+              boxShadow: 2,
+
+              '&:hover': { bgcolor: grey[100] },
+            }}
+          >
             <MenuOpen sx={{ transform: 'rotate(180deg)' }} />
           </IconButton>
         </Box>
