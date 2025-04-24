@@ -195,7 +195,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             borderRadius: isMobile ? 0 : 1,
           }}
         >
-          {contents[index.value]}
+          {contents[Math.min(index.value, contents.length - 1)]}
         </Box>
 
         {/* 상단 진행 바 */}
