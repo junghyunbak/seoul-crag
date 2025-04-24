@@ -168,9 +168,10 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       <ContentMotionDiv
         {...bind()}
         style={{ y }}
-        initial={false}
-        exit={{ y: isMobile ? '100%' : 0 }}
-        transition={{ duration: 0.3 }}
+        initial={isMobile ? { y: '100%' } : {}}
+        animate={isMobile ? { y: 0 } : {}}
+        exit={isMobile ? { y: '100%' } : {}}
+        transition={{ duration: 0.2 }}
         sx={{
           position: 'relative',
           width: isMobile ? '100%' : 'auto',
