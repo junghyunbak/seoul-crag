@@ -12,6 +12,11 @@ import { useDrag } from '@use-gesture/react';
 const DimmedMotionDiv = styled(motion.div)``;
 const ContentMotionDiv = styled(motion.div)``;
 
+const MAX_DIMMED_OPACITY = 0.9;
+const MIN_DIMMED_OPACITY = 0.3;
+
+const CLOSE_THRESHOLD = 400;
+
 interface StorySliderProps {
   contents: React.ReactNode[];
   duration?: number;
@@ -34,7 +39,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
   const y = useMotionValue(0);
-  const backdropOpacity = useTransform(y, [0, 400], [0.9, 0.3]);
+  const backdropOpacity = useTransform(y, [0, CLOSE_THRESHOLD], [MAX_DIMMED_OPACITY, MIN_DIMMED_OPACITY]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -154,13 +159,19 @@ export const StorySlider: React.FC<StorySliderProps> = ({
         zIndex: zIndex.story,
       }}
     >
+      {/**
+       * // [ ]: 퇴장시 opacity 적용 안되는 중. y축에 다른 backdropOpacity가 덮어쓰는 것 같음.
+       */}
       <DimmedMotionDiv
+        initial={isMobile ? { opacity: MIN_DIMMED_OPACITY } : {}}
+        animate={isMobile ? { opacity: MAX_DIMMED_OPACITY } : {}}
+        exit={isMobile ? { opacity: MIN_DIMMED_OPACITY } : {}}
+        transition={{ duration: 0.2 }}
         style={{ opacity: backdropOpacity }}
         sx={{
           position: 'absolute',
           inset: 0,
           backgroundColor: 'black',
-          opacity: 0.9,
         }}
         onClick={onClose}
       />
