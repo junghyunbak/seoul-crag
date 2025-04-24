@@ -39,8 +39,8 @@ export class GymsController {
     return this.gymsService.create(dto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('gym_admin', 'partner_admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateGymDto) {
     return this.gymsService.update(id, dto);

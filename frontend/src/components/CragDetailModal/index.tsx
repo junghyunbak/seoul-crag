@@ -26,6 +26,18 @@ import { useDrag } from '@use-gesture/react';
 
 import { zIndex } from '@/styles';
 
+import { engDayToKor } from '@/components/WeeklyHoursSilder';
+
+const dayOfPriority: Record<OpeningHourDayType, number> = {
+  sunday: 1,
+  monday: 2,
+  tuesday: 3,
+  wednesday: 4,
+  thursday: 5,
+  friday: 6,
+  saturday: 7,
+};
+
 export function CragDetailModal() {
   const navigate = useNavigate();
 
@@ -187,9 +199,27 @@ export function CragDetailModal() {
                 <Typography variant="subtitle1" fontWeight={600} gutterBottom>
                   이용 시간
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  평일: 10:00 - 22:00 / 주말: 10:00 - 20:00
-                </Typography>
+                {crag.openingHourOfWeek &&
+                  crag.openingHourOfWeek
+                    .sort((a, b) => (dayOfPriority[a.day] < dayOfPriority[b.day] ? -1 : 1))
+                    .map(({ id, day, open_time, close_time }) => {
+                      if (!(open_time && close_time)) {
+                        return null;
+                      }
+
+                      const [oh, om] = open_time.split(':');
+                      const [ch, cm] = close_time.split(':');
+
+                      return (
+                        <Box key={id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Typography variant="body2" color="text.secondary">
+                            {engDayToKor(day)}
+                          </Typography>
+
+                          <Typography variant="body2" color="text.secondary">{`${oh}:${om} - ${ch}:${cm}`}</Typography>
+                        </Box>
+                      );
+                    })}
               </Box>
 
               <Divider />
@@ -232,6 +262,7 @@ function CragLocation({ crag }: CragLocationProps) {
       draggable: false,
       pinchZoom: false,
       scrollWheel: false,
+      keyboardShortcuts: false,
       zoom: 14,
     }),
     []

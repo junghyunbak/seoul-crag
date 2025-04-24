@@ -9,6 +9,7 @@ import { GymImage } from '../gym-images/gym-images.entity';
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 import { UpdateGymDto } from 'src/gyms/dto/update-gym.dto';
 import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
+import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
 
 type GymField = {
   [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
@@ -16,13 +17,15 @@ type GymField = {
 
 type ImageType = { imageTypes: string[] };
 type ScheduleType = { futureSchedules: GymSchedule[] };
+type OpeningHourType = { openingHourOfWeek: GymOpeningHour[] };
 
-type GymJoinedTypes = (GymField & ImageType & ScheduleType)[];
+type JoinedType = ImageType & ScheduleType & OpeningHourType;
+
+type GymJoinedTypes = (GymField & JoinedType)[];
 
 type JoinGymWithImageType = {
   [P in keyof GymField as `gym_${P}`]: GymField[P];
-} & ImageType &
-  ScheduleType;
+} & JoinedType;
 
 @Injectable()
 export class GymsService {
@@ -55,6 +58,15 @@ export class GymsService {
             .where('s.gymId = gym.id')
             .andWhere(`s.date >= date_trunc('month', CURRENT_DATE)`),
         'futureSchedules',
+      )
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(`JSON_AGG(o)`)
+            .from(GymOpeningHour, 'o')
+            .where('o.gymId = gym.id'),
+        'openingHourOfWeek',
       );
   }
 
@@ -77,9 +89,10 @@ export class GymsService {
         updated_at: raw.gym_updated_at,
         images: raw.gym_images,
         schedules: raw.gym_schedules,
+        openingHours: raw.gym_openingHours,
         imageTypes: raw.imageTypes,
         futureSchedules: raw.futureSchedules,
-        openingHours: raw.gym_openingHours,
+        openingHourOfWeek: raw.openingHourOfWeek,
       };
 
       gymWithImages.push(gymWithImage);
@@ -109,9 +122,10 @@ export class GymsService {
       updated_at: rawGym.gym_updated_at,
       images: rawGym.gym_images,
       schedules: rawGym.gym_schedules,
+      openingHours: rawGym.gym_openingHours,
       imageTypes: rawGym.imageTypes,
       futureSchedules: rawGym.futureSchedules,
-      openingHours: rawGym.gym_openingHours,
+      openingHourOfWeek: rawGym.openingHourOfWeek,
     };
 
     return gymWithImage;

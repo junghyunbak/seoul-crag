@@ -11,7 +11,7 @@ export const daysOfWeek: OpeningHourDayType[] = [
   'saturday',
 ];
 
-function engDayToKor(engDay: OpeningHourDayType) {
+export function engDayToKor(engDay: OpeningHourDayType) {
   switch (engDay) {
     case 'sunday':
       return '일요일';
