@@ -21,16 +21,20 @@ export function useFetchCrags() {
 
 export function useFetchCrag({
   cragId,
-  enabled = false,
+  enabled = true,
   initialData,
 }: {
-  cragId: string;
+  cragId: string | undefined | null;
   enabled?: boolean;
-  initialData: Crag;
+  initialData?: Crag;
 }) {
   const { data: crag, refetch } = useQuery({
     queryKey: ['crag', cragId],
     queryFn: async () => {
+      if (!cragId) {
+        return null;
+      }
+
       const { data } = await api.get(`/gyms/${cragId}`);
 
       const crag = cragScheme.parse(data);

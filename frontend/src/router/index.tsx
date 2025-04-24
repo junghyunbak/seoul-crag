@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
           <ErrorBoundary
             fallback={
               <div>
-                401<button onClick={() => (window.location.href = '/?menu=open')}>로그인</button>
+                401<button onClick={() => (window.location.href = '/?menu=1')}>로그인</button>
               </div>
             }
           >

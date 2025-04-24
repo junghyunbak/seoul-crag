@@ -2,16 +2,16 @@ import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { Tune } from '@mui/icons-material';
 import { Search } from '@mui/icons-material';
 import { Menu } from '@mui/icons-material';
-import { useModifyMenu } from '@/hooks';
-import { useLocation } from 'react-router';
+
+import { useQueryParam, BooleanParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
 
 export function Controller() {
-  const { updateIsMenuOpen } = useModifyMenu();
-
-  const { search } = useLocation();
+  const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
   const handleMenuButtonClick = () => {
-    updateIsMenuOpen(true, new URLSearchParams(search));
+    setIsMenuOpen(true);
   };
 
   return (

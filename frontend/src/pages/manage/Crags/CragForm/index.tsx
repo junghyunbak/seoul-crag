@@ -26,6 +26,10 @@ export function CragForm({ initialCrag }: CragFormProps) {
     initialData: initialCrag,
   });
 
+  if (!crag) {
+    return;
+  }
+
   return (
     <cragFormContext.Provider
       value={{

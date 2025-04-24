@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 
 import { StoryImage } from '@/components/StoryImage';
 import { StorySchedule } from '@/components/StorySchedule';
+import { CragDetailModal } from '@/components/CragDetailModal';
 
 import { ReactRouter7Adapter } from '@/router';
 import { QueryProvider } from '@/router/QueryProvider';
@@ -19,6 +20,7 @@ export function Layout() {
 
           <StoryImage imageType="interior" />
           <StorySchedule />
+          <CragDetailModal />
         </QueryParamProvider>
       </QueryProvider>
     </Box>

@@ -2,17 +2,18 @@ import { Drawer, Box, Button, Typography, Stack } from '@mui/material';
 
 import { MapsUgc } from '@mui/icons-material';
 
-import { useFetchMe, useMenu, useModifyMenu, useMutateLogout } from '@/hooks';
-import { useLocation } from 'react-router';
+import { useFetchMe, useMutateLogout } from '@/hooks';
+
+import { BooleanParam, useQueryParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
 
 export function Menu() {
-  const { search } = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
+
+  const { user } = useFetchMe();
 
   const { logoutMutation } = useMutateLogout();
-
-  const { updateIsMenuOpen } = useModifyMenu();
-
-  const { isMenuOpen } = useMenu();
 
   const handleLoginButtonClick = () => {
     window.location.href = '/api/auth/kakao';
@@ -23,13 +24,11 @@ export function Menu() {
   };
 
   const handleMenuClose = () => {
-    updateIsMenuOpen(false, new URLSearchParams(search));
+    setIsMenuOpen(null);
   };
 
-  const { user } = useFetchMe();
-
   return (
-    <Drawer anchor="right" open={isMenuOpen} onClose={handleMenuClose}>
+    <Drawer anchor="right" open={!!isMenuOpen} onClose={handleMenuClose}>
       <Box
         sx={{
           maxWidth: '300px',

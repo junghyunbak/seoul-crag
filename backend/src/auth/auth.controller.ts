@@ -92,7 +92,7 @@ export class AuthController {
       return res.redirect('/login-fail');
     }
 
-    return res.redirect('/?menu=open');
+    return res.redirect('/?menu=1');
   }
 
   @Post('logout')

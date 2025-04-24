@@ -7,7 +7,6 @@ export * from './useFilter';
 export * from './useMap';
 export * from './useExerciseTimeRange';
 export * from './useCragList';
-export * from './useMenu';
 export * from './useNaverMap';
 
 /**
@@ -18,7 +17,6 @@ export * from './useModifyMap';
 export * from './useModifyExerciseTimeRange';
 export * from './useModifyCragList';
 export * from './useModifySelectDate';
-export * from './useModifyMenu';
 export * from './useModifyCrag';
 
 /**
