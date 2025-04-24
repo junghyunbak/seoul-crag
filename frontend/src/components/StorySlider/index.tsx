@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, TouchEvent, MouseEvent } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Box, IconButton, useMediaQuery } from '@mui/material';
 import { ChevronLeft, ChevronRight, Pause, PlayArrow, Close } from '@mui/icons-material';
@@ -7,6 +7,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { zIndex } from '@/styles';
 
 import { motion, animate, useMotionValue, useTransform } from 'framer-motion';
+import { useDrag } from '@use-gesture/react';
 
 const DimmedMotionDiv = styled(motion.div)``;
 const ContentMotionDiv = styled(motion.div)``;
@@ -34,8 +35,6 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
   const y = useMotionValue(0);
   const backdropOpacity = useTransform(y, [0, 400], [0.9, 0.3]);
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -99,47 +98,39 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
   const handlePauseToggle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-
     setPaused((prev) => !prev);
   };
 
-  const handleTouchStart = (e: TouchEvent) => {
-    touchStartX.current = e.changedTouches[0].clientX;
-    touchStartY.current = e.changedTouches[0].clientY;
-  };
-
-  const handleTouchMove = (e: TouchEvent) => {
-    const currentY = e.touches[0].clientY;
-
-    const delta = currentY - touchStartY.current;
-
-    if (delta > 0) {
-      y.set(delta);
-    }
-  };
-
-  const handleTouchEnd = (e: TouchEvent) => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - touchStartX.current;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        handlePrev();
-      } else {
-        handleNext();
+  const bind = useDrag(
+    ({ last, movement: [mx, my], velocity: [vx, vy], direction: [dx, dy], cancel, memo }) => {
+      // 최초 방향 판단 후 고정
+      if (!memo) {
+        memo = Math.abs(mx) > Math.abs(my) ? 'x' : 'y';
       }
+
+      if (memo === 'x') {
+        if (last) {
+          if (mx > 50) handlePrev();
+          else if (mx < -50) handleNext();
+        }
+      } else if (memo === 'y') {
+        y.set(my);
+        if (last) {
+          if (my > 100 || vy > 1.5) onClose?.();
+          else animate(y, 0);
+        }
+      }
+
+      return memo;
+    },
+    {
+      axis: 'lock',
+      filterTaps: true,
+      pointer: { touch: true },
     }
+  );
 
-    const delta = y.get();
-
-    if (delta > 100) {
-      onClose?.();
-    }
-
-    animate(y, 0);
-  };
-
-  const handleClickMobile = (e: MouseEvent<HTMLDivElement>) => {
+  const handleClickMobile = (e: React.MouseEvent<HTMLDivElement>) => {
     const x = e.nativeEvent.offsetX;
     const width = (e.target as HTMLDivElement).clientWidth;
     if (x < width / 2) {
@@ -164,9 +155,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       }}
     >
       <DimmedMotionDiv
-        style={{
-          opacity: backdropOpacity,
-        }}
+        style={{ opacity: backdropOpacity }}
         sx={{
           position: 'absolute',
           inset: 0,
@@ -177,9 +166,8 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       />
 
       <ContentMotionDiv
-        style={{
-          y,
-        }}
+        {...bind()}
+        style={{ y }}
         initial={false}
         exit={{ y: isMobile ? '100%' : 0 }}
         transition={{ duration: 0.3 }}
@@ -192,11 +180,9 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           alignItems: 'center',
           backgroundColor: 'black',
           boxShadow: isMobile ? undefined : 3,
+          touchAction: 'none',
         }}
         onClick={isMobile ? handleClickMobile : undefined}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <Box
           sx={{
