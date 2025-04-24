@@ -39,7 +39,6 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   const progressRef = useRef<NodeJS.Timeout | null>(null);
 
   const y = useMotionValue(0);
-  const backdropOpacity = useTransform(y, [0, CLOSE_THRESHOLD], [MAX_DIMMED_OPACITY, MIN_DIMMED_OPACITY]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -159,15 +158,11 @@ export const StorySlider: React.FC<StorySliderProps> = ({
         zIndex: zIndex.story,
       }}
     >
-      {/**
-       * // [ ]: 퇴장시 opacity 적용 안되는 중. y축에 다른 backdropOpacity가 덮어쓰는 것 같음.
-       */}
       <DimmedMotionDiv
-        initial={isMobile ? { opacity: MIN_DIMMED_OPACITY } : {}}
-        animate={isMobile ? { opacity: MAX_DIMMED_OPACITY } : {}}
-        exit={isMobile ? { opacity: MIN_DIMMED_OPACITY } : {}}
+        initial={{ opacity: MIN_DIMMED_OPACITY }}
+        animate={{ opacity: MAX_DIMMED_OPACITY }}
+        exit={{ opacity: MIN_DIMMED_OPACITY }}
         transition={{ duration: 0.2 }}
-        style={{ opacity: backdropOpacity }}
         sx={{
           position: 'absolute',
           inset: 0,
@@ -179,32 +174,43 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       <ContentMotionDiv
         {...bind()}
         style={{ y }}
-        initial={isMobile ? { y: '100%' } : {}}
-        animate={isMobile ? { y: 0 } : {}}
-        exit={isMobile ? { y: '100%' } : {}}
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
         transition={{ duration: 0.2 }}
         sx={{
           position: 'relative',
+
+          boxShadow: 3,
+
           width: isMobile ? '100%' : 'auto',
           height: isMobile ? '100%' : '95dvh',
           aspectRatio: isMobile ? 'auto' : '9/16',
+
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: 'black',
-          boxShadow: isMobile ? undefined : 3,
+
+          /**
+           * useDrag와의 충돌을 방지하기 위해 중요한 스타일
+           */
           touchAction: 'none',
         }}
         onClick={isMobile ? handleClickMobile : undefined}
       >
         <Box
           sx={{
-            overflow: 'hidden',
             width: '100%',
             height: '100%',
+            overflow: 'hidden',
+
             display: 'flex',
             alignItems: 'center',
-            pointerEvents: 'none',
+
             borderRadius: isMobile ? 0 : 1,
+
+            backgroundColor: 'black',
+
+            pointerEvents: 'none',
           }}
         >
           {contents[Math.min(index.value, contents.length - 1)]}
