@@ -10,14 +10,10 @@ import { motion, animate, useMotionValue } from 'framer-motion';
 
 import { useDrag } from '@use-gesture/react';
 
+import { SIZE } from '@/constants';
+
 const DimmedMotionDiv = styled(motion.div)``;
 const ContentMotionDiv = styled(motion.div)``;
-
-const MAX_DIMMED_OPACITY = 0.9;
-const MIN_DIMMED_OPACITY = 0.3;
-
-const CLOSE_THRESHOLD_Y = 100;
-const SWIPE_THRESHOLD_X = 50;
 
 interface StorySliderProps {
   contents: React.ReactNode[];
@@ -116,14 +112,20 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
       if (memo === 'x') {
         if (last) {
-          if (mx > SWIPE_THRESHOLD_X) handlePrev();
-          else if (mx < -SWIPE_THRESHOLD_X) handleNext();
+          if (mx > SIZE.SWIPE_THRESHOLD_X) handlePrev();
+          else if (mx < -SIZE.SWIPE_THRESHOLD_X) handleNext();
         }
       } else if (memo === 'y') {
-        y.set(my);
+        const nextY = Math.max(my, 0);
+
+        y.set(nextY);
+
         if (last) {
-          if (my > CLOSE_THRESHOLD_Y || vy > 1.5) onClose?.();
-          else animate(y, 0);
+          if (nextY > SIZE.CLOSE_THRESHOLD_Y || vy > 1.5) {
+            onClose?.();
+          } else {
+            animate(y, 0);
+          }
         }
       }
 
@@ -161,9 +163,9 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       }}
     >
       <DimmedMotionDiv
-        initial={{ opacity: MIN_DIMMED_OPACITY }}
-        animate={{ opacity: MAX_DIMMED_OPACITY }}
-        exit={{ opacity: MIN_DIMMED_OPACITY }}
+        initial={{ opacity: SIZE.MIN_DIMMED_OPACITY }}
+        animate={{ opacity: SIZE.MAX_DIMMED_OPACITY }}
+        exit={{ opacity: SIZE.MIN_DIMMED_OPACITY }}
         transition={{ duration: 0.2 }}
         sx={{
           position: 'absolute',

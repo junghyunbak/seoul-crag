@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { useMotionValue, AnimatePresence, motion, animate } from 'framer-motion';
 
 import { Box, Typography, IconButton, Stack, Divider } from '@mui/material';
+
 import { Share, Edit, Close, GradeOutlined } from '@mui/icons-material';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
-import { QUERY_STRING } from '@/constants';
+import { QUERY_STRING, SIZE } from '@/constants';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
@@ -20,10 +21,16 @@ import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
 
 import { urlService } from '@/utils';
 
+import { useDrag } from '@use-gesture/react';
+
 import { zIndex } from '@/styles';
 
 export function CragDetailModal() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const y = useMotionValue(0);
 
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });
   const { images } = useFetchImages(selectCragDetailId, 'interior');
@@ -39,6 +46,42 @@ export function CragDetailModal() {
       setCurrentSlide(slider.track.details.rel);
     },
   });
+
+  const bind = useDrag(
+    ({ last, movement: [mx, my], velocity: [vx, vy], memo, cancel }) => {
+      if (!(scrollRef.current && scrollRef.current.scrollTop <= 10)) {
+        return;
+      }
+
+      if (!memo) {
+        // x축 제스처는 무시하고 y만 허용
+        if (Math.abs(mx) > Math.abs(my)) {
+          return;
+        }
+
+        memo = 'y';
+      }
+
+      const nextY = Math.max(0, my);
+
+      y.set(nextY);
+
+      if (last) {
+        if (nextY > SIZE.CLOSE_THRESHOLD_Y || vy > 1.5) {
+          setSelectCragDetailId(null);
+        } else {
+          animate(y, 0);
+        }
+      }
+
+      return memo;
+    },
+    {
+      axis: 'lock',
+      filterTaps: true,
+      pointer: { touch: true },
+    }
+  );
 
   return createPortal(
     <AnimatePresence>
@@ -58,16 +101,19 @@ export function CragDetailModal() {
           }}
         >
           <motion.div
+            {...bind()}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.2 }}
             style={{
+              y,
               backgroundColor: '#fff',
               width: '100%',
               height: '100%',
               overflowY: 'auto',
             }}
+            ref={scrollRef}
           >
             {/* 이미지 슬라이더 */}
             <Box sx={{ position: 'relative' }}>
