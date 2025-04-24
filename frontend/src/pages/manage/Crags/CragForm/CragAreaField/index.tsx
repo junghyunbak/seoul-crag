@@ -4,9 +4,7 @@ import { FormTextField } from '@/components/FormTextField';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { useMutation } from '@tanstack/react-query';
-
-import { api } from '@/api/axios';
+import { useMutateCragArea } from '@/hooks';
 
 const MIN_AREA_VALUE = 50;
 const MAX_AREA_VALUE = 1000;
@@ -14,12 +12,7 @@ const MAX_AREA_VALUE = 1000;
 export function CragAreaField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
-  const { mutate } = useMutation({
-    mutationFn: async (areaSize: number) => {
-      await api.patch(`/gyms/${crag.id}`, {
-        area: areaSize,
-      });
-    },
+  const { changeCragAreaMutation } = useMutateCragArea({
     onSettled() {
       revalidateCrag();
     },
@@ -30,7 +23,10 @@ export function CragAreaField() {
       throw new Error();
     }
 
-    mutate(+data);
+    changeCragAreaMutation.mutate({
+      cragId: crag.id,
+      area: +data,
+    });
   };
 
   return (
