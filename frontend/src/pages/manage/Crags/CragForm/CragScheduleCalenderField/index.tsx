@@ -4,16 +4,35 @@ import { Box, Typography } from '@mui/material';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { api } from '@/api/axios';
-
 import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 
-import { useFetchSchedules } from '@/hooks';
+import { useFetchSchedules, useMutateAddSchedule, useMutateDeleteSchedule, useMutateUpdateSchedule } from '@/hooks';
 
 export function CragScheduleCalenderField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
   const { schedules, refetch } = useFetchSchedules(crag.id);
+
+  const { addScheduleMutation } = useMutateAddSchedule({
+    onSettled() {
+      refetch();
+      revalidateCrag();
+    },
+  });
+
+  const { deleteScheduleMutation } = useMutateDeleteSchedule({
+    onSettled() {
+      refetch();
+      revalidateCrag();
+    },
+  });
+
+  const { updateScheduleMutation } = useMutateUpdateSchedule({
+    onSettled() {
+      refetch();
+      revalidateCrag();
+    },
+  });
 
   return (
     <Box>
@@ -22,30 +41,13 @@ export function CragScheduleCalenderField() {
       <ScheduleCalendar
         schedules={schedules || []}
         onDelete={async (id) => {
-          await api.delete(`/gyms/${crag.id}/schedules/${id}`);
-
-          refetch();
-          revalidateCrag();
+          deleteScheduleMutation.mutate({ cragId: crag.id, scheduleId: id });
         }}
         onUpdate={async ({ id, type, reason }) => {
-          await api.patch(`/gyms/${crag.id}/schedules/${id}`, {
-            type,
-            reason,
-          });
-
-          refetch();
-          revalidateCrag();
+          updateScheduleMutation.mutate({ cragId: crag.id, scheduleId: id, type, reason });
         }}
         onCreate={async ({ date, type, reason }) => {
-          await api.post(`/gyms/${crag.id}/schedules`, {
-            gymId: crag.id,
-            date,
-            type,
-            reason,
-          });
-
-          refetch();
-          revalidateCrag();
+          addScheduleMutation.mutate({ cragId: crag.id, date, type, reason });
         }}
       />
     </Box>

@@ -33,5 +33,6 @@ export * from './useFetchImages';
  */
 export * from './useMutateRole';
 export * from './useMutateLogout';
-export * from './useMutateImage';
 export * from './useMutateCrag';
+export * from './useMutateImage';
+export * from './useMutateSchedule';
