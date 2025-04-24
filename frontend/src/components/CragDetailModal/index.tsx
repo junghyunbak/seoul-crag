@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 
-import { useMotionValue, AnimatePresence, motion, animate } from 'framer-motion';
+import { useMotionValue, AnimatePresence, motion, animate, m } from 'framer-motion';
 
 import { Box, Typography, IconButton, Stack, Divider } from '@mui/material';
 
@@ -15,9 +15,10 @@ import { QUERY_STRING, SIZE } from '@/constants';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 
-import { useFetchCrag, useFetchImages } from '@/hooks';
+import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
 
 import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
+import { Map } from '@/components/Map';
 
 import { urlService } from '@/utils';
 
@@ -26,16 +27,12 @@ import { useDrag } from '@use-gesture/react';
 import { zIndex } from '@/styles';
 
 export function CragDetailModal() {
+  const navigate = useNavigate();
+
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const y = useMotionValue(0);
 
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });
   const { images } = useFetchImages(selectCragDetailId, 'interior');
-
-  const navigate = useNavigate();
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -46,6 +43,9 @@ export function CragDetailModal() {
       setCurrentSlide(slider.track.details.rel);
     },
   });
+
+  const y = useMotionValue(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const bind = useDrag(
     ({ last, movement: [mx, my], velocity: [vx, vy], memo, cancel }) => {
@@ -155,7 +155,7 @@ export function CragDetailModal() {
             </Box>
 
             {/* 본문 내용 */}
-            <Box sx={{ p: 3 }}>
+            <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
                 <Typography variant="h5" fontWeight={600}>
                   {crag.name}
@@ -177,25 +177,38 @@ export function CragDetailModal() {
                 </Stack>
               </Stack>
 
-              <Divider sx={{ my: 2 }} />
-
               <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'wrap' }}>
                 {crag.description}
               </Typography>
 
-              <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                이용 시간
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                평일: 10:00 - 22:00 / 주말: 10:00 - 20:00
-              </Typography>
+              <Divider />
 
-              <Box mt={4}>
+              <Box>
+                <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                  이용 시간
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  평일: 10:00 - 22:00 / 주말: 10:00 - 20:00
+                </Typography>
+              </Box>
+
+              <Divider />
+
+              <Box>
                 <Typography variant="subtitle1" fontWeight={600} gutterBottom>
                   일정표
                 </Typography>
 
                 <GymScheduleGrid schedules={crag.futureSchedules || []} currentMonth={new Date()} readOnly />
+              </Box>
+
+              <Divider />
+
+              <Box>
+                <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                  상세 위치
+                </Typography>
+                <CragLocation crag={crag} />
               </Box>
             </Box>
           </motion.div>
@@ -203,5 +216,43 @@ export function CragDetailModal() {
       )}
     </AnimatePresence>,
     document.body
+  );
+}
+
+interface CragLocationProps {
+  crag: Crag;
+}
+
+/**
+ * portal에서 맵 ref를 연결하면 동작하지 않음.
+ */
+function CragLocation({ crag }: CragLocationProps) {
+  const { map, mapRef } = useNaverMap(
+    () => ({
+      draggable: false,
+      pinchZoom: false,
+      scrollWheel: false,
+      zoom: 14,
+    }),
+    []
+  );
+
+  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
+
+  useEffect(() => {
+    if (map && crag && marker) {
+      const latLng = new naver.maps.LatLng(crag.latitude, crag.longitude);
+
+      map.setCenter(latLng);
+      marker.setPosition(latLng);
+    }
+  }, [crag, map, marker]);
+
+  return (
+    <Box sx={{ width: '100%', aspectRatio: '1/1' }}>
+      <Map map={map} mapRef={mapRef}>
+        <Map.Marker.Default onCreate={setMarker} />
+      </Map>
+    </Box>
   );
 }
