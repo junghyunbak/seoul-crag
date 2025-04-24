@@ -13,7 +13,7 @@ import { QueryProvider } from '@/router/QueryProvider';
 
 export function Layout() {
   return (
-    <Box sx={{ width: '100dvw', height: '100dvh' }}>
+    <Box sx={{ position: 'fixed', inset: 0 }}>
       <QueryProvider>
         <QueryParamProvider adapter={ReactRouter7Adapter}>
           <Outlet />
