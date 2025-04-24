@@ -97,7 +97,9 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     setIndex({ value: index.value + 1 });
   };
 
-  const handlePauseToggle = () => {
+  const handlePauseToggle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+
     setPaused((prev) => !prev);
   };
 
@@ -171,6 +173,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           backgroundColor: 'black',
           opacity: 0.9,
         }}
+        onClick={onClose}
       />
 
       <ContentMotionDiv
@@ -178,7 +181,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           y,
         }}
         initial={false}
-        exit={{ y: '100%' }}
+        exit={{ y: isMobile ? '100%' : 0 }}
         transition={{ duration: 0.3 }}
         sx={{
           position: 'relative',
