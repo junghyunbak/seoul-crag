@@ -2,9 +2,14 @@ import React, { useEffect, useRef, useState, TouchEvent, MouseEvent } from 'reac
 
 import { Box, IconButton, useMediaQuery } from '@mui/material';
 import { ChevronLeft, ChevronRight, Pause, PlayArrow, Close } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 import { zIndex } from '@/styles';
+
+import { motion, animate, useMotionValue, useTransform } from 'framer-motion';
+
+const DimmedMotionDiv = styled(motion.div)``;
+const ContentMotionDiv = styled(motion.div)``;
 
 interface StorySliderProps {
   contents: React.ReactNode[];
@@ -26,6 +31,11 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   const [paused, setPaused] = useState(initPaused);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
+
+  const y = useMotionValue(0);
+  const backdropOpacity = useTransform(y, [0, 400], [0.9, 0.3]);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -91,10 +101,19 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     setPaused((prev) => !prev);
   };
 
-  const touchStartX = useRef(0);
-
   const handleTouchStart = (e: TouchEvent) => {
     touchStartX.current = e.changedTouches[0].clientX;
+    touchStartY.current = e.changedTouches[0].clientY;
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    const currentY = e.touches[0].clientY;
+
+    const delta = currentY - touchStartY.current;
+
+    if (delta > 0) {
+      y.set(delta);
+    }
   };
 
   const handleTouchEnd = (e: TouchEvent) => {
@@ -108,6 +127,14 @@ export const StorySlider: React.FC<StorySliderProps> = ({
         handleNext();
       }
     }
+
+    const delta = y.get();
+
+    if (delta > 100) {
+      onClose?.();
+    }
+
+    animate(y, 0);
   };
 
   const handleClickMobile = (e: MouseEvent<HTMLDivElement>) => {
@@ -122,31 +149,51 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
   return (
     <Box
-      position="fixed"
-      top={0}
-      left={0}
-      width="100vw"
-      height="100vh"
-      bgcolor={isMobile ? 'black' : 'rgba(0,0,0,0.9)'}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      zIndex={zIndex.story}
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: zIndex.story,
+      }}
     >
-      <Box
-        position="relative"
-        width={isMobile ? '100%' : 'auto'}
-        height={isMobile ? '100%' : '95dvh'}
+      <DimmedMotionDiv
+        style={{
+          opacity: backdropOpacity,
+        }}
         sx={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'black',
+          opacity: 0.9,
+        }}
+      />
+
+      <ContentMotionDiv
+        style={{
+          y,
+        }}
+        initial={false}
+        exit={{ y: '100%' }}
+        transition={{ duration: 0.3 }}
+        sx={{
+          position: 'relative',
+          width: isMobile ? '100%' : 'auto',
+          height: isMobile ? '100%' : '95dvh',
           aspectRatio: isMobile ? 'auto' : '9/16',
           display: 'flex',
           alignItems: 'center',
+          backgroundColor: 'black',
+          boxShadow: isMobile ? undefined : 3,
         }}
-        bgcolor="black"
-        boxShadow={isMobile ? undefined : 3}
         onClick={isMobile ? handleClickMobile : undefined}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <Box
           sx={{
@@ -199,7 +246,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             </IconButton>
           </>
         )}
-      </Box>
+      </ContentMotionDiv>
     </Box>
   );
 };

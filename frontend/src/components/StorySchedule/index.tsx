@@ -12,6 +12,8 @@ import { StorySlider } from '@/components/StorySlider';
 import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { MonthNavigation } from '@/components/ScheduleCalendar/MonthNavigation';
 
+import { AnimatePresence } from 'framer-motion';
+
 import dayjs from 'dayjs';
 
 interface DateObject {
@@ -45,7 +47,7 @@ export function StorySchedule() {
   );
 
   return createPortal(
-    <div>
+    <AnimatePresence>
       {scheduleStoryCragId && schedules && (
         // [ ]: dimmed 클릭 시 닫기
         <StorySlider
@@ -66,7 +68,7 @@ export function StorySchedule() {
           initPaused
         />
       )}
-    </div>,
+    </AnimatePresence>,
     document.body
   );
 }

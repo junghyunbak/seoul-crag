@@ -12,6 +12,8 @@ import { QUERY_STRING } from '@/constants';
 
 import { useFetchImages } from '@/hooks';
 
+import { AnimatePresence } from 'framer-motion';
+
 interface StoryImageProps {
   imageType: ImageType;
 }
@@ -31,7 +33,7 @@ export function StoryImage({ imageType }: StoryImageProps) {
   const { images } = useFetchImages(cragId, imageType);
 
   return createPortal(
-    <div>
+    <AnimatePresence>
       {cragId && images && (
         <StorySlider
           contents={images.map((image) => (
@@ -49,7 +51,7 @@ export function StoryImage({ imageType }: StoryImageProps) {
           onComplete={() => setCragId(null)}
         />
       )}
-    </div>,
+    </AnimatePresence>,
     document.body
   );
 }
