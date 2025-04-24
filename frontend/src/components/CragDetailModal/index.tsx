@@ -20,6 +20,8 @@ import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
 
 import { urlService } from '@/utils';
 
+import { zIndex } from '@/styles';
+
 export function CragDetailModal() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
 
@@ -49,7 +51,7 @@ export function CragDetailModal() {
             width: '100vw',
             height: '100vh',
             bgcolor: 'rgba(0, 0, 0, 0.6)',
-            zIndex: 1300,
+            zIndex: zIndex.cragDetail,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -107,7 +109,7 @@ export function CragDetailModal() {
 
             {/* 본문 내용 */}
             <Box sx={{ p: 3 }}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
                 <Typography variant="h5" fontWeight={600}>
                   {crag.name}
                 </Typography>
@@ -124,13 +126,6 @@ export function CragDetailModal() {
                     }}
                   >
                     <Edit />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setSelectCragDetailId(null);
-                    }}
-                  >
-                    <Close />
                   </IconButton>
                 </Stack>
               </Stack>

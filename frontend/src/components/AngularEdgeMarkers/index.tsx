@@ -4,7 +4,9 @@ import { useMap } from '@/hooks';
 
 import { CragIcon } from '@/components/CragIcon';
 
-import './index.css';
+import { zIndex } from '@/styles';
+
+import { Box, Typography } from '@mui/material';
 
 interface AngularIndicator {
   x: number;
@@ -111,36 +113,87 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
   return (
     <>
       {indicators.map((item, i) => (
-        <div
+        <Box
           key={i}
-          className="marker-wrapper"
           onClick={() => {
             map?.setCenter(item.latLng);
           }}
-          style={{
+          sx={{
             position: 'fixed',
             top: item.y,
             left: item.x,
+            zIndex: zIndex.edgeMarker,
+
             transform: 'translate(-50%, -50%)',
-            zIndex: 9999,
+
             pointerEvents: 'auto',
+
+            width: 'max-content',
+            height: 'max-content',
+
             cursor: 'pointer',
           }}
         >
-          <div className="tail-wrapper" style={{ '--angle': `${item.angle}deg` } as React.CSSProperties}>
-            <div className="tail-bg" />
-          </div>
-
-          <div
-            className="balloon"
-            style={{
-              color: '#56654b',
-              width: '50px',
-              height: '46px',
+          {/**
+           * arrow background
+           */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: `rotate(${item.angle}deg)`,
+              transformOrigin: 'center center',
+              pointerEvents: 'none',
             }}
           >
-            <div
-              style={{
+            <Box
+              sx={{
+                width: '21px',
+                height: '21px',
+
+                backgroundColor: '#56654b',
+
+                clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                transform: 'translate(-50%, -180%)',
+
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: -1,
+              }}
+            />
+          </Box>
+
+          {/**
+           * content (border)
+           */}
+          <Box
+            sx={{
+              width: '50px',
+              height: '46px',
+
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+
+              background: '#f7ead6',
+
+              border: '3px solid #56654b',
+              borderRadius: 1,
+
+              position: 'relative',
+
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              overflow: 'hidden',
+            }}
+          >
+            {/**
+             * content (main)
+             */}
+            <Box
+              sx={{
                 position: 'absolute',
                 inset: 0,
 
@@ -153,26 +206,51 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
 
                 gap: '0.25rem',
 
-                zIndex: 10000,
+                zIndex: 1,
               }}
             >
-              <p
+              <Typography
                 style={{
+                  color: '#56654b',
                   fontSize: '0.875rem',
                   fontWeight: 'bold',
+                  userSelect: 'none',
                 }}
               >
                 {item.count}
-              </p>
+              </Typography>
 
               <CragIcon width={18} />
-            </div>
-          </div>
+            </Box>
+          </Box>
 
-          <div className="tail-wrapper" style={{ '--angle': `${item.angle}deg` } as React.CSSProperties}>
-            <div className="tail" />
-          </div>
-        </div>
+          {/**
+           * arrow foreground
+           */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: `rotate(${item.angle}deg)`,
+              transformOrigin: 'center center',
+              pointerEvents: 'none',
+            }}
+          >
+            <Box
+              sx={{
+                width: '18px',
+                height: '18px',
+                background: '#7e9468',
+                clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                transform: 'translate(-50%, -180%)',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }}
+            />
+          </Box>
+        </Box>
       ))}
     </>
   );

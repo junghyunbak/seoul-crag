@@ -8,6 +8,8 @@ import { BooleanParam, useQueryParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
+import { zIndex } from '@/styles';
+
 export function Menu() {
   const [isMenuOpen, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
@@ -28,7 +30,14 @@ export function Menu() {
   };
 
   return (
-    <Drawer anchor="right" open={!!isMenuOpen} onClose={handleMenuClose}>
+    <Drawer
+      anchor="right"
+      open={!!isMenuOpen}
+      onClose={handleMenuClose}
+      sx={{
+        zIndex: zIndex.menu,
+      }}
+    >
       <Box
         sx={{
           maxWidth: '300px',

@@ -6,6 +6,8 @@ import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Terrain } from '@mui/icons-material';
 
+import { zIndex } from '@/styles';
+
 import { urlService } from '@/utils';
 
 type SidebarItem = {
@@ -120,7 +122,7 @@ export function ManagePage() {
           sx={{
             position: 'absolute',
             right: 0,
-            zIndex: 10,
+            zIndex: zIndex.openMenu,
 
             m: 2,
 

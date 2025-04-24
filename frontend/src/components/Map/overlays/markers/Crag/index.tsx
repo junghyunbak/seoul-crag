@@ -17,6 +17,8 @@ import { format } from 'date-fns';
 import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 
+import { zIndex } from '@/styles';
+
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
   const MIN_AREA = minArea;
   const MAX_AREA = maxArea;
@@ -106,7 +108,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       return;
     }
 
-    marker.setZIndex(isSelect ? 1 : 0);
+    marker.setZIndex(isSelect ? zIndex.cragMarkerAcive : zIndex.cragMarkerUnactive);
   }, [marker, isSelect]);
 
   /**
