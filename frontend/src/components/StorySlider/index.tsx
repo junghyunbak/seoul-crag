@@ -6,7 +6,8 @@ import { styled, useTheme } from '@mui/material/styles';
 
 import { zIndex } from '@/styles';
 
-import { motion, animate, useMotionValue, useTransform } from 'framer-motion';
+import { motion, animate, useMotionValue } from 'framer-motion';
+
 import { useDrag } from '@use-gesture/react';
 
 const DimmedMotionDiv = styled(motion.div)``;
@@ -15,7 +16,8 @@ const ContentMotionDiv = styled(motion.div)``;
 const MAX_DIMMED_OPACITY = 0.9;
 const MIN_DIMMED_OPACITY = 0.3;
 
-const CLOSE_THRESHOLD = 400;
+const CLOSE_THRESHOLD_Y = 100;
+const SWIPE_THRESHOLD_X = 50;
 
 interface StorySliderProps {
   contents: React.ReactNode[];
@@ -114,13 +116,13 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
       if (memo === 'x') {
         if (last) {
-          if (mx > 50) handlePrev();
-          else if (mx < -50) handleNext();
+          if (mx > SWIPE_THRESHOLD_X) handlePrev();
+          else if (mx < -SWIPE_THRESHOLD_X) handleNext();
         }
       } else if (memo === 'y') {
         y.set(my);
         if (last) {
-          if (my > 100 || vy > 1.5) onClose?.();
+          if (my > CLOSE_THRESHOLD_Y || vy > 1.5) onClose?.();
           else animate(y, 0);
         }
       }
