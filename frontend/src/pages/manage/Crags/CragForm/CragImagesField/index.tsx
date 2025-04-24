@@ -136,8 +136,9 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
 
       <Box
         sx={{
-          overflowX: 'scroll',
           WebkitOverflowScrolling: 'touch',
+          width: '100%',
+          overflow: 'auto',
           py: 2,
         }}
       >

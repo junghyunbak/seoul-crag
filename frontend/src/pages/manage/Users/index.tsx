@@ -36,7 +36,14 @@ export function Users() {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        overflow: 'auto',
+        p: 2,
+      }}
+    >
       <Typography variant="h3">사용자 관리</Typography>
       <Paper>
         <TableContainer sx={{ overflowY: 'visible' }}>
@@ -77,7 +84,7 @@ export function Users() {
           </Table>
         </TableContainer>
       </Paper>
-    </>
+    </Box>
   );
 }
 

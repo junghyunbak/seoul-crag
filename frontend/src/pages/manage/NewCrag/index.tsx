@@ -67,7 +67,7 @@ export function NewCrag() {
   };
 
   return (
-    <Stack gap={1} sx={{ alignItems: 'flex-start' }}>
+    <Stack gap={1} sx={{ alignItems: 'flex-start', p: 2 }}>
       <TextField
         label="암장 이름"
         variant="outlined"

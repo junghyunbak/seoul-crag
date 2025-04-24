@@ -126,7 +126,7 @@ export function ManagePage() {
         </Menu>
       </Sidebar>
 
-      <Box sx={{ flex: 1, display: 'flex', overflowX: 'hidden', overflowY: 'scroll' }}>
+      <Box sx={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         <Box
           sx={{
             position: 'absolute',
