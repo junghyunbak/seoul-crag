@@ -17,18 +17,9 @@ import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { api } from '@/api/axios';
-
-import { useFetchImages } from '@/hooks';
+import { useFetchImages, useMutateImageAdd, useMutateImageDelete, useMutateImageReorder } from '@/hooks';
 
 import { SortableImage } from './SortableImage';
-
-const ScrollContainer = styled(Box)({
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  whiteSpace: 'nowrap',
-  WebkitOverflowScrolling: 'touch',
-});
 
 const ImageWrapper = styled(Box)({
   width: 100,
@@ -59,6 +50,27 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     setImages(fetchImages);
   }, [fetchImages]);
 
+  const { addImageMutation } = useMutateImageAdd({
+    onSettled() {
+      refetch();
+      revalidateCrag();
+    },
+  });
+
+  const { reorderImageMutation } = useMutateImageReorder({
+    onSettled() {
+      refetch();
+      revalidateCrag();
+    },
+  });
+
+  const { deleteImageMutation } = useMutateImageDelete({
+    onSettled() {
+      refetch();
+      revalidateCrag();
+    },
+  });
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(TouchSensor, {
@@ -85,11 +97,8 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
         form.append('file', file);
         form.append('type', imageType);
 
-        await api.post(`/gym-images/${crag.id}/images`, form);
+        addImageMutation.mutate({ cragId: crag.id, form });
       }
-
-      refetch();
-      revalidateCrag();
     }
   };
 
@@ -104,28 +113,34 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
 
       setImages(nextItems);
 
-      await api.post(`/gym-images/${crag.id}/images/reorder`, {
-        type: imageType,
-        orderedIds: nextItems.filter((image) => 'id' in image).map((image) => image.id),
+      reorderImageMutation.mutate({
+        imageType,
+        cragId: crag.id,
+        nextItems,
       });
-
-      refetch();
-      revalidateCrag();
     }
   };
 
-  const handleRemoveImage = async (id: string) => {
-    await api.delete(`/gym-images/${crag.id}/images/${id}`);
-
-    refetch();
-    revalidateCrag();
+  const handleRemoveImage = async (imageId: string) => {
+    deleteImageMutation.mutate({
+      cragId: crag.id,
+      imageId,
+    });
   };
 
   return (
     <Box>
       <Typography variant="h6">암장 내부 이미지</Typography>
+
       <Typography variant="caption">jpeg, jpg, png 확장자만 업로드 가능합니다.</Typography>
-      <ScrollContainer px={1} py={2}>
+
+      <Box
+        sx={{
+          overflowX: 'scroll',
+          WebkitOverflowScrolling: 'touch',
+          py: 2,
+        }}
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -136,7 +151,12 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
             items={images.map((image) => (image instanceof File ? image.name : image.id))}
             strategy={horizontalListSortingStrategy}
           >
-            <Box display="flex" gap={2} minWidth="fit-content">
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
+              }}
+            >
               {images.map((image) => {
                 if (image instanceof File) {
                   return <SortableImage key={image.name} id={image.name} file={image} />;
@@ -161,7 +181,7 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
             </Box>
           </SortableContext>
         </DndContext>
-      </ScrollContainer>
+      </Box>
     </Box>
   );
 }
