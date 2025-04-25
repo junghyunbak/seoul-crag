@@ -4,7 +4,7 @@ import { Outlet, useLocation, Link } from 'react-router';
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
 import { grey } from '@mui/material/colors';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Link as MuiLink, Box, IconButton, Typography } from '@mui/material';
 import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Terrain } from '@mui/icons-material';
 
 import { zIndex } from '@/styles';
@@ -97,9 +97,11 @@ export function ManagePage() {
             },
           }}
         >
-          <Typography variant="h3" sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
-            서울 암장
-          </Typography>
+          <Box sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
+            <MuiLink href={'/'} variant="h3" sx={{ color: 'black', textDecoration: 'none' }}>
+              서울 암장
+            </MuiLink>
+          </Box>
 
           {sidebarList.map((sidebarItem, i) => {
             return (
