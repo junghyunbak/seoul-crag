@@ -10,7 +10,11 @@ type AddImageMutateParams = {
 export function useMutateImageAdd({ onSettled }: MutationOptions<void, DefaultError, AddImageMutateParams>) {
   const addImageMutation = useMutation<void, DefaultError, AddImageMutateParams>({
     mutationFn: async ({ form, cragId }) => {
-      await api.post(`/gym-images/${cragId}/images`, form);
+      await api.post(`/gym-images/${cragId}/images`, form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     },
     onSettled,
   });
