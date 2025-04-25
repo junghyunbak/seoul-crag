@@ -207,7 +207,7 @@ function CragLocation({ crag }: CragLocationProps) {
       pinchZoom: false,
       scrollWheel: false,
       keyboardShortcuts: false,
-      zoom: 14,
+      zoom: 15,
     }),
     []
   );
