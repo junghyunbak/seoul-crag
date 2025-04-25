@@ -35,7 +35,9 @@ const BarContainer = styled(Box)({
   zIndex: 5,
 });
 
-const Segment = styled(Box)<{ complete?: boolean }>(({ complete }) => ({
+const Segment = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'complete',
+})<{ complete?: boolean }>(({ complete }) => ({
   flex: 1,
   height: '100%',
   backgroundColor: complete ? '#fff' : 'rgba(255,255,255,0.2)',
