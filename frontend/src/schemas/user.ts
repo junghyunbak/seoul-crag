@@ -1,8 +1,13 @@
 import { z } from 'zod';
 
-export const roleScheme = z.object({
+import { rolesScheme } from '@/schemas/role';
+
+export const userScheme = z.object({
   id: z.string(),
-  name: z.enum(['owner', 'gym_admin', 'partner_admin']),
+  username: z.string(),
+  email: z.string().optional(),
+  created_at: z.coerce.date(),
+  roles: rolesScheme,
 });
 
-export const rolesScheme = z.array(roleScheme);
+export const usersScheme = z.array(userScheme);

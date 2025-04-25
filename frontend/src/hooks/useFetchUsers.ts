@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
 
-import { usersScheme } from '@/schemas/role';
+import { usersScheme } from '@/schemas';
 
 export function useFetchUsers() {
   const { data: users } = useQuery({
