@@ -126,7 +126,9 @@ export function CragDetailModal() {
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      navigate(`${urlService.getAbsolutePath('/manage/crags')}?${QUERY_STRING.SELECT_CRAG}=${crag.id}`);
+                      window.location.href = `${urlService.getAbsolutePath('/manage/crags')}?${
+                        QUERY_STRING.SELECT_CRAG
+                      }=${crag.id}`;
                     }}
                   >
                     <Edit />
