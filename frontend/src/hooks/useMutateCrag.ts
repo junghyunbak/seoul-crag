@@ -115,7 +115,7 @@ type CreateCragMutateParams = Pick<Crag, 'name' | 'description' | 'latitude' | '
 export function useMutateCreateCrag({ onSuccess }: MutateOptions<void, DefaultError, CreateCragMutateParams>) {
   const createCragMutation = useMutation<void, DefaultError, CreateCragMutateParams>({
     mutationFn: async (crag) => {
-      api.post('/gyms', crag);
+      await api.post('/gyms', crag);
     },
     onSuccess,
   });
