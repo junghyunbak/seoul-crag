@@ -40,7 +40,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
           {user ? (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Avatar src={user.profile_image}>{user.username}</Avatar>
+                <Avatar src={user.profile_image || ''}>{user.username}</Avatar>
                 <Box sx={{ flex: 1, overflow: 'hidden' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography
