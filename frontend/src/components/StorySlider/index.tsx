@@ -208,6 +208,15 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     else goNext();
   };
 
+  /**
+   * https://github.com/pmndrs/use-gesture/issues/374
+   *
+   * use-gesture bind 함수를 spread 하여 사용할 때, 실제 동작에는 문제가 없지만
+   *
+   * motion.div와 이벤트 핸들러 타입이 맞지 않다고 에러가 발생하여 as any로 일단 처리함.
+   */
+  const gestureBind = bind() as any;
+
   return (
     <Box
       sx={{
@@ -232,7 +241,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       />
 
       <ContentMotionDiv
-        {...bind()}
+        {...gestureBind}
         style={{
           y,
           width: isMobile ? '100%' : undefined,
