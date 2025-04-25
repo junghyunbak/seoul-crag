@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,6 +18,40 @@ export class UserService {
     const user = await this.users.findOneBy({ id: userId });
 
     return user;
+  }
+
+  async getUserWithRoles(userId: string) {
+    const user = await this.users.findOne({
+      relations: ['userRoles', 'userRoles.role'],
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return {
+      id: user.id,
+      username: user?.username,
+      profile_image: user.profile_image,
+      email: user.email,
+      created_at: user.created_at,
+      roles: user.userRoles.map((ur) => ur.role),
+    };
+  }
+
+  async getAllUsersWithRoles() {
+    const users = await this.users.find({
+      relations: ['userRoles', 'userRoles.role'],
+    });
+
+    return users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      created_at: user.created_at,
+      roles: user.userRoles.map((ur) => ur.role),
+    }));
   }
 
   async findOrCreate(user: UserInfo): Promise<User> {
@@ -40,20 +74,6 @@ export class UserService {
     });
 
     return await this.users.save(newUser);
-  }
-
-  async getAllUsersWithRoles() {
-    const users = await this.users.find({
-      relations: ['userRoles', 'userRoles.role'],
-    });
-
-    return users.map((user) => ({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      created_at: user.created_at,
-      roles: user.userRoles.map((ur) => ur.role),
-    }));
   }
 
   async setRefreshToken(userId: string, token: string) {

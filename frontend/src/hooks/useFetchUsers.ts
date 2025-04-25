@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
 
-import { usersScheme } from '@/schemas';
+import { userScheme, usersScheme } from '@/schemas';
 
 export function useFetchUsers() {
   const { data: users } = useQuery({
@@ -27,7 +27,9 @@ export function useFetchMe() {
     queryFn: async () => {
       const { data } = await api.get('/users/me');
 
-      return data;
+      const user = userScheme.parse(data);
+
+      return user;
     },
   });
 

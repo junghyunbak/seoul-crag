@@ -11,9 +11,10 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
 
 import { Map } from '@/components/Map';
-import { Menu } from '@/components/Menu';
 import { Controller } from '@/components/Controller';
+import { Menu } from '@/components/Menu';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
+
 import { useStore } from '@/store';
 
 const DEFAULT_LAT = 37.55296695234301;

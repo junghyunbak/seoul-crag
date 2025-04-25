@@ -1,4 +1,10 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { UserService } from './user.service';
 
@@ -22,6 +28,12 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(@Req() req: Request) {
-    return req.user;
+    const { user } = req;
+
+    if (!user || !('id' in user) || typeof user.id !== 'string') {
+      throw new UnauthorizedException('');
+    }
+
+    return this.userService.getUserWithRoles(user.id);
   }
 }

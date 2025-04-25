@@ -1,14 +1,119 @@
-import { Drawer, Box, Button, Typography, Stack } from '@mui/material';
-
-import { MapsUgc } from '@mui/icons-material';
-
+import React from 'react';
+import { Box, Drawer, Avatar, Typography, IconButton, Button, Divider, useTheme } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import { useMediaQuery } from '@mui/material';
 import { useFetchMe, useMutateLogout } from '@/hooks';
-
 import { BooleanParam, useQueryParam } from 'use-query-params';
-
 import { QUERY_STRING } from '@/constants';
-
 import { zIndex } from '@/styles';
+import { urlService } from '@/utils';
+
+interface SidebarMenuProps {
+  open: boolean;
+  onClose: () => void;
+  user?: User;
+  onLogout: () => void;
+  onLogin: () => void;
+  onCopyId: () => void;
+  onNavigate: (path: string) => void;
+}
+
+export const SidebarMenu: React.FC<SidebarMenuProps> = ({
+  open,
+  onClose,
+  user,
+  onLogout,
+  onLogin,
+  onCopyId,
+  onNavigate,
+}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return (
+    <Drawer anchor="right" open={open} onClose={onClose} sx={{ zIndex: zIndex.menu }}>
+      <Box sx={{ width: isMobile ? '75vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Box sx={{ p: 3 }}>
+          {user ? (
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar src={user.profile_image}>{user.username}</Avatar>
+                <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {user.username}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                    >
+                      {user.id}
+                    </Typography>
+                    <IconButton size="small" onClick={onCopyId}>
+                      <ContentCopyIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box sx={{ mt: 3 }}>
+                {user.roles.some(({ name }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin') ? (
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => onNavigate(urlService.getAbsolutePath('/manage/crags'))}
+                  >
+                    내 암장 관리
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => onNavigate(urlService.getAbsolutePath('/manage'))}
+                  >
+                    내 정보 변경
+                  </Button>
+                )}
+              </Box>
+            </>
+          ) : (
+            <Box sx={{ textAlign: 'center', mt: 4 }}>
+              <Button
+                variant="contained"
+                startIcon={<LoginIcon />}
+                onClick={onLogin}
+                sx={{ backgroundColor: '#FEE500', color: '#000', '&:hover': { backgroundColor: '#ffeb3b' } }}
+              >
+                카카오 로그인
+              </Button>
+            </Box>
+          )}
+        </Box>
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        {user && (
+          <Box sx={{ p: 2 }}>
+            <Divider sx={{ mb: 2 }} />
+            <Button fullWidth startIcon={<LogoutIcon />} variant="outlined" color="error" onClick={onLogout}>
+              로그아웃
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </Drawer>
+  );
+};
 
 export function Menu() {
   const [isMenuOpen, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
@@ -29,64 +134,27 @@ export function Menu() {
     setIsMenuOpen(null);
   };
 
-  return (
-    <Drawer
-      anchor="right"
-      open={!!isMenuOpen}
-      onClose={handleMenuClose}
-      sx={{
-        zIndex: zIndex.menu,
-      }}
-    >
-      <Box
-        sx={{
-          maxWidth: '300px',
-          width: '80dvw',
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          display: 'flex',
-          p: '2rem',
-        }}
-      >
-        {!user ? (
-          <Button
-            variant="contained"
-            sx={{ gap: '0.5rem', alignItems: 'center', background: '#ffe948', color: 'black' }}
-            onClick={handleLoginButtonClick}
-          >
-            <MapsUgc sx={{ width: '2rem', height: '2rem' }} />
-            <Typography fontSize="1.5rem" fontWeight="bold">
-              카카오 로그인
-            </Typography>
-          </Button>
-        ) : (
-          <Stack sx={{ width: '100%', height: '100%' }} justifyContent="space-around">
-            <Stack direction="row" gap={1}>
-              <Box
-                sx={{
-                  p: 1,
-                  background: '#ffe948',
-                  borderRadius: '0.5rem',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <MapsUgc sx={{ width: '2rem', height: '2rem' }} />
-              </Box>
-              <Stack alignContent="space-between">
-                <Typography fontWeight="bold">{user.username}</Typography>
-                <Typography fontWeight="bold">사용자 식별자</Typography>
-              </Stack>
-            </Stack>
+  const handleNavigate = (path: string) => {
+    window.location.href = path;
+  };
 
-            <Button variant="outlined" onClick={handleLogoutButtonClick}>
-              로그아웃
-            </Button>
-          </Stack>
-        )}
-      </Box>
-    </Drawer>
+  const handleCopyId = () => {
+    if (!user) {
+      return;
+    }
+
+    navigator.clipboard.writeText(user.id);
+  };
+
+  return (
+    <SidebarMenu
+      open={!!isMenuOpen}
+      user={user}
+      onNavigate={handleNavigate}
+      onClose={handleMenuClose}
+      onCopyId={handleCopyId}
+      onLogin={handleLoginButtonClick}
+      onLogout={handleLogoutButtonClick}
+    />
   );
 }
