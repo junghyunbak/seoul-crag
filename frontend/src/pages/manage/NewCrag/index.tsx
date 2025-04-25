@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { api } from '@/api/axios';
-
 import { Stack, TextField, Box, Button } from '@mui/material';
 
-import { useMutation } from '@tanstack/react-query';
-
-import { useNaverMap } from '@/hooks';
+import { useNaverMap, useMutateCreateCrag } from '@/hooks';
 
 import { urlService } from '@/utils';
 
@@ -19,6 +15,12 @@ export function NewCrag() {
   const { map, mapRef } = useNaverMap(() => ({}), []);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
+
+  const { createCragMutation } = useMutateCreateCrag({
+    onSuccess() {
+      window.location.href = urlService.getAbsolutePath('/manage/crags');
+    },
+  });
 
   /**
    * 맵 이벤트 등록
@@ -38,20 +40,6 @@ export function NewCrag() {
       map.removeListener(listener);
     };
   }, [map, marker]);
-
-  const createCragMutation = useMutation({
-    mutationFn: async (
-      crag: MyOmit<
-        Crag,
-        'id' | 'created_at' | 'updated_at' | 'thumbnail_url' | 'area' | 'futureSchedules' | 'imageTypes'
-      >
-    ) => {
-      api.post('/gyms', crag);
-    },
-    onSuccess() {
-      window.location.href = urlService.getAbsolutePath('/manage/crags');
-    },
-  });
 
   const handleCragAddButtonClick = () => {
     if (!map || !name || !description) {

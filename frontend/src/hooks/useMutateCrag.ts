@@ -109,3 +109,18 @@ export function useMutateCragLocation({
 
   return { changeCragLocationMutation };
 }
+
+type CreateCragMutateParams = Pick<Crag, 'name' | 'description' | 'latitude' | 'longitude'>;
+
+export function useMutateCreateCrag({ onSuccess }: MutateOptions<void, DefaultError, CreateCragMutateParams>) {
+  const createCragMutation = useMutation<void, DefaultError, CreateCragMutateParams>({
+    mutationFn: async (crag) => {
+      api.post('/gyms', crag);
+    },
+    onSuccess,
+  });
+
+  return {
+    createCragMutation,
+  };
+}
