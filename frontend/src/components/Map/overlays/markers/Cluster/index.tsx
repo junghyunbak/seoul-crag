@@ -9,8 +9,6 @@ import { Box } from '@mui/material';
 
 import { CRAG_CLUSTER_MARKER_SIZE } from '@/constants/size';
 
-import './markerClustering';
-
 interface ClusterProps {
   markers: naver.maps.Marker[];
 }

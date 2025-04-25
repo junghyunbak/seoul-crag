@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Outlet } from 'react-router';
 
 import { QueryParamProvider } from 'use-query-params';
@@ -11,8 +13,11 @@ import { CragDetailModal } from '@/components/CragDetailModal';
 import { ReactRouter7Adapter } from '@/router';
 import { QueryProvider } from '@/router/QueryProvider';
 
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { AxiosError } from 'axios';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import splashImageSrc from '@/assets/splash.png';
 
 export function Layout() {
   return (
@@ -20,11 +25,15 @@ export function Layout() {
       <ErrorBoundary FallbackComponent={Fallback}>
         <QueryProvider>
           <QueryParamProvider adapter={ReactRouter7Adapter}>
-            <Outlet />
+            <Suspense fallback={<Splash />}>
+              <LoadNaverMap>
+                <Outlet />
 
-            <StoryImage imageType="interior" />
-            <StorySchedule />
-            <CragDetailModal />
+                <StoryImage imageType="interior" />
+                <StorySchedule />
+                <CragDetailModal />
+              </LoadNaverMap>
+            </Suspense>
           </QueryParamProvider>
         </QueryProvider>
       </ErrorBoundary>
@@ -77,4 +86,74 @@ function Fallback({ error }: FallbackProps) {
       </Button>
     </Box>
   );
+}
+
+function Splash() {
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Box
+        component="img"
+        src={splashImageSrc}
+        sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(8px)' }}
+      />
+      <Box component="img" src={splashImageSrc} sx={{ position: 'absolute', height: '100%', objectFit: 'cover' }} />
+    </Box>
+  );
+}
+
+function LoadNaverMap({ children }: React.PropsWithChildren) {
+  const { isLoading } = useSuspenseQuery({
+    queryKey: ['navermap'],
+    queryFn: async () => {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, 500);
+      });
+
+      const NCP_CLIENT_ID = 'xn1nppbjtp';
+
+      await loadScript(`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`);
+      await loadScript('https://oapi.map.naver.com/openapi/v3/maps-gl.js');
+      await loadScript('/markerClustering.js');
+
+      return null;
+    },
+  });
+
+  if (isLoading) {
+    return;
+  }
+
+  return children;
+}
+
+function loadScript(src: string) {
+  if (document.querySelector(`[src="${src}"]`)) {
+    return null;
+  }
+
+  const script = document.createElement('script');
+
+  script.src = src;
+  script.type = 'text/javascript';
+
+  return new Promise<void>((resolve) => {
+    const handleScriptLoad = () => {
+      resolve();
+    };
+
+    script.addEventListener('load', handleScriptLoad);
+
+    document.body.appendChild(script);
+  });
 }
