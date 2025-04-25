@@ -262,6 +262,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             borderRadius: isMobile ? 0 : 1,
             backgroundColor: 'black',
             pointerEvents: 'none',
+            userSelect: 'none',
           }}
         >
           {contents[Math.min(index.value, contents.length - 1)]}
