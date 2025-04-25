@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Box,
   Typography,
@@ -14,9 +16,10 @@ import {
   Paper,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Grid from '@mui/material/GridLegacy';
+import Grid from '@mui/material/Grid';
+
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from 'date-fns';
-import { useState } from 'react';
+
 import holidayData from '../holidays.ko.json' assert { type: 'json' };
 
 interface CalendarGridProps {
@@ -75,9 +78,9 @@ export function GymScheduleGrid({
 
   return (
     <Paper>
-      <Grid container columns={7} spacing={0.5}>
+      <Grid container columns={7}>
         {dayLabels.map((label, i) => (
-          <Grid item xs={1} key={label} sx={{ borderRight: i === 6 ? 'none' : '1px solid #ccc' }}>
+          <Grid size={{ xs: 1 }} key={label} sx={{ borderRight: i === 6 ? 'none' : '1px solid #ccc' }}>
             <Typography align="center" fontWeight={600} sx={{ color: i === 0 ? 'error.main' : undefined }}>
               {label}
             </Typography>
@@ -86,8 +89,7 @@ export function GymScheduleGrid({
 
         {Array.from({ length: emptyStart }).map((_, idx) => (
           <Grid
-            item
-            xs={1}
+            size={{ xs: 1 }}
             key={`empty-${idx}`}
             sx={{
               height: { md: 124, xs: 100 },
@@ -121,8 +123,7 @@ export function GymScheduleGrid({
 
           return (
             <Grid
-              item
-              xs={1}
+              size={{ xs: 1 }}
               key={iso}
               sx={{
                 borderRight: (i + emptyStart) % 7 === 6 ? 'none' : '1px solid #ccc',
@@ -214,8 +215,7 @@ export function GymScheduleGrid({
 
         {Array.from({ length: emptyEnd }).map((_, idx) => (
           <Grid
-            item
-            xs={1}
+            size={{ xs: 1 }}
             key={`empty-${idx}`}
             style={{
               borderRight: emptyEnd - 1 === idx ? 'none' : '1px solid #ccc',
