@@ -64,6 +64,8 @@ export function GymScheduleGrid({
   const isHoliday = (iso: string, date: Date) => holidays.includes(iso) || getDay(date) === 0;
   const lastWeek = Math.ceil((emptyStart + days.length) / 7);
 
+  const emptyEnd = lastWeek * 7 - emptyStart - days.length;
+
   const handleSave = () => {
     if (!selected) return;
     if (selected.id === '') onCreate?.(selected);
@@ -209,6 +211,23 @@ export function GymScheduleGrid({
             </Grid>
           );
         })}
+
+        {Array.from({ length: emptyEnd }).map((_, idx) => (
+          <Grid
+            item
+            xs={1}
+            key={`empty-${idx}`}
+            style={{
+              borderRight: emptyEnd - 1 === idx ? 'none' : '1px solid #ccc',
+            }}
+            sx={{
+              height: { md: 124, xs: 100 },
+              p: 0.5,
+              pl: 0,
+              pb: 0,
+            }}
+          />
+        ))}
       </Grid>
 
       {!readOnly && selected && (
