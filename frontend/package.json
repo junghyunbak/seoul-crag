@@ -8,8 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "serve": "npx serve -p 5173 -s ./dist",
-    "start": "npm run build && npm run serve",
+    "serve": "npm run build && npx serve -p 5173 -s ./dist",
     "serve:pm2": "pm2 start \"npm run serve\" --name seoul-crag-frontend"
   },
   "dependencies": {
