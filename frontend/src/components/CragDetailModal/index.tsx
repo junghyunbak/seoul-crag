@@ -1,32 +1,33 @@
-import { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useEffect } from 'react';
+
 import { useNavigate } from 'react-router';
 
-import { useMotionValue, AnimatePresence, motion, animate, m } from 'framer-motion';
-
-import { Box, Typography, IconButton, Stack, Divider } from '@mui/material';
-
-import { Share, Edit, Close, GradeOutlined } from '@mui/icons-material';
+import { Box, Typography, IconButton, Stack, Divider, styled } from '@mui/material';
+import { Share, Edit, GradeOutlined } from '@mui/icons-material';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
-import { QUERY_STRING, SIZE } from '@/constants';
-
-import { useKeenSlider } from 'keen-slider/react';
-import 'keen-slider/keen-slider.min.css';
+import { QUERY_STRING } from '@/constants';
 
 import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
 
 import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { Map } from '@/components/Map';
+import { engDayToKor } from '@/components/WeeklyHoursSilder';
 
 import { urlService } from '@/utils';
 
-import { useDrag } from '@use-gesture/react';
+import { Sheet } from 'react-modal-sheet';
 
-import { zIndex } from '@/styles';
+import { useKeenSlider } from 'keen-slider/react';
+import 'keen-slider/keen-slider.min.css';
 
-import { engDayToKor } from '@/components/WeeklyHoursSilder';
+const CustomSheet = styled(Sheet)`
+  .react-modal-sheet-container {
+    height: 100% !important;
+    border-radius: 0 !important;
+  }
+`;
 
 const dayOfPriority: Record<OpeningHourDayType, number> = {
   sunday: 1,
@@ -56,78 +57,22 @@ export function CragDetailModal() {
     },
   });
 
-  const y = useMotionValue(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  if (!crag) {
+    return null;
+  }
 
-  const bind = useDrag(
-    ({ last, movement: [mx, my], velocity: [vx, vy], memo, cancel }) => {
-      if (!(scrollRef.current && scrollRef.current.scrollTop <= 10)) {
-        return;
-      }
-
-      if (!memo) {
-        // x축 제스처는 무시하고 y만 허용
-        if (Math.abs(mx) > Math.abs(my)) {
-          return;
-        }
-
-        memo = 'y';
-      }
-
-      const nextY = Math.max(0, my);
-
-      y.set(nextY);
-
-      if (last) {
-        if (nextY > SIZE.CLOSE_THRESHOLD_Y || vy > 1.5) {
-          setSelectCragDetailId(null);
-        } else {
-          animate(y, 0);
-        }
-      }
-
-      return memo;
-    },
-    {
-      axis: 'lock',
-      filterTaps: true,
-      pointer: { touch: true },
-    }
-  );
-
-  return createPortal(
-    <AnimatePresence>
-      {selectCragDetailId && crag && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            bgcolor: 'rgba(0, 0, 0, 0.6)',
-            zIndex: zIndex.cragDetail,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <motion.div
-            {...bind()}
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ duration: 0.2 }}
-            style={{
-              y,
-              backgroundColor: '#fff',
-              width: '100%',
-              height: '100%',
-              overflowY: 'auto',
-              touchAction: 'none',
-            }}
-            ref={scrollRef}
-          >
+  return (
+    <CustomSheet
+      isOpen={typeof crag === 'object'}
+      onClose={() => setSelectCragDetailId(null)}
+      snapPoints={[1]}
+      initialSnap={0}
+      disableDrag={false}
+    >
+      <Sheet.Container>
+        <Sheet.Header />
+        <Sheet.Content>
+          <Sheet.Scroller>
             {/* 이미지 슬라이더 */}
             <Box sx={{ position: 'relative' }}>
               <Box ref={sliderRef} className="keen-slider" sx={{ height: 240 }}>
@@ -241,11 +186,10 @@ export function CragDetailModal() {
                 <CragLocation crag={crag} />
               </Box>
             </Box>
-          </motion.div>
-        </Box>
-      )}
-    </AnimatePresence>,
-    document.body
+          </Sheet.Scroller>
+        </Sheet.Content>
+      </Sheet.Container>
+    </CustomSheet>
   );
 }
 
