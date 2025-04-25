@@ -1,4 +1,4 @@
-import { Box, Typography, IconButton, SxProps, Theme } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { format } from 'date-fns';

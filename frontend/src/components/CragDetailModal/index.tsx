@@ -49,7 +49,7 @@ export function CragDetailModal() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const [sliderRef, instanceRef] = useKeenSlider({
+  const [sliderRef] = useKeenSlider({
     loop: true,
     mode: 'snap',
     slideChanged(slider) {

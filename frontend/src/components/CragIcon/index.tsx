@@ -6,13 +6,7 @@ interface CragIconProps {
   counting?: boolean;
 }
 
-export function CragIcon({
-  width,
-  isSelect = false,
-  isClose = false,
-  counting = false,
-  isSetting = false,
-}: CragIconProps) {
+export function CragIcon({ width, isSelect = false, isClose = false, counting = false }: CragIconProps) {
   const mountainTopBg = (() => {
     if (isClose) {
       return 'white';
