@@ -9,6 +9,7 @@ import { BooleanParam, useQueryParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
 import { zIndex } from '@/styles';
 import { urlService } from '@/utils';
+import { Edit } from '@mui/icons-material';
 
 interface SidebarMenuProps {
   open: boolean;
@@ -41,16 +42,21 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Avatar src={user.profile_image}>{user.username}</Avatar>
                 <Box sx={{ flex: 1, overflow: 'hidden' }}>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {user.username}
-                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {user.username}
+                    </Typography>
+                    <IconButton size="small" onClick={() => onNavigate(urlService.getAbsolutePath('/manage'))}>
+                      <Edit fontSize="small" />
+                    </IconButton>
+                  </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography
                       variant="body2"
@@ -66,8 +72,8 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
                 </Box>
               </Box>
 
-              <Box sx={{ mt: 3 }}>
-                {user.roles.some(({ name }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin') ? (
+              {user.roles.some(({ name }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin') && (
+                <Box sx={{ mt: 3 }}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -75,16 +81,8 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
                   >
                     내 암장 관리
                   </Button>
-                ) : (
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    onClick={() => onNavigate(urlService.getAbsolutePath('/manage'))}
-                  >
-                    내 정보 변경
-                  </Button>
-                )}
-              </Box>
+                </Box>
+              )}
             </>
           ) : (
             <Box sx={{ textAlign: 'center', mt: 4 }}>
