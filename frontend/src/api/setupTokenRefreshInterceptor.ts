@@ -23,7 +23,11 @@ export function setupTokenRefreshInterceptor({
     async (error: AxiosError) => {
       const originalRequest = error.config;
 
-      if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      if (
+        (error.response?.status === 401 || error.response?.status === 403) &&
+        originalRequest &&
+        !originalRequest._retry
+      ) {
         /**
          * `_retry` flag 설정
          *
