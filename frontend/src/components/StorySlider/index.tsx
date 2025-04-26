@@ -280,6 +280,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           display: 'flex',
           alignItems: 'center',
           touchAction: 'none',
+          userSelect: 'none',
         }}
       >
         <Box
