@@ -23,6 +23,8 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
+import * as sharp from 'sharp';
+
 @Controller('gym-images/:gymId/images')
 export class GymImagesController {
   constructor(private readonly gymImagesService: GymImagesService) {}
@@ -50,7 +52,7 @@ export class GymImagesController {
         }
         cb(null, true);
       },
-      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB 제한
+      limits: { fileSize: 20 * 1024 * 1024 },
     }),
   )
   async uploadImage(
@@ -59,7 +61,18 @@ export class GymImagesController {
     @Body() dto: UploadImageDto,
   ) {
     const imageUrl = `/uploads/${file.filename}`;
-    return this.gymImagesService.save(gymId, imageUrl, dto.type);
+    const resizedImageUrl = `/uploads/resized-${file.filename}`;
+
+    /**
+     * nest.js의 루트 폴더를 기준으로 계산하기 때문에 '.' 상대경로를 표시
+     */
+    await sharp(`.${imageUrl}`)
+      .rotate()
+      .resize({ width: 1024 })
+      .jpeg({ quality: 80 })
+      .toFile(`.${resizedImageUrl}`);
+
+    return this.gymImagesService.save(gymId, resizedImageUrl, dto.type);
   }
 
   @Get()

@@ -132,7 +132,10 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     <Box>
       <Typography variant="h6">암장 내부 이미지</Typography>
 
-      <Typography variant="caption">jpeg, jpg, png 확장자만 업로드 가능합니다.</Typography>
+      <Typography variant="caption">
+        * jpeg, jpg, png 확장자만 업로드 가능합니다.
+        <br />* 최대 20MB 크기의 사진을 업로드 할 수 있으며 올린 파일은 압축됩니다.
+      </Typography>
 
       <Box
         sx={{
