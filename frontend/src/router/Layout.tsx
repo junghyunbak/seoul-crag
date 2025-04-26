@@ -105,7 +105,7 @@ function Splash() {
       <Box
         component="img"
         src={splashImageSrc}
-        sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(8px)' }}
+        sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(20px)' }}
       />
       <Box component="img" src={splashImageSrc} sx={{ position: 'absolute', height: '100%', objectFit: 'cover' }} />
     </Box>
@@ -122,7 +122,7 @@ function LoadNaverMap({ children }: React.PropsWithChildren) {
       await loadScript('https://oapi.map.naver.com/openapi/v3/maps-gl.js');
       await loadScript('/markerClustering.js');
 
-      await time.sleep(500);
+      await time.sleep(10000);
 
       return null;
     },
