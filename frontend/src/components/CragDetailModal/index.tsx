@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 
-import { useNavigate } from 'react-router';
-
 import { Box, Typography, IconButton, Stack, Divider, styled } from '@mui/material';
 import { Share, Edit, GradeOutlined } from '@mui/icons-material';
 
@@ -40,8 +38,6 @@ const dayOfPriority: Record<OpeningHourDayType, number> = {
 };
 
 export function CragDetailModal() {
-  const navigate = useNavigate();
-
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
 
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });
