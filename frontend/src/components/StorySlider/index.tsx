@@ -183,14 +183,12 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       if (!memo) {
         memo = Math.abs(mx) > Math.abs(my) ? 'x' : 'y';
       }
-      if (memo === 'x') {
-        if (last) {
-          if (mx > SIZE.SWIPE_THRESHOLD_X) goPrev();
-          else if (mx < -SIZE.SWIPE_THRESHOLD_X) goNext();
-        }
-      } else if (memo === 'y') {
+
+      if (memo === 'y') {
         const nextY = Math.max(my, 0);
+
         y.set(nextY);
+
         if (last) {
           if (nextY > SIZE.CLOSE_THRESHOLD_Y || vy > 1.5) onClose?.();
           else animate(y, 0);
@@ -201,11 +199,38 @@ export const StorySlider: React.FC<StorySliderProps> = ({
     { axis: 'lock', filterTaps: true, pointer: { touch: true } }
   );
 
-  const handleClickMobile = (e: React.MouseEvent<HTMLDivElement>) => {
-    const x = e.nativeEvent.offsetX;
-    const width = (e.target as HTMLDivElement).clientWidth;
-    if (x < width / 2) goPrev();
-    else goNext();
+  const [longPressed, setLongPressed] = useState(false);
+  const lastPaused = useRef(false);
+  const longPressTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handlePointerDown = () => {
+    lastPaused.current = paused;
+
+    setPaused(true);
+    setLongPressed(false);
+
+    longPressTimeout.current = setTimeout(() => {
+      setLongPressed(true);
+    }, 600);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (longPressTimeout.current) {
+      clearTimeout(longPressTimeout.current);
+    }
+
+    setPaused(lastPaused.current);
+
+    if (!longPressed) {
+      const x = e.nativeEvent.offsetX;
+      const width = (e.target as HTMLDivElement).clientWidth;
+
+      if (x < width / 2) {
+        goPrev();
+      } else {
+        goNext();
+      }
+    }
   };
 
   /**
@@ -256,8 +281,13 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           alignItems: 'center',
           touchAction: 'none',
         }}
-        onClick={handleClickMobile}
       >
+        <Box
+          sx={{ position: 'absolute', width: '100%', height: '100%' }}
+          onPointerDownCapture={handlePointerDown}
+          onPointerUpCapture={handlePointerUp}
+        />
+
         <Box
           sx={{
             width: '100%',
