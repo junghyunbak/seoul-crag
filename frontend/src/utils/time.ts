@@ -21,3 +21,11 @@ export function convert24ToCustom12HourFormat(hour: number): string {
 
   return `${period} ${hour12}시`;
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms);
+  });
+}

@@ -19,6 +19,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import splashImageSrc from '@/assets/splash.png';
 
+import { time } from '@/utils';
+
 export function Layout() {
   return (
     <Box sx={{ position: 'fixed', inset: 0 }}>
@@ -114,17 +116,13 @@ function LoadNaverMap({ children }: React.PropsWithChildren) {
   const { isLoading } = useSuspenseQuery({
     queryKey: ['navermap'],
     queryFn: async () => {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true);
-        }, 500);
-      });
-
       const NCP_CLIENT_ID = 'xn1nppbjtp';
 
       await loadScript(`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`);
       await loadScript('https://oapi.map.naver.com/openapi/v3/maps-gl.js');
       await loadScript('/markerClustering.js');
+
+      await time.sleep(500);
 
       return null;
     },
