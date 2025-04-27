@@ -164,11 +164,11 @@ UploadModal.DeleteImage = function DeleteImage({ onClick }: { onClick: () => voi
 };
 
 UploadModal.SaveButton = function SaveButton({ onClick }: { onClick: () => void }) {
-  const { selectImage } = useContext(UploadModalContext);
+  const { selectImage, selectFile } = useContext(UploadModalContext);
 
   return (
-    <Button fullWidth variant="contained" onClick={onClick}>
-      {selectImage ? '수정' : '저장'}
+    <Button fullWidth variant="contained" onClick={onClick} disabled={selectImage ? false : selectFile ? false : true}>
+      {selectImage ? '수정' : '업로드'}
     </Button>
   );
 };
