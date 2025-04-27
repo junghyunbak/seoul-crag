@@ -43,15 +43,15 @@ export function useMutateImageDelete({ onSettled }: MutationOptions<void, Defaul
 type ReorderImageMutateParams = {
   imageType: ImageType;
   cragId: string;
-  nextItems: (File | Image)[];
+  images: Image[];
 };
 
 export function useMutateImageReorder({ onSettled }: MutationOptions<void, DefaultError, ReorderImageMutateParams>) {
   const reorderImageMutation = useMutation<void, DefaultError, ReorderImageMutateParams>({
-    mutationFn: async ({ cragId, imageType, nextItems }) => {
+    mutationFn: async ({ cragId, imageType, images }) => {
       await api.post(`/gym-images/${cragId}/images/reorder`, {
         type: imageType,
-        orderedIds: nextItems.filter((image) => 'id' in image).map((image) => image.id),
+        orderedIds: images.map((image) => image.id),
       });
     },
     onSettled,
