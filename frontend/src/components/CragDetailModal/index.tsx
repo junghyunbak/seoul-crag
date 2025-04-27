@@ -5,13 +5,14 @@ import { Share, Edit, GradeOutlined, Close } from '@mui/icons-material';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
-import { QUERY_STRING } from '@/constants';
+import { QUERY_STRING, SIZE } from '@/constants';
 
 import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
 
-import { ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { Map } from '@/components/Map';
+import { ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { engDayToKor } from '@/components/WeeklyHoursSilder';
+import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 
 import { urlService } from '@/utils';
 
@@ -19,7 +20,6 @@ import { Sheet } from 'react-modal-sheet';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
-import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
@@ -44,6 +44,28 @@ export function CragDetailModal() {
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });
   const { images } = useFetchImages(selectCragDetailId, 'interior');
 
+  const handleSheetClose = () => {
+    setSelectCragDetailId(null);
+  };
+
+  return (
+    <CragDetail
+      isOpen={typeof selectCragDetailId === 'string'}
+      onClose={handleSheetClose}
+      crag={crag}
+      images={images}
+    />
+  );
+}
+
+interface CragDetailProps {
+  crag: Crag | null | undefined;
+  images: Image[] | null | undefined;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [sliderRef] = useKeenSlider({
@@ -54,30 +76,24 @@ export function CragDetailModal() {
     },
   });
 
-  const handleSheetClose = () => {
-    setSelectCragDetailId(null);
-  };
-
-  if (!crag) {
-    return null;
-  }
-
   return (
     <CustomSheet
-      isOpen={typeof crag === 'object'}
-      onClose={handleSheetClose}
+      isOpen={isOpen}
+      onClose={onClose}
       snapPoints={[1]}
       initialSnap={0}
       disableDrag={false}
+      dragCloseThreshold={SIZE.CLOSE_THRESHOLD_Y}
+      dragVelocityThreshold={SIZE.SWIPE_THRESHOLD_X}
     >
       <Sheet.Container>
         <Sheet.Content>
-          <Sheet.Scroller>
-            {/* 이미지 슬라이더 */}
-            <Box sx={{ position: 'relative' }}>
-              <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-                {images &&
-                  images.map(({ url }, i) => (
+          {images && crag && (
+            <Sheet.Scroller>
+              {/* 이미지 슬라이더 */}
+              <Box sx={{ position: 'relative' }}>
+                <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
+                  {images.map(({ url }, i) => (
                     <Box
                       key={i}
                       className="keen-slider__slide"
@@ -87,117 +103,121 @@ export function CragDetailModal() {
                       sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   ))}
-              </Box>
-              {/* 페이지 인디케이터 */}
-              <Stack
-                direction="row"
-                justifyContent="center"
-                spacing={1}
-                sx={{ position: 'absolute', bottom: 8, width: '100%' }}
-              >
-                {images &&
-                  images.map((_, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        bgcolor: currentSlide === i ? 'primary.main' : 'grey.400',
-                        transition: 'all 0.3s',
-                      }}
-                    />
-                  ))}
-              </Stack>
-
-              <IconButton sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }} onClick={handleSheetClose}>
-                <Close />
-              </IconButton>
-            </Box>
-
-            {/* 본문 내용 */}
-            <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
-                <Typography variant="h5" fontWeight={600}>
-                  {crag.name}
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <IconButton>
-                    <GradeOutlined />
-                  </IconButton>
-                  <IconButton>
-                    <Share />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      window.location.href = `${urlService.getAbsolutePath('/manage/crags')}?${
-                        QUERY_STRING.SELECT_CRAG
-                      }=${crag.id}`;
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
+                </Box>
+                {/* 페이지 인디케이터 */}
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  spacing={1}
+                  sx={{ position: 'absolute', bottom: 8, width: '100%' }}
+                >
+                  {images &&
+                    images.map((_, i) => (
+                      <Box
+                        key={i}
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          bgcolor: currentSlide === i ? 'primary.main' : 'grey.400',
+                          transition: 'all 0.3s',
+                        }}
+                      />
+                    ))}
                 </Stack>
-              </Stack>
 
-              <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }} component="pre">
-                {crag.description}
-              </Typography>
-
-              <Divider />
-
-              <Box>
-                <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                  이용 시간
-                </Typography>
-                {crag.openingHourOfWeek &&
-                  crag.openingHourOfWeek
-                    .sort((a, b) => (dayOfPriority[a.day] < dayOfPriority[b.day] ? -1 : 1))
-                    .map(({ id, day, open_time, close_time }) => {
-                      if (!(open_time && close_time)) {
-                        return null;
-                      }
-
-                      const [oh, om] = open_time.split(':');
-                      const [ch, cm] = close_time.split(':');
-
-                      return (
-                        <Box key={id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography variant="body2" color="text.secondary">
-                            {engDayToKor(day)}
-                          </Typography>
-
-                          <Typography variant="body2" color="text.secondary">{`${oh}:${om} - ${ch}:${cm}`}</Typography>
-                        </Box>
-                      );
-                    })}
+                <IconButton sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }} onClick={onClose}>
+                  <Close />
+                </IconButton>
               </Box>
 
-              <Divider />
+              {/* 본문 내용 */}
+              <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
+                  <Typography variant="h5" fontWeight={600}>
+                    {crag.name}
+                  </Typography>
+                  <Stack direction="row" spacing={1}>
+                    <IconButton>
+                      <GradeOutlined />
+                    </IconButton>
+                    <IconButton>
+                      <Share />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => {
+                        window.location.href = `${urlService.getAbsolutePath('/manage/crags')}?${
+                          QUERY_STRING.SELECT_CRAG
+                        }=${crag.id}`;
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                  </Stack>
+                </Stack>
 
-              <Box>
-                <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                  일정표
+                <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }} component="pre">
+                  {crag.description}
                 </Typography>
 
-                {/**
-                 * // [ ]: 미래 일정만 보여지도록 수정
-                 */}
-                <ScheduleCalendar schedules={crag.futureSchedules || []} readOnly />
+                <Divider />
 
-                <ScheduleTypes />
+                <Box>
+                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                    이용 시간
+                  </Typography>
+                  {crag.openingHourOfWeek &&
+                    crag.openingHourOfWeek
+                      .sort((a, b) => (dayOfPriority[a.day] < dayOfPriority[b.day] ? -1 : 1))
+                      .map(({ id, day, open_time, close_time }) => {
+                        if (!(open_time && close_time)) {
+                          return null;
+                        }
+
+                        const [oh, om] = open_time.split(':');
+                        const [ch, cm] = close_time.split(':');
+
+                        return (
+                          <Box key={id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="body2" color="text.secondary">
+                              {engDayToKor(day)}
+                            </Typography>
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >{`${oh}:${om} - ${ch}:${cm}`}</Typography>
+                          </Box>
+                        );
+                      })}
+                </Box>
+
+                <Divider />
+
+                <Box>
+                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                    일정표
+                  </Typography>
+
+                  {/**
+                   * // [ ]: 미래 일정만 보여지도록 수정
+                   */}
+                  <ScheduleCalendar schedules={crag.futureSchedules || []} readOnly />
+
+                  <ScheduleTypes />
+                </Box>
+
+                <Divider />
+
+                <Box>
+                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                    상세 위치
+                  </Typography>
+                  <CragLocation crag={crag} />
+                </Box>
               </Box>
-
-              <Divider />
-
-              <Box>
-                <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                  상세 위치
-                </Typography>
-                <CragLocation crag={crag} />
-              </Box>
-            </Box>
-          </Sheet.Scroller>
+            </Sheet.Scroller>
+          )}
         </Sheet.Content>
       </Sheet.Container>
     </CustomSheet>
