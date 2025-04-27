@@ -132,7 +132,7 @@ export function CragDetailModal() {
                 </Stack>
               </Stack>
 
-              <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'wrap' }}>
+              <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }} component="pre">
                 {crag.description}
               </Typography>
 
