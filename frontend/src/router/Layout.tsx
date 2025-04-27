@@ -103,7 +103,14 @@ function Splash() {
       <Box
         component="img"
         src="/splash.png"
-        sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(20px)' }}
+        sx={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          filter: 'blur(20px)',
+          transform: 'scale(1.05)',
+        }}
       />
       <Box component="img" src="/splash.png" sx={{ position: 'absolute', height: '100%', objectFit: 'cover' }} />
     </Box>

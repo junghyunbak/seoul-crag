@@ -1,3 +1,5 @@
+import { lazy } from 'react';
+
 import { createBrowserRouter, useLocation, useNavigate } from 'react-router';
 
 import { type PartialLocation, type QueryParamAdapterComponent } from 'use-query-params';
@@ -11,7 +13,6 @@ import { Users } from '@/pages/manage/Users';
 import { Crags } from '@/pages/manage/Crags';
 import { Dashboard } from '@/pages/manage/Dashboard';
 import { NewCrag } from '@/pages/manage/NewCrag';
-import { lazy } from 'react';
 
 const Main = lazy(() => import('@/pages/main'));
 const ManagePage = lazy(() => import('@/pages/manage'));
