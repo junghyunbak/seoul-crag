@@ -20,7 +20,7 @@ import { useStore } from '@/store';
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
 
-export function Main() {
+export default function Main() {
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const [initCragId] = useState(selectCragId);

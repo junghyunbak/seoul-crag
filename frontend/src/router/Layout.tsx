@@ -1,14 +1,10 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Outlet } from 'react-router';
 
 import { QueryParamProvider } from 'use-query-params';
 
 import { Box, Button, Typography } from '@mui/material';
-
-import { StoryImage } from '@/components/StoryImage';
-import { StorySchedule } from '@/components/StorySchedule';
-import { CragDetailModal } from '@/components/CragDetailModal';
 
 import { ReactRouter7Adapter } from '@/router';
 import { QueryProvider } from '@/router/QueryProvider';
@@ -18,6 +14,10 @@ import { AxiosError } from 'axios';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { time } from '@/utils';
+
+const CragDetailModal = lazy(() => import('@/components/CragDetailModal'));
+const StoryImage = lazy(() => import('@/components/StoryImage'));
+const StorySchedule = lazy(() => import('@/components/StorySchedule'));
 
 export function Layout() {
   return (

@@ -18,7 +18,7 @@ interface StoryImageProps {
   imageType: ImageType;
 }
 
-export function StoryImage({ imageType }: StoryImageProps) {
+export default function StoryImage({ imageType }: StoryImageProps) {
   const queryString = useMemo(() => {
     switch (imageType) {
       case 'interior':

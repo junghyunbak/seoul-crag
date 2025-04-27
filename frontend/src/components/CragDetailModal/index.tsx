@@ -41,7 +41,7 @@ const dayOfPriority: Record<OpeningHourDayType, number> = {
   saturday: 7,
 };
 
-export function CragDetailModal() {
+export default function CragDetailModal() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
 
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });

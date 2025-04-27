@@ -67,7 +67,7 @@ const sidebarList: SidebarList = [
   },
 ];
 
-export function ManagePage() {
+export default function ManagePage() {
   const location = useLocation();
 
   const [toggled, setToggled] = useState(false);
