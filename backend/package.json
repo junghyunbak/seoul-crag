@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "serve:pm2": "pm2 start \"npm start\" --name seoul-crag-backend"
+    "serve:pm2": "npm run build && pm2 start dist/main.js --name seoul-crag-backend -i 2"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
