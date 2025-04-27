@@ -17,8 +17,6 @@ import { AxiosError } from 'axios';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import splashImageSrc from '@/assets/splash.png';
-
 import { time } from '@/utils';
 
 export function Layout() {
@@ -104,10 +102,10 @@ function Splash() {
     >
       <Box
         component="img"
-        src={splashImageSrc}
+        src="/splash.png"
         sx={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(20px)' }}
       />
-      <Box component="img" src={splashImageSrc} sx={{ position: 'absolute', height: '100%', objectFit: 'cover' }} />
+      <Box component="img" src="/splash.png" sx={{ position: 'absolute', height: '100%', objectFit: 'cover' }} />
     </Box>
   );
 }
