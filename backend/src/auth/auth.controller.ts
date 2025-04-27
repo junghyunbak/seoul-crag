@@ -32,7 +32,6 @@ const refreshTokenExpires: ms.StringValue = '14d';
 
 // [ ]: 서버 시간대
 // [ ]: cors
-// [ ]: 자동 로그인
 @Controller('auth')
 export class AuthController {
   constructor(

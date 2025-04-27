@@ -9,7 +9,7 @@ import { QUERY_STRING } from '@/constants';
 
 import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
 
-import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
+import { ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { Map } from '@/components/Map';
 import { engDayToKor } from '@/components/WeeklyHoursSilder';
 
@@ -19,6 +19,7 @@ import { Sheet } from 'react-modal-sheet';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
+import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
@@ -179,7 +180,12 @@ export function CragDetailModal() {
                   일정표
                 </Typography>
 
-                <GymScheduleGrid schedules={crag.futureSchedules || []} currentMonth={new Date()} readOnly />
+                {/**
+                 * // [ ]: 미래 일정만 보여지도록 수정
+                 */}
+                <ScheduleCalendar schedules={crag.futureSchedules || []} readOnly />
+
+                <ScheduleTypes />
               </Box>
 
               <Divider />

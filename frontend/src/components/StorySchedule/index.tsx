@@ -9,7 +9,7 @@ import { QUERY_STRING } from '@/constants';
 import { useFetchSchedules } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
-import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
+import { GymScheduleGrid, ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { MonthNavigation } from '@/components/ScheduleCalendar/MonthNavigation';
 
 import { AnimatePresence } from 'framer-motion';
@@ -49,7 +49,6 @@ export function StorySchedule() {
   return createPortal(
     <AnimatePresence>
       {scheduleStoryCragId && schedules && (
-        // [ ]: dimmed 클릭 시 닫기
         <StorySlider
           contents={futureYearMonthDates.map((date) => (
             <Box
@@ -61,6 +60,7 @@ export function StorySchedule() {
             >
               <MonthNavigation currentMonth={date} readonly fontColor="white" onPrev={() => {}} onNext={() => {}} />
               <GymScheduleGrid schedules={schedules || []} readOnly currentMonth={date} />
+              <ScheduleTypes color="white" />
             </Box>
           ))}
           onClose={() => setScheduleStory(null)}

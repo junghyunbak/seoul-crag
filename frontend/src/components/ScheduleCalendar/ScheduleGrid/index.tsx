@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   Box,
@@ -32,6 +32,8 @@ interface CalendarGridProps {
 }
 
 const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
+
+const scheduleType: Schedule['type'][] = ['closed', 'setup', 'lesson', 'etc'];
 
 const typeColors: Record<Schedule['type'], string> = {
   closed: '#ef5350',
@@ -275,5 +277,52 @@ export function GymScheduleGrid({
         </Dialog>
       )}
     </Paper>
+  );
+}
+
+interface ScheduleTypesProps {
+  color?: React.CSSProperties['color'];
+}
+
+export function ScheduleTypes({ color = 'black' }: ScheduleTypesProps) {
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'start',
+        gap: 1.5,
+        p: 1,
+      }}
+    >
+      {scheduleType.map((type) => {
+        return (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
+            <Box
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: typeColors[type],
+              }}
+            />
+
+            <Typography
+              style={{
+                color,
+              }}
+            >
+              {typeLabels[type]}
+            </Typography>
+          </Box>
+        );
+      })}
+    </Box>
   );
 }
