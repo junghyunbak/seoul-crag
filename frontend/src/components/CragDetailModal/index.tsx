@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { Box, Typography, IconButton, Stack, Divider, styled } from '@mui/material';
-import { Share, Edit, GradeOutlined } from '@mui/icons-material';
+import { Share, Edit, GradeOutlined, Close } from '@mui/icons-material';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -53,6 +53,10 @@ export function CragDetailModal() {
     },
   });
 
+  const handleSheetClose = () => {
+    setSelectCragDetailId(null);
+  };
+
   if (!crag) {
     return null;
   }
@@ -60,18 +64,17 @@ export function CragDetailModal() {
   return (
     <CustomSheet
       isOpen={typeof crag === 'object'}
-      onClose={() => setSelectCragDetailId(null)}
+      onClose={handleSheetClose}
       snapPoints={[1]}
       initialSnap={0}
       disableDrag={false}
     >
       <Sheet.Container>
-        <Sheet.Header />
         <Sheet.Content>
           <Sheet.Scroller>
             {/* 이미지 슬라이더 */}
             <Box sx={{ position: 'relative' }}>
-              <Box ref={sliderRef} className="keen-slider" sx={{ height: 240 }}>
+              <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
                 {images &&
                   images.map(({ url }, i) => (
                     <Box
@@ -105,6 +108,10 @@ export function CragDetailModal() {
                     />
                   ))}
               </Stack>
+
+              <IconButton sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }} onClick={handleSheetClose}>
+                <Close />
+              </IconButton>
             </Box>
 
             {/* 본문 내용 */}
