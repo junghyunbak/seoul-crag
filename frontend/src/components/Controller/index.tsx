@@ -1,7 +1,8 @@
 import { Box, Button, Paper, Stack, Typography } from '@mui/material';
-import { ManageHistory } from '@mui/icons-material';
-import { Search } from '@mui/icons-material';
-import { Menu } from '@mui/icons-material';
+
+import ManageHistory from '@mui/icons-material/ManageHistory';
+import Search from '@mui/icons-material/Search';
+import Menu from '@mui/icons-material/Menu';
 
 import { useQueryParam, BooleanParam } from 'use-query-params';
 

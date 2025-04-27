@@ -1,15 +1,20 @@
 import React from 'react';
-import { Box, Drawer, Avatar, Typography, IconButton, Button, Divider, useTheme } from '@mui/material';
+
+import { useMediaQuery, Box, Drawer, Avatar, Typography, IconButton, Button, Divider, useTheme } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
-import { useMediaQuery } from '@mui/material';
+import Edit from '@mui/icons-material/Edit';
+
 import { useFetchMe, useMutateLogout } from '@/hooks';
+
 import { BooleanParam, useQueryParam } from 'use-query-params';
+
 import { QUERY_STRING } from '@/constants';
+
 import { zIndex } from '@/styles';
+
 import { urlService } from '@/utils';
-import { Edit } from '@mui/icons-material';
 
 interface SidebarMenuProps {
   open: boolean;

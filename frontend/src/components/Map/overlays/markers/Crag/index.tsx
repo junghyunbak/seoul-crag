@@ -1,7 +1,12 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
-import { Shower, CalendarMonth, EventBusy, HideImage, Image, MoreHoriz } from '@mui/icons-material';
+import Shower from '@mui/icons-material/Shower';
+import CalendarMonth from '@mui/icons-material/CalendarMonth';
+import EventBusy from '@mui/icons-material/EventBusy';
+import HideImage from '@mui/icons-material/HideImage';
+import Image from '@mui/icons-material/Image';
+import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { grey } from '@mui/material/colors';
 
 import { useCragArea } from '@/hooks';

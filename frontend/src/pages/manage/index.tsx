@@ -3,9 +3,14 @@ import { Outlet, useLocation, Link } from 'react-router';
 
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
-import { grey } from '@mui/material/colors';
 import { Link as MuiLink, Box, IconButton, Typography } from '@mui/material';
-import { Dashboard, Foundation, ManageAccounts, MenuOpen, SupervisorAccount, Terrain } from '@mui/icons-material';
+import { grey } from '@mui/material/colors';
+import Dashboard from '@mui/icons-material/Dashboard';
+import Foundation from '@mui/icons-material/Foundation';
+import ManageAccounts from '@mui/icons-material/ManageAccounts';
+import MenuOpen from '@mui/icons-material/MenuOpen';
+import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
+import Terrain from '@mui/icons-material/Terrain';
 
 import { zIndex } from '@/styles';
 

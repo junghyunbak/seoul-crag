@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { TextField, CircularProgress, InputAdornment } from '@mui/material';
 
-import { Check, Error } from '@mui/icons-material';
+import Check from '@mui/icons-material/Check';
+import Error from '@mui/icons-material/Error';
 
 interface FormTextFieldProps {
   value: string | null | undefined;

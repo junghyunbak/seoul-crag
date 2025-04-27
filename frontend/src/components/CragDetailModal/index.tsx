@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 
 import { Box, Typography, IconButton, Stack, Divider, styled } from '@mui/material';
-import { Share, Edit, GradeOutlined, Close } from '@mui/icons-material';
+import Share from '@mui/icons-material/Share';
+import Edit from '@mui/icons-material/Edit';
+import GradeOutlined from '@mui/icons-material/GradeOutlined';
+import Close from '@mui/icons-material/Close';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 

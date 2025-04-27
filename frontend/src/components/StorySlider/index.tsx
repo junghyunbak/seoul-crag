@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Box, IconButton, useMediaQuery } from '@mui/material';
-import { ChevronLeft, ChevronRight, Pause, PlayArrow, Close } from '@mui/icons-material';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import Pause from '@mui/icons-material/Pause';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+import Close from '@mui/icons-material/Close';
 import { styled, useTheme } from '@mui/material/styles';
 
 import { zIndex } from '@/styles';

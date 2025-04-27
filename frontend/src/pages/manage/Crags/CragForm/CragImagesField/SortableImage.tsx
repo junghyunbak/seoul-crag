@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+
 import { Box, IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
