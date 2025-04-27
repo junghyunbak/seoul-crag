@@ -82,7 +82,9 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     setSelectFile(file);
   };
 
-  const handleUpdateImageInfo = async () => {};
+  const handleUpdateImageInfo = async () => {
+    // [ ]: 이미지 정보 갱신 코드 작성
+  };
 
   const handleSaveImage = async () => {
     if (!selectFile) return;
@@ -96,6 +98,7 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     await addImageMutation.mutateAsync({ cragId: crag.id, form });
 
     setOpenModal(false);
+    setSelectFile(null);
   };
 
   const handleDeleteImage = async () => {
