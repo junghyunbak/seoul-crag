@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "serve": "npm run build && npx serve -p 5173 -s ./dist",
-    "serve:pm2": "pm2 start \"npm run serve\" --name seoul-crag-frontend"
+    "serve": "npx serve -p 5173 -s ./dist",
+    "serve:pm2": "npm run build && pm2 delete seoul-crag-frontend && pm2 start \"npm run serve\" --name seoul-crag-frontend"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
