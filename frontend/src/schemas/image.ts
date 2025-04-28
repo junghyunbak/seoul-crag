@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const imageTypeScheme = z.union([z.literal('interior'), z.literal('shower')]);
+export const imageTypeScheme = z.union([z.literal('interior'), z.literal('shower'), z.literal('thumbnail')]);
 
 export const imageScheme = z.object({
   id: z.string(),

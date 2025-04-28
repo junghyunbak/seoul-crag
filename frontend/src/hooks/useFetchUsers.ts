@@ -22,7 +22,7 @@ export function useFetchUsers() {
 }
 
 export function useFetchMe() {
-  const { data: user } = useQuery({
+  const { data: user, refetch } = useQuery({
     queryKey: ['me'],
     queryFn: async () => {
       const { data } = await api.get('/users/me');
@@ -35,5 +35,6 @@ export function useFetchMe() {
 
   return {
     user,
+    refetch,
   };
 }

@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,6 +10,8 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
 import * as bcrypt from 'bcrypt';
+
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -52,6 +58,18 @@ export class UserService {
       created_at: user.created_at,
       roles: user.userRoles.map((ur) => ur.role),
     }));
+  }
+
+  async updateUser(userId: string, userInfo: UpdateUserDto) {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new BadRequestException('해당되는 사용자가 없습니다.');
+    }
+
+    Object.assign(user, userInfo);
+
+    return this.userRepo.save(user);
   }
 
   async findOrCreate(user: UserInfo): Promise<User> {
