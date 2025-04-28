@@ -23,6 +23,7 @@ import { Sheet } from 'react-modal-sheet';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
+import { ImageWithSource } from '@/components/ImageWithSource';
 
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
@@ -96,15 +97,8 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
               {/* 이미지 슬라이더 */}
               <Box sx={{ position: 'relative' }}>
                 <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-                  {images.map(({ url }, i) => (
-                    <Box
-                      key={i}
-                      className="keen-slider__slide"
-                      component="img"
-                      src={url}
-                      alt={`slide-${i}`}
-                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                  {images.map((image, i) => (
+                    <ImageWithSource className="keen-slider__slide" key={i} image={image} />
                   ))}
                 </Box>
                 {/* 페이지 인디케이터 */}
