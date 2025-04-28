@@ -2,7 +2,13 @@ import { useEffect, useState, useContext } from 'react';
 
 import { Typography, Box } from '@mui/material';
 
-import { useFetchImages, useMutateImageAdd, useMutateImageDelete, useMutateImageReorder } from '@/hooks';
+import {
+  useFetchImages,
+  useMutateImageAdd,
+  useMutateImageDelete,
+  useMutateImageReorder,
+  useMutateImageUpdate,
+} from '@/hooks';
 
 import { ImageUploader } from './ImageUploader';
 import { UploadModal } from './UploadModal';
@@ -55,6 +61,12 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
       revalidateCrag();
     },
   });
+  const { updateImageMutation } = useMutateImageUpdate({
+    onSettled: () => {
+      refetch();
+      revalidateCrag();
+    },
+  });
 
   const handleUploadClick = () => {
     setSelectedImage(null);
@@ -83,7 +95,13 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
   };
 
   const handleUpdateImageInfo = async () => {
-    // [ ]: 이미지 정보 갱신 코드 작성
+    if (!selectedImage) {
+      return;
+    }
+
+    await updateImageMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id, source: sourceText });
+
+    setOpenModal(false);
   };
 
   const handleSaveImage = async () => {

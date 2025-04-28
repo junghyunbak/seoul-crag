@@ -59,3 +59,23 @@ export function useMutateImageReorder({ onSettled }: MutationOptions<void, Defau
 
   return { reorderImageMutation };
 }
+
+type UpdateImageMutateParams = {
+  cragId: string;
+  imageId: string;
+  source: string;
+};
+
+export function useMutateImageUpdate({ onSettled }: MutationOptions<void, DefaultError, UpdateImageMutateParams>) {
+  const updateImageMutation = useMutation<void, DefaultError, UpdateImageMutateParams>({
+    mutationFn: async ({ imageId, cragId, source }) => {
+      await api.patch(`/gym-images/${cragId}/images`, {
+        imageId,
+        source,
+      });
+    },
+    onSettled,
+  });
+
+  return { updateImageMutation };
+}
