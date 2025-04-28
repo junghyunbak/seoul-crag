@@ -169,28 +169,33 @@ export function GymScheduleGrid({
                     '&::-webkit-scrollbar': { display: 'none' },
                   }}
                 >
-                  {combinedSchedules.map((s, i) => (
-                    <Box
-                      key={s.id}
-                      sx={{
-                        bgcolor: typeColors[s.type],
-                        color: 'white',
-                        flexShrink: 0,
-                        px: { md: 1, xs: 0.5 },
-                        py: 0.2,
-                        mb: combinedSchedules.length - 1 === i ? 0.5 : 0,
-                        borderRadius: 0.5,
-                        fontSize: { md: 12, xs: 8 },
-                        cursor: readOnly ? 'default' : 'pointer',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
-                      onClick={() => !readOnly && !s.id.startsWith('holiday-') && setSelected(s)}
-                    >
-                      {s.reason?.trim() ? s.reason : typeLabels[s.type]}
-                    </Box>
-                  ))}
+                  {combinedSchedules
+                    /**
+                     * 정렬하지 않으면, 다른 일정 삭제로 인해 일정 순서가 변경되어 UX를 떨어뜨릴 수 있다.
+                     */
+                    .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
+                    .map((s, i) => (
+                      <Box
+                        key={s.id}
+                        sx={{
+                          bgcolor: typeColors[s.type],
+                          color: 'white',
+                          flexShrink: 0,
+                          px: { md: 1, xs: 0.5 },
+                          py: 0.2,
+                          mb: combinedSchedules.length - 1 === i ? 0.5 : 0,
+                          borderRadius: 0.5,
+                          fontSize: { md: 12, xs: 8 },
+                          cursor: readOnly ? 'default' : 'pointer',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                        onClick={() => !readOnly && !s.id.startsWith('holiday-') && setSelected(s)}
+                      >
+                        {s.reason?.trim() ? s.reason : typeLabels[s.type]}
+                      </Box>
+                    ))}
                 </Box>
               </Stack>
 
