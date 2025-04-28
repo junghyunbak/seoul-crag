@@ -61,7 +61,6 @@ export default function StorySchedule() {
             >
               <MonthNavigation currentMonth={date} readonly fontColor="white" onPrev={() => {}} onNext={() => {}} />
               <GymScheduleGrid schedules={crag.futureSchedules || []} readOnly currentMonth={date} />
-              <ScheduleTypes color="white" />
             </Box>
           ))}
           onClose={() => setScheduleStory(null)}

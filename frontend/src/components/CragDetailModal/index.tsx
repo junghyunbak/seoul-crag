@@ -230,8 +230,6 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                    * // [ ]: 미래 일정만 보여지도록 수정
                    */}
                   <ScheduleCalendar schedules={crag.futureSchedules || []} readOnly />
-
-                  <ScheduleTypes />
                 </Box>
 
                 <Divider />
