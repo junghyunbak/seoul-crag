@@ -127,7 +127,9 @@ function LoadNaverMap({ children }: React.PropsWithChildren) {
       await loadScript('https://oapi.map.naver.com/openapi/v3/maps-gl.js');
       await loadScript('/markerClustering.js');
 
-      await time.sleep(1000);
+      if (process.env.NODE_ENV === 'production') {
+        await time.sleep(1000);
+      }
 
       return null;
     },
