@@ -16,13 +16,17 @@ import { zIndex } from '@/styles';
 
 import { urlService } from '@/utils';
 
+import { useFetchMe } from '@/hooks';
+
+type MenuGroupTitle = '사용자 메뉴' | '관리자 메뉴' | '운영자 메뉴';
+
 type SidebarItem = {
   icon: React.ReactNode;
   pathname: string;
   title: string;
 };
 
-type SidebarList = { title: string; items: SidebarItem[] }[];
+type SidebarList = { title: MenuGroupTitle; items: SidebarItem[] }[];
 
 const sidebarList: SidebarList = [
   {
@@ -72,6 +76,12 @@ export default function ManagePage() {
 
   const [toggled, setToggled] = useState(false);
 
+  const { user } = useFetchMe();
+
+  if (!user) {
+    return;
+  }
+
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex' }}>
       {/**
@@ -109,6 +119,19 @@ export default function ManagePage() {
           </Box>
 
           {sidebarList.map((sidebarItem, i) => {
+            if (sidebarItem.title === '운영자 메뉴' && !user.roles.some((role) => role.name === 'owner')) {
+              return null;
+            }
+
+            if (
+              sidebarItem.title === '관리자 메뉴' &&
+              !user.roles.some(
+                (role) => role.name === 'gym_admin' || role.name === 'partner_admin' || role.name === 'owner'
+              )
+            ) {
+              return null;
+            }
+
             return (
               <Box key={i}>
                 <Typography fontWeight="bold" sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
