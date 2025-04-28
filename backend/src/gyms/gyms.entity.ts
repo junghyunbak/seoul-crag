@@ -24,6 +24,9 @@ export class Gym {
   @Column({ type: 'text', nullable: true })
   thumbnail_url?: string;
 
+  @Column({ type: 'text', nullable: true })
+  website_url: string;
+
   @Column({ type: 'float' })
   latitude: number;
 
