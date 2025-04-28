@@ -65,6 +65,7 @@ export function CragForm({ initialCrag }: CragFormProps) {
         <CragThumbnailField />
         <CragDescriptionField />
         <CragWebsiteUrlField />
+        <CragImagesField imageType="shower" />
         <CragOpeningHoursField />
         <CragScheduleCalenderField />
       </Box>

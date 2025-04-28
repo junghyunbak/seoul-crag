@@ -141,9 +141,21 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     cragImageReorderMutation.mutate({ cragId: crag.id, imageType, images: nextImages });
   };
 
+  const imageUploadFieldTitle = (() => {
+    switch (imageType) {
+      case 'interior':
+        return '암장 내부 이미지';
+      case 'shower':
+        return '샤워실 이미지';
+      default:
+      case 'thumbnail':
+        return '';
+    }
+  })();
+
   return (
     <Box>
-      <Typography variant="h6">암장 내부 이미지</Typography>
+      <Typography variant="h6">{imageUploadFieldTitle}</Typography>
       <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
         * jpeg, jpg, png 확장자만 업로드 가능합니다.
         <br />* 최대 20MB 크기의 사진을 업로드 할 수 있으며 올린 파일은 압축됩니다.
