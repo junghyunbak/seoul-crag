@@ -11,17 +11,17 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly users: Repository<User>,
+    private readonly userRepo: Repository<User>,
   ) {}
 
   async getUser(userId: string): Promise<User | null> {
-    const user = await this.users.findOneBy({ id: userId });
+    const user = await this.userRepo.findOneBy({ id: userId });
 
     return user;
   }
 
   async getUserWithRoles(userId: string) {
-    const user = await this.users.findOne({
+    const user = await this.userRepo.findOne({
       relations: ['userRoles', 'userRoles.role'],
       where: { id: userId },
     });
@@ -41,7 +41,7 @@ export class UserService {
   }
 
   async getAllUsersWithRoles() {
-    const users = await this.users.find({
+    const users = await this.userRepo.find({
       relations: ['userRoles', 'userRoles.role'],
     });
 
@@ -57,7 +57,7 @@ export class UserService {
   async findOrCreate(user: UserInfo): Promise<User> {
     const { provider, provider_id, email, username, profile_image } = user;
 
-    const existing = await this.users.findOne({
+    const existing = await this.userRepo.findOne({
       where: { provider, provider_id },
     });
 
@@ -65,7 +65,7 @@ export class UserService {
       return existing;
     }
 
-    const newUser = this.users.create({
+    const newUser = this.userRepo.create({
       provider,
       provider_id,
       email,
@@ -73,19 +73,19 @@ export class UserService {
       profile_image,
     });
 
-    return await this.users.save(newUser);
+    return await this.userRepo.save(newUser);
   }
 
   async setRefreshToken(userId: string, token: string) {
     const hashedToken = await bcrypt.hash(token, 10);
 
-    await this.users.update(userId, {
+    await this.userRepo.update(userId, {
       refresh_token_hash: hashedToken,
     });
   }
 
   async removeRefreshToken(userId: string) {
-    await this.users.update(userId, {
+    await this.userRepo.update(userId, {
       refresh_token_hash: '',
     });
   }
@@ -94,7 +94,7 @@ export class UserService {
     userId: string,
     refreshToken: string,
   ): Promise<boolean> {
-    const user = await this.users.findOneBy({ id: userId });
+    const user = await this.userRepo.findOneBy({ id: userId });
 
     if (!user || !user.refresh_token_hash) {
       return false;
