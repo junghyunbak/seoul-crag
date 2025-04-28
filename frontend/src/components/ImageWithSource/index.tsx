@@ -28,18 +28,23 @@ export function ImageWithSource({ image, className }: ImageWithSourceProps) {
       <Box
         sx={{
           position: 'absolute',
-          right: 8,
-          bottom: 4,
+          bottom: 0,
+          width: '100%',
+          p: 1,
         }}
       >
-        <Typography
-          variant="caption"
-          sx={{
+        <p
+          style={{
+            margin: 0,
+            fontSize: '0.75rem',
+            lineHeight: '0.75rem',
             color: grey[400],
+            whiteSpace: 'normal',
+            wordBreak: 'break-all',
           }}
         >
           {`출처: ${image.source}`}
-        </Typography>
+        </p>
       </Box>
     </div>
   );
