@@ -50,7 +50,13 @@ export function CragThumbnailField() {
     >
       <Typography variant="h6">썸네일 이미지</Typography>
       <Typography variant="caption">스토리 좌측 상단에 사용됩니다.</Typography>
-      <Avatar src={crag.thumbnail_url || ''} onClick={handleAvatarClick}>
+      <Avatar
+        src={crag.thumbnail_url || ''}
+        onClick={handleAvatarClick}
+        sx={{
+          cursor: 'pointer',
+        }}
+      >
         {crag.name}
       </Avatar>
       <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
