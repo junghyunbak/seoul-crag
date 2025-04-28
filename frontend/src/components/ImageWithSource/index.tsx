@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
 interface ImageWithSourceProps extends React.HTMLAttributes<HTMLDivElement> {

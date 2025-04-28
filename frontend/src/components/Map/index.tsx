@@ -12,8 +12,10 @@ const mockCrag: Crag = {
   longitude: 0,
   created_at: new Date(),
   updated_at: new Date(),
+  website_url: '',
 };
 
+// [ ]: 타입 제거. Children.type 으로 대체 가능.
 const CragMarkerType = (<Marker.Crag crag={mockCrag} />).type;
 const DefaultMarkerType = (<Marker.Default />).type;
 const BoundaryPolygonType = (<Polygon.Boundary />).type;
