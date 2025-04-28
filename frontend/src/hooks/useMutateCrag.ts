@@ -1,4 +1,4 @@
-import { useMutation, DefaultError, MutateOptions } from '@tanstack/react-query';
+import { useMutation, DefaultError, MutationOptions } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
 
@@ -7,7 +7,7 @@ type ChangeCragNameMutateParmas = {
   name: string;
 };
 
-export function useMutateCragName({ onSettled }: MutateOptions<void, DefaultError, ChangeCragNameMutateParmas>) {
+export function useMutateCragName({ onSettled }: MutationOptions<void, DefaultError, ChangeCragNameMutateParmas>) {
   const changeCragNameMutation = useMutation<void, DefaultError, ChangeCragNameMutateParmas>({
     mutationFn: async ({ cragId, name }) => {
       await api.patch(`/gyms/${cragId}`, {
@@ -27,7 +27,7 @@ type ChangeCragWebsitUrlMutateParams = {
 
 export function useMutateCragWebsiteUrl({
   onSettled,
-}: MutateOptions<void, DefaultError, ChangeCragWebsitUrlMutateParams>) {
+}: MutationOptions<void, DefaultError, ChangeCragWebsitUrlMutateParams>) {
   const changeCragWebsiteUrlMutation = useMutation<void, DefaultError, ChangeCragWebsitUrlMutateParams>({
     mutationFn: async ({ cragId, websiteUrl }) => {
       await api.patch(`/gyms/${cragId}`, {
@@ -47,7 +47,7 @@ type ChangeCragDescriptionMutateParmas = {
 
 export function useMutateCragDescription({
   onSettled,
-}: MutateOptions<void, DefaultError, ChangeCragDescriptionMutateParmas>) {
+}: MutationOptions<void, DefaultError, ChangeCragDescriptionMutateParmas>) {
   const changeCragDescriptionMutation = useMutation<void, DefaultError, ChangeCragDescriptionMutateParmas>({
     mutationFn: async ({ cragId, description }) => {
       await api.patch(`/gyms/${cragId}`, {
@@ -67,7 +67,7 @@ type ChangeCragAreaMutateParmas = {
   area: number;
 };
 
-export function useMutateCragArea({ onSettled }: MutateOptions<void, DefaultError, ChangeCragAreaMutateParmas>) {
+export function useMutateCragArea({ onSettled }: MutationOptions<void, DefaultError, ChangeCragAreaMutateParmas>) {
   const changeCragAreaMutation = useMutation<void, DefaultError, ChangeCragAreaMutateParmas>({
     mutationFn: async ({ area, cragId }) => {
       await api.patch(`/gyms/${cragId}`, {
@@ -92,7 +92,7 @@ type ChangeCragOpeningHourMutateParams = {
 
 export function useMutateCragOpeningHour({
   onSettled,
-}: MutateOptions<void, DefaultError, ChangeCragOpeningHourMutateParams>) {
+}: MutationOptions<void, DefaultError, ChangeCragOpeningHourMutateParams>) {
   const changeCragOpeningHourMutation = useMutation<void, DefaultError, ChangeCragOpeningHourMutateParams>({
     mutationFn: async ({ cragId, day, openTime, closeTime, isClosed }) => {
       await api.patch(`/gyms/${cragId}/opening-hours`, {
@@ -116,7 +116,7 @@ type ChangeCragLocationMutateParams = {
 
 export function useMutateCragLocation({
   onSettled,
-}: MutateOptions<void, DefaultError, ChangeCragLocationMutateParams>) {
+}: MutationOptions<void, DefaultError, ChangeCragLocationMutateParams>) {
   const changeCragLocationMutation = useMutation<void, DefaultError, ChangeCragLocationMutateParams>({
     mutationFn: async ({ cragId, latitude, longitude }) => {
       await api.patch(`/gyms/${cragId}`, {
@@ -132,7 +132,7 @@ export function useMutateCragLocation({
 
 type CreateCragMutateParams = Pick<Crag, 'name' | 'description' | 'latitude' | 'longitude'>;
 
-export function useMutateCreateCrag({ onSuccess }: MutateOptions<void, DefaultError, CreateCragMutateParams>) {
+export function useMutateCreateCrag({ onSuccess }: MutationOptions<void, DefaultError, CreateCragMutateParams>) {
   const createCragMutation = useMutation<void, DefaultError, CreateCragMutateParams>({
     mutationFn: async (crag) => {
       await api.post('/gyms', crag);
@@ -143,4 +143,90 @@ export function useMutateCreateCrag({ onSuccess }: MutateOptions<void, DefaultEr
   return {
     createCragMutation,
   };
+}
+
+type CragImageAddMutateParams = {
+  cragId: string;
+  url: string;
+  source: string;
+  type: ImageType;
+};
+
+export function useMutateCragImageAdd({ onSettled }: MutationOptions<void, DefaultError, CragImageAddMutateParams>) {
+  const cragImageAddMutation = useMutation<void, DefaultError, CragImageAddMutateParams>({
+    mutationFn: async ({ cragId, url, source, type }) => {
+      await api.post(`/gym-images/${cragId}/images`, {
+        url,
+        source,
+        type,
+      });
+    },
+    onSettled,
+  });
+
+  return { cragImageAddMutation };
+}
+
+type CragImageUpdateMutateParams = {
+  cragId: string;
+  imageId: string;
+  source: string;
+};
+
+export function useMutateCragImageUpdate({
+  onSettled,
+}: MutationOptions<void, DefaultError, CragImageUpdateMutateParams>) {
+  const cragImageUpdateMutation = useMutation<void, DefaultError, CragImageUpdateMutateParams>({
+    mutationFn: async ({ imageId, cragId, source }) => {
+      await api.patch(`/gym-images/${cragId}/images`, {
+        imageId,
+        source,
+      });
+    },
+    onSettled,
+  });
+
+  return { cragImageUpdateMutation };
+}
+
+type CragImageDeleteMutateParams = {
+  cragId: string;
+  imageId: string;
+};
+
+export function useMutateCragImageDelete({
+  onSettled,
+}: MutationOptions<void, DefaultError, CragImageDeleteMutateParams>) {
+  const cragImageDeleteMutation = useMutation<void, DefaultError, CragImageDeleteMutateParams>({
+    mutationFn: async ({ cragId, imageId }) => {
+      await api.delete(`/gym-images/${cragId}/images/${imageId}`);
+    },
+    onSettled,
+  });
+
+  return {
+    cragImageDeleteMutation,
+  };
+}
+
+type CragImageReorderMutateParams = {
+  imageType: ImageType;
+  cragId: string;
+  images: Image[];
+};
+
+export function useMutateCragImageReorder({
+  onSettled,
+}: MutationOptions<void, DefaultError, CragImageReorderMutateParams>) {
+  const cragImageReorderMutation = useMutation<void, DefaultError, CragImageReorderMutateParams>({
+    mutationFn: async ({ cragId, imageType, images }) => {
+      await api.post(`/gym-images/${cragId}/images/reorder`, {
+        type: imageType,
+        orderedIds: images.map((image) => image.id),
+      });
+    },
+    onSettled,
+  });
+
+  return { cragImageReorderMutation };
 }

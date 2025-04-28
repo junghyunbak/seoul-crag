@@ -4,10 +4,11 @@ import { Typography, Box } from '@mui/material';
 
 import {
   useFetchImages,
-  useMutateImageAdd,
-  useMutateImageDelete,
-  useMutateImageReorder,
-  useMutateImageUpdate,
+  useMutateCragImageAdd,
+  useMutateCragImageDelete,
+  useMutateCragImageReorder,
+  useMutateCragImageUpdate,
+  useMutateUploadImage,
 } from '@/hooks';
 
 import { ImageUploader } from './ImageUploader';
@@ -43,30 +44,31 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     if (fetchImages) setImages(fetchImages);
   }, [fetchImages]);
 
-  const { addImageMutation } = useMutateImageAdd({
+  const { cragImageAddMutation } = useMutateCragImageAdd({
     onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
-  const { reorderImageMutation } = useMutateImageReorder({
+  const { cragImageReorderMutation } = useMutateCragImageReorder({
     onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
-  const { deleteImageMutation } = useMutateImageDelete({
+  const { cragImageDeleteMutation } = useMutateCragImageDelete({
     onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
-  const { updateImageMutation } = useMutateImageUpdate({
+  const { cragImageUpdateMutation } = useMutateCragImageUpdate({
     onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
+  const { uploadImageMutation } = useMutateUploadImage({});
 
   const handleUploadClick = () => {
     setSelectedImage(null);
@@ -99,7 +101,7 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
       return;
     }
 
-    await updateImageMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id, source: sourceText });
+    await cragImageUpdateMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id, source: sourceText });
 
     setOpenModal(false);
   };
@@ -110,10 +112,10 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
     const form = new FormData();
 
     form.append('file', selectFile);
-    form.append('type', imageType);
-    form.append('source', sourceText);
 
-    await addImageMutation.mutateAsync({ cragId: crag.id, form });
+    const url = await uploadImageMutation.mutateAsync({ form });
+
+    await cragImageAddMutation.mutateAsync({ cragId: crag.id, url, source: sourceText, type: imageType });
 
     setOpenModal(false);
     setSelectFile(null);
@@ -128,7 +130,7 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
 
     if (!confirmed) return;
 
-    await deleteImageMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id });
+    await cragImageDeleteMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id });
 
     setOpenModal(false);
   };
@@ -136,7 +138,7 @@ export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps
   const handleReorderImage = (nextImages: Image[]) => {
     setImages(nextImages);
 
-    reorderImageMutation.mutate({ cragId: crag.id, imageType, images: nextImages });
+    cragImageReorderMutation.mutate({ cragId: crag.id, imageType, images: nextImages });
   };
 
   return (
