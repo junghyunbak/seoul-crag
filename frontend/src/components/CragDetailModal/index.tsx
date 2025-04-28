@@ -15,9 +15,9 @@ import { QUERY_STRING, SIZE } from '@/constants';
 import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
 
 import { Map } from '@/components/Map';
-import { ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { engDayToKor } from '@/components/WeeklyHoursSilder';
 import { ScheduleCalendar } from '@/components/ScheduleCalendar';
+import { ImageWithSource } from '@/components/ImageWithSource';
 
 import { urlService } from '@/utils';
 
@@ -25,7 +25,6 @@ import { Sheet } from 'react-modal-sheet';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
-import { ImageWithSource } from '@/components/ImageWithSource';
 
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
