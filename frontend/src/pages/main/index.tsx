@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
 import { useFetchCrags } from '@/hooks';
 
@@ -144,9 +144,48 @@ export default function Main() {
 
       <Controller />
 
+      <MapLoading />
+
       {markers && <AngularEdgeMarkers markers={markers} />}
     </Box>
   );
+}
+
+function MapLoading() {
+  const { map } = useMap();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const dragStartListener = map.addListener('dragstart', () => {
+      setIsLoading(true);
+    });
+
+    const dragEndListener = map.addListener('dragend', () => {
+      setIsLoading(false);
+    });
+
+    const zoomStartListener = map.addListener('zoomstart', () => {
+      setIsLoading(true);
+    });
+
+    const zoomEndListener = map.addListener('zoomend', () => {
+      setIsLoading(false);
+    });
+
+    return function cleanup() {
+      map.removeListener(dragStartListener);
+      map.removeListener(dragEndListener);
+      map.removeListener(zoomStartListener);
+      map.removeListener(zoomEndListener);
+    };
+  }, [map]);
+
+  return <Box sx={{ position: 'fixed', top: 0, right: 0 }}>{isLoading && <CircularProgress />}</Box>;
 }
 
 /*
