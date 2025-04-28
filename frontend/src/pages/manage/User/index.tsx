@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { FormTextField } from '@/components/FormTextField';
 import { useFetchMe, useMutateUploadImage } from '@/hooks';
 import { Avatar, Box } from '@mui/material';
-import { useMutateUserImage } from '@/hooks/useMutateUser';
+import { useMutateUserEmail, useMutateUserImage, useMutateUserNickname } from '@/hooks/useMutateUser';
 
 /**
  * 이미지 업로드 api를 분리, 링크를 받아서 추가. 암장 정보도 마찬가지.
@@ -14,6 +14,16 @@ export function User() {
 
   const { uploadImageMutation } = useMutateUploadImage({});
   const { updateUserImageMutation } = useMutateUserImage({
+    onSettled() {
+      refetch();
+    },
+  });
+  const { updateUserEmailMutation } = useMutateUserEmail({
+    onSettled() {
+      refetch();
+    },
+  });
+  const { updateUserNicknameMutation } = useMutateUserNickname({
     onSettled() {
       refetch();
     },
@@ -46,6 +56,14 @@ export function User() {
     inputRef.current!.value = '';
   };
 
+  const handleNicknameChange = async (nickname: string) => {
+    updateUserNicknameMutation.mutate({ nickname });
+  };
+
+  const handleEmailChange = async (email: string) => {
+    updateUserEmailMutation.mutate({ email });
+  };
+
   if (!user) {
     return;
   }
@@ -67,15 +85,9 @@ export function User() {
       </Avatar>
       <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
 
-      <FormTextField
-        value={user.username}
-        label="닉네임"
-        onSave={async () => {
-          console.log('사용자 이름 변경');
-        }}
-      />
+      <FormTextField value={user.username} label="닉네임" onSave={handleNicknameChange} />
 
-      <FormTextField value={user.email} label="이메일" onSave={async () => {}} />
+      <FormTextField value={user.email} label="이메일" onSave={handleEmailChange} />
     </Box>
   );
 }
