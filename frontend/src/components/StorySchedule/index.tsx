@@ -6,7 +6,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFetchSchedules } from '@/hooks';
+import { useFetchCrag } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
 import { GymScheduleGrid, ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
@@ -40,16 +40,17 @@ function extractFutureYearMonthDates(data: DateObject[]): Date[] {
 export default function StorySchedule() {
   const [scheduleStoryCragId, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
-  const { schedules } = useFetchSchedules(scheduleStoryCragId);
+  const { crag } = useFetchCrag({ cragId: scheduleStoryCragId });
 
   const futureYearMonthDates = extractFutureYearMonthDates(
-    (schedules || []).map((schedule) => ({ date: schedule.date }))
+    (crag?.futureSchedules || []).map((schedule) => ({ date: schedule.date }))
   );
 
   return createPortal(
     <AnimatePresence>
-      {scheduleStoryCragId && schedules && (
+      {scheduleStoryCragId && crag && (
         <StorySlider
+          crag={crag}
           contents={futureYearMonthDates.map((date) => (
             <Box
               sx={{
@@ -59,7 +60,7 @@ export default function StorySchedule() {
               }}
             >
               <MonthNavigation currentMonth={date} readonly fontColor="white" onPrev={() => {}} onNext={() => {}} />
-              <GymScheduleGrid schedules={schedules || []} readOnly currentMonth={date} />
+              <GymScheduleGrid schedules={crag.futureSchedules || []} readOnly currentMonth={date} />
               <ScheduleTypes color="white" />
             </Box>
           ))}

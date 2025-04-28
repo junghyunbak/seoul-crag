@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Box, IconButton, useMediaQuery } from '@mui/material';
+import { Avatar, Box, IconButton, Typography, useMediaQuery } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Pause from '@mui/icons-material/Pause';
@@ -25,6 +25,7 @@ interface StorySliderProps {
   onComplete?: () => void;
   onClose?: () => void;
   initPaused?: boolean;
+  crag?: Crag | null;
 }
 
 const BarContainer = styled(Box)({
@@ -146,6 +147,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
   onComplete,
   onClose,
   initPaused = false,
+  crag,
 }) => {
   const [index, setIndex] = useState({ value: 0 });
   const [paused, setPaused] = useState(initPaused);
@@ -311,19 +313,52 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
         <TranslateBar index={index} count={contents.length} duration={duration} onNext={goNext} paused={paused} />
 
-        <Box position="absolute" top={8} right={8} display="flex" gap={1} zIndex={5}>
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              pauseToggle();
+        <Box
+          sx={{
+            position: 'absolute',
+            zIndex: 5,
+            top: 0,
+
+            width: '100%',
+            p: 2,
+
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
             }}
-            sx={{ color: 'white' }}
           >
-            {paused ? <PlayArrow /> : <Pause />}
-          </IconButton>
-          <IconButton onClick={onClose} sx={{ color: 'white' }}>
-            <Close />
-          </IconButton>
+            <Avatar sx={{ width: 32, height: 32 }} src={crag?.thumbnail_url || ''}>
+              {crag?.name}
+            </Avatar>
+            <Typography color="white">{crag?.name}</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                pauseToggle();
+              }}
+              sx={{ color: 'white' }}
+            >
+              {paused ? <PlayArrow /> : <Pause />}
+            </IconButton>
+            <IconButton onClick={onClose} sx={{ color: 'white' }}>
+              <Close />
+            </IconButton>
+          </Box>
         </Box>
 
         {!isMobile && (

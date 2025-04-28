@@ -6,4 +6,8 @@ export class UpdateGymDto extends PartialType(CreateGymDto) {
   @IsOptional()
   @IsString()
   website_url: string;
+
+  @IsOptional()
+  @IsString()
+  thumbnail_url: string;
 }

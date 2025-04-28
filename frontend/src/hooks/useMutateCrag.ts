@@ -230,3 +230,23 @@ export function useMutateCragImageReorder({
 
   return { cragImageReorderMutation };
 }
+
+type CragThumbnailUpdateMutateParams = {
+  cragId: string;
+  url: string;
+};
+
+export function useMutateCragThumbnailUpdate({
+  onSettled,
+}: MutationOptions<void, DefaultError, CragThumbnailUpdateMutateParams>) {
+  const cragThumbnailUpdateMutation = useMutation<void, DefaultError, CragThumbnailUpdateMutateParams>({
+    mutationFn: async ({ cragId, url }) => {
+      await api.patch(`/gyms/${cragId}`, {
+        thumbnail_url: url,
+      });
+    },
+    onSettled,
+  });
+
+  return { cragThumbnailUpdateMutation };
+}
