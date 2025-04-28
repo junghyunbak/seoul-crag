@@ -17,12 +17,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { SIZE, QUERY_STRING } from '@/constants';
 
-import { format } from 'date-fns';
+import { format, getDay, isBefore, parse } from 'date-fns';
 
 import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 
 import { zIndex } from '@/styles';
+import { daysOfWeek } from '@/components/WeeklyHoursSilder';
 
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
   const MIN_AREA = minArea;
@@ -189,18 +190,42 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   };
 
   const todayIso = format(new Date(), 'yyyy-MM-dd');
+  const todayDay = daysOfWeek[getDay(new Date())];
 
-  const isOff = !crag.futureSchedules
-    ? false
-    : crag.futureSchedules.some((schedule) => {
+  const isOff = (() => {
+    let _isOff = false;
+
+    if (crag.futureSchedules) {
+      _isOff = crag.futureSchedules.some((schedule) => {
         if (schedule.type !== 'closed') {
-          return false;
+          return;
         }
 
         const iso = format(schedule.date, 'yyyy-MM-dd');
 
         return iso === todayIso;
       });
+    }
+
+    if (crag.openingHourOfWeek) {
+      const todayOpeningHour = crag.openingHourOfWeek.find((openingHour) => openingHour.day == todayDay);
+
+      if (todayOpeningHour) {
+        if (todayOpeningHour.is_closed) {
+          _isOff = true;
+        } else {
+          if (todayOpeningHour.close_time && todayOpeningHour.open_time) {
+            const openTime = parse(todayOpeningHour.open_time, 'HH:mm:ss', new Date());
+            const closeTime = parse(todayOpeningHour.close_time, 'HH:mm:ss', new Date());
+
+            _isOff = !(isBefore(openTime, new Date()) && isBefore(new Date(), closeTime));
+          }
+        }
+      }
+    }
+
+    return _isOff;
+  })();
 
   const isSetting = !crag.futureSchedules
     ? false
