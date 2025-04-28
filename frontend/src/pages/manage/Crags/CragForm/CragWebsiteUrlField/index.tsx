@@ -21,5 +21,6 @@ export function CragWebsiteUrlField() {
     });
   };
 
-  return <FormTextField value={crag.website_url} onSave={handleTextFieldUpdate} label="웹 사이트 링크" />;
+  // BUG: website_url이 null일 경우 암장이 전환되도 이전 상태가 유지됨
+  return <FormTextField value={crag.website_url || ''} onSave={handleTextFieldUpdate} label="웹 사이트 링크" />;
 }
