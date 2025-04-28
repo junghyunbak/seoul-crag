@@ -26,6 +26,9 @@ export class GymImage {
   @Column({ type: 'int', default: 0 })
   order: number;
 
+  @Column({ nullable: true })
+  source: string;
+
   @CreateDateColumn()
   created_at: Date;
 }
