@@ -84,7 +84,7 @@ export function Crags() {
           <FormControl fullWidth>
             <InputLabel>암장 선택</InputLabel>
             <Select
-              value={selectCragId}
+              value={selectCragId || ''}
               onChange={(e) => {
                 setSelectCragId(e.target.value);
               }}
