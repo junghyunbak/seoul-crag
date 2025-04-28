@@ -19,7 +19,9 @@ export function Filter() {
       ? (crag: Crag) => {
           return crag.imageTypes?.includes('shower');
         }
-      : () => {};
+      : () => {
+          return true;
+        };
 
     return crags.filter(showerFilter).length;
   })();
