@@ -9,7 +9,7 @@ import { QUERY_STRING } from '@/constants';
 import { useFetchCrag } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
-import { GymScheduleGrid, ScheduleTypes } from '@/components/ScheduleCalendar/ScheduleGrid';
+import { GymScheduleGrid } from '@/components/ScheduleCalendar/ScheduleGrid';
 import { MonthNavigation } from '@/components/ScheduleCalendar/MonthNavigation';
 
 import { AnimatePresence } from 'framer-motion';

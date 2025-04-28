@@ -75,6 +75,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
+  const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
@@ -141,7 +142,9 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
               default:
                 return {
                   icon: <Shower />,
-                  callback: () => {},
+                  callback: () => {
+                    setShowerStory(crag.id);
+                  },
 
                   disabled: false,
                 };

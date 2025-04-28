@@ -30,6 +30,8 @@ export function Layout() {
                 <Outlet />
 
                 <StoryImage imageType="interior" />
+                <StoryImage imageType="shower" />
+
                 <StorySchedule />
                 <CragDetailModal />
               </LoadNaverMap>
