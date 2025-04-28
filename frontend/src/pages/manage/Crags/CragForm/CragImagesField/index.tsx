@@ -1,34 +1,20 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
-import { Typography, Box, IconButton, styled } from '@mui/material';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { Typography, Box } from '@mui/material';
 
 import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+  useFetchImages,
+  useMutateImageAdd,
+  useMutateImageDelete,
+  useMutateImageReorder,
+  useMutateImageUpdate,
+} from '@/hooks';
+
+import { ImageUploader } from './ImageUploader';
+import { UploadModal } from './UploadModal';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { useFetchImages, useMutateImageAdd, useMutateImageDelete, useMutateImageReorder } from '@/hooks';
-
-import { SortableImage } from './SortableImage';
-
-const ImageWrapper = styled(Box)({
-  width: 100,
-  height: 100,
-  flexShrink: 0,
-  borderRadius: 8,
-  overflow: 'hidden',
-  position: 'relative',
-});
 interface CragImagesFieldProps {
   imageType?: ImageType;
 }
@@ -36,156 +22,156 @@ interface CragImagesFieldProps {
 export function CragImagesField({ imageType = 'interior' }: CragImagesFieldProps) {
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [images, setImages] = useState<Image[]>([]);
 
-  const [images, setImages] = useState<(File | Image)[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+
+  /**
+   * selectedImage
+   *
+   * null : 새로운 이미지 추가
+   * not null : 기존 값 수정
+   */
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [selectFile, setSelectFile] = useState<File | null>(null);
+
+  const [sourceText, setSourceText] = useState('');
 
   const { images: fetchImages, refetch } = useFetchImages(crag.id, imageType);
 
   useEffect(() => {
-    if (!fetchImages) {
-      return;
-    }
-
-    setImages(fetchImages);
+    if (fetchImages) setImages(fetchImages);
   }, [fetchImages]);
 
   const { addImageMutation } = useMutateImageAdd({
-    onSettled() {
+    onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
-
   const { reorderImageMutation } = useMutateImageReorder({
-    onSettled() {
+    onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
-
   const { deleteImageMutation } = useMutateImageDelete({
-    onSettled() {
+    onSettled: () => {
       refetch();
       revalidateCrag();
     },
   });
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 200,
-        tolerance: 5,
-      },
-    })
-  );
+  const { updateImageMutation } = useMutateImageUpdate({
+    onSettled: () => {
+      refetch();
+      revalidateCrag();
+    },
+  });
 
   const handleUploadClick = () => {
-    inputRef.current?.click();
+    setSelectedImage(null);
+    setOpenModal(true);
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+  const handleEditImage = (image: Image) => {
+    setSelectedImage(image);
+    setOpenModal(true);
+  };
 
-    if (files) {
-      setImages((prev) => [...prev, ...Array.from(files)]);
+  const handleDeleteFile = () => {
+    setSelectFile(null);
+  };
 
-      for (const file of Array.from(files)) {
-        const form = new FormData();
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
-        form.append('file', file);
-        form.append('type', imageType);
+  const handleSourceTextChange = (value: string) => {
+    setSourceText(value);
+  };
 
-        addImageMutation.mutate({ cragId: crag.id, form });
-      }
+  const handleFilePick = (file: File) => {
+    setSelectFile(file);
+  };
+
+  const handleUpdateImageInfo = async () => {
+    if (!selectedImage) {
+      return;
     }
+
+    await updateImageMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id, source: sourceText });
+
+    setOpenModal(false);
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleSaveImage = async () => {
+    if (!selectFile) return;
 
-    if (active.id !== over?.id) {
-      const oldIndex = images.findIndex((image) => (image instanceof File ? image.name : image.id) === active.id);
-      const newIndex = images.findIndex((image) => (image instanceof File ? image.name : image.id) === over?.id);
+    const form = new FormData();
 
-      const nextItems = arrayMove(images, oldIndex, newIndex);
+    form.append('file', selectFile);
+    form.append('type', imageType);
+    form.append('source', sourceText);
 
-      setImages(nextItems);
+    await addImageMutation.mutateAsync({ cragId: crag.id, form });
 
-      reorderImageMutation.mutate({
-        imageType,
-        cragId: crag.id,
-        nextItems,
-      });
+    setOpenModal(false);
+    setSelectFile(null);
+  };
+
+  const handleDeleteImage = async () => {
+    if (!selectedImage) {
+      return;
     }
+
+    const confirmed = window.confirm('정말 삭제하시겠습니까?');
+
+    if (!confirmed) return;
+
+    await deleteImageMutation.mutateAsync({ cragId: crag.id, imageId: selectedImage.id });
+
+    setOpenModal(false);
   };
 
-  const handleRemoveImage = async (imageId: string) => {
-    deleteImageMutation.mutate({
-      cragId: crag.id,
-      imageId,
-    });
+  const handleReorderImage = (nextImages: Image[]) => {
+    setImages(nextImages);
+
+    reorderImageMutation.mutate({ cragId: crag.id, imageType, images: nextImages });
   };
 
   return (
     <Box>
       <Typography variant="h6">암장 내부 이미지</Typography>
-
-      <Typography variant="caption">
+      <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
         * jpeg, jpg, png 확장자만 업로드 가능합니다.
         <br />* 최대 20MB 크기의 사진을 업로드 할 수 있으며 올린 파일은 압축됩니다.
       </Typography>
 
-      <Box
-        sx={{
-          WebkitOverflowScrolling: 'touch',
-          width: '100%',
-          overflow: 'auto',
-          py: 2,
-        }}
-      >
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-          modifiers={[restrictToHorizontalAxis]}
-        >
-          <SortableContext
-            items={images.map((image) => (image instanceof File ? image.name : image.id))}
-            strategy={horizontalListSortingStrategy}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
-              }}
-            >
-              {images.map((image) => {
-                if (image instanceof File) {
-                  return <SortableImage key={image.name} id={image.name} file={image} />;
-                } else {
-                  return <SortableImage key={image.id} id={image.id} url={image.url} onDelete={handleRemoveImage} />;
-                }
-              })}
+      <ImageUploader
+        images={images}
+        onUploadClick={handleUploadClick}
+        onEditImage={handleEditImage}
+        onReorder={handleReorderImage}
+      />
 
-              <ImageWrapper display="flex" alignItems="center" justifyContent="center" border="2px dashed #ccc">
-                <IconButton onClick={handleUploadClick}>
-                  <AddPhotoAlternateIcon />
-                </IconButton>
-                <input
-                  ref={inputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                />
-              </ImageWrapper>
-            </Box>
-          </SortableContext>
-        </DndContext>
-      </Box>
+      {selectedImage ? (
+        <UploadModal selectImage={selectedImage} selectFile={selectFile} open={openModal} onClose={handleCloseModal}>
+          <UploadModal.ImagePreview />
+          <UploadModal.SourceInput onChangeValue={handleSourceTextChange} />
+          <UploadModal.SaveButton onClick={handleUpdateImageInfo} />
+          <UploadModal.DeleteButton onClick={handleDeleteImage} />
+          <UploadModal.CloseButton onClick={handleCloseModal} />
+        </UploadModal>
+      ) : (
+        <UploadModal selectImage={null} selectFile={selectFile} open={openModal} onClose={handleCloseModal}>
+          <UploadModal.ImagePreview />
+          <UploadModal.SourceInput onChangeValue={handleSourceTextChange} />
+          <UploadModal.DeleteImage onClick={handleDeleteFile} />
+          <UploadModal.FilePicker onPick={handleFilePick} />
+          <UploadModal.SaveButton onClick={handleSaveImage} />
+          <UploadModal.CloseButton onClick={handleCloseModal} />
+        </UploadModal>
+      )}
     </Box>
   );
 }

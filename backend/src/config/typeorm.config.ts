@@ -12,7 +12,7 @@ export const TypeOrmConfig: TypeOrmModuleAsyncOptions = {
       type: 'postgres',
       url: config.get('DATABASE_URL'),
       autoLoadEntities: true,
-      synchronize: nodeEnv !== 'production',
+      synchronize: false, // nodeEnv !== 'production',
       logging: nodeEnv === 'development',
     };
   },

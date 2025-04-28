@@ -5,6 +5,8 @@ import Share from '@mui/icons-material/Share';
 import Edit from '@mui/icons-material/Edit';
 import GradeOutlined from '@mui/icons-material/GradeOutlined';
 import Close from '@mui/icons-material/Close';
+import LanguageIcon from '@mui/icons-material/Language';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -23,6 +25,7 @@ import { Sheet } from 'react-modal-sheet';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
+import { ImageWithSource } from '@/components/ImageWithSource';
 
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
@@ -96,15 +99,8 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
               {/* 이미지 슬라이더 */}
               <Box sx={{ position: 'relative' }}>
                 <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-                  {images.map(({ url }, i) => (
-                    <Box
-                      key={i}
-                      className="keen-slider__slide"
-                      component="img"
-                      src={url}
-                      alt={`slide-${i}`}
-                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                  {images.map((image, i) => (
+                    <ImageWithSource className="keen-slider__slide" key={i} image={image} />
                   ))}
                 </Box>
                 {/* 페이지 인디케이터 */}
@@ -162,6 +158,34 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                 <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }} component="pre">
                   {crag.description}
                 </Typography>
+
+                {crag.website_url && (
+                  <>
+                    <Divider />
+
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                      }}
+                    >
+                      <LanguageIcon
+                        sx={{
+                          fill: 'currentcolor',
+                        }}
+                      />
+
+                      <Box sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {crag.website_url}
+                      </Box>
+
+                      <IconButton onClick={() => window.open(crag.website_url || '', '_blank')}>
+                        <LaunchIcon />
+                      </IconButton>
+                    </Box>
+                  </>
+                )}
 
                 <Divider />
 

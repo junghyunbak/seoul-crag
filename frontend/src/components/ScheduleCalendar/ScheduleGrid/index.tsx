@@ -298,6 +298,7 @@ export function ScheduleTypes({ color = 'black' }: ScheduleTypesProps) {
       {scheduleType.map((type) => {
         return (
           <Box
+            key={type}
             sx={{
               display: 'flex',
               alignItems: 'center',

@@ -9,6 +9,7 @@ import {
   Get,
   Delete,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -24,6 +25,7 @@ import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
 import * as sharp from 'sharp';
+import { UpdateImageDto } from 'src/gym-images/dto/update-image.dto';
 
 @Controller('gym-images/:gymId/images')
 export class GymImagesController {
@@ -72,7 +74,21 @@ export class GymImagesController {
       .jpeg({ quality: 80 })
       .toFile(`.${resizedImageUrl}`);
 
-    return this.gymImagesService.save(gymId, resizedImageUrl, dto.type);
+    return this.gymImagesService.save(
+      gymId,
+      resizedImageUrl,
+      dto.type,
+      dto.source,
+    );
+  }
+
+  @Roles('gym_admin', 'partner_admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch()
+  async updateImage(@Body() body: UpdateImageDto) {
+    const { imageId, source } = body;
+
+    return await this.gymImagesService.update(imageId, source);
   }
 
   @Get()

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GymImage } from './gym-images.entity';
@@ -32,6 +32,7 @@ export class GymImagesService {
     gymId: string,
     url: string,
     type: GymImageType,
+    source: string,
   ): Promise<GymImage> {
     const last = await this.imageRepo.findOne({
       where: { gym: { id: gymId }, type },
@@ -45,7 +46,22 @@ export class GymImagesService {
       url,
       type,
       order,
+      source,
     });
+
+    return this.imageRepo.save(image);
+  }
+
+  async update(imageId: string, source: string) {
+    const image = await this.imageRepo.findOne({
+      where: { id: imageId },
+    });
+
+    if (!image) {
+      throw new NotFoundException('이미지를 찾을 수 없습니다.');
+    }
+
+    image.source = source;
 
     return this.imageRepo.save(image);
   }

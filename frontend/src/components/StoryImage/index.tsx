@@ -2,11 +2,10 @@ import { useMemo } from 'react';
 
 import { createPortal } from 'react-dom';
 
-import { Box } from '@mui/material';
-
 import { StringParam, useQueryParam } from 'use-query-params';
 
 import { StorySlider } from '@/components/StorySlider';
+import { ImageWithSource } from '@/components/ImageWithSource';
 
 import { QUERY_STRING } from '@/constants';
 
@@ -37,15 +36,7 @@ export default function StoryImage({ imageType }: StoryImageProps) {
       {cragId && images && (
         <StorySlider
           contents={images.map((image) => (
-            <Box
-              component="img"
-              width="100%"
-              src={image.url}
-              sx={{
-                userSelect: 'none',
-                objectFit: 'cover',
-              }}
-            />
+            <ImageWithSource image={image} />
           ))}
           onClose={() => setCragId(null)}
           onComplete={() => setCragId(null)}
