@@ -196,7 +196,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                   {crag.openingHourOfWeek &&
                     crag.openingHourOfWeek
                       .sort((a, b) => (dayOfPriority[a.day] < dayOfPriority[b.day] ? -1 : 1))
-                      .map(({ id, day, open_time, close_time }) => {
+                      .map(({ id, day, open_time, close_time, is_closed }) => {
                         if (!(open_time && close_time)) {
                           return null;
                         }
@@ -210,10 +210,9 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                               {engDayToKor(day)}
                             </Typography>
 
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                            >{`${oh}:${om} - ${ch}:${cm}`}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {is_closed ? '정기 휴무' : `${oh}:${om} - ${ch}:${cm}`}
+                            </Typography>
                           </Box>
                         );
                       })}
