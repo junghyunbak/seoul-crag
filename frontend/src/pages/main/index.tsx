@@ -14,6 +14,7 @@ import { Map } from '@/components/Map';
 import { Controller } from '@/components/Controller';
 import { Menu } from '@/components/Menu';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
+import { Filter } from '@/components/Filter';
 
 import { useStore } from '@/store';
 
@@ -142,10 +143,16 @@ export default function Main() {
 
       <Menu />
 
-      <Controller />
-
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: '10%',
+        }}
+      >
+        <Controller />
+      </Box>
       <MapLoading />
-
+      <Filter />
       {markers && <AngularEdgeMarkers markers={markers} />}
     </Box>
   );

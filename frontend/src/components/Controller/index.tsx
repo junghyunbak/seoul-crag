@@ -1,43 +1,64 @@
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { Badge, Button, Paper, Stack, Typography, styled, BadgeProps } from '@mui/material';
 
-import ManageHistory from '@mui/icons-material/ManageHistory';
-import Search from '@mui/icons-material/Search';
-import Menu from '@mui/icons-material/Menu';
+import ListIcon from '@mui/icons-material/Menu';
+import TuneIcon from '@mui/icons-material/Tune';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { useQueryParam, BooleanParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
+const StyledBadge = styled(Badge)<BadgeProps>(() => ({
+  '& .MuiBadge-badge': {
+    right: 3,
+    top: 3,
+    border: `2px solid #f4f2ef`,
+    padding: '0 4px',
+  },
+}));
+
 export function Controller() {
   const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
+  const [, setIsFilterOpen] = useQueryParam(QUERY_STRING.FILTER, BooleanParam);
 
-  const handleMenuButtonClick = () => {
+  const [enableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
+
+  const filterCount = (() => {
+    let count = 0;
+
+    if (enableShowerFilter) {
+      count += 1;
+    }
+
+    return count;
+  })();
+
+  const handleManageButtonClick = () => {
     setIsMenuOpen(true);
   };
 
+  const handleFilterButtonClick = () => {
+    setIsFilterOpen(true);
+  };
+
   return (
-    <Box
-      sx={{
-        position: 'fixed',
-        bottom: '10%',
-      }}
-    >
-      <Paper sx={{ borderRadius: '0.5rem', width: '90dvw', maxWidth: '400px', p: '1rem', background: '#f4f2ef' }}>
-        <Stack direction="row" justifyContent="space-around" sx={{ width: '100%' }}>
-          <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }}>
-            <ManageHistory sx={{ width: '2rem', height: '2rem', transform: 'scaleX(-1)' }} />
-            <Typography>날짜</Typography>
-          </Button>
-          <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }}>
-            <Search sx={{ width: '2rem', height: '2rem' }} />
-            <Typography>검색</Typography>
-          </Button>
-          <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }} onClick={handleMenuButtonClick}>
-            <Menu sx={{ width: '2rem', height: '2rem' }} />
-            <Typography>메뉴</Typography>
-          </Button>
-        </Stack>
-      </Paper>
-    </Box>
+    <Paper sx={{ borderRadius: '0.5rem', width: '90dvw', maxWidth: '400px', p: '1rem', background: '#f4f2ef' }}>
+      <Stack direction="row" justifyContent="space-around" sx={{ width: '100%' }}>
+        <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }} onClick={handleFilterButtonClick}>
+          <StyledBadge badgeContent={filterCount} color="primary">
+            <TuneIcon sx={{ width: '2rem', height: '2rem', transform: 'scaleX(-1)' }} />
+          </StyledBadge>
+          <Typography>필터</Typography>
+        </Button>
+        <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }}>
+          <ListIcon sx={{ width: '2rem', height: '2rem' }} />
+          <Typography>목록</Typography>
+        </Button>
+        <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }} onClick={handleManageButtonClick}>
+          <PersonIcon sx={{ width: '2rem', height: '2rem' }} />
+          <Typography>관리</Typography>
+        </Button>
+      </Stack>
+    </Paper>
   );
 }

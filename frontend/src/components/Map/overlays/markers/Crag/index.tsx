@@ -11,7 +11,7 @@ import { grey } from '@mui/material/colors';
 
 import { useCragArea } from '@/hooks';
 
-import { useQueryParam, StringParam } from 'use-query-params';
+import { useQueryParam, StringParam, BooleanParam } from 'use-query-params';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -71,6 +71,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const markerRef = useRef<HTMLDivElement>(null);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [enableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
@@ -239,8 +240,18 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
         return iso === todayIso;
       });
 
+  const isFiltered = !enableShowerFilter ? false : !crag.imageTypes?.includes('shower');
+
   return (
-    <Box ref={markerRef} sx={{ position: 'absolute', transform: 'translate(-50%, -100%)' }}>
+    <Box
+      ref={markerRef}
+      sx={{
+        position: 'absolute',
+        transform: 'translate(-50%, -100%)',
+        opacity: isFiltered ? 0.3 : 1,
+        pointerEvents: isFiltered ? 'none' : 'auto',
+      }}
+    >
       {/**
        * 마커
        */}
