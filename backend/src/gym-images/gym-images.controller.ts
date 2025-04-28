@@ -74,7 +74,12 @@ export class GymImagesController {
       .jpeg({ quality: 80 })
       .toFile(`.${resizedImageUrl}`);
 
-    return this.gymImagesService.save(gymId, resizedImageUrl, dto.type);
+    return this.gymImagesService.save(
+      gymId,
+      resizedImageUrl,
+      dto.type,
+      dto.source,
+    );
   }
 
   @Roles('gym_admin', 'partner_admin')

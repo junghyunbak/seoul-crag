@@ -32,6 +32,7 @@ export class GymImagesService {
     gymId: string,
     url: string,
     type: GymImageType,
+    source: string,
   ): Promise<GymImage> {
     const last = await this.imageRepo.findOne({
       where: { gym: { id: gymId }, type },
@@ -45,6 +46,7 @@ export class GymImagesService {
       url,
       type,
       order,
+      source,
     });
 
     return this.imageRepo.save(image);
