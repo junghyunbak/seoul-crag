@@ -3,10 +3,12 @@ import { Sheet } from 'react-modal-sheet';
 import ShowerIcon from '@mui/icons-material/Shower';
 import { BooleanParam, useQueryParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
-import { useFetchCrags } from '@/hooks';
+import { useFetchCrags, useFilter, useModifyFilter } from '@/hooks';
 
 export function Filter() {
-  const [isFilterOpen, setIsFilterOpen] = useQueryParam(QUERY_STRING.FILTER, BooleanParam);
+  const { isFilterSheetOpen } = useFilter();
+  const { updateIsFilterSheetOpen } = useModifyFilter();
+
   const [enableShowerFilter, setEnableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
   const { crags } = useFetchCrags();
 
@@ -27,7 +29,7 @@ export function Filter() {
   })();
 
   const handleShowButtonClick = () => {
-    setIsFilterOpen(null);
+    updateIsFilterSheetOpen(false);
   };
 
   const handleResetFilterButtonClick = () => {
@@ -35,7 +37,7 @@ export function Filter() {
   };
 
   const handleSheetClose = () => {
-    setIsFilterOpen(null);
+    updateIsFilterSheetOpen(false);
   };
 
   const handleShowerChipClick = () => {
@@ -43,7 +45,7 @@ export function Filter() {
   };
 
   return (
-    <Sheet isOpen={!!isFilterOpen} onClose={handleSheetClose}>
+    <Sheet isOpen={isFilterSheetOpen} onClose={handleSheetClose}>
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content

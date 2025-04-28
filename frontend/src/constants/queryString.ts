@@ -11,6 +11,5 @@ export const START_EXERCISE_TIME = 'startExerciseTime';
 export const END_EXERCISE_TIME = 'endExerciseTime';
 
 export const MENU = 'menu';
-export const FILTER = 'filter';
 
 export const FILTER_SHOWER = 'fs';

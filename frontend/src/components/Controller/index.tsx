@@ -7,6 +7,7 @@ import PersonIcon from '@mui/icons-material/PersonOutline';
 import { useQueryParam, BooleanParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
+import { useModifyFilter } from '@/hooks';
 
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   '& .MuiBadge-badge': {
@@ -19,7 +20,8 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
 
 export function Controller() {
   const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
-  const [, setIsFilterOpen] = useQueryParam(QUERY_STRING.FILTER, BooleanParam);
+
+  const { updateIsFilterSheetOpen } = useModifyFilter();
 
   const [enableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
 
@@ -38,7 +40,7 @@ export function Controller() {
   };
 
   const handleFilterButtonClick = () => {
-    setIsFilterOpen(true);
+    updateIsFilterSheetOpen(true);
   };
 
   return (
