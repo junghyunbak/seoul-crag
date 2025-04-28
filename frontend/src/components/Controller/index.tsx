@@ -2,7 +2,7 @@ import { Badge, Button, Paper, Stack, Typography, styled, BadgeProps } from '@mu
 
 import ListIcon from '@mui/icons-material/Menu';
 import TuneIcon from '@mui/icons-material/Tune';
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from '@mui/icons-material/PersonOutline';
 
 import { useQueryParam, BooleanParam } from 'use-query-params';
 
