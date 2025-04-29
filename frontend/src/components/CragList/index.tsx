@@ -75,18 +75,18 @@ export function getFilteredSortedCrags(
 }
 
 // SearchBar 컴포넌트 예시
-import { IconButton } from '@mui/material';
+import { IconButton, MenuItem, Select, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
-      <input
+      <TextField
+        fullWidth
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="검색어를 입력하세요"
-        style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #ccc' }}
       />
       {value && (
         <IconButton onClick={onClear} size="small" sx={{ ml: 1 }}>
@@ -101,17 +101,13 @@ export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
 export function SortSelect({ value, onChange }: SortSelectProps) {
   return (
     <div style={{ padding: '8px' }}>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as SortType)}
-        style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ccc' }}
-      >
+      <Select value={value} fullWidth onChange={(e) => onChange(e.target.value as SortType)}>
         {Object.entries(SORT_OPTIONS).map(([key, label]) => (
-          <option key={key} value={key}>
+          <MenuItem key={key} value={key}>
             {label}
-          </option>
+          </MenuItem>
         ))}
-      </select>
+      </Select>
     </div>
   );
 }
