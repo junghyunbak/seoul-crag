@@ -18,6 +18,7 @@ export function useFilter() {
     QUERY_STRING.FILTER_NEW_SETTING,
     BooleanParam
   );
+  const [enableTodayRemove, setEnableTodayRemove] = useQueryParam(QUERY_STRING.FILTER_TODAY_REMOVE, BooleanParam);
 
   const todayIso = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
 
@@ -61,23 +62,23 @@ export function useFilter() {
     [enableNewSettingFilter, todayIso]
   );
 
+  const todayRemoveFilter = useMemo(
+    () =>
+      enableTodayRemove
+        ? (crag: Crag) =>
+            (crag.futureSchedules || []).some(
+              ({ type, date }) => type === 'remove' && format(date, 'yyyy-MM-dd') === todayIso
+            )
+        : () => true,
+    [enableTodayRemove, todayIso]
+  );
+
   const filterCount = useMemo(() => {
-    let count = 0;
-
-    if (enableShowerFilter) {
-      count += 1;
-    }
-
-    if (enableExceptionSettingFilter) {
-      count += 1;
-    }
-
-    if (enableNewSettingFilter) {
-      count += 1;
-    }
-
-    return count;
-  }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter]);
+    return [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove].reduce(
+      (acc, cur) => acc + (cur ? 1 : 0),
+      0
+    );
+  }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove]);
 
   const isCragFiltered = useCallback(
     (crag: Crag) => {
@@ -95,16 +96,37 @@ export function useFilter() {
         _isFiltered &&= newSettingFilter(crag);
       }
 
+      if (enableTodayRemove) {
+        _isFiltered &&= todayRemoveFilter(crag);
+      }
+
       return _isFiltered;
     },
     [
       enableExceptionSettingFilter,
       enableNewSettingFilter,
       enableShowerFilter,
+      enableTodayRemove,
       exceptionSettingFilter,
       newSettingFilter,
       showerFilter,
+      todayRemoveFilter,
     ]
+  );
+
+  const getFilteredCragCount = useCallback(
+    (crags: Crag[] | undefined | null) => {
+      if (!crags) {
+        return 0;
+      }
+
+      return crags
+        .filter(showerFilter)
+        .filter(exceptionSettingFilter)
+        .filter(newSettingFilter)
+        .filter(todayRemoveFilter).length;
+    },
+    [exceptionSettingFilter, newSettingFilter, showerFilter, todayRemoveFilter]
   );
 
   return {
@@ -116,15 +138,18 @@ export function useFilter() {
     enableShowerFilter,
     enableExceptionSettingFilter,
     enableNewSettingFilter,
+    enableTodayRemove,
 
     setEnableShowerFilter,
     setEnableExceptionSettingFilter,
     setEnableNewSettingFilter,
+    setEnableTodayRemove,
 
     showerFilter,
     exceptionSettingFilter,
     newSettingFilter,
 
     isCragFiltered,
+    getFilteredCragCount,
   };
 }

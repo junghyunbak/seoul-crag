@@ -15,3 +15,4 @@ export const MENU = 'menu';
 export const FILTER_SHOWER = 'fs';
 export const FILTER_EXCEPTION_SETTING = 'fes';
 export const FILTER_NEW_SETTING = 'fns';
+export const FILTER_TODAY_REMOVE = 'fdr';

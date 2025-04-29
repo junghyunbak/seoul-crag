@@ -11,24 +11,16 @@ export function Filter() {
     enableExceptionSettingFilter,
     enableShowerFilter,
     enableNewSettingFilter,
+    enableTodayRemove,
     setEnableExceptionSettingFilter,
     setEnableShowerFilter,
     setEnableNewSettingFilter,
-    showerFilter,
-    exceptionSettingFilter,
-    newSettingFilter,
+    setEnableTodayRemove,
+    getFilteredCragCount,
   } = useFilter();
   const { updateIsFilterSheetOpen } = useModifyFilter();
 
   const { crags } = useFetchCrags();
-
-  const filteredCragCount = (() => {
-    if (!crags) {
-      return 0;
-    }
-
-    return crags.filter(showerFilter).filter(exceptionSettingFilter).filter(newSettingFilter).length;
-  })();
 
   const handleShowButtonClick = () => {
     updateIsFilterSheetOpen(false);
@@ -52,6 +44,10 @@ export function Filter() {
 
   const handleNewSettingChipClick = () => {
     setEnableNewSettingFilter(enableNewSettingFilter ? null : true);
+  };
+
+  const handleTodayRemoveChipClick = () => {
+    setEnableTodayRemove(enableTodayRemove ? null : true);
   };
 
   return (
@@ -86,6 +82,7 @@ export function Filter() {
                 >
                   <ShowerChip isSelect={!!enableShowerFilter} onClick={handleShowerChipClick} />
                   <NewSettingChip isSelect={!!enableNewSettingFilter} onClick={handleNewSettingChipClick} />
+                  <TodayRemoveChip isSelect={!!enableTodayRemove} onClick={handleTodayRemoveChipClick} />
                 </Box>
               </Box>
 
@@ -112,11 +109,9 @@ export function Filter() {
               <Button fullWidth variant="outlined" onClick={handleResetFilterButtonClick}>
                 초기화
               </Button>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleShowButtonClick}
-              >{`${filteredCragCount}개 암장 보기`}</Button>
+              <Button fullWidth variant="contained" onClick={handleShowButtonClick}>{`${getFilteredCragCount(
+                crags
+              )}개 암장 보기`}</Button>
             </Box>
           </Box>
         </Sheet.Content>
@@ -165,6 +160,21 @@ export function NewSettingChip({ isSelect, onClick }: FilterChipProps) {
         </Box>
       }
       label="New 세팅"
+      onClick={onClick}
+      variant={isSelect ? 'filled' : 'outlined'}
+    />
+  );
+}
+
+export function TodayRemoveChip({ isSelect, onClick }: FilterChipProps) {
+  return (
+    <Chip
+      icon={
+        <Box sx={{ width: 21, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography fontSize={'1.25rem'}>🍂</Typography>
+        </Box>
+      }
+      label="오늘 탈거"
       onClick={onClick}
       variant={isSelect ? 'filled' : 'outlined'}
     />
