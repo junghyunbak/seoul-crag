@@ -119,7 +119,17 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                     <IconButton>
                       <GradeOutlined />
                     </IconButton>
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        if (navigator.share) {
+                          navigator.share({
+                            title: '⛰️서울암장',
+                            text: [crag.name, '', crag.description].join('\n'),
+                            url: `/?${QUERY_STRING.SELECT_CRAG}=${crag.id}&${QUERY_STRING.SELECT_CRAGE_DETAIL}=${crag.id}`,
+                          });
+                        }
+                      }}
+                    >
                       <Share />
                     </IconButton>
                     <IconButton
