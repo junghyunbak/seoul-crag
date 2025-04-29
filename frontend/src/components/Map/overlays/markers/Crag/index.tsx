@@ -9,9 +9,9 @@ import Image from '@mui/icons-material/Image';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { grey } from '@mui/material/colors';
 
-import { useCragArea } from '@/hooks';
+import { useCragArea, useFilter } from '@/hooks';
 
-import { useQueryParam, StringParam, BooleanParam } from 'use-query-params';
+import { useQueryParam, StringParam } from 'use-query-params';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -71,11 +71,12 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const markerRef = useRef<HTMLDivElement>(null);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
-  const [enableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
+
+  const { enableShowerFilter, enableExceptionSettingFilter, exceptionSettingFilter, showerFilter } = useFilter();
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
@@ -222,19 +223,19 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
     return _isOff;
   })();
 
-  const isSetting = !crag.futureSchedules
-    ? false
-    : crag.futureSchedules.some((schedule) => {
-        if (schedule.type !== 'setup') {
-          return false;
-        }
+  const isFiltered = (() => {
+    let _isFiltered = true;
 
-        const iso = format(schedule.date, 'yyyy-MM-dd');
+    if (enableShowerFilter) {
+      _isFiltered &&= showerFilter(crag);
+    }
 
-        return iso === todayIso;
-      });
+    if (enableExceptionSettingFilter) {
+      _isFiltered &&= exceptionSettingFilter(crag);
+    }
 
-  const isFiltered = !enableShowerFilter ? false : !crag.imageTypes?.includes('shower');
+    return _isFiltered;
+  })();
 
   return (
     <Box
@@ -242,8 +243,8 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       sx={{
         position: 'absolute',
         transform: 'translate(-50%, -100%)',
-        opacity: isFiltered ? 0.3 : 1,
-        pointerEvents: isFiltered ? 'none' : 'auto',
+        opacity: !isFiltered ? 0.3 : 1,
+        pointerEvents: !isFiltered ? 'none' : 'auto',
       }}
     >
       {/**
@@ -253,7 +254,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
         {/**
          * 아이콘
          */}
-        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} isSetting={isSetting} />
+        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} />
 
         {/**
          * 방사형 메뉴

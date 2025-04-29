@@ -13,3 +13,4 @@ export const END_EXERCISE_TIME = 'endExerciseTime';
 export const MENU = 'menu';
 
 export const FILTER_SHOWER = 'fs';
+export const FILTER_EXCEPTION_SETTING = 'fes';

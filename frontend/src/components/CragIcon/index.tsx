@@ -2,7 +2,6 @@ interface CragIconProps {
   width: number;
   isSelect?: boolean;
   isClose?: boolean;
-  isSetting?: boolean;
   counting?: boolean;
 }
 

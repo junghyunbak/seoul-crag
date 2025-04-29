@@ -1,15 +1,22 @@
-import { Box, Button, Chip, Divider, Typography } from '@mui/material';
 import { Sheet } from 'react-modal-sheet';
+
+import { Box, Button, Chip, Divider, Typography } from '@mui/material';
 import ShowerIcon from '@mui/icons-material/Shower';
-import { BooleanParam, useQueryParam } from 'use-query-params';
-import { QUERY_STRING } from '@/constants';
+
 import { useFetchCrags, useFilter, useModifyFilter } from '@/hooks';
 
 export function Filter() {
-  const { isFilterSheetOpen } = useFilter();
+  const {
+    isFilterSheetOpen,
+    enableExceptionSettingFilter,
+    enableShowerFilter,
+    setEnableExceptionSettingFilter,
+    setEnableShowerFilter,
+    showerFilter,
+    exceptionSettingFilter,
+  } = useFilter();
   const { updateIsFilterSheetOpen } = useModifyFilter();
 
-  const [enableShowerFilter, setEnableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
   const { crags } = useFetchCrags();
 
   const filteredCragCount = (() => {
@@ -17,15 +24,7 @@ export function Filter() {
       return 0;
     }
 
-    const showerFilter = enableShowerFilter
-      ? (crag: Crag) => {
-          return crag.imageTypes?.includes('shower');
-        }
-      : () => {
-          return true;
-        };
-
-    return crags.filter(showerFilter).length;
+    return crags.filter(showerFilter).filter(exceptionSettingFilter).length;
   })();
 
   const handleShowButtonClick = () => {
@@ -42,6 +41,10 @@ export function Filter() {
 
   const handleShowerChipClick = () => {
     setEnableShowerFilter(enableShowerFilter ? null : true);
+  };
+
+  const handleExceptionSettingChipClick = () => {
+    setEnableExceptionSettingFilter(enableExceptionSettingFilter ? null : true);
   };
 
   return (
@@ -66,8 +69,17 @@ export function Filter() {
 
             <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Typography variant="body2">속성</Typography>
-              <Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 1,
+                }}
+              >
                 <ShowerChip isSelect={!!enableShowerFilter} onClick={handleShowerChipClick} />
+                <ExceptionSettingChip
+                  isSelect={!!enableExceptionSettingFilter}
+                  onClick={handleExceptionSettingChipClick}
+                />
               </Box>
             </Box>
           </Box>
@@ -90,18 +102,33 @@ export function Filter() {
   );
 }
 
-interface ShowerChipProps {
+interface FilterChipProps {
   isSelect: boolean;
   onClick: () => void;
 }
 
-export function ShowerChip({ isSelect, onClick }: ShowerChipProps) {
+export function ShowerChip({ isSelect, onClick }: FilterChipProps) {
   return (
     <Chip
       icon={<ShowerIcon color="primary" />}
-      label="샤워실"
+      label="샤워실 보유"
       variant={isSelect ? 'filled' : 'outlined'}
       onClick={onClick}
+    />
+  );
+}
+
+export function ExceptionSettingChip({ isSelect, onClick }: FilterChipProps) {
+  return (
+    <Chip
+      icon={
+        <Box sx={{ width: 21, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography fontSize={'1.25rem'}>🚧</Typography>
+        </Box>
+      }
+      label="세팅 제외"
+      onClick={onClick}
+      variant={isSelect ? 'filled' : 'outlined'}
     />
   );
 }
