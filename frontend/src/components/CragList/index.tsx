@@ -218,6 +218,7 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
           boxShadow: 24,
           display: 'flex',
           flexDirection: 'column',
+          overflow: 'hidden',
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
