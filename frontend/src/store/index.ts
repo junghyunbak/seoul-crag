@@ -28,7 +28,7 @@ export const useStore = create<StoreState>()(
     (set) => ({
       sheetRef: { current: null },
 
-      isFilterSheetOpen: true,
+      isFilterSheetOpen: false,
       setIsFilterSheetOpen(isOpen) {
         set(() => ({ isFilterSheetOpen: isOpen }));
       },
