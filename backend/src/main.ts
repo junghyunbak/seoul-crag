@@ -5,6 +5,13 @@ import { ValidationPipe } from '@nestjs/common';
 
 import 'reflect-metadata';
 
+import { types } from 'pg';
+
+/**
+ * 자동으로 date 문자열을 js Date 객체로 변경하는 문제를 해결하기 위함.
+ */
+types.setTypeParser(1082, (val) => val);
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

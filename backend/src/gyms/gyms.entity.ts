@@ -27,6 +27,9 @@ export class Gym {
   @Column({ type: 'text', nullable: true })
   website_url: string;
 
+  @Column({ type: 'date', nullable: true })
+  opened_at: string;
+
   @Column({ type: 'float' })
   latitude: number;
 

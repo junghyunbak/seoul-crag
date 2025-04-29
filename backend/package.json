@@ -66,6 +66,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-kakao": "^1.0.3",
     "@types/passport-oauth2": "^1.4.17",
+    "@types/pg": "^8.11.14",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",

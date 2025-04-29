@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 
 export class UpdateGymDto extends PartialType(CreateGymDto) {
@@ -10,4 +10,8 @@ export class UpdateGymDto extends PartialType(CreateGymDto) {
   @IsOptional()
   @IsString()
   thumbnail_url: string;
+
+  @IsOptional()
+  @IsDateString()
+  opened_at: string;
 }

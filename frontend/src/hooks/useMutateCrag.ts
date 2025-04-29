@@ -250,3 +250,23 @@ export function useMutateCragThumbnailUpdate({
 
   return { cragThumbnailUpdateMutation };
 }
+
+type CragOpenedAtUpdateMutateParams = {
+  cragId: string;
+  openedAt: string;
+};
+
+export function useMutateCragOpenedAtUpdate({
+  onSettled,
+}: MutationOptions<void, DefaultError, CragOpenedAtUpdateMutateParams>) {
+  const cragOpenedAtUpdateMutation = useMutation<void, DefaultError, CragOpenedAtUpdateMutateParams>({
+    mutationFn: async ({ cragId, openedAt }) => {
+      await api.patch(`/gyms/${cragId}`, {
+        opened_at: openedAt,
+      });
+    },
+    onSettled,
+  });
+
+  return { cragOpenedAtUpdateMutation };
+}
