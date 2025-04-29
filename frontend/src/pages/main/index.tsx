@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
 
-import { useFetchCrags } from '@/hooks';
+import { useCragList, useFetchCrags, useModifyCragList } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
 import { useQueryParam, StringParam } from 'use-query-params';
+
+import { useStore } from '@/store';
 
 import { QUERY_STRING } from '@/constants';
 
@@ -15,24 +17,21 @@ import { Controller } from '@/components/Controller';
 import { Menu } from '@/components/Menu';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 import { Filter } from '@/components/Filter';
-
-import { useStore } from '@/store';
+import { CragListModal } from '@/components/CragList';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
 
 export default function Main() {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const { crags } = useFetchCrags();
+  const { mapRef, boundary } = useMap();
+  const { isCragListModalOpen } = useCragList();
 
   const [initCragId] = useState(selectCragId);
-
-  const { crags } = useFetchCrags();
-
-  const { mapRef, boundary } = useMap();
-
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
-
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { map } = useNaverMap(
     () => {
@@ -55,6 +54,7 @@ export default function Main() {
   );
 
   const { updateMap } = useModifyMap();
+  const { updateIsCragListModalOpen } = useModifyCragList();
 
   /**
    * 기존에 선택된 마커가 있다면 이동
@@ -131,6 +131,10 @@ export default function Main() {
     });
   }, []);
 
+  const handleCragListClose = () => {
+    updateIsCragListModalOpen(false);
+  };
+
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
       <Map map={map} mapRef={mapRef}>
@@ -143,6 +147,7 @@ export default function Main() {
 
       <Menu />
 
+      <CragListModal crags={crags || []} open={isCragListModalOpen} onClose={handleCragListClose} />
       <Box
         sx={{
           position: 'fixed',
@@ -194,33 +199,3 @@ function MapLoading() {
 
   return <Box sx={{ position: 'fixed', top: 0, right: 0 }}>{isLoading && <CircularProgress />}</Box>;
 }
-
-/*
-      <Stack
-        direction="row"
-        sx={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          padding: '0.5rem',
-        }}
-        gap="0.5rem"
-      >
-        <Button variant="contained" onClick={handleChangeDateButtonClick}>
-          <CalendarIcon sx={{ mr: '0.5rem' }} />
-          {selectDate ? dayjs(selectDate).format('YYYY년 MM월 DD일') : '전국 암장'}
-        </Button>
-
-        {selectDate !== null && (
-          <Button variant="contained" onClick={handleChangeExerciseButtonClick}>
-            <AccessTime sx={{ mr: '0.5rem' }} />
-
-            {isUseAllTime
-              ? '아무때나'
-              : `${time.convert24ToCustom12HourFormat(exerciseTimeRange[0])} ~ ${time.convert24ToCustom12HourFormat(
-                  exerciseTimeRange[1]
-                )}`}
-          </Button>
-        )}
-      </Stack>
-      */

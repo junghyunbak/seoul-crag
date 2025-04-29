@@ -16,6 +16,7 @@ export * from './useModifyFilter';
 export * from './useModifyMap';
 export * from './useModifyExerciseTimeRange';
 export * from './useModifySelectDate';
+export * from './useModifyCragList';
 
 /**
  * fetch

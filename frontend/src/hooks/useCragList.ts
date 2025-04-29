@@ -2,7 +2,7 @@ import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
 export function useCragList() {
-  const [isCragListSheetOpen] = useStore(useShallow((s) => [s.isCragListSheetOpen]));
+  const [isCragListModalOpen] = useStore(useShallow((s) => [s.isCragListModalOpen]));
 
-  return { isCragListSheetOpen };
+  return { isCragListModalOpen };
 }

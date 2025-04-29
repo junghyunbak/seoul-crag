@@ -7,7 +7,7 @@ import PersonIcon from '@mui/icons-material/PersonOutline';
 import { useQueryParam, BooleanParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
-import { useFilter, useModifyFilter } from '@/hooks';
+import { useFilter, useModifyCragList, useModifyFilter } from '@/hooks';
 
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   '& .MuiBadge-badge': {
@@ -22,6 +22,7 @@ export function Controller() {
   const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
   const { updateIsFilterSheetOpen } = useModifyFilter();
+  const { updateIsCragListModalOpen } = useModifyCragList();
 
   const { filterCount } = useFilter();
 
@@ -33,6 +34,10 @@ export function Controller() {
     updateIsFilterSheetOpen(true);
   };
 
+  const handleCragListOpenButtonClick = () => {
+    updateIsCragListModalOpen(true);
+  };
+
   return (
     <Paper sx={{ borderRadius: '0.5rem', width: '90dvw', maxWidth: '400px', p: '1rem', background: '#f4f2ef' }}>
       <Stack direction="row" justifyContent="space-around" sx={{ width: '100%' }}>
@@ -42,7 +47,7 @@ export function Controller() {
           </StyledBadge>
           <Typography>필터</Typography>
         </Button>
-        <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }}>
+        <Button sx={{ display: 'flex', gap: '0.5rem', color: '#5f6161' }} onClick={handleCragListOpenButtonClick}>
           <ListIcon sx={{ width: '2rem', height: '2rem' }} />
           <Typography>목록</Typography>
         </Button>

@@ -8,8 +8,8 @@ type StoreState = {
   isFilterSheetOpen: boolean;
   setIsFilterSheetOpen: (isOpen: boolean) => void;
 
-  isCragListSheetOpen: boolean;
-  setIsCragListSheetOpen: (isOpen: boolean) => void;
+  isCragListModalOpen: boolean;
+  setIsCragListModalOpen: (isOpen: boolean) => void;
 
   map: naver.maps.Map | null;
   setMap: (map: naver.maps.Map) => void;
@@ -33,9 +33,9 @@ export const useStore = create<StoreState>()(
         set(() => ({ isFilterSheetOpen: isOpen }));
       },
 
-      isCragListSheetOpen: false,
-      setIsCragListSheetOpen(isOpen) {
-        set(() => ({ isCragListSheetOpen: isOpen }));
+      isCragListModalOpen: false,
+      setIsCragListModalOpen(isOpen) {
+        set(() => ({ isCragListModalOpen: isOpen }));
       },
 
       map: null,
