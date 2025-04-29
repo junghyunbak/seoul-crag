@@ -47,7 +47,7 @@ export function Filter() {
   };
 
   return (
-    <Sheet isOpen={isFilterSheetOpen} onClose={handleSheetClose}>
+    <Sheet isOpen={isFilterSheetOpen} onClose={handleSheetClose} snapPoints={[0.5]} initialSnap={0}>
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content
@@ -60,7 +60,7 @@ export function Filter() {
           }}
         >
           <Box sx={{ flex: 1, overflow: 'auto' }}>
-            <Box sx={{ p: 2 }}>
+            <Box sx={{ p: 2, pt: 0 }}>
               <Typography variant="subtitle1">암장 필터</Typography>
             </Box>
 
