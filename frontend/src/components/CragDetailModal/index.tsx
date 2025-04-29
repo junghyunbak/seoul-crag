@@ -101,7 +101,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
               {/* 이미지 슬라이더 */}
               <Box sx={{ position: 'relative' }}>
                 <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-                  <ImageWithSource className="keen-slider__slide" image={images[0]} />
+                  <ImageWithSource className="keen-slider__slide" image={images[0] || ''} />
                 </Box>
 
                 <IconButton sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }} onClick={onClose}>
