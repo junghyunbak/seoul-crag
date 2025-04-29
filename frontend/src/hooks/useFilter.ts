@@ -13,6 +13,10 @@ export function useFilter() {
     QUERY_STRING.FILTER_EXCEPTION_SETTING,
     BooleanParam
   );
+  const [enableNewSettingFilter, setEnableNewSettingFilter] = useQueryParam(
+    QUERY_STRING.FILTER_NEW_SETTING,
+    BooleanParam
+  );
 
   const todayIso = format(new Date(), 'yyyy-MM-dd');
 
@@ -26,8 +30,18 @@ export function useFilter() {
 
   const exceptionSettingFilter = enableExceptionSettingFilter
     ? (crag: Crag) => {
-        return !crag.futureSchedules?.some(
+        return !(crag.futureSchedules || []).some(
           ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === todayIso
+        );
+      }
+    : () => {
+        return true;
+      };
+
+  const newSettingFilter = enableNewSettingFilter
+    ? (crag: Crag) => {
+        return (crag.futureSchedules || []).some(
+          ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === todayIso
         );
       }
     : () => {
@@ -45,18 +59,29 @@ export function useFilter() {
       count += 1;
     }
 
+    if (enableNewSettingFilter) {
+      count += 1;
+    }
+
     return count;
   })();
 
   return {
     sheetRef,
     isFilterSheetOpen,
+
+    filterCount,
+
     enableShowerFilter,
     enableExceptionSettingFilter,
+    enableNewSettingFilter,
+
     setEnableShowerFilter,
     setEnableExceptionSettingFilter,
+    setEnableNewSettingFilter,
+
     showerFilter,
     exceptionSettingFilter,
-    filterCount,
+    newSettingFilter,
   };
 }

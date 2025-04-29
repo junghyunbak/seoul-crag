@@ -76,7 +76,14 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
 
-  const { enableShowerFilter, enableExceptionSettingFilter, exceptionSettingFilter, showerFilter } = useFilter();
+  const {
+    enableShowerFilter,
+    enableExceptionSettingFilter,
+    enableNewSettingFilter,
+    exceptionSettingFilter,
+    showerFilter,
+    newSettingFilter,
+  } = useFilter();
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
@@ -232,6 +239,10 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
 
     if (enableExceptionSettingFilter) {
       _isFiltered &&= exceptionSettingFilter(crag);
+    }
+
+    if (enableNewSettingFilter) {
+      _isFiltered &&= newSettingFilter(crag);
     }
 
     return _isFiltered;

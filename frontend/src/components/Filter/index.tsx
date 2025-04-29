@@ -10,10 +10,13 @@ export function Filter() {
     isFilterSheetOpen,
     enableExceptionSettingFilter,
     enableShowerFilter,
+    enableNewSettingFilter,
     setEnableExceptionSettingFilter,
     setEnableShowerFilter,
+    setEnableNewSettingFilter,
     showerFilter,
     exceptionSettingFilter,
+    newSettingFilter,
   } = useFilter();
   const { updateIsFilterSheetOpen } = useModifyFilter();
 
@@ -24,7 +27,7 @@ export function Filter() {
       return 0;
     }
 
-    return crags.filter(showerFilter).filter(exceptionSettingFilter).length;
+    return crags.filter(showerFilter).filter(exceptionSettingFilter).filter(newSettingFilter).length;
   })();
 
   const handleShowButtonClick = () => {
@@ -47,6 +50,10 @@ export function Filter() {
     setEnableExceptionSettingFilter(enableExceptionSettingFilter ? null : true);
   };
 
+  const handleNewSettingChipClick = () => {
+    setEnableNewSettingFilter(enableNewSettingFilter ? null : true);
+  };
+
   return (
     <Sheet isOpen={isFilterSheetOpen} onClose={handleSheetClose}>
       <Sheet.Container>
@@ -67,19 +74,35 @@ export function Filter() {
 
             <Divider />
 
-            <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Typography variant="body2">속성</Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 1,
-                }}
-              >
-                <ShowerChip isSelect={!!enableShowerFilter} onClick={handleShowerChipClick} />
-                <ExceptionSettingChip
-                  isSelect={!!enableExceptionSettingFilter}
-                  onClick={handleExceptionSettingChipClick}
-                />
+            <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body2">이용 가능</Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    gap: 1,
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <ShowerChip isSelect={!!enableShowerFilter} onClick={handleShowerChipClick} />
+                  <NewSettingChip isSelect={!!enableNewSettingFilter} onClick={handleNewSettingChipClick} />
+                </Box>
+              </Box>
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body2">제한 사항</Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    gap: 1,
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <ExceptionSettingChip
+                    isSelect={!!enableExceptionSettingFilter}
+                    onClick={handleExceptionSettingChipClick}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -111,7 +134,7 @@ export function ShowerChip({ isSelect, onClick }: FilterChipProps) {
   return (
     <Chip
       icon={<ShowerIcon color="primary" />}
-      label="샤워실 보유"
+      label="샤워실"
       variant={isSelect ? 'filled' : 'outlined'}
       onClick={onClick}
     />
@@ -126,7 +149,22 @@ export function ExceptionSettingChip({ isSelect, onClick }: FilterChipProps) {
           <Typography fontSize={'1.25rem'}>🚧</Typography>
         </Box>
       }
-      label="세팅 제외"
+      label="세팅중"
+      onClick={onClick}
+      variant={isSelect ? 'filled' : 'outlined'}
+    />
+  );
+}
+
+export function NewSettingChip({ isSelect, onClick }: FilterChipProps) {
+  return (
+    <Chip
+      icon={
+        <Box sx={{ width: 21, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography fontSize={'1.25rem'}>✨</Typography>
+        </Box>
+      }
+      label="New 세팅"
       onClick={onClick}
       variant={isSelect ? 'filled' : 'outlined'}
     />

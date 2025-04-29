@@ -6,8 +6,18 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Gym } from '../gyms/gyms.entity';
+import { GYM_IMAGE_TYPES } from 'src/gym-images/gym-images.type';
 
-export type GymScheduleType = 'closed' | 'setup' | 'lesson' | 'etc';
+export const GYM_SCHEDULE_TYPES = [
+  'closed',
+  'remove',
+  'new',
+  'setup',
+  'lesson',
+  'etc',
+] as const;
+
+export type GymScheduleType = (typeof GYM_IMAGE_TYPES)[number];
 
 @Entity('gym_schedules')
 export class GymSchedule {

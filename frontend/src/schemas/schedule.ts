@@ -5,6 +5,8 @@ export const scheduleTypeScheme = z.union([
   z.literal('setup'),
   z.literal('lesson'),
   z.literal('etc'),
+  z.literal('new'),
+  z.literal('remove'),
 ]);
 
 export const scheduleScheme = z.object({

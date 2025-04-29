@@ -5,6 +5,7 @@ import {
   IsDateString,
   IsIn,
 } from 'class-validator';
+import { GYM_SCHEDULE_TYPES } from 'src/gym-schedules/gym-schedules.entity';
 
 export class UpdateGymScheduleDto {
   @IsOptional()
@@ -20,6 +21,6 @@ export class UpdateGymScheduleDto {
   date?: string;
 
   @IsOptional()
-  @IsIn(['closed', 'setup', 'lesson', 'etc'])
+  @IsIn(GYM_SCHEDULE_TYPES)
   type?: string;
 }

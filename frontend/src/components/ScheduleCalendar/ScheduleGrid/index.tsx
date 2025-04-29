@@ -33,13 +33,15 @@ interface CalendarGridProps {
 
 const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
 
-const scheduleType: Schedule['type'][] = ['closed', 'setup', 'lesson', 'etc'];
+const scheduleType: Schedule['type'][] = ['closed', 'setup', 'lesson', 'remove', 'new', 'etc'];
 
 const typeColors: Record<Schedule['type'], string> = {
   closed: '#ef5350',
   setup: '#42a5f5',
   lesson: '#66bb6a',
   etc: '#ab47bc',
+  remove: '#ffa726',
+  new: '#26c6da',
 };
 
 const typeLabels: Record<Schedule['type'], string> = {
@@ -47,6 +49,8 @@ const typeLabels: Record<Schedule['type'], string> = {
   setup: '세팅일',
   lesson: '강습일',
   etc: '기타',
+  remove: '탈거일',
+  new: '뉴세팅',
 };
 
 export function GymScheduleGrid({
@@ -250,10 +254,9 @@ export function GymScheduleGrid({
                   setSelected((prev) => (prev ? { ...prev, type: e.target.value as Schedule['type'] } : prev))
                 }
               >
-                <MenuItem value="closed">휴무일</MenuItem>
-                <MenuItem value="setup">세팅일</MenuItem>
-                <MenuItem value="lesson">강습일</MenuItem>
-                <MenuItem value="etc">기타</MenuItem>
+                {scheduleType.map((type) => (
+                  <MenuItem value={type}>{typeLabels[type]}</MenuItem>
+                ))}
               </Select>
               <TextField
                 label="사유"
