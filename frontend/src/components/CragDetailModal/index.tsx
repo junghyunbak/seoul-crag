@@ -71,7 +71,10 @@ interface CragDetailProps {
 }
 
 function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  /**
+   * y, x축 동시 스크롤로 인한 ux 저하 이슈 해결을 위해 비활성화
+   */
+  const [, /*currentSlide*/ setCurrentSlide] = useState(0);
 
   const [sliderRef] = useKeenSlider({
     loop: true,
@@ -98,31 +101,8 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
               {/* 이미지 슬라이더 */}
               <Box sx={{ position: 'relative' }}>
                 <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-                  {images.map((image, i) => (
-                    <ImageWithSource className="keen-slider__slide" key={i} image={image} />
-                  ))}
+                  <ImageWithSource className="keen-slider__slide" image={images[0]} />
                 </Box>
-                {/* 페이지 인디케이터 */}
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  spacing={1}
-                  sx={{ position: 'absolute', bottom: 8, width: '100%' }}
-                >
-                  {images &&
-                    images.map((_, i) => (
-                      <Box
-                        key={i}
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          bgcolor: currentSlide === i ? 'primary.main' : 'grey.400',
-                          transition: 'all 0.3s',
-                        }}
-                      />
-                    ))}
-                </Stack>
 
                 <IconButton sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }} onClick={onClose}>
                   <Close />
