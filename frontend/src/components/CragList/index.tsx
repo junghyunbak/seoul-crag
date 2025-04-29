@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, IconButton, MenuItem, Select, Modal, InputBase } from '@mui/material';
+import { Box, IconButton, MenuItem, Select, Modal, InputBase, useTheme } from '@mui/material';
 
 // 검색 정렬 조건 타입
 export type SortType = 'distance' | 'newest' | 'size';
@@ -84,30 +84,36 @@ export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        px: 1,
-        py: 0.5,
-        background: '#f5f6f5',
-        m: 1.5,
-        borderRadius: 1,
-        gap: 1,
+        width: '100%',
+        p: 1.5,
       }}
     >
-      <SearchIcon color="action" />
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          px: 1,
+          py: 0.5,
+          background: '#f5f6f5',
+          borderRadius: 1,
+          gap: 1,
+        }}
+      >
+        <SearchIcon color="action" />
 
-      <InputBase
-        fullWidth
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="클라이밍장 검색"
-      />
-      {value && (
-        <IconButton onClick={onClear} size="small" sx={{ ml: 1 }}>
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      )}
+        <InputBase
+          fullWidth
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="클라이밍장 검색"
+        />
+        {value && (
+          <IconButton onClick={onClear} size="small" sx={{ ml: 1 }}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      </Box>
     </Box>
   );
 }
@@ -115,7 +121,7 @@ export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
 // SortSelect 컴포넌트 예시
 export function SortSelect({ value, onChange }: SortSelectProps) {
   return (
-    <Box sx={{ p: 1.5, pt: 0 }}>
+    <Box sx={{ p: 1.5, pt: 0, width: '100%' }}>
       <Select value={value} fullWidth onChange={(e) => onChange(e.target.value as SortType)}>
         {Object.entries(SORT_OPTIONS).map(([key, label]) => (
           <MenuItem key={key} value={key}>
@@ -205,6 +211,8 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
   const [sort, setSort] = useState<SortType>('distance');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
+  const theme = useTheme();
+
   useEffect(() => {
     if (open) {
       navigator.geolocation.getCurrentPosition(
@@ -245,6 +253,21 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
           outline: 'none',
         }}
       >
+        <Box sx={{ position: 'absolute', bottom: '7%', left: '50%', transform: 'translateX(-50%)', zIndex: 1 }}>
+          <IconButton
+            sx={{
+              background: theme.palette.primary.main,
+              boxShadow: 2,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+              },
+            }}
+            onClick={onClose}
+          >
+            <CloseIcon sx={{ color: 'white' }} />
+          </IconButton>
+        </Box>
+
         <SearchBar value={search} onChange={setSearch} onClear={() => setSearch('')} />
         <SortSelect value={sort} onChange={setSort} />
         <Box sx={{ flex: 1, overflowY: 'auto', px: 2, pb: 2 }}>
