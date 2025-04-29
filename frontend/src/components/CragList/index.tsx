@@ -75,6 +75,9 @@ export function getFilteredSortedCrags(
 }
 
 // SearchBar 컴포넌트 예시
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
@@ -86,9 +89,9 @@ export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
         style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #ccc' }}
       />
       {value && (
-        <button onClick={onClear} style={{ marginLeft: '8px' }}>
-          x
-        </button>
+        <IconButton onClick={onClear} size="small" sx={{ ml: 1 }}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
       )}
     </div>
   );
@@ -117,13 +120,25 @@ export function SortSelect({ value, onChange }: SortSelectProps) {
 import { Avatar } from '@mui/material';
 
 export function CragListItem({ crag, userLat, userLng }: { crag: Crag; userLat?: number; userLng?: number }) {
+  const { map } = useMap();
+  const { updateIsCragListModalOpen } = useModifyCragList();
+
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+
   const distance =
     userLat !== undefined && userLng !== undefined
       ? calculateDistance(userLat, userLng, crag.latitude, crag.longitude)
       : null;
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', padding: '12px', borderBottom: '1px solid #eee', gap: 12 }}>
+    <div
+      style={{ display: 'flex', alignItems: 'center', padding: '12px', borderBottom: '1px solid #eee', gap: 12 }}
+      onClick={() => {
+        map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+        updateIsCragListModalOpen(false);
+        setSelectCragId(crag.id);
+      }}
+    >
       <Avatar variant="rounded" src={crag.thumbnail_url ?? undefined} alt={crag.name} sx={{ width: 64, height: 64 }}>
         {!crag.thumbnail_url && crag.name.charAt(0)}
       </Avatar>
@@ -160,18 +175,19 @@ export function CragList({ crags, userLat, userLng }: CragListProps) {
 }
 
 // CragListModal 컴포넌트 (MUI Modal 버전) - 내부에서 위치 상태 관리
-import { Modal, Box, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Modal, Box, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { useMap, useModifyCragList } from '@/hooks';
+import { QUERY_STRING } from '@/constants';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: boolean; onClose: () => void }) {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortType>('distance');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
-  // BUG: userLocation이 매번 초기화되지 않음.
   useEffect(() => {
-    if (open && !userLocation) {
+    if (open) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({
@@ -184,7 +200,7 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
         }
       );
     }
-  }, [open, userLocation]);
+  }, [open]);
 
   const filteredCrags = getFilteredSortedCrags(crags, search, sort, userLocation?.lat, userLocation?.lng);
 
@@ -193,20 +209,22 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
       <Box
         sx={{
           position: 'absolute',
-          top: '50%',
+          top: 0,
           left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '90%',
+          transform: 'translateX(-50%)',
+          width: 'calc(100% - 32px)',
           maxWidth: 600,
+          height: 'calc(100% - 32px)',
+          marginTop: 2,
+          marginBottom: 2,
           bgcolor: 'background.paper',
           borderRadius: 2,
           boxShadow: 24,
-          p: 3,
-          maxHeight: '90vh',
-          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
           <Typography variant="h6">암장 찾기</Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -215,7 +233,10 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
 
         <SearchBar value={search} onChange={setSearch} onClear={() => setSearch('')} />
         <SortSelect value={sort} onChange={setSort} />
-        <CragList crags={filteredCrags} userLat={userLocation?.lat} userLng={userLocation?.lng} />
+
+        <Box sx={{ flex: 1, overflowY: 'auto', px: 2, pb: 2 }}>
+          <CragList crags={filteredCrags} userLat={userLocation?.lat} userLng={userLocation?.lng} />
+        </Box>
       </Box>
     </Modal>
   );
