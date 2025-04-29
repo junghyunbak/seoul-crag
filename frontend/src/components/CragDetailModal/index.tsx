@@ -125,7 +125,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                           navigator.share({
                             title: '⛰️서울암장',
                             text: [crag.name, '', crag.description].join('\n'),
-                            url: `/?${QUERY_STRING.SELECT_CRAG}=${crag.id}&${QUERY_STRING.SELECT_CRAGE_DETAIL}=${crag.id}`,
+                            url: `/?${QUERY_STRING.SELECT_CRAG}=${crag.id}`,
                           });
                         }
                       }}
