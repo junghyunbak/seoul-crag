@@ -66,6 +66,24 @@ export function useFilter() {
     return count;
   })();
 
+  const isCragFiltered = (crag: Crag) => {
+    let _isFiltered = true;
+
+    if (enableShowerFilter) {
+      _isFiltered &&= showerFilter(crag);
+    }
+
+    if (enableExceptionSettingFilter) {
+      _isFiltered &&= exceptionSettingFilter(crag);
+    }
+
+    if (enableNewSettingFilter) {
+      _isFiltered &&= newSettingFilter(crag);
+    }
+
+    return _isFiltered;
+  };
+
   return {
     sheetRef,
     isFilterSheetOpen,
@@ -83,5 +101,7 @@ export function useFilter() {
     showerFilter,
     exceptionSettingFilter,
     newSettingFilter,
+
+    isCragFiltered,
   };
 }

@@ -153,7 +153,7 @@ export default function Main() {
       </Box>
       <MapLoading />
       <Filter />
-      {markers && <AngularEdgeMarkers markers={markers} />}
+      {markers && <AngularEdgeMarkers crags={crags} />}
     </Box>
   );
 }

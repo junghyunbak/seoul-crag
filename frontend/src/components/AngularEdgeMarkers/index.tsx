@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useMap } from '@/hooks';
+import { useFilter, useMap } from '@/hooks';
 
 import { CragIcon } from '@/components/CragIcon';
 
@@ -17,7 +17,7 @@ interface AngularIndicator {
 }
 
 interface AngularEdgeMarkersProps {
-  markers: naver.maps.Marker[];
+  crags: Crag[] | undefined | null;
 }
 
 // ✅ 교차점 계산 함수
@@ -43,13 +43,14 @@ function projectToScreenEdge(targetX: number, targetY: number, centerX: number, 
   return { x, y };
 }
 
-export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps) {
+export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
+  const { isCragFiltered } = useFilter();
   const { map } = useMap();
 
   useEffect(() => {
-    if (!map || !markers.length || !map.getProjection()) return;
+    if (!map || !crags || !crags.length || !map.getProjection()) return;
 
     const projection = map.getProjection();
 
@@ -60,10 +61,16 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
 
       const grouped: Record<number, AngularIndicator> = {};
 
-      markers.forEach((marker) => {
-        const markerCoord = marker.getPosition();
+      crags.forEach((crag) => {
+        if (!isCragFiltered(crag)) {
+          return;
+        }
 
-        if ('hasLatLng' in bounds && bounds.hasLatLng(markerCoord)) return;
+        const markerCoord = new naver.maps.LatLng(crag.latitude, crag.longitude);
+
+        if ('hasLatLng' in bounds && bounds.hasLatLng(markerCoord)) {
+          return;
+        }
 
         const point = projection.fromCoordToOffset(markerCoord);
         const dx = point.x - centerOffset.x;
@@ -108,7 +115,7 @@ export default function AngularEdgeMarkers({ markers }: AngularEdgeMarkersProps)
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, markers]);
+  }, [map, crags]);
 
   return (
     <>
