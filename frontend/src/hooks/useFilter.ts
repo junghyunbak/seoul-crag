@@ -3,6 +3,7 @@ import { useShallow } from 'zustand/shallow';
 import { useQueryParam, BooleanParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
 import { format } from 'date-fns';
+import { useCallback, useMemo } from 'react';
 
 export function useFilter() {
   const [sheetRef] = useStore(useShallow((s) => [s.sheetRef]));
@@ -18,37 +19,49 @@ export function useFilter() {
     BooleanParam
   );
 
-  const todayIso = format(new Date(), 'yyyy-MM-dd');
+  const todayIso = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
 
-  const showerFilter = enableShowerFilter
-    ? (crag: Crag) => {
-        return crag.imageTypes?.includes('shower') || false;
-      }
-    : () => {
-        return true;
-      };
+  const showerFilter = useMemo(
+    () =>
+      enableShowerFilter
+        ? (crag: Crag) => {
+            return crag.imageTypes?.includes('shower') || false;
+          }
+        : () => {
+            return true;
+          },
+    [enableShowerFilter]
+  );
 
-  const exceptionSettingFilter = enableExceptionSettingFilter
-    ? (crag: Crag) => {
-        return !(crag.futureSchedules || []).some(
-          ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === todayIso
-        );
-      }
-    : () => {
-        return true;
-      };
+  const exceptionSettingFilter = useMemo(
+    () =>
+      enableExceptionSettingFilter
+        ? (crag: Crag) => {
+            return !(crag.futureSchedules || []).some(
+              ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === todayIso
+            );
+          }
+        : () => {
+            return true;
+          },
+    [enableExceptionSettingFilter, todayIso]
+  );
 
-  const newSettingFilter = enableNewSettingFilter
-    ? (crag: Crag) => {
-        return (crag.futureSchedules || []).some(
-          ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === todayIso
-        );
-      }
-    : () => {
-        return true;
-      };
+  const newSettingFilter = useMemo(
+    () =>
+      enableNewSettingFilter
+        ? (crag: Crag) => {
+            return (crag.futureSchedules || []).some(
+              ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === todayIso
+            );
+          }
+        : () => {
+            return true;
+          },
+    [enableNewSettingFilter, todayIso]
+  );
 
-  const filterCount = (() => {
+  const filterCount = useMemo(() => {
     let count = 0;
 
     if (enableShowerFilter) {
@@ -64,25 +77,35 @@ export function useFilter() {
     }
 
     return count;
-  })();
+  }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter]);
 
-  const isCragFiltered = (crag: Crag) => {
-    let _isFiltered = true;
+  const isCragFiltered = useCallback(
+    (crag: Crag) => {
+      let _isFiltered = true;
 
-    if (enableShowerFilter) {
-      _isFiltered &&= showerFilter(crag);
-    }
+      if (enableShowerFilter) {
+        _isFiltered &&= showerFilter(crag);
+      }
 
-    if (enableExceptionSettingFilter) {
-      _isFiltered &&= exceptionSettingFilter(crag);
-    }
+      if (enableExceptionSettingFilter) {
+        _isFiltered &&= exceptionSettingFilter(crag);
+      }
 
-    if (enableNewSettingFilter) {
-      _isFiltered &&= newSettingFilter(crag);
-    }
+      if (enableNewSettingFilter) {
+        _isFiltered &&= newSettingFilter(crag);
+      }
 
-    return _isFiltered;
-  };
+      return _isFiltered;
+    },
+    [
+      enableExceptionSettingFilter,
+      enableNewSettingFilter,
+      enableShowerFilter,
+      exceptionSettingFilter,
+      newSettingFilter,
+      showerFilter,
+    ]
+  );
 
   return {
     sheetRef,

@@ -115,7 +115,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, crags]);
+  }, [map, crags, isCragFiltered]);
 
   return (
     <>
