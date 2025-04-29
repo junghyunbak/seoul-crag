@@ -26,10 +26,6 @@ export function Filter() {
     updateIsFilterSheetOpen(false);
   };
 
-  const handleResetFilterButtonClick = () => {
-    setEnableShowerFilter(null);
-  };
-
   const handleSheetClose = () => {
     updateIsFilterSheetOpen(false);
   };
@@ -106,9 +102,6 @@ export function Filter() {
 
           <Box sx={{}}>
             <Box sx={{ p: 2, display: 'flex', gap: 1 }}>
-              <Button fullWidth variant="outlined" onClick={handleResetFilterButtonClick}>
-                초기화
-              </Button>
               <Button fullWidth variant="contained" onClick={handleShowButtonClick}>{`${getFilteredCragCount(
                 crags
               )}개 암장 보기`}</Button>
