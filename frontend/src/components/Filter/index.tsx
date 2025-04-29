@@ -4,6 +4,7 @@ import { Box, Button, Chip, Divider, Typography } from '@mui/material';
 import ShowerIcon from '@mui/icons-material/Shower';
 
 import { useFetchCrags, useFilter, useModifyFilter } from '@/hooks';
+import { zIndex } from '@/styles';
 
 export function Filter() {
   const {
@@ -47,7 +48,13 @@ export function Filter() {
   };
 
   return (
-    <Sheet isOpen={isFilterSheetOpen} onClose={handleSheetClose} snapPoints={[0.5]} initialSnap={0}>
+    <Sheet
+      isOpen={isFilterSheetOpen}
+      onClose={handleSheetClose}
+      snapPoints={[0.5]}
+      initialSnap={0}
+      style={{ zIndex: zIndex.filter }}
+    >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content

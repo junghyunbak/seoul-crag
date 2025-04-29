@@ -198,6 +198,7 @@ import { useState, useEffect } from 'react';
 import { useMap, useModifyCragList } from '@/hooks';
 import { QUERY_STRING } from '@/constants';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { zIndex } from '@/styles';
 
 export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: boolean; onClose: () => void }) {
   const [search, setSearch] = useState('');
@@ -223,7 +224,7 @@ export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: b
   const filteredCrags = getFilteredSortedCrags(crags, search, sort, userLocation?.lat, userLocation?.lng);
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} sx={{ zIndex: zIndex.cragList }}>
       <Box
         sx={{
           position: 'absolute',

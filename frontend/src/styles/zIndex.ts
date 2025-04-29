@@ -4,6 +4,8 @@ export const cragMarkerAcive = 1;
 export const edgeMarker = 11;
 
 export const openMenu = 100;
+export const filter = 101;
+export const cragList = 102;
 
 export const story = 1000;
 export const menu = 1001;
