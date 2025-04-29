@@ -123,37 +123,18 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
    * 방사형 메뉴 계산
    */
   const features = useMemo<Feature[]>(() => {
-    const ret: Feature[] = [];
+    const _features: Feature[] = [];
 
-    if (crag.imageTypes && crag.imageTypes.length > 0) {
-      crag.imageTypes.forEach((type) => {
-        ret.push(
-          (() => {
-            switch (type) {
-              case 'interior':
-                return {
-                  icon: <Image />,
-                  callback: () => {
-                    setInteriorStory(crag.id);
-                  },
-                  disabled: false,
-                };
-              case 'shower':
-              default:
-                return {
-                  icon: <Shower />,
-                  callback: () => {
-                    setShowerStory(crag.id);
-                  },
-
-                  disabled: false,
-                };
-            }
-          })()
-        );
+    if (crag.imageTypes?.includes('interior')) {
+      _features.push({
+        icon: <Image />,
+        callback: () => {
+          setInteriorStory(crag.id);
+        },
+        disabled: false,
       });
     } else {
-      ret.push({
+      _features.push({
         icon: <HideImage />,
         callback: () => {},
         disabled: true,
@@ -161,7 +142,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
     }
 
     if (crag.futureSchedules && crag.futureSchedules.length > 0) {
-      ret.push({
+      _features.push({
         icon: <CalendarMonth />,
         callback: () => {
           setScheduleStory(crag.id);
@@ -169,14 +150,14 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
         disabled: false,
       });
     } else {
-      ret.push({
+      _features.push({
         icon: <EventBusy />,
         callback: () => {},
         disabled: true,
       });
     }
 
-    ret.push({
+    _features.push({
       icon: <MoreHoriz />,
       callback: () => {
         setSelectCragDetailId(crag.id);
@@ -184,8 +165,18 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       disabled: false,
     });
 
-    return ret;
-  }, [crag, setInteriorStory, setScheduleStory, setSelectCragDetailId]);
+    if (crag.imageTypes?.includes('shower')) {
+      _features.push({
+        icon: <Shower />,
+        callback: () => {
+          setShowerStory(crag.id);
+        },
+        disabled: false,
+      });
+    }
+
+    return _features;
+  }, [crag, setInteriorStory, setScheduleStory, setSelectCragDetailId, setShowerStory]);
 
   const handleMarkerClick = () => {
     setSelectCragId(crag.id);
