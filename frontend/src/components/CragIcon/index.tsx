@@ -40,6 +40,7 @@ export function CragIcon({ width, isSelect = false, isClose = false, counting = 
         position: 'relative',
         display: 'flex',
         justifyContent: 'center',
+        userSelect: 'none',
       }}
     >
       {counting && (

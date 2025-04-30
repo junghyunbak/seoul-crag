@@ -127,8 +127,6 @@ export function Filter() {
                   onChange={(e) => {
                     const date = e.target.value;
 
-                    console.log('hi', date);
-
                     if (!date || date === todayIso) {
                       updateSelectDate(null);
                       return;
