@@ -1,9 +1,15 @@
+import { useCallback, useMemo } from 'react';
+
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
+
 import { useQueryParam, BooleanParam } from 'use-query-params';
+
 import { QUERY_STRING } from '@/constants';
-import { format } from 'date-fns';
-import { useCallback, useMemo } from 'react';
+
+import { format, parse, isBefore, getDay } from 'date-fns';
+
+import { daysOfWeek } from '@/components/WeeklyHoursSilder';
 
 export function useFilter() {
   const [sheetRef] = useStore(useShallow((s) => [s.sheetRef]));
@@ -22,12 +28,11 @@ export function useFilter() {
   const [enableTodayRemove, setEnableTodayRemove] = useQueryParam(QUERY_STRING.FILTER_TODAY_REMOVE, BooleanParam);
 
   const todayIso = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
+  const expeditionDay = daysOfWeek[getDay(selectDate || new Date())];
   const expeditionDateYYYYMMDD = useMemo(
     () => (selectDate ? format(selectDate, 'yyyy-MM-dd') : todayIso),
     [todayIso, selectDate]
   );
-
-  console.log('선택 날짜', expeditionDateYYYYMMDD);
 
   const showerFilter = useMemo(
     () =>
@@ -90,7 +95,7 @@ export function useFilter() {
     ].reduce((acc, cur) => acc + (cur ? 1 : 0), 0);
   }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove, selectDate]);
 
-  const isCragFiltered = useCallback(
+  const getCragIsFiltered = useCallback(
     (crag: Crag) => {
       let _isFiltered = true;
 
@@ -122,6 +127,44 @@ export function useFilter() {
       showerFilter,
       todayRemoveFilter,
     ]
+  );
+
+  const getCragIsOff = useCallback(
+    (crag: Crag) => {
+      let _isOff = false;
+
+      if (crag.futureSchedules) {
+        _isOff = crag.futureSchedules.some((schedule) => {
+          if (schedule.type !== 'closed') {
+            return;
+          }
+
+          const iso = format(schedule.date, 'yyyy-MM-dd');
+
+          return iso === expeditionDateYYYYMMDD;
+        });
+      }
+
+      if (crag.openingHourOfWeek) {
+        const todayOpeningHour = crag.openingHourOfWeek.find((openingHour) => openingHour.day == expeditionDay);
+
+        if (todayOpeningHour) {
+          if (todayOpeningHour.is_closed) {
+            _isOff = true;
+          } else {
+            if (todayOpeningHour.close_time && todayOpeningHour.open_time) {
+              const openTime = parse(todayOpeningHour.open_time, 'HH:mm:ss', new Date());
+              const closeTime = parse(todayOpeningHour.close_time, 'HH:mm:ss', new Date());
+
+              _isOff = !(isBefore(openTime, new Date()) && isBefore(new Date(), closeTime));
+            }
+          }
+        }
+      }
+
+      return _isOff;
+    },
+    [expeditionDay, expeditionDateYYYYMMDD]
   );
 
   const getFilteredCragCount = useCallback(
@@ -163,7 +206,8 @@ export function useFilter() {
     exceptionSettingFilter,
     newSettingFilter,
 
-    isCragFiltered,
+    getCragIsFiltered,
+    getCragIsOff,
     getFilteredCragCount,
   };
 }
