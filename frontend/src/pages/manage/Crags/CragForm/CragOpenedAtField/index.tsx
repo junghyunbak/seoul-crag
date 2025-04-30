@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from 'react';
 
 import { useMutateCragOpenedAtUpdate } from '@/hooks';
 
-import { TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+
 import { format } from 'date-fns';
 
 export function CragOpenedAtField() {
@@ -35,14 +36,18 @@ export function CragOpenedAtField() {
   };
 
   return (
-    <TextField
-      label="개설일"
-      type="date"
-      value={openedAtValue}
-      onChange={handleOnChange}
-      InputLabelProps={{
-        shrink: true,
-      }}
-    />
+    <Box>
+      <TextField
+        label="개설일"
+        type="date"
+        value={openedAtValue}
+        onChange={handleOnChange}
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+          },
+        }}
+      />
+    </Box>
   );
 }
