@@ -8,6 +8,7 @@ import { useCallback, useMemo } from 'react';
 export function useFilter() {
   const [sheetRef] = useStore(useShallow((s) => [s.sheetRef]));
   const [isFilterSheetOpen] = useStore(useShallow((s) => [s.isFilterSheetOpen]));
+  const [selectDate] = useStore(useShallow((s) => [s.selectDate]));
 
   const [enableShowerFilter, setEnableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
   const [enableExceptionSettingFilter, setEnableExceptionSettingFilter] = useQueryParam(
@@ -21,6 +22,12 @@ export function useFilter() {
   const [enableTodayRemove, setEnableTodayRemove] = useQueryParam(QUERY_STRING.FILTER_TODAY_REMOVE, BooleanParam);
 
   const todayIso = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
+  const expeditionDateYYYYMMDD = useMemo(
+    () => (selectDate ? format(selectDate, 'yyyy-MM-dd') : todayIso),
+    [todayIso, selectDate]
+  );
+
+  console.log('선택 날짜', expeditionDateYYYYMMDD);
 
   const showerFilter = useMemo(
     () =>
@@ -39,13 +46,13 @@ export function useFilter() {
       enableExceptionSettingFilter
         ? (crag: Crag) => {
             return !(crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === todayIso
+              ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === expeditionDateYYYYMMDD
             );
           }
         : () => {
             return true;
           },
-    [enableExceptionSettingFilter, todayIso]
+    [enableExceptionSettingFilter, expeditionDateYYYYMMDD]
   );
 
   const newSettingFilter = useMemo(
@@ -53,13 +60,13 @@ export function useFilter() {
       enableNewSettingFilter
         ? (crag: Crag) => {
             return (crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === todayIso
+              ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === expeditionDateYYYYMMDD
             );
           }
         : () => {
             return true;
           },
-    [enableNewSettingFilter, todayIso]
+    [enableNewSettingFilter, expeditionDateYYYYMMDD]
   );
 
   const todayRemoveFilter = useMemo(
@@ -67,18 +74,21 @@ export function useFilter() {
       enableTodayRemove
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'remove' && format(date, 'yyyy-MM-dd') === todayIso
+              ({ type, date }) => type === 'remove' && format(date, 'yyyy-MM-dd') === expeditionDateYYYYMMDD
             )
         : () => true,
-    [enableTodayRemove, todayIso]
+    [enableTodayRemove, expeditionDateYYYYMMDD]
   );
 
   const filterCount = useMemo(() => {
-    return [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove].reduce(
-      (acc, cur) => acc + (cur ? 1 : 0),
-      0
-    );
-  }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove]);
+    return [
+      enableShowerFilter,
+      enableExceptionSettingFilter,
+      enableNewSettingFilter,
+      enableTodayRemove,
+      selectDate !== null,
+    ].reduce((acc, cur) => acc + (cur ? 1 : 0), 0);
+  }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove, selectDate]);
 
   const isCragFiltered = useCallback(
     (crag: Crag) => {
@@ -139,6 +149,10 @@ export function useFilter() {
     enableExceptionSettingFilter,
     enableNewSettingFilter,
     enableTodayRemove,
+
+    todayIso,
+
+    selectDate,
 
     setEnableShowerFilter,
     setEnableExceptionSettingFilter,

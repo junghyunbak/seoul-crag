@@ -1,10 +1,14 @@
 import { Sheet } from 'react-modal-sheet';
 
-import { Box, Button, Chip, Divider, Typography } from '@mui/material';
+import { Box, Button, Chip, Divider, IconButton, TextField, Typography } from '@mui/material';
 import ShowerIcon from '@mui/icons-material/Shower';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useFetchCrags, useFilter, useModifyFilter } from '@/hooks';
+
 import { zIndex } from '@/styles';
+
+import { format, parse } from 'date-fns';
 
 export function Filter() {
   const {
@@ -18,8 +22,10 @@ export function Filter() {
     setEnableNewSettingFilter,
     setEnableTodayRemove,
     getFilteredCragCount,
+    todayIso,
+    selectDate,
   } = useFilter();
-  const { updateIsFilterSheetOpen } = useModifyFilter();
+  const { updateIsFilterSheetOpen, updateSelectDate } = useModifyFilter();
 
   const { crags } = useFetchCrags();
 
@@ -51,8 +57,7 @@ export function Filter() {
     <Sheet
       isOpen={isFilterSheetOpen}
       onClose={handleSheetClose}
-      snapPoints={[0.5]}
-      initialSnap={0}
+      detent="content-height"
       style={{ zIndex: zIndex.filter }}
     >
       <Sheet.Container>
@@ -68,14 +73,14 @@ export function Filter() {
         >
           <Box sx={{ flex: 1, overflow: 'auto' }}>
             <Box sx={{ p: 2, pt: 0 }}>
-              <Typography variant="subtitle1">암장 필터</Typography>
+              <Typography variant="h6">암장 필터</Typography>
             </Box>
 
             <Divider />
 
             <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="body2">이용 가능</Typography>
+                <Typography variant="subtitle1">이용 가능</Typography>
                 <Box
                   sx={{
                     display: 'flex',
@@ -90,7 +95,7 @@ export function Filter() {
               </Box>
 
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="body2">제한 사항</Typography>
+                <Typography variant="subtitle1">제한 사항</Typography>
                 <Box
                   sx={{
                     display: 'flex',
@@ -103,6 +108,40 @@ export function Filter() {
                     onClick={handleExceptionSettingChipClick}
                   />
                 </Box>
+              </Box>
+            </Box>
+
+            <Divider />
+
+            <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="subtitle1">원정 날짜 선택</Typography>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <TextField
+                  type="date"
+                  value={format(selectDate || new Date(), 'yyyy-MM-dd')}
+                  slotProps={{
+                    htmlInput: {
+                      min: format(new Date(), 'yyyy-MM-dd'),
+                    },
+                  }}
+                  onChange={(e) => {
+                    const date = e.target.value;
+
+                    console.log('hi', date);
+
+                    if (!date || date === todayIso) {
+                      updateSelectDate(null);
+                      return;
+                    }
+
+                    updateSelectDate(parse(e.target.value, 'yyyy-MM-dd', new Date()));
+                  }}
+                />
+                {selectDate && (
+                  <IconButton onClick={() => updateSelectDate(null)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
               </Box>
             </Box>
           </Box>

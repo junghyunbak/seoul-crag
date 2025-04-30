@@ -21,6 +21,9 @@ type StoreState = {
 
   lastLng: number;
   setLastLng: (lng: number) => void;
+
+  selectDate: Date | null;
+  setSelectDate: (date: Date | null) => void;
 };
 
 export const useStore = create<StoreState>()(
@@ -53,6 +56,11 @@ export const useStore = create<StoreState>()(
       lastLng: -1,
       setLastLng(lng) {
         set(() => ({ lastLng: lng }));
+      },
+
+      selectDate: null,
+      setSelectDate(date) {
+        set(() => ({ selectDate: date }));
       },
     }),
     {

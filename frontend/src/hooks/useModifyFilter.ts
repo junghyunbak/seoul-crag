@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/shallow';
 
 export function useModifyFilter() {
   const [setIsFilterSheetOpen] = useStore(useShallow((s) => [s.setIsFilterSheetOpen]));
+  const [setSelectDate] = useStore(useShallow((s) => [s.setSelectDate]));
 
   const updateIsFilterSheetOpen = useCallback(
     (isOpen: boolean) => {
@@ -12,7 +13,15 @@ export function useModifyFilter() {
     [setIsFilterSheetOpen]
   );
 
+  const updateSelectDate = useCallback(
+    (date: Date | null) => {
+      setSelectDate(date);
+    },
+    [setSelectDate]
+  );
+
   return {
     updateIsFilterSheetOpen,
+    updateSelectDate,
   };
 }
