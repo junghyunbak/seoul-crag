@@ -1,7 +1,9 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { config } from 'dotenv';
 
-config();
+config({
+  path: ['.env.dev', '.env.prod'],
+});
 
 const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -9,7 +11,7 @@ const dataSourceOptions: DataSourceOptions = {
   entities: ['src/**/*/*.entity.ts'],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,
-  logging: process.env.NODE_ENV !== 'prod',
+  logging: true,
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
