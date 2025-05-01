@@ -27,6 +27,9 @@ import {
 
 import * as ms from 'ms';
 
+import { JwtParsedUser } from 'src/types/auth';
+import { isPassportUser } from 'src/utils/typeguard';
+
 const accessTokenExpires: ms.StringValue = '15m';
 const refreshTokenExpires: ms.StringValue = '14d';
 
@@ -51,7 +54,7 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   async kakaoRedirect(@Req() req: Request, @Res() res: Response) {
     try {
-      if (!req.user) {
+      if (!req.user || !isPassportUser(req.user)) {
         throw new Error('로그인에 실패하였습니다.');
       }
 
@@ -100,7 +103,7 @@ export class AuthController {
 
     if (typeof refreshToken === 'string') {
       try {
-        const payload = this.jwtService.verify<JwtPayload>(refreshToken);
+        const payload = this.jwtService.verify<JwtParsedUser>(refreshToken);
 
         await this.userService.removeRefreshToken(payload.id);
       } catch (err) {
@@ -134,10 +137,10 @@ export class AuthController {
       throw new UnauthorizedException('토큰이 존재하지 않습니다.');
     }
 
-    let payload: JwtPayload | null = null;
+    let payload: JwtParsedUser | null = null;
 
     try {
-      payload = this.jwtService.verify<JwtPayload>(refreshToken);
+      payload = this.jwtService.verify<JwtParsedUser>(refreshToken);
     } catch (err) {
       console.error(err);
 

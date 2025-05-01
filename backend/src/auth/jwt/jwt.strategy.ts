@@ -10,6 +10,8 @@ import { type Request } from 'express';
 
 import { ACCESS_TOKEN_COOKIE_NAME } from 'src/constants';
 
+import { JwtParsedUser } from 'src/types/auth';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly config: ConfigService<AppConfig, true>) {
@@ -30,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(payload: JwtPayload) {
+  validate(payload: JwtParsedUser) {
     return payload;
   }
 }

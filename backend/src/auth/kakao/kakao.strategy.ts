@@ -9,6 +9,8 @@ import { KakaoRawProfileSchema } from 'src/auth/kakao/kakao.schema';
 
 import { AppConfig } from 'src/config/env.validation';
 
+import { PassportUser } from 'src/types/auth';
+
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor(private configService: ConfigService<AppConfig, true>) {
@@ -34,7 +36,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     try {
       const json = KakaoRawProfileSchema.parse(profile._json);
 
-      const user: UserInfo = {
+      const user: PassportUser = {
         provider: 'kakao',
         provider_id: id,
         username: json.properties?.nickname || '익명의 클라이머',

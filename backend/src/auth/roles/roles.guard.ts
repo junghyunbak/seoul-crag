@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles.decorator';
 import { RoleName } from 'src/role/role.entity';
+import { isJwtParsedUser } from 'src/utils/typeguard';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -25,7 +26,7 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Express.Request>();
     const user = request.user;
 
-    if (!user || !user.roles) {
+    if (!user || !isJwtParsedUser(user)) {
       throw new ForbiddenException('권한 정보가 없습니다');
     }
 

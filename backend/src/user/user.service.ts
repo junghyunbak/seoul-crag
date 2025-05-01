@@ -12,6 +12,7 @@ import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { PassportUser } from 'src/types/auth';
 
 @Injectable()
 export class UserService {
@@ -72,7 +73,7 @@ export class UserService {
     return this.userRepo.save(user);
   }
 
-  async findOrCreate(user: UserInfo): Promise<User> {
+  async findOrCreate(user: PassportUser): Promise<User> {
     const { provider, provider_id, email, username, profile_image } = user;
 
     const existing = await this.userRepo.findOne({

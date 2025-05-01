@@ -7,6 +7,8 @@ import { UserRoleService } from 'src/user-role/user-role.service';
 
 import * as ms from 'ms';
 
+import { JwtParsedUser } from 'src/types/auth';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,7 +19,7 @@ export class AuthService {
   async generateJwt(user: User, expiresIn: ms.StringValue): Promise<string> {
     const roles = await this.userRoleService.getRolesOfUser(user.id);
 
-    const payload: JwtPayload = {
+    const payload: JwtParsedUser = {
       id: user.id,
       username: user.username,
       provider: user.provider,
