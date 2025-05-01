@@ -61,6 +61,18 @@ export function Filter() {
     updateIsFilterTodayRemove(!isFilterTodayRemove);
   };
 
+  const handleResetSelectDateButtonClick = () => {
+    updateSelectDate(null);
+  };
+
+  const handleResetAllButtonClick = () => {
+    updateIsFilterNewSetting(false);
+    updateIsFilterNonSetting(false);
+    updateIsFilterShower(false);
+    updateIsFilterTodayRemove(false);
+    updateSelectDate(null);
+  };
+
   return (
     <Sheet
       isOpen={isOpenFilterSheet}
@@ -141,7 +153,7 @@ export function Filter() {
                   }}
                 />
                 {selectDate && (
-                  <IconButton onClick={() => updateSelectDate(null)}>
+                  <IconButton onClick={handleResetSelectDateButtonClick}>
                     <DeleteIcon />
                   </IconButton>
                 )}
@@ -149,12 +161,13 @@ export function Filter() {
             </Box>
           </Box>
 
-          <Box sx={{}}>
-            <Box sx={{ p: 2, display: 'flex', gap: 1 }}>
-              <Button fullWidth variant="contained" onClick={handleShowButtonClick}>{`${getFilteredCragCount(
-                crags
-              )}개 암장 보기`}</Button>
-            </Box>
+          <Box sx={{ p: 2, display: 'flex', gap: 1 }}>
+            <Button fullWidth variant="outlined" onClick={handleResetAllButtonClick}>
+              초기화
+            </Button>
+            <Button fullWidth variant="contained" onClick={handleShowButtonClick}>{`${getFilteredCragCount(
+              crags
+            )}개 암장 보기`}</Button>
           </Box>
         </Sheet.Content>
       </Sheet.Container>
