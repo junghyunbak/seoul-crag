@@ -184,22 +184,26 @@ export function GymScheduleGrid({
                       <Box
                         key={s.id}
                         sx={{
-                          bgcolor: typeColors[s.type],
-                          color: 'white',
                           flexShrink: 0,
+                          bgcolor: typeColors[s.type],
                           px: { md: 1, xs: 0.5 },
                           py: 0.2,
                           mb: combinedSchedules.length - 1 === i ? 0.5 : 0,
                           borderRadius: 0.5,
-                          fontSize: { md: 12, xs: 8 },
                           cursor: readOnly ? 'default' : 'pointer',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
                         }}
                         onClick={() => !readOnly && !s.id.startsWith('holiday-') && setSelected(s)}
                       >
-                        {s.reason?.trim() ? s.reason : typeLabels[s.type]}
+                        <Typography
+                          sx={{
+                            whiteSpace: 'normal',
+                            wordBreak: 'break-all',
+                            color: 'white',
+                            fontSize: { md: 12, xs: 8 },
+                          }}
+                        >
+                          {s.reason?.trim() ? s.reason : typeLabels[s.type]}
+                        </Typography>
                       </Box>
                     ))}
                 </Box>
