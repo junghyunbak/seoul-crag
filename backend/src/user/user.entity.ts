@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { UserRole } from 'src/user-role/user-role.entity';
+import { Comment } from 'src/comments/comments.entity';
 
 @Entity('users')
 export class User {
@@ -35,4 +36,7 @@ export class User {
 
   @OneToMany(() => UserRole, (userRole) => userRole.user)
   userRoles: UserRole[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }

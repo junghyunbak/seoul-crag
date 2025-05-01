@@ -1,7 +1,7 @@
 import { type Role } from 'src/role/role.entity';
 import { type User } from 'src/user/user.entity';
 
-type PassportUser = Omit<User, 'id' | 'created_at' | 'userRoles'>;
+type PassportUser = Omit<User, 'id' | 'created_at' | 'userRoles' | 'comments'>;
 type JwtParsedUser = {
   id: string;
   username: string;

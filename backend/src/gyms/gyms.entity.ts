@@ -9,6 +9,7 @@ import {
 import { GymImage } from 'src/gym-images/gym-images.entity';
 import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
+import { Comment } from 'src/comments/comments.entity';
 
 @Entity('gyms')
 export class Gym {
@@ -53,4 +54,7 @@ export class Gym {
 
   @OneToMany(() => GymOpeningHour, (openingHour) => openingHour.gym)
   openingHours: GymOpeningHour[];
+
+  @OneToMany(() => Comment, (comment) => comment.gym)
+  comments: Comment[];
 }

@@ -20,6 +20,7 @@ import { GymImagesModule } from 'src/gym-images/gym-images.module';
 import { GymScheduleModule } from 'src/gym-schedules/gym-schedules.module';
 import { GymOpeningHoursModule } from 'src/gym-opening-hours/gym-opening-hours.module';
 import { ImageModule } from 'src/image/image-module';
+import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ImageModule } from 'src/image/image-module';
     GymScheduleModule,
     GymOpeningHoursModule,
     ImageModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
