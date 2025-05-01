@@ -39,7 +39,7 @@ export class CommentsService {
 
     const comment = this.commentRepo.create({
       content: dto.content,
-      is_admin_only: dto.isAdminOnly ?? false,
+      is_admin_only: dto.is_admin_only ?? false,
       user,
       gym,
     });
@@ -55,26 +55,33 @@ export class CommentsService {
       ? await this.isAdminOfGym(jwtParsedUser)
       : false;
 
-    const where = isAdmin
-      ? { gym: { id: gymId } }
-      : {
-          gym: { id: gymId },
-          isAdminOnly: false,
-        };
-
     const comments = await this.commentRepo.find({
-      where,
+      where: { gym: { id: gymId } },
       relations: ['user'],
       order: { created_at: 'DESC' },
     });
 
-    return comments.map((comment) => ({
-      ...comment,
-      content:
-        !isAdmin && comment.is_admin_only
-          ? '관리자만 볼 수 있는 댓글입니다.'
-          : comment.content,
-    }));
+    return comments.map((comment) => {
+      const isMe = comment.user.id === jwtParsedUser?.id;
+
+      return {
+        ...comment,
+        user: {
+          ...comment.user,
+          email: '',
+          provider: '',
+          provider_id: '',
+          refresh_token_hash: '',
+          created_at: new Date(0),
+        },
+        content:
+          isAdmin || isMe
+            ? comment.content
+            : comment.is_admin_only
+              ? '관리자만 볼 수 있는 댓글입니다.'
+              : comment.content,
+      };
+    });
   }
 
   async delete(commentId: string, jwtParsedUser: JwtParsedUser): Promise<void> {

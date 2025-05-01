@@ -25,6 +25,8 @@ import { Sheet } from 'react-modal-sheet';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 
+import CommentSection from '@/components/Comments';
+
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
     height: 100% !important;
@@ -224,6 +226,8 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                   </Typography>
                   <CragLocation crag={crag} />
                 </Box>
+
+                <CommentSection cragId={crag.id} />
               </Box>
             </Sheet.Scroller>
           )}

@@ -16,5 +16,5 @@ export class CreateCommentDto {
 
   @IsOptional()
   @IsBoolean()
-  isAdminOnly?: boolean;
+  is_admin_only?: boolean;
 }
