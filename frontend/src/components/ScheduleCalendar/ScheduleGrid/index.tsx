@@ -15,12 +15,13 @@ import {
   Stack,
   Paper,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import Grid from '@mui/material/Grid';
+import AddIcon from '@mui/icons-material/Add';
+
+import { useFilter } from '@/hooks';
 
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from 'date-fns';
-
-import holidayData from '../holidays.ko.json' assert { type: 'json' };
+import holidayData from '../holidays.ko.json';
 
 interface CalendarGridProps {
   currentMonth: Date;
@@ -68,7 +69,8 @@ export function GymScheduleGrid({
   const days = eachDayOfInterval({ start, end });
   const emptyStart = getDay(start);
   const holidays: string[] = holidayData[2025];
-  const todayIso = format(new Date(), 'yyyy-MM-dd');
+
+  const { YYYYMMDDExpedition } = useFilter();
 
   const isHoliday = (iso: string, date: Date) => holidays.includes(iso) || getDay(date) === 0;
   const lastWeek = Math.ceil((emptyStart + days.length) / 7);
@@ -146,9 +148,9 @@ export function GymScheduleGrid({
                 align="center"
                 variant="body2"
                 sx={{
-                  background: iso === todayIso ? '#1976d2' : undefined,
-                  borderRadius: iso === todayIso ? '50%' : undefined,
-                  color: isHoliday(iso, day) ? 'error.main' : iso === todayIso ? 'white' : undefined,
+                  background: iso === YYYYMMDDExpedition ? '#1976d2' : undefined,
+                  borderRadius: iso === YYYYMMDDExpedition ? '50%' : undefined,
+                  color: isHoliday(iso, day) ? 'error.main' : iso === YYYYMMDDExpedition ? 'white' : undefined,
                   width: 24,
                   height: 24,
                   display: 'inline-flex',
