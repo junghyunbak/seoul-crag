@@ -9,13 +9,14 @@ import {
   Button,
   FormControlLabel,
   IconButton,
-  Checkbox,
+  Switch,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useQuery, useMutation, DefaultError } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { commentsScheme } from '@/schemas/comment';
 import { isBefore } from 'date-fns';
+import { grey } from '@mui/material/colors';
 
 interface CommentSectionProps {
   cragId: string;
@@ -95,11 +96,27 @@ function CommentItem({ comment, onDelete }: { comment: CragComment; onDelete: (c
       }}
     >
       <Avatar src={comment.user.profile_image || ''}>{comment.user.username.charAt(0)}</Avatar>
-      <Box sx={{ flex: 1 }}>
-        <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-          {comment.user.username}
-        </Typography>
-        <Typography component="pre" sx={{ whiteSpace: 'pre-wrap' }} variant="body2" color="text.secondary">
+      <Box sx={{ flex: 1, mb: 0.5, overflow: 'hidden' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          <Typography variant="subtitle2" sx={{ mr: 0.5 }}>
+            {comment.user.username}
+          </Typography>
+          <Typography variant="caption" color={grey['500']}>
+            {comment.created_at.toLocaleString()}
+          </Typography>
+        </Box>
+        <Typography
+          component="pre"
+          sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          variant="body2"
+          color="text.secondary"
+        >
           {comment.content}
         </Typography>
       </Box>
@@ -155,15 +172,16 @@ export function CommentForm({ onSubmit, isSubmitting }: CommentFormProps) {
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'space-between',
         }}
       >
         <FormControlLabel
-          control={<Checkbox checked={isAdminOnly} onChange={(e) => setIsAdminOnly(e.target.checked)} />}
+          control={<Switch checked={isAdminOnly} onChange={(e) => setIsAdminOnly(e.target.checked)} />}
           label="관리자만 보기"
         />
 
         <Button variant="contained" type="submit" disabled={isSubmitting || !content.trim()}>
-          작성하기
+          작성
         </Button>
       </Box>
     </Box>

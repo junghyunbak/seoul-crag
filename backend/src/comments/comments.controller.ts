@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { JwtAuthGuard, OptionalJwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Request } from 'express';
 import { isJwtParsedUser } from 'src/utils/typeguard';
 
@@ -38,7 +38,7 @@ export class CommentsController {
   /**
    * 특정 암장의 댓글 목록 조회
    */
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(OptionalJwtAuthGuard)
   @Get('gym/:gymId')
   async findByGym(
     @Param('gymId', ParseUUIDPipe) gymId: string,

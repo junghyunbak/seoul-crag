@@ -177,7 +177,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                 <Divider />
 
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                  <Typography variant="h6" fontWeight={600} gutterBottom>
                     이용 시간
                   </Typography>
                   {crag.openingHourOfWeek &&
@@ -208,7 +208,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                 <Divider />
 
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                  <Typography variant="h6" fontWeight={600} gutterBottom>
                     일정표
                   </Typography>
 
@@ -221,7 +221,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                 <Divider />
 
                 <Box>
-                  <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                  <Typography variant="h6" fontWeight={600} gutterBottom>
                     상세 위치
                   </Typography>
                   <CragLocation crag={crag} />
