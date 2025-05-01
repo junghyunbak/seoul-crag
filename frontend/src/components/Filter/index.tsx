@@ -197,6 +197,7 @@ function Chip({ isSelect, onClick, label, emoji }: ChipProps) {
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: isSelect ? grey['600'] : 'transparent',
+        cursor: 'pointer',
         py: 1,
         px: 2,
         borderRadius: 3,
