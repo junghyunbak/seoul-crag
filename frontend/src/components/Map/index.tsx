@@ -20,6 +20,7 @@ const CragMarkerType = (<Marker.Crag crag={mockCrag} />).type;
 const DefaultMarkerType = (<Marker.Default />).type;
 const BoundaryPolygonType = (<Polygon.Boundary />).type;
 const ClusterMarkerType = (<Marker.Cluster markers={[]} />).type;
+const GpsMarkerType = (<Marker.Gps lat={-1} lng={-1} />).type;
 
 import { mapContext } from '@/components/Map/index.context';
 
@@ -36,6 +37,7 @@ function MapImpl({ map, mapRef, children }: MapProps) {
   const CragMarkers = getElementsFromChildren(children, CragMarkerType);
   const DefaultMarkers = getElementsFromChildren(children, DefaultMarkerType);
   const BoundaryPolygons = getElementsFromChildren(children, BoundaryPolygonType);
+  const [GpsMarker] = getElementsFromChildren(children, GpsMarkerType);
 
   const ClusterMarkers = getElementsFromChildren(children, ClusterMarkerType);
 
@@ -47,6 +49,7 @@ function MapImpl({ map, mapRef, children }: MapProps) {
           {DefaultMarkers.map((DefaultMarker) => DefaultMarker)}
           {BoundaryPolygons.map((BoundayPolygon) => BoundayPolygon)}
           {ClusterMarkers.map((ClusterMarker) => ClusterMarker)}
+          {GpsMarker}
         </Box>
       </Box>
     </mapContext.Provider>

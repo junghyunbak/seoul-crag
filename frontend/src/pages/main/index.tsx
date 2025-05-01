@@ -18,6 +18,7 @@ import { Menu } from '@/components/Menu';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 import { Filter } from '@/components/Filter';
 import { CragListModal } from '@/components/CragList';
+import { useShallow } from 'zustand/shallow';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -29,6 +30,9 @@ export default function Main() {
   const { crags } = useFetchCrags();
   const { mapRef, boundary } = useMap();
   const { isCragListModalOpen } = useCragList();
+
+  const [gpsLat] = useStore(useShallow((s) => [s.gpsLat]));
+  const [gpsLng] = useStore(useShallow((s) => [s.gpsLng]));
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
@@ -143,6 +147,7 @@ export default function Main() {
           <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}
         <Map.Marker.Cluster markers={markers} />
+        {gpsLat !== -1 && gpsLng !== -1 && <Map.Marker.Gps lat={gpsLat} lng={gpsLng} />}
       </Map>
 
       <Menu />
