@@ -17,6 +17,7 @@ import { api } from '@/api/axios';
 import { commentsScheme } from '@/schemas/comment';
 import { isBefore } from 'date-fns';
 import { grey } from '@mui/material/colors';
+import { useFetchMe } from '@/hooks';
 
 interface CommentSectionProps {
   cragId: string;
@@ -138,6 +139,8 @@ export function CommentForm({ onSubmit, isSubmitting }: CommentFormProps) {
   const [content, setContent] = useState('');
   const [isAdminOnly, setIsAdminOnly] = useState(false);
 
+  const { user } = useFetchMe();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -160,13 +163,14 @@ export function CommentForm({ onSubmit, isSubmitting }: CommentFormProps) {
       }}
     >
       <TextField
-        label="댓글을 입력하세요"
+        label={user ? '댓글을 입력하세요' : '로그인이 필요합니다.'}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         fullWidth
         multiline
         rows={3}
         sx={{ mb: 2 }}
+        disabled={!user}
       />
 
       <Box
