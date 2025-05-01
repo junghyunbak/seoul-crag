@@ -31,8 +31,7 @@ export default function Main() {
   const { mapRef, boundary } = useMap();
   const { isCragListModalOpen } = useCragList();
 
-  const [gpsLat] = useStore(useShallow((s) => [s.gpsLat]));
-  const [gpsLng] = useStore(useShallow((s) => [s.gpsLng]));
+  const [gpsLatLng] = useStore(useShallow((s) => [s.gpsLatLng]));
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
@@ -147,7 +146,7 @@ export default function Main() {
           <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}
         <Map.Marker.Cluster markers={markers} />
-        {gpsLat !== -1 && gpsLng !== -1 && <Map.Marker.Gps lat={gpsLat} lng={gpsLng} />}
+        {gpsLatLng.lat !== -1 && gpsLatLng.lng !== -1 && <Map.Marker.Gps gpsLatLng={gpsLatLng} />}
       </Map>
 
       <Menu />

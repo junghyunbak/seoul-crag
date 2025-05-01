@@ -3,20 +3,22 @@ import { useMap } from '@/hooks';
 import { useContext, useEffect } from 'react';
 
 interface GpsProps {
-  lat: number;
-  lng: number;
+  gpsLatLng: {
+    lat: number;
+    lng: number;
+  };
 }
 
-export function Gps({ lat, lng }: GpsProps) {
+export function Gps({ gpsLatLng }: GpsProps) {
   const { map } = useContext(mapContext);
   const { boundary } = useMap();
 
   useEffect(() => {
-    if (!map || lat === -1 || lng === -1) {
+    if (!map || gpsLatLng.lat === -1 || gpsLatLng.lng === -1) {
       return;
     }
 
-    const latLng = new naver.maps.LatLng(lat, lng);
+    const latLng = new naver.maps.LatLng(gpsLatLng.lat, gpsLatLng.lng);
 
     const marker = new naver.maps.Marker({
       map,
@@ -37,7 +39,7 @@ export function Gps({ lat, lng }: GpsProps) {
     return function cleanup() {
       marker.setMap(null);
     };
-  }, [map, lat, lng, boundary]);
+  }, [map, gpsLatLng, boundary]);
 
   return <div />;
 }

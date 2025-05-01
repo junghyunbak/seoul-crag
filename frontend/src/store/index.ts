@@ -18,11 +18,8 @@ type StoreState = {
   lastLng: number;
   setLastLng: (lng: number) => void;
 
-  gpsLat: number;
-  setGpsLat: (lat: number) => void;
-
-  gpsLng: number;
-  setGpsLng: (lng: number) => void;
+  gpsLatLng: { lat: number; lng: number };
+  setGpsLatLng: (lat: number, lng: number) => void;
 } & ReturnType<typeof createFilterSlice>;
 
 export const useStore = create<StoreState>()(
@@ -52,14 +49,12 @@ export const useStore = create<StoreState>()(
         set(() => ({ lastLng: lng }));
       },
 
-      gpsLat: -1,
-      setGpsLat(lat) {
-        set(() => ({ gpsLat: lat }));
+      gpsLatLng: {
+        lat: -1,
+        lng: -1,
       },
-
-      gpsLng: -1,
-      setGpsLng(lng) {
-        set(() => ({ gpsLng: lng }));
+      setGpsLatLng(lat, lng) {
+        set(() => ({ gpsLatLng: { lat, lng } }));
       },
     }),
     {

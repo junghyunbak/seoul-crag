@@ -54,7 +54,7 @@ export function Controller() {
       >
         <IconButton
           onClick={() => {
-            const { setGpsLat, setGpsLng } = useStore.getState();
+            const { setGpsLatLng } = useStore.getState();
 
             if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition((position) => {
@@ -62,8 +62,7 @@ export function Controller() {
                   coords: { latitude, longitude },
                 } = position;
 
-                setGpsLat(latitude);
-                setGpsLng(longitude);
+                setGpsLatLng(latitude, longitude);
               });
             }
           }}
