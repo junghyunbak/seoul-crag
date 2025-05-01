@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   CircularProgress,
-  Divider,
   Avatar,
   TextField,
   Button,
@@ -11,6 +10,7 @@ import {
   IconButton,
   Switch,
 } from '@mui/material';
+import ShieldIcon from '@mui/icons-material/AdminPanelSettings';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useQuery, useMutation, DefaultError } from '@tanstack/react-query';
 import { api } from '@/api/axios';
@@ -101,14 +101,14 @@ function CommentItem({ comment, onDelete }: { comment: CragComment; onDelete: (c
             display: 'flex',
             alignItems: 'center',
             flexWrap: 'wrap',
+            gap: 0.5,
           }}
         >
-          <Typography variant="subtitle2" sx={{ mr: 0.5 }}>
-            {comment.user.username}
-          </Typography>
+          <Typography variant="subtitle2">{comment.user.username}</Typography>
           <Typography variant="caption" color={grey['500']}>
             {comment.created_at.toLocaleString()}
           </Typography>
+          {comment.is_admin_only && <ShieldIcon sx={{ color: grey['500'], width: 12, height: 12 }} />}
         </Box>
         <Typography
           component="pre"
