@@ -1,8 +1,8 @@
 import { Sheet } from 'react-modal-sheet';
 
-import { Box, Button, Chip, Divider, IconButton, TextField, Typography } from '@mui/material';
-import ShowerIcon from '@mui/icons-material/Shower';
+import { Box, Button, Divider, IconButton, TextField, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { grey } from '@mui/material/colors';
 
 import { useFetchCrags, useFilter, useModifyFilter } from '@/hooks';
 
@@ -49,7 +49,7 @@ export function Filter() {
     updateIsFilterShower(!isFilterShower);
   };
 
-  const handleExceptionSettingChipClick = () => {
+  const handleNonSettingChipClick = () => {
     updateIsFilterNonSetting(!isFilterNonSetting);
   };
 
@@ -108,9 +108,14 @@ export function Filter() {
                     flexWrap: 'wrap',
                   }}
                 >
-                  <ShowerChip isSelect={isFilterShower} onClick={handleShowerChipClick} />
-                  <NewSettingChip isSelect={isFilterNewSetting} onClick={handleNewSettingChipClick} />
-                  <TodayRemoveChip isSelect={isFilterTodayRemove} onClick={handleTodayRemoveChipClick} />
+                  <Chip isSelect={isFilterShower} onClick={handleShowerChipClick} label="샤워실" emoji="🚿" />
+                  <Chip isSelect={isFilterNewSetting} onClick={handleNewSettingChipClick} label="New 세팅" emoji="✨" />
+                  <Chip
+                    isSelect={isFilterTodayRemove}
+                    onClick={handleTodayRemoveChipClick}
+                    label="오늘 탈거"
+                    emoji="🍂"
+                  />
                 </Box>
               </Box>
 
@@ -123,7 +128,7 @@ export function Filter() {
                     flexWrap: 'wrap',
                   }}
                 >
-                  <ExceptionSettingChip isSelect={isFilterNonSetting} onClick={handleExceptionSettingChipClick} />
+                  <Chip isSelect={isFilterNonSetting} onClick={handleNonSettingChipClick} label="세팅중" emoji="🚧" />
                 </Box>
               </Box>
             </Box>
@@ -175,63 +180,46 @@ export function Filter() {
   );
 }
 
-interface FilterChipProps {
+interface ChipProps {
   isSelect: boolean;
   onClick: () => void;
+  label: string;
+  emoji: string;
 }
 
-export function ShowerChip({ isSelect, onClick }: FilterChipProps) {
+function Chip({ isSelect, onClick, label, emoji }: ChipProps) {
   return (
-    <Chip
-      icon={<ShowerIcon color="primary" />}
-      label="샤워실"
-      variant={isSelect ? 'filled' : 'outlined'}
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: isSelect ? grey['600'] : 'transparent',
+        py: 1,
+        px: 2,
+        borderRadius: 3,
+        background: grey['100'],
+      }}
       onClick={onClick}
-    />
-  );
-}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
 
-export function ExceptionSettingChip({ isSelect, onClick }: FilterChipProps) {
-  return (
-    <Chip
-      icon={
-        <Box sx={{ width: 21, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Typography fontSize={'1.25rem'}>🚧</Typography>
-        </Box>
-      }
-      label="세팅중"
-      onClick={onClick}
-      variant={isSelect ? 'filled' : 'outlined'}
-    />
-  );
-}
+          width: 21,
+          height: 21,
 
-export function NewSettingChip({ isSelect, onClick }: FilterChipProps) {
-  return (
-    <Chip
-      icon={
-        <Box sx={{ width: 21, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Typography fontSize={'1.25rem'}>✨</Typography>
-        </Box>
-      }
-      label="New 세팅"
-      onClick={onClick}
-      variant={isSelect ? 'filled' : 'outlined'}
-    />
-  );
-}
+          fontSize: '1.5rem',
+        }}
+      >
+        {emoji}
+      </Box>
 
-export function TodayRemoveChip({ isSelect, onClick }: FilterChipProps) {
-  return (
-    <Chip
-      icon={
-        <Box sx={{ width: 21, height: 21, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Typography fontSize={'1.25rem'}>🍂</Typography>
-        </Box>
-      }
-      label="오늘 탈거"
-      onClick={onClick}
-      variant={isSelect ? 'filled' : 'outlined'}
-    />
+      <Typography fontSize={'1rem'}>{label}</Typography>
+    </Box>
   );
 }
