@@ -278,6 +278,10 @@ function CragLocation({ crag }: CragLocationProps) {
       pinchZoom: false,
       scrollWheel: false,
       keyboardShortcuts: false,
+      disableDoubleClickZoom: true,
+      disableTwoFingerTapZoom: true,
+      disableDoubleTapZoom: true,
+      disableKineticPan: true,
       zoom: 15,
     }),
     []

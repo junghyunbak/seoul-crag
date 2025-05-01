@@ -53,6 +53,11 @@ export function CragPositionField() {
       draggable: mapEnabled,
       pinchZoom: mapEnabled,
       scrollWheel: mapEnabled,
+      keyboardShortcuts: mapEnabled,
+      disableDoubleClickZoom: !mapEnabled,
+      disableTwoFingerTapZoom: !mapEnabled,
+      disableDoubleTapZoom: !mapEnabled,
+      disableKineticPan: !mapEnabled,
     });
   }, [map, mapEnabled]);
 
