@@ -94,7 +94,6 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
       disableDrag={false}
       dragCloseThreshold={SIZE.CLOSE_THRESHOLD_Y}
       dragVelocityThreshold={SIZE.SWIPE_THRESHOLD_X}
-      disableScrollLocking
     >
       <Sheet.Container>
         <Sheet.Content>
