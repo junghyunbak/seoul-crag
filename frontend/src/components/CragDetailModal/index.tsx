@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Stack, Divider, styled } from '@mui/material';
 import Share from '@mui/icons-material/Share';
 import Edit from '@mui/icons-material/Edit';
-import GradeOutlined from '@mui/icons-material/GradeOutlined';
 import Close from '@mui/icons-material/Close';
 import LanguageIcon from '@mui/icons-material/Language';
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -116,9 +115,6 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                     {crag.name}
                   </Typography>
                   <Stack direction="row" spacing={1}>
-                    <IconButton>
-                      <GradeOutlined />
-                    </IconButton>
                     <IconButton
                       onClick={() => {
                         if (navigator.share) {
