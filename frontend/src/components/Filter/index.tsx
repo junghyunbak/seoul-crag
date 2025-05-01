@@ -12,20 +12,28 @@ import { format, parse } from 'date-fns';
 
 export function Filter() {
   const {
-    isFilterSheetOpen,
-    enableExceptionSettingFilter,
-    enableShowerFilter,
-    enableNewSettingFilter,
-    enableTodayRemove,
-    setEnableExceptionSettingFilter,
-    setEnableShowerFilter,
-    setEnableNewSettingFilter,
-    setEnableTodayRemove,
-    getFilteredCragCount,
-    todayIso,
+    isOpenFilterSheet,
+
+    isFilterNewSetting,
+    isFilterNonSetting,
+    isFilterShower,
+    isFilterTodayRemove,
+
+    YYYYMMDDToday,
+
     selectDate,
+
+    getFilteredCragCount,
   } = useFilter();
-  const { updateIsFilterSheetOpen, updateSelectDate } = useModifyFilter();
+
+  const {
+    updateIsFilterSheetOpen,
+    updateSelectDate,
+    updateIsFilterNewSetting,
+    updateIsFilterNonSetting,
+    updateIsFilterShower,
+    updateIsFilterTodayRemove,
+  } = useModifyFilter();
 
   const { crags } = useFetchCrags();
 
@@ -38,24 +46,24 @@ export function Filter() {
   };
 
   const handleShowerChipClick = () => {
-    setEnableShowerFilter(enableShowerFilter ? null : true);
+    updateIsFilterShower(!isFilterShower);
   };
 
   const handleExceptionSettingChipClick = () => {
-    setEnableExceptionSettingFilter(enableExceptionSettingFilter ? null : true);
+    updateIsFilterNonSetting(!isFilterNonSetting);
   };
 
   const handleNewSettingChipClick = () => {
-    setEnableNewSettingFilter(enableNewSettingFilter ? null : true);
+    updateIsFilterNewSetting(!isFilterNewSetting);
   };
 
   const handleTodayRemoveChipClick = () => {
-    setEnableTodayRemove(enableTodayRemove ? null : true);
+    updateIsFilterTodayRemove(!isFilterTodayRemove);
   };
 
   return (
     <Sheet
-      isOpen={isFilterSheetOpen}
+      isOpen={isOpenFilterSheet}
       onClose={handleSheetClose}
       detent="content-height"
       style={{ zIndex: zIndex.filter }}
@@ -88,9 +96,9 @@ export function Filter() {
                     flexWrap: 'wrap',
                   }}
                 >
-                  <ShowerChip isSelect={!!enableShowerFilter} onClick={handleShowerChipClick} />
-                  <NewSettingChip isSelect={!!enableNewSettingFilter} onClick={handleNewSettingChipClick} />
-                  <TodayRemoveChip isSelect={!!enableTodayRemove} onClick={handleTodayRemoveChipClick} />
+                  <ShowerChip isSelect={isFilterShower} onClick={handleShowerChipClick} />
+                  <NewSettingChip isSelect={isFilterNewSetting} onClick={handleNewSettingChipClick} />
+                  <TodayRemoveChip isSelect={isFilterTodayRemove} onClick={handleTodayRemoveChipClick} />
                 </Box>
               </Box>
 
@@ -103,10 +111,7 @@ export function Filter() {
                     flexWrap: 'wrap',
                   }}
                 >
-                  <ExceptionSettingChip
-                    isSelect={!!enableExceptionSettingFilter}
-                    onClick={handleExceptionSettingChipClick}
-                  />
+                  <ExceptionSettingChip isSelect={isFilterNonSetting} onClick={handleExceptionSettingChipClick} />
                 </Box>
               </Box>
             </Box>
@@ -127,7 +132,7 @@ export function Filter() {
                   onChange={(e) => {
                     const date = e.target.value;
 
-                    if (!date || date === todayIso) {
+                    if (!date || date === YYYYMMDDToday) {
                       updateSelectDate(null);
                       return;
                     }

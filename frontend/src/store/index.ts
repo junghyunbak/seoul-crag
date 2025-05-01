@@ -1,13 +1,9 @@
-import { SheetRef } from 'react-modal-sheet';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { createFilterSlice } from '@/store/slices/filter';
+
 type StoreState = {
-  sheetRef: React.RefObject<SheetRef | null>;
-
-  isFilterSheetOpen: boolean;
-  setIsFilterSheetOpen: (isOpen: boolean) => void;
-
   isCragListModalOpen: boolean;
   setIsCragListModalOpen: (isOpen: boolean) => void;
 
@@ -21,20 +17,12 @@ type StoreState = {
 
   lastLng: number;
   setLastLng: (lng: number) => void;
-
-  selectDate: Date | null;
-  setSelectDate: (date: Date | null) => void;
-};
+} & ReturnType<typeof createFilterSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
-    (set) => ({
-      sheetRef: { current: null },
-
-      isFilterSheetOpen: false,
-      setIsFilterSheetOpen(isOpen) {
-        set(() => ({ isFilterSheetOpen: isOpen }));
-      },
+    (set, get, store) => ({
+      ...createFilterSlice(set, get, store),
 
       isCragListModalOpen: false,
       setIsCragListModalOpen(isOpen) {
@@ -57,18 +45,29 @@ export const useStore = create<StoreState>()(
       setLastLng(lng) {
         set(() => ({ lastLng: lng }));
       },
-
-      selectDate: null,
-      setSelectDate(date) {
-        set(() => ({ selectDate: date }));
-      },
     }),
     {
       name: 'zustandStore',
       partialize(state) {
-        const { isFilterSheetOpen, lastLat, lastLng } = state;
+        const {
+          isOpenFilterSheet,
+          isFilterNewSetting,
+          isFilterNonSetting,
+          isFilterShower,
+          isFilterTodayRemove,
+          lastLat,
+          lastLng,
+        } = state;
 
-        return { isFilterSheetOpen, lastLat, lastLng };
+        return {
+          isOpenFilterSheet,
+          isFilterNewSetting,
+          isFilterNonSetting,
+          isFilterShower,
+          isFilterTodayRemove,
+          lastLat,
+          lastLng,
+        };
       },
     }
   )

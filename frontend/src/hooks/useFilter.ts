@@ -3,129 +3,115 @@ import { useCallback, useMemo } from 'react';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { useQueryParam, BooleanParam } from 'use-query-params';
-
-import { QUERY_STRING } from '@/constants';
-
 import { format, parse, isBefore, getDay } from 'date-fns';
 
 import { daysOfWeek } from '@/components/WeeklyHoursSilder';
 
 export function useFilter() {
-  const [sheetRef] = useStore(useShallow((s) => [s.sheetRef]));
-  const [isFilterSheetOpen] = useStore(useShallow((s) => [s.isFilterSheetOpen]));
+  const [isOpenFilterSheet] = useStore(useShallow((s) => [s.isOpenFilterSheet]));
+
+  const [isFilterShower] = useStore(useShallow((s) => [s.isFilterShower]));
+  const [isFilterNonSetting] = useStore(useShallow((s) => [s.isFilterNonSetting]));
+  const [isFilterNewSetting] = useStore(useShallow((s) => [s.isFilterNewSetting]));
+  const [isFilterTodayRemove] = useStore(useShallow((s) => [s.isFilterTodayRemove]));
+
   const [selectDate] = useStore(useShallow((s) => [s.selectDate]));
 
-  const [enableShowerFilter, setEnableShowerFilter] = useQueryParam(QUERY_STRING.FILTER_SHOWER, BooleanParam);
-  const [enableExceptionSettingFilter, setEnableExceptionSettingFilter] = useQueryParam(
-    QUERY_STRING.FILTER_EXCEPTION_SETTING,
-    BooleanParam
-  );
-  const [enableNewSettingFilter, setEnableNewSettingFilter] = useQueryParam(
-    QUERY_STRING.FILTER_NEW_SETTING,
-    BooleanParam
-  );
-  const [enableTodayRemove, setEnableTodayRemove] = useQueryParam(QUERY_STRING.FILTER_TODAY_REMOVE, BooleanParam);
-
-  const todayIso = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
-  const expeditionDay = daysOfWeek[getDay(selectDate || new Date())];
-  const expeditionDateYYYYMMDD = useMemo(
-    () => (selectDate ? format(selectDate, 'yyyy-MM-dd') : todayIso),
-    [todayIso, selectDate]
+  const YYYYMMDDToday = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
+  const YYYYMMDDExpedition = useMemo(
+    () => (selectDate ? format(selectDate, 'yyyy-MM-dd') : YYYYMMDDToday),
+    [YYYYMMDDToday, selectDate]
   );
 
-  const showerFilter = useMemo(
+  const DayExpedition = useMemo(() => daysOfWeek[getDay(selectDate || new Date())], [selectDate]);
+
+  const filterShower = useMemo(
     () =>
-      enableShowerFilter
+      isFilterShower
         ? (crag: Crag) => {
             return crag.imageTypes?.includes('shower') || false;
           }
-        : () => {
-            return true;
-          },
-    [enableShowerFilter]
+        : () => true,
+    [isFilterShower]
   );
 
-  const exceptionSettingFilter = useMemo(
+  const filterNonSetting = useMemo(
     () =>
-      enableExceptionSettingFilter
+      isFilterNonSetting
         ? (crag: Crag) => {
             return !(crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === expeditionDateYYYYMMDD
+              ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === YYYYMMDDExpedition
             );
           }
         : () => {
             return true;
           },
-    [enableExceptionSettingFilter, expeditionDateYYYYMMDD]
+    [isFilterNonSetting, YYYYMMDDExpedition]
   );
 
-  const newSettingFilter = useMemo(
+  const filterNewSetting = useMemo(
     () =>
-      enableNewSettingFilter
+      isFilterNewSetting
         ? (crag: Crag) => {
             return (crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === expeditionDateYYYYMMDD
+              ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === YYYYMMDDExpedition
             );
           }
         : () => {
             return true;
           },
-    [enableNewSettingFilter, expeditionDateYYYYMMDD]
+    [isFilterNewSetting, YYYYMMDDExpedition]
   );
 
-  const todayRemoveFilter = useMemo(
+  const filterTodayRemove = useMemo(
     () =>
-      enableTodayRemove
+      isFilterTodayRemove
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'remove' && format(date, 'yyyy-MM-dd') === expeditionDateYYYYMMDD
+              ({ type, date }) => type === 'remove' && format(date, 'yyyy-MM-dd') === YYYYMMDDExpedition
             )
         : () => true,
-    [enableTodayRemove, expeditionDateYYYYMMDD]
+    [isFilterTodayRemove, YYYYMMDDExpedition]
   );
 
   const filterCount = useMemo(() => {
-    return [
-      enableShowerFilter,
-      enableExceptionSettingFilter,
-      enableNewSettingFilter,
-      enableTodayRemove,
-      selectDate !== null,
-    ].reduce((acc, cur) => acc + (cur ? 1 : 0), 0);
-  }, [enableShowerFilter, enableExceptionSettingFilter, enableNewSettingFilter, enableTodayRemove, selectDate]);
+    return [isFilterShower, isFilterNonSetting, isFilterNewSetting, isFilterTodayRemove, selectDate !== null].reduce(
+      (acc, cur) => acc + (cur ? 1 : 0),
+      0
+    );
+  }, [isFilterNewSetting, isFilterNonSetting, isFilterShower, isFilterTodayRemove, selectDate]);
 
   const getCragIsFiltered = useCallback(
     (crag: Crag) => {
       let _isFiltered = true;
 
-      if (enableShowerFilter) {
-        _isFiltered &&= showerFilter(crag);
+      if (isFilterShower) {
+        _isFiltered &&= filterShower(crag);
       }
 
-      if (enableExceptionSettingFilter) {
-        _isFiltered &&= exceptionSettingFilter(crag);
+      if (isFilterNonSetting) {
+        _isFiltered &&= filterNonSetting(crag);
       }
 
-      if (enableNewSettingFilter) {
-        _isFiltered &&= newSettingFilter(crag);
+      if (isFilterNewSetting) {
+        _isFiltered &&= filterNewSetting(crag);
       }
 
-      if (enableTodayRemove) {
-        _isFiltered &&= todayRemoveFilter(crag);
+      if (isFilterTodayRemove) {
+        _isFiltered &&= filterTodayRemove(crag);
       }
 
       return _isFiltered;
     },
     [
-      enableExceptionSettingFilter,
-      enableNewSettingFilter,
-      enableShowerFilter,
-      enableTodayRemove,
-      exceptionSettingFilter,
-      newSettingFilter,
-      showerFilter,
-      todayRemoveFilter,
+      filterNewSetting,
+      filterNonSetting,
+      filterShower,
+      filterTodayRemove,
+      isFilterNewSetting,
+      isFilterNonSetting,
+      isFilterShower,
+      isFilterTodayRemove,
     ]
   );
 
@@ -134,25 +120,22 @@ export function useFilter() {
       let _isOff = false;
 
       if (crag.futureSchedules) {
-        _isOff = crag.futureSchedules.some((schedule) => {
-          if (schedule.type !== 'closed') {
-            return;
-          }
-
-          const iso = format(schedule.date, 'yyyy-MM-dd');
-
-          return iso === expeditionDateYYYYMMDD;
-        });
+        _isOff = crag.futureSchedules.some(
+          (schedule) => schedule.type === 'closed' && format(schedule.date, 'yyyy-MM-dd') === YYYYMMDDExpedition
+        );
       }
 
       if (crag.openingHourOfWeek) {
-        const todayOpeningHour = crag.openingHourOfWeek.find((openingHour) => openingHour.day == expeditionDay);
+        const todayOpeningHour = crag.openingHourOfWeek.find((openingHour) => openingHour.day == DayExpedition);
 
         if (todayOpeningHour) {
           if (todayOpeningHour.is_closed) {
             _isOff = true;
           } else {
             if (todayOpeningHour.close_time && todayOpeningHour.open_time) {
+              /**
+               * 원정 날짜만 고려하고, 시간은 현재를 기준으로 하고 있기 때문에 new Date() 사용
+               */
               const openTime = parse(todayOpeningHour.open_time, 'HH:mm:ss', new Date());
               const closeTime = parse(todayOpeningHour.close_time, 'HH:mm:ss', new Date());
 
@@ -164,7 +147,7 @@ export function useFilter() {
 
       return _isOff;
     },
-    [expeditionDay, expeditionDateYYYYMMDD]
+    [YYYYMMDDExpedition, DayExpedition]
   );
 
   const getFilteredCragCount = useCallback(
@@ -173,38 +156,26 @@ export function useFilter() {
         return 0;
       }
 
-      return crags
-        .filter(showerFilter)
-        .filter(exceptionSettingFilter)
-        .filter(newSettingFilter)
-        .filter(todayRemoveFilter).length;
+      return crags.filter(filterShower).filter(filterNonSetting).filter(filterNewSetting).filter(filterTodayRemove)
+        .length;
     },
-    [exceptionSettingFilter, newSettingFilter, showerFilter, todayRemoveFilter]
+    [filterShower, filterNonSetting, filterNewSetting, filterTodayRemove]
   );
 
   return {
-    sheetRef,
-    isFilterSheetOpen,
+    isOpenFilterSheet,
 
     filterCount,
 
-    enableShowerFilter,
-    enableExceptionSettingFilter,
-    enableNewSettingFilter,
-    enableTodayRemove,
+    isFilterNewSetting,
+    isFilterNonSetting,
+    isFilterShower,
+    isFilterTodayRemove,
 
-    todayIso,
+    YYYYMMDDExpedition,
+    YYYYMMDDToday,
 
     selectDate,
-
-    setEnableShowerFilter,
-    setEnableExceptionSettingFilter,
-    setEnableNewSettingFilter,
-    setEnableTodayRemove,
-
-    showerFilter,
-    exceptionSettingFilter,
-    newSettingFilter,
 
     getCragIsFiltered,
     getCragIsOff,
