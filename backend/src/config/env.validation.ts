@@ -1,7 +1,11 @@
 import * as Joi from 'joi';
 
+const NODE_ENVS = ['dev', 'prod', 'test'] as const;
+
+type NODE_ENV = (typeof NODE_ENVS)[number];
+
 export type AppConfig = {
-  NODE_ENV: 'development' | 'production';
+  NODE_ENV: NODE_ENV;
 
   KAKAO_CLIENT_ID: string;
   KAKAO_REDIRECT_URI: string;
@@ -10,8 +14,6 @@ export type AppConfig = {
 
   JWT_SECRET: string;
 };
-
-const NODE_ENVS: AppConfig['NODE_ENV'][] = ['development', 'production'];
 
 export const envValidationSchema = Joi.object<AppConfig, true>({
   NODE_ENV: Joi.string()

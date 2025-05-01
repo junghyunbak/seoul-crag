@@ -9,7 +9,7 @@ const dataSourceOptions: DataSourceOptions = {
   entities: ['src/**/*/*.entity.ts'],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,
-  logging: process.env.NODE_ENV === 'development',
+  logging: process.env.NODE_ENV !== 'prod',
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

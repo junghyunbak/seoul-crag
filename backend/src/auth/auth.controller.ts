@@ -68,7 +68,7 @@ export class AuthController {
       );
 
       const isProd =
-        this.configService.get('NODE_ENV', { infer: true }) === 'production';
+        this.configService.get('NODE_ENV', { infer: true }) === 'prod';
 
       res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
         httpOnly: true,
@@ -109,7 +109,7 @@ export class AuthController {
     }
 
     const isProd =
-      this.configService.get('NODE_ENV', { infer: true }) === 'production';
+      this.configService.get('NODE_ENV', { infer: true }) === 'prod';
 
     res.clearCookie(ACCESS_TOKEN_COOKIE_NAME, {
       httpOnly: true,
@@ -170,7 +170,7 @@ export class AuthController {
     );
 
     const isProd =
-      this.configService.get('NODE_ENV', { infer: true }) === 'production';
+      this.configService.get('NODE_ENV', { infer: true }) === 'prod';
 
     res.cookie(ACCESS_TOKEN_COOKIE_NAME, newAccessToken, {
       httpOnly: true,

@@ -12,8 +12,8 @@ export const TypeOrmConfig: TypeOrmModuleAsyncOptions = {
       type: 'postgres',
       url: config.get('DATABASE_URL'),
       autoLoadEntities: true,
-      synchronize: false, // nodeEnv !== 'production',
-      logging: nodeEnv === 'development',
+      synchronize: false,
+      logging: nodeEnv !== 'prod',
     };
   },
 };

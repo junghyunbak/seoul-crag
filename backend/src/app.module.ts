@@ -25,6 +25,7 @@ import { ImageModule } from 'src/image/image-module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
       validationSchema: envValidationSchema,
     }),
     TypeOrmModule.forRootAsync(TypeOrmConfig),
