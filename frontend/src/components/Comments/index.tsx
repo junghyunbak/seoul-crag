@@ -48,8 +48,6 @@ export default function CommentSection({ cragId }: CommentSectionProps) {
 
       {isLoading ? <CircularProgress /> : <CommentList comments={comments ?? []} refetch={refetch} />}
 
-      <Divider sx={{ my: 2 }} />
-
       <CommentForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
     </Box>
   );
