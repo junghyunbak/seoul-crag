@@ -43,8 +43,7 @@ function getMarkerSizeFromArea(area: number | null | undefined, minArea: number,
 }
 
 const BASE_ANGLE = -135;
-
-const RADIUS = 80;
+const RADIUS = 70;
 
 type Feature = {
   icon: React.ReactNode;
@@ -63,23 +62,22 @@ interface CragMarkerProps {
 export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMarkerProps) {
   const { map } = useContext(mapContext);
 
-  const { cragArea } = useCragArea(crags);
+  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
   const markerRef = useRef<HTMLDivElement>(null);
 
+  const { cragArea } = useCragArea(crags);
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
-
   const { getCragIsOff, getCragIsFiltered } = useFilter();
 
-  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
-
   const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
-
   const isSelect = crag.id === selectCragId;
+  const isOff = getCragIsOff(crag);
+  const isFiltered = getCragIsFiltered(crag);
 
   /**
    * 마커 초기화
@@ -181,9 +179,6 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
 
     map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
   };
-
-  const isOff = getCragIsOff(crag);
-  const isFiltered = getCragIsFiltered(crag);
 
   return (
     <Box
