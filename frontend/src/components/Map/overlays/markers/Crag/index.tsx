@@ -32,6 +32,10 @@ function getMarkerSizeFromArea(area: number | null | undefined, minArea: number,
     return MIN_SIZE; // null인 경우 최소 크기
   }
 
+  if (minArea === maxArea) {
+    return (MIN_SIZE + MAX_SIZE) / 2;
+  }
+
   // 면적 값을 10~1000 사이로 클램핑
   const clamped = Math.max(MIN_AREA, Math.min(MAX_AREA, area));
 
@@ -74,7 +78,12 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const { getCragIsOff, getCragIsFiltered } = useFilter();
 
+  console.log(crag.area, cragArea);
+
   const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
+
+  console.log('엥', markerWidth);
+
   const isSelect = crag.id === selectCragId;
   const isOff = getCragIsOff(crag);
   const isFiltered = getCragIsFiltered(crag);
