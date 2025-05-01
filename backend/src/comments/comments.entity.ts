@@ -18,8 +18,8 @@ export class Comment {
   @Column({ type: 'text' })
   content: string;
 
-  @Column({ name: 'is_admin_only', default: false })
-  isAdminOnly: boolean;
+  @Column({ default: false })
+  is_admin_only: boolean;
 
   @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
   user: User;
@@ -28,11 +28,11 @@ export class Comment {
   gym: Gym;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deleted_at?: Date;
 }

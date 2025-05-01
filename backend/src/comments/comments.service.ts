@@ -39,7 +39,7 @@ export class CommentsService {
 
     const comment = this.commentRepo.create({
       content: dto.content,
-      isAdminOnly: dto.isAdminOnly ?? false,
+      is_admin_only: dto.isAdminOnly ?? false,
       user,
       gym,
     });
@@ -65,13 +65,13 @@ export class CommentsService {
     const comments = await this.commentRepo.find({
       where,
       relations: ['user'],
-      order: { createdAt: 'DESC' },
+      order: { created_at: 'DESC' },
     });
 
     return comments.map((comment) => ({
       ...comment,
       content:
-        !isAdmin && comment.isAdminOnly
+        !isAdmin && comment.is_admin_only
           ? '관리자만 볼 수 있는 댓글입니다.'
           : comment.content,
     }));
