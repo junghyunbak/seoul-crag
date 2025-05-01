@@ -20,7 +20,7 @@ const CragMarkerType = (<Marker.Crag crag={mockCrag} />).type;
 const DefaultMarkerType = (<Marker.Default />).type;
 const BoundaryPolygonType = (<Polygon.Boundary />).type;
 const ClusterMarkerType = (<Marker.Cluster markers={[]} />).type;
-const GpsMarkerType = (<Marker.Gps lat={-1} lng={-1} />).type;
+const GpsMarkerType = (<Marker.Gps gpsLatLng={{ lat: -1, lng: -1 }} />).type;
 
 import { mapContext } from '@/components/Map/index.context';
 
