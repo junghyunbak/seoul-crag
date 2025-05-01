@@ -4,15 +4,18 @@ import {
   Typography,
   CircularProgress,
   Divider,
-  Paper,
+  Avatar,
   TextField,
   Button,
   FormControlLabel,
+  IconButton,
   Checkbox,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useQuery, useMutation, DefaultError } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { commentsScheme } from '@/schemas/comment';
+import { isBefore } from 'date-fns';
 
 interface CommentSectionProps {
   cragId: string;
@@ -41,7 +44,7 @@ export default function CommentSection({ cragId }: CommentSectionProps) {
         댓글
       </Typography>
 
-      {isLoading ? <CircularProgress /> : <CommentList comments={comments ?? []} />}
+      {isLoading ? <CircularProgress /> : <CommentList comments={comments ?? []} refetch={refetch} />}
 
       <Divider sx={{ my: 2 }} />
 
@@ -52,19 +55,59 @@ export default function CommentSection({ cragId }: CommentSectionProps) {
 
 interface CommentListProps {
   comments: CragComment[];
+  refetch: () => void;
 }
 
-function CommentList({ comments }: CommentListProps) {
+function CommentList({ comments, refetch }: CommentListProps) {
+  const { deleteCommentMutation } = useMutateDeleteComment();
+
   return (
     <Box>
-      {comments.map((comment) => (
-        <Paper key={comment.id} sx={{ p: 2, mb: 2 }}>
-          <Typography variant="subtitle2">{comment.user.username}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {comment.content}
-          </Typography>
-        </Paper>
-      ))}
+      {comments
+        .sort((a, b) => (isBefore(a.created_at, b.created_at) ? -1 : 1))
+        .map((comment) => (
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            onDelete={async (commentId) => {
+              const confirmed = window.confirm('정말 삭제하시겠습니까?');
+
+              if (confirmed) {
+                await deleteCommentMutation.mutateAsync({ commentId });
+
+                refetch();
+              }
+            }}
+          />
+        ))}
+    </Box>
+  );
+}
+
+function CommentItem({ comment, onDelete }: { comment: CragComment; onDelete: (commentId: string) => void }) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 2,
+        mb: 3,
+      }}
+    >
+      <Avatar src={comment.user.profile_image || ''}>{comment.user.username.charAt(0)}</Avatar>
+      <Box sx={{ flex: 1 }}>
+        <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+          {comment.user.username}
+        </Typography>
+        <Typography component="pre" sx={{ whiteSpace: 'pre-wrap' }} variant="body2" color="text.secondary">
+          {comment.content}
+        </Typography>
+      </Box>
+      {onDelete && (
+        <IconButton onClick={() => onDelete(comment.id)}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      )}
     </Box>
   );
 }
@@ -159,4 +202,14 @@ const useMutateCreateComment = () => {
   return {
     createCommentMutation,
   };
+};
+
+const useMutateDeleteComment = () => {
+  const deleteCommentMutation = useMutation<void, DefaultError, { commentId: string }>({
+    mutationFn: async ({ commentId }) => {
+      await api.delete(`/comments/${commentId}`);
+    },
+  });
+
+  return { deleteCommentMutation };
 };
