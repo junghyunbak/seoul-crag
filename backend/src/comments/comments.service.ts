@@ -76,6 +76,7 @@ export class CommentsService {
           : comment.content,
     }));
   }
+
   async delete(commentId: string, jwtParsedUser: JwtParsedUser): Promise<void> {
     const comment = await this.commentRepo.findOne({
       where: { id: commentId },
