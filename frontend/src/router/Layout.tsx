@@ -55,9 +55,9 @@ function Fallback({ error }: FallbackProps) {
   const errorMessage = (() => {
     switch (errorCode) {
       case 401:
-        return '로그인이 필요합니다.';
+        return '로그인이 필요한 기능입니다.';
       case 403:
-        return '접근 권한이 없습니다.';
+        return '접근 권한이 없습니다.\n해당 암장의 관리자시면, jeong5728@gmail.com로 문의주세요.';
     }
 
     return '알 수 없는 에러가 발생했습니다.';
@@ -75,16 +75,15 @@ function Fallback({ error }: FallbackProps) {
         gap: 2,
       }}
     >
-      <Typography variant="h2">{errorMessage}</Typography>
-      {errorCode === 403 && (
-        <Typography variant="body1" textAlign="center">
-          해당 암장의 관리자이신가요?
-          <br />
-          맞으시다면 이메일 <strong>jeong5728@gmail.com</strong> 으로 연락주세요.
-        </Typography>
-      )}
-      <Button variant="contained" color="warning" onClick={() => (window.location.href = '/?menu=1')}>
-        로그인 화면으로 이동
+      <Typography variant="h1" fontWeight="bold">
+        {errorCode}
+      </Typography>
+      <Typography variant="body1" component="pre" sx={{ whiteSpace: 'pre-wrap' }} textAlign="center">
+        {errorMessage}
+      </Typography>
+
+      <Button variant="contained" onClick={() => (window.location.href = '/?menu=1')}>
+        로그인
       </Button>
     </Box>
   );
