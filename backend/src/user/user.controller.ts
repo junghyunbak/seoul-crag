@@ -17,7 +17,8 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { type Request } from 'express';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
-// [ ]: JwtAuthGuard와 카카오 로그인 시 전달되는 req.user의 타입이 달라 생기는 방어코드 제거
+import { isJwtParsedUser } from 'src/utils/typeguard';
+
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -34,8 +35,8 @@ export class UserController {
   getMe(@Req() req: Request) {
     const { user } = req;
 
-    if (!user || !('id' in user) || typeof user.id !== 'string') {
-      throw new UnauthorizedException('');
+    if (!user || !isJwtParsedUser(user)) {
+      throw new UnauthorizedException('로그인 되어있지 않습니다.');
     }
 
     return this.userService.getUserWithRoles(user.id);
@@ -46,8 +47,8 @@ export class UserController {
   updateUser(@Req() req: Request, @Body() userInfo: UpdateUserDto) {
     const { user } = req;
 
-    if (!user || !('id' in user) || typeof user.id !== 'string') {
-      throw new UnauthorizedException('');
+    if (!user || !isJwtParsedUser(user)) {
+      throw new UnauthorizedException('로그인 되어있지 않습니다.');
     }
 
     return this.userService.updateUser(user.id, userInfo);
