@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { FormTextField } from '@/components/FormTextField';
 import { useFetchMe, useMutateUploadImage } from '@/hooks';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, Button } from '@mui/material';
 import { useMutateUserEmail, useMutateUserImage, useMutateUserNickname } from '@/hooks/useMutateUser';
 
 /**
@@ -28,6 +28,12 @@ export function User() {
       refetch();
     },
   });
+
+  const handleRemoveProfileImage = async () => {
+    await updateUserImageMutation.mutateAsync({
+      url: null,
+    });
+  };
 
   const handleClick = () => {
     inputRef.current?.click();
@@ -72,17 +78,26 @@ export function User() {
     <Box
       sx={{ p: 2, width: '100%', height: '100%', overflow: 'scroll', display: 'flex', flexDirection: 'column', gap: 2 }}
     >
-      <Avatar
+      <Box
         sx={{
-          width: 56,
-          height: 56,
-          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
         }}
-        src={user.profile_image || ''}
-        onClick={handleClick}
       >
-        {user.username}
-      </Avatar>
+        <Avatar
+          sx={{
+            width: 56,
+            height: 56,
+            cursor: 'pointer',
+          }}
+          src={user.profile_image || ''}
+          onClick={handleClick}
+        >
+          {user.username}
+        </Avatar>
+        <Button onClick={handleRemoveProfileImage}>이미지 삭제</Button>
+      </Box>
       <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
 
       <FormTextField value={user.username} label="닉네임" onSave={handleNicknameChange} />

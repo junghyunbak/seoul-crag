@@ -10,7 +10,6 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 
 import { Roles } from 'src/auth/roles/roles.decorator';
-import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 
 import * as sharp from 'sharp';
@@ -18,7 +17,7 @@ import * as sharp from 'sharp';
 @Controller('image')
 export class ImageController {
   @Roles('gym_admin', 'partner_admin')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {

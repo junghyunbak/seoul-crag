@@ -2,7 +2,7 @@ import { api } from '@/api/axios';
 import { DefaultError, MutationOptions, useMutation } from '@tanstack/react-query';
 
 type UpdateUserImageMutateParams = {
-  url: string;
+  url: string | null;
 };
 
 export function useMutateUserImage({ onSettled }: MutationOptions<void, DefaultError, UpdateUserImageMutateParams>) {
