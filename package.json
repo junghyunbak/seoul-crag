@@ -4,9 +4,12 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "concurrently \"npm run frontend\" \"npm run backend\" \"npm run proxy\"",
+    "start:dev": "concurrently \"npm run frontend\" \"npm run backend\" \"npm run proxy\"",
     "frontend": "npm run dev --prefix frontend",
     "backend": "npm run start:dev --prefix backend",
+    "start:test": "concurrently \"npm run frontend:test\" \"npm run backend:test\" \"npm run proxy\"",
+    "frontend:test": "npm run dev --prefix frontend",
+    "backend:test": "npm run start:test --prefix backend",
     "proxy": "node index.js"
   },
   "author": "",
