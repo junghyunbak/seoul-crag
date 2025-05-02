@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import { Typography, styled } from '@mui/material';
 import { useFilter } from '@/hooks';
 
+const dayToKor = ['일', '월', '화', '수', '목', '금', '토'];
+
 function formatTimeParts(date: Date) {
   return {
     hours: date.getHours().toString().padStart(2, '0'),
     minutes: date.getMinutes().toString().padStart(2, '0'),
     month: (date.getMonth() + 1).toString().padStart(2, '0'),
-    day: date.getDate().toString().padStart(2, '0'),
+    date: date.getDate().toString().padStart(2, '0'),
+    day: dayToKor[date.getDay()],
   };
 }
 
@@ -38,11 +41,11 @@ export default function CurrentTime() {
     return () => clearInterval(interval);
   }, [selectDate]);
 
-  const { month, day, hours, minutes } = formatTimeParts(time);
+  const { month, date, day, hours, minutes } = formatTimeParts(time);
 
   return (
     <Typography variant="h4" sx={{ color: 'black', textShadow: '-1px 0 white,0 1px white,1px 0 white,0 -1px white' }}>
-      {month}월 {day}일 {hours}
+      {`${month}월 ${date}일 (${day}) ${hours}`}
       <BlinkingColon>:</BlinkingColon>
       {minutes}
     </Typography>
