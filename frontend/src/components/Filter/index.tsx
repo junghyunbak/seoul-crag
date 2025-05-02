@@ -19,8 +19,6 @@ export function Filter() {
     isFilterShower,
     isFilterTodayRemove,
 
-    YYYYMMDDToday,
-
     selectDate,
 
     getFilteredCragCount,
@@ -98,63 +96,26 @@ export function Filter() {
 
             <Divider />
 
-            <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="subtitle1">이용 가능</Typography>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <Chip isSelect={isFilterShower} onClick={handleShowerChipClick} label="샤워실" emoji="🚿" />
-                  <Chip isSelect={isFilterNewSetting} onClick={handleNewSettingChipClick} label="New 세팅" emoji="✨" />
-                  <Chip
-                    isSelect={isFilterTodayRemove}
-                    onClick={handleTodayRemoveChipClick}
-                    label="오늘 탈거"
-                    emoji="🍂"
-                  />
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="subtitle1">제한 사항</Typography>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 1,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <Chip isSelect={isFilterNonSetting} onClick={handleNonSettingChipClick} label="세팅중" emoji="🚧" />
-                </Box>
-              </Box>
-            </Box>
-
-            <Divider />
-
             <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Typography variant="subtitle1">원정 날짜 선택</Typography>
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <TextField
-                  type="date"
-                  value={format(selectDate || new Date(), 'yyyy-MM-dd')}
+                  type="datetime-local"
+                  value={format(selectDate || new Date(), "yyyy-MM-dd'T'HH:mm")}
                   slotProps={{
                     htmlInput: {
-                      min: format(new Date(), 'yyyy-MM-dd'),
+                      min: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
                     },
                   }}
                   onChange={(e) => {
-                    const date = e.target.value;
+                    const value = e.target.value;
 
-                    if (!date || date === YYYYMMDDToday) {
+                    if (!value || value === format(new Date(), "yyyy-MM-dd'T'HH:mm")) {
                       updateSelectDate(null);
                       return;
                     }
 
-                    updateSelectDate(parse(e.target.value, 'yyyy-MM-dd', new Date()));
+                    updateSelectDate(parse(value, "yyyy-MM-dd'T'HH:mm", new Date()));
                   }}
                 />
                 {selectDate && (
@@ -162,6 +123,46 @@ export function Filter() {
                     <DeleteIcon />
                   </IconButton>
                 )}
+              </Box>
+              <Typography variant="caption" color="textSecondary">
+                가려는 시간에 암장이 열려 있는지 미리 확인해보세요.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Divider />
+
+          <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="subtitle1">이용 가능</Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 1,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <Chip isSelect={isFilterShower} onClick={handleShowerChipClick} label="샤워실" emoji="🚿" />
+                <Chip isSelect={isFilterNewSetting} onClick={handleNewSettingChipClick} label="New 세팅" emoji="✨" />
+                <Chip
+                  isSelect={isFilterTodayRemove}
+                  onClick={handleTodayRemoveChipClick}
+                  label="오늘 탈거"
+                  emoji="🍂"
+                />
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography variant="subtitle1">제한 사항</Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 1,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <Chip isSelect={isFilterNonSetting} onClick={handleNonSettingChipClick} label="세팅중" emoji="🚧" />
               </Box>
             </Box>
           </Box>
