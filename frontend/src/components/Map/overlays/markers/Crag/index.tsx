@@ -4,8 +4,6 @@ import { Box, Typography, IconButton } from '@mui/material';
 import Shower from '@mui/icons-material/Shower';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import EventBusy from '@mui/icons-material/EventBusy';
-import HideImage from '@mui/icons-material/HideImage';
-import Image from '@mui/icons-material/Image';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { grey } from '@mui/material/colors';
 
@@ -73,16 +71,11 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const { cragArea } = useCragArea(crags);
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
-  const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const { getCragIsOff, getCragIsFiltered } = useFilter();
 
-  console.log(crag.area, cragArea);
-
   const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
-
-  console.log('엥', markerWidth);
 
   const isSelect = crag.id === selectCragId;
   const isOff = getCragIsOff(crag);
@@ -130,22 +123,6 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const features = useMemo<Feature[]>(() => {
     const _features: Feature[] = [];
 
-    if (crag.imageTypes?.includes('interior')) {
-      _features.push({
-        icon: <Image />,
-        callback: () => {
-          setInteriorStory(crag.id);
-        },
-        disabled: false,
-      });
-    } else {
-      _features.push({
-        icon: <HideImage />,
-        callback: () => {},
-        disabled: true,
-      });
-    }
-
     if (crag.futureSchedules && crag.futureSchedules.length > 0) {
       _features.push({
         icon: <CalendarMonth />,
@@ -181,7 +158,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
     }
 
     return _features;
-  }, [crag, setInteriorStory, setScheduleStory, setSelectCragDetailId, setShowerStory]);
+  }, [crag, setScheduleStory, setSelectCragDetailId, setShowerStory]);
 
   const handleMarkerClick = () => {
     setSelectCragId(crag.id);
