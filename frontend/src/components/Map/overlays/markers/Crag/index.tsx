@@ -4,7 +4,7 @@ import { Box, Typography, IconButton } from '@mui/material';
 import Shower from '@mui/icons-material/Shower';
 import CalendarMonth from '@mui/icons-material/CalendarMonth';
 import EventBusy from '@mui/icons-material/EventBusy';
-import MoreHoriz from '@mui/icons-material/MoreHoriz';
+import InfoIcon from '@mui/icons-material/Info';
 import { grey } from '@mui/material/colors';
 
 import { useCragArea, useFilter } from '@/hooks';
@@ -140,7 +140,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
     }
 
     _features.push({
-      icon: <MoreHoriz />,
+      icon: <InfoIcon color="primary" />,
       callback: () => {
         setSelectCragDetailId(crag.id);
       },
