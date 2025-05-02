@@ -33,7 +33,7 @@ export default function CurrentTime() {
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(selectDate || new Date());
-    }, 1000 * 30);
+    }, 1000 * 10);
 
     return () => clearInterval(interval);
   }, [selectDate]);
