@@ -9,6 +9,7 @@ import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 import { useQueryParam, StringParam } from 'use-query-params';
 
 import { useStore } from '@/store';
+import { useShallow } from 'zustand/shallow';
 
 import { QUERY_STRING } from '@/constants';
 
@@ -18,7 +19,9 @@ import { Menu } from '@/components/Menu';
 import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 import { Filter } from '@/components/Filter';
 import { CragListModal } from '@/components/CragList';
-import { useShallow } from 'zustand/shallow';
+import CurrentTime from '@/components/CurrentTime';
+
+import { zIndex } from '@/styles';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -152,16 +155,32 @@ export default function Main() {
       <Menu />
 
       <CragListModal crags={crags || []} open={isCragListModalOpen} onClose={handleCragListClose} />
+
       <Box
         sx={{
-          position: 'fixed',
+          position: 'absolute',
           bottom: '10%',
+          zIndex: zIndex.controller,
         }}
       >
         <Controller />
       </Box>
+
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: zIndex.timer,
+        }}
+      >
+        <CurrentTime />
+      </Box>
+
       <MapLoading />
+
       <Filter />
+
       {markers && <AngularEdgeMarkers crags={crags} />}
     </Box>
   );
@@ -201,5 +220,7 @@ function MapLoading() {
     };
   }, [map]);
 
-  return <Box sx={{ position: 'fixed', top: 0, right: 0 }}>{isLoading && <CircularProgress />}</Box>;
+  return (
+    <Box sx={{ position: 'fixed', top: 0, right: 0 }}>{isLoading && <CircularProgress sx={{ color: 'white' }} />}</Box>
+  );
 }
