@@ -44,7 +44,10 @@ export default function CurrentTime() {
   const { month, date, day, hours, minutes } = formatTimeParts(time);
 
   return (
-    <Typography variant="h4" sx={{ color: 'black', textShadow: '-1px 0 white,0 1px white,1px 0 white,0 -1px white' }}>
+    <Typography
+      variant="h4"
+      sx={{ color: 'black', textShadow: '-1px 0 white,0 1px white,1px 0 white,0 -1px white', fontFamily: 'DS-Digital' }}
+    >
       {`${month}월 ${date}일 (${day}) ${hours}`}
       <BlinkingColon>:</BlinkingColon>
       {minutes}
