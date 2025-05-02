@@ -14,9 +14,10 @@ import { QUERY_STRING, SIZE } from '@/constants';
 import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
 
 import { Map } from '@/components/Map';
-import { engDayToKor } from '@/components/WeeklyHoursSilder';
 import { ScheduleCalendar } from '@/components/ScheduleCalendar';
 import { ImageWithSource } from '@/components/ImageWithSource';
+import { CragDetailOpeningHours } from '@/components/CragDetailModal/CragDetailOpeningHours';
+import CommentSection from '@/components/Comments';
 
 import { urlService } from '@/utils';
 
@@ -25,24 +26,12 @@ import { Sheet } from 'react-modal-sheet';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 
-import CommentSection from '@/components/Comments';
-
 const CustomSheet = styled(Sheet)`
   .react-modal-sheet-container {
     height: 100% !important;
     border-radius: 0 !important;
   }
 `;
-
-const dayOfPriority: Record<OpeningHourDayType, number> = {
-  sunday: 1,
-  monday: 2,
-  tuesday: 3,
-  wednesday: 4,
-  thursday: 5,
-  friday: 6,
-  saturday: 7,
-};
 
 export default function CragDetailModal() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
@@ -226,34 +215,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
 
                 <Divider />
 
-                <Box>
-                  <Typography variant="h6" fontWeight={600} gutterBottom>
-                    이용 시간
-                  </Typography>
-                  {crag.openingHourOfWeek &&
-                    crag.openingHourOfWeek
-                      .sort((a, b) => (dayOfPriority[a.day] < dayOfPriority[b.day] ? -1 : 1))
-                      .map(({ id, day, open_time, close_time, is_closed }) => {
-                        if (!(open_time && close_time)) {
-                          return null;
-                        }
-
-                        const [oh, om] = open_time.split(':');
-                        const [ch, cm] = close_time.split(':');
-
-                        return (
-                          <Box key={id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="body2" color="text.secondary">
-                              {engDayToKor(day)}
-                            </Typography>
-
-                            <Typography variant="body2" color="text.secondary">
-                              {is_closed ? '정기 휴무' : `${oh}:${om} - ${ch}:${cm}`}
-                            </Typography>
-                          </Box>
-                        );
-                      })}
-                </Box>
+                <CragDetailOpeningHours crag={crag} />
 
                 <Divider />
 
