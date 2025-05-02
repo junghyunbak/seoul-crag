@@ -21,10 +21,7 @@ export class GymScheduleService {
     const gym = await this.gymRepo.findOneByOrFail({ id: dto.gymId });
     const schedule = this.scheduleRepo.create({
       gym,
-      date: dto.date,
-      type: dto.type,
-      reason: dto.reason,
-      is_regular: dto.is_regular ?? false,
+      ...dto,
     });
     return this.scheduleRepo.save(schedule);
   }
@@ -32,7 +29,7 @@ export class GymScheduleService {
   async findByGymId(gymId: string): Promise<GymSchedule[]> {
     return this.scheduleRepo.find({
       where: { gym: { id: gymId } },
-      order: { date: 'ASC' },
+      order: { open_date: 'ASC' },
     });
   }
 
