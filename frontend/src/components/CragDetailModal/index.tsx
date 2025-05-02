@@ -97,7 +97,7 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
     }
 
     return () => observer.disconnect();
-  }, []);
+  }, [isOpen]);
 
   const [sliderRef] = useKeenSlider({
     loop: true,
