@@ -110,7 +110,14 @@ function CragThumbnailImages() {
     <Box
       component="img"
       src={images[0].url}
-      sx={{ width: '120px', aspectRatio: '2/1', objectFit: 'cover', border: '1px solid white', boxShadow: 2 }}
+      sx={{
+        width: '120px',
+        aspectRatio: '2/1',
+        objectFit: 'cover',
+        border: '1px solid white',
+        boxShadow: 2,
+        cursor: 'pointer',
+      }}
       onClick={() => {
         setInteriorStory(selectCragId);
       }}
