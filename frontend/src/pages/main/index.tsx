@@ -46,7 +46,7 @@ export default function Main() {
       return {
         gl: true,
         customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
-        zoom: 12,
+        zoom: useStore.getState().zoomLevel,
         minZoom: 10,
         center: new naver.maps.LatLng(lastLat !== -1 ? lastLat : DEFAULT_LAT, lastLng !== -1 ? lastLng : DEFAULT_LNG),
         maxBounds: new naver.maps.LatLngBounds(
@@ -181,9 +181,31 @@ export default function Main() {
 
       <Filter />
 
+      <ZoomChange />
+
       {markers && <AngularEdgeMarkers crags={crags} />}
     </Box>
   );
+}
+
+function ZoomChange() {
+  const { map } = useMap();
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const zoomChangedListener = map.addListener('zoom_changed', (zoom: number) => {
+      useStore.getState().setZoomLevel(zoom);
+    });
+
+    return function cleanup() {
+      map.removeListener(zoomChangedListener);
+    };
+  }, [map]);
+
+  return <div />;
 }
 
 function MapLoading() {

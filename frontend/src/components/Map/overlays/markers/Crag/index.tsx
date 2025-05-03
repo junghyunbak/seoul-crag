@@ -17,6 +17,8 @@ import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 
 import { zIndex } from '@/styles';
+import { useStore } from '@/store';
+import { useShallow } from 'zustand/shallow';
 
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
   const MIN_AREA = minArea;
@@ -65,6 +67,8 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
   const markerRef = useRef<HTMLDivElement>(null);
+
+  const [zoomLevel] = useStore(useShallow((s) => [s.zoomLevel]));
 
   const { cragArea } = useCragArea(crags);
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
@@ -209,25 +213,27 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       {/**
        * 제목
        */}
-      <Box
-        sx={{
-          /**
-           * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
-           */
-          position: 'absolute',
-          transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
-        }}
-      >
-        <Typography
-          fontWeight={600}
+      {zoomLevel > 11 && (
+        <Box
           sx={{
-            userSelect: 'none',
-            textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+            /**
+             * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
+             */
+            position: 'absolute',
+            transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
           }}
         >
-          {crag.name}
-        </Typography>
-      </Box>
+          <Typography
+            fontWeight={600}
+            sx={{
+              userSelect: 'none',
+              textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+            }}
+          >
+            {crag.name}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

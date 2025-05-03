@@ -20,6 +20,9 @@ type StoreState = {
 
   gpsLatLng: { lat: number; lng: number };
   setGpsLatLng: (lat: number, lng: number) => void;
+
+  zoomLevel: number;
+  setZoomLevel: (zoomLevel: number) => void;
 } & ReturnType<typeof createFilterSlice>;
 
 export const useStore = create<StoreState>()(
@@ -56,6 +59,11 @@ export const useStore = create<StoreState>()(
       setGpsLatLng(lat, lng) {
         set(() => ({ gpsLatLng: { lat, lng } }));
       },
+
+      zoomLevel: 12,
+      setZoomLevel(zoomLevel) {
+        set(() => ({ zoomLevel }));
+      },
     }),
     {
       name: 'zustandStore',
@@ -68,6 +76,7 @@ export const useStore = create<StoreState>()(
           isFilterTodayRemove,
           lastLat,
           lastLng,
+          zoomLevel,
         } = state;
 
         return {
@@ -78,6 +87,7 @@ export const useStore = create<StoreState>()(
           isFilterTodayRemove,
           lastLat,
           lastLng,
+          zoomLevel,
         };
       },
     }
