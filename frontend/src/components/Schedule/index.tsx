@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 
 import { useFilter } from '@/hooks';
 
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore, min } from 'date-fns';
 
 import holidayData from './holidays.ko.json';
 
@@ -89,7 +89,6 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                 height: { md: 124, xs: 100 },
                 position: 'relative',
                 pt: 0.5,
-                pr: 0.5,
                 display: 'flex',
                 flexDirection: 'column',
               }}
@@ -125,32 +124,78 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                     '&::-webkit-scrollbar': { display: 'none' },
                   }}
                 >
-                  {filteredSchedules.map((schedule, i, arr) => (
-                    <Box
-                      key={schedule.id}
-                      sx={{
-                        flexShrink: 0,
-                        bgcolor: SCHEDULE_TYPE_TO_COLORS[schedule.type],
-                        px: { md: 1, xs: 0.5 },
-                        py: 0.2,
-                        mb: arr.length - 1 === i ? 0.5 : 0,
-                        borderRadius: 0.5,
-                        cursor: readOnly ? 'default' : 'pointer',
-                      }}
-                      onClick={() => onScheduleElementClick(schedule)}
-                    >
-                      <Typography
+                  {filteredSchedules.map((schedule, i, arr) => {
+                    const isFirst = time.dateTimeStrToDateStr(schedule.open_date) === scheduleDateStr;
+                    const isLast = time.dateTimeStrToDateStr(schedule.close_date) === scheduleDateStr;
+
+                    let left = 0;
+                    let right = 0;
+
+                    switch (schedule.type) {
+                      case 'closed': {
+                        break;
+                      }
+                      case 'reduced':
+                      case 'setup': {
+                        if (isFirst && isLast) {
+                          const endMinutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.close_date));
+                          const startMinutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.open_date));
+
+                          left = (startMinutes / 1440) * 100;
+                          right = ((1440 - endMinutes) / 1440) * 100;
+                        } else if (isFirst) {
+                          const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.open_date));
+
+                          left = ((1440 - minutes) / 1440) * 100;
+                          right = 0;
+                        } else if (isLast) {
+                          const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.close_date));
+
+                          left = 0;
+                          right = ((1440 - minutes) / 1440) * 100;
+                        }
+
+                        break;
+                      }
+                    }
+
+                    return (
+                      <Box
+                        key={schedule.id}
                         sx={{
-                          whiteSpace: 'normal',
-                          wordBreak: 'break-all',
-                          color: 'white',
-                          fontSize: { md: 12, xs: 8 },
+                          width: '100%',
+                          display: 'flex',
                         }}
                       >
-                        {SCHEDULE_TYPE_TO_LABELS[schedule.type]}
-                      </Typography>
-                    </Box>
-                  ))}
+                        <Box sx={{ width: `${left}%` }} />
+                        <Box
+                          sx={{
+                            flex: 1,
+                            bgcolor: SCHEDULE_TYPE_TO_COLORS[schedule.type],
+                            px: { md: 1, xs: 0.5 },
+                            py: 0.2,
+                            mb: arr.length - 1 === i ? 0.5 : 0,
+                            borderTopLeftRadius: isFirst ? 4 : 0,
+                            borderBottomLeftRadius: isFirst ? 4 : 0,
+                            borderTopRightRadius: isLast ? 4 : 0,
+                            borderBottomRightRadius: isLast ? 4 : 0,
+                            cursor: readOnly ? 'default' : 'pointer',
+                          }}
+                          onClick={() => onScheduleElementClick(schedule)}
+                        >
+                          <Typography
+                            sx={{
+                              color: 'white',
+                              fontSize: { md: 12, xs: 8 },
+                            }}
+                          >
+                            {SCHEDULE_TYPE_TO_LABELS[schedule.type]}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ width: `${right}%` }} />
+                      </Box>
+                    );
+                  })}
                 </Box>
               </Stack>
             </Grid>

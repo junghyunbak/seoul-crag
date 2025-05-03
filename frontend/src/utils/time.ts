@@ -69,6 +69,10 @@ export function normalizeToFullTimestamp(datetime: string): string {
     : datetime;
 }
 
+export function getTodayMinutesFromDate(date: Date) {
+  return date.getHours() * 60 + date.getMinutes();
+}
+
 /**
  * [date]
  * yyyy-MM-dd
@@ -95,4 +99,3 @@ export const dateTimeStrToDate = (str: string) => parse(str, "yyyy-MM-dd'T'HH:mm
 export const dateTimeStrToDateStr = (str: string) => dateToDateStr(dateTimeStrToDate(str));
 
 export const timeStrToDate = (str: string, baseDate: Date = new Date()) => parse(str, 'HH:mm:ss', baseDate);
-
