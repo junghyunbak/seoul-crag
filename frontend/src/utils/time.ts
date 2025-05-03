@@ -82,6 +82,8 @@ export const dateToDateStr = (date: Date) => format(date, 'yyyy-MM-dd');
 
 export const dateToDateTimeStr = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
+export const dateToTimeStr = (date: Date) => format(date, 'HH:mm:ss');
+
 export const dateTimeStrToDate = (str: string) => parse(str, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
 export const dateTimeStrToDateStr = (str: string) => dateToDateStr(dateTimeStrToDate(str));

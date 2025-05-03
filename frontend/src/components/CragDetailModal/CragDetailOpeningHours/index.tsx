@@ -4,18 +4,16 @@ import { time } from '@/utils';
 
 import { useFilter } from '@/hooks';
 
-import { getDay } from 'date-fns';
+import { addDays } from 'date-fns';
 
-import { DAY_TO_INDEX } from '@/constants/time';
+import { DAY_TO_INDEX, DAYS_OF_KOR } from '@/constants/time';
 
 interface CragDetailOpeningHoursProps {
   crag: Crag | undefined | null;
 }
 
 export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
-  const { selectDate } = useFilter();
-
-  const selectDay = getDay(selectDate || new Date());
+  const { expeditionDate } = useFilter();
 
   if (!crag) {
     return null;
@@ -26,50 +24,82 @@ export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
       <Typography variant="h6" fontWeight={600} gutterBottom>
         이용 시간
       </Typography>
-      {crag.openingHourOfWeek &&
-        crag.openingHourOfWeek
-          .sort((a, b) => (DAY_TO_INDEX[a.day] < DAY_TO_INDEX[b.day] ? -1 : 1))
-          .map(({ id, day, open_time, close_time, is_closed }) => {
-            if (!(open_time && close_time)) {
-              return null;
+      {Array(7)
+        .fill(null)
+        .map((_, i) => {
+          const date = addDays(expeditionDate, i);
+
+          const openingHour = crag.openingHourOfWeek?.find(({ day }) => {
+            return DAY_TO_INDEX[day] === date.getDay();
+          });
+
+          if (!openingHour) {
+            return null;
+          }
+
+          const { open_time, close_time, is_closed } = openingHour;
+
+          if (!open_time || !close_time) {
+            return null;
+          }
+
+          let [oh, om] = open_time.split(':');
+          let [ch, cm] = close_time.split(':');
+
+          let isTemporaryClosed = false;
+          let isReduced = false;
+
+          (crag?.futureSchedules || []).forEach(({ type, open_date, close_date }) => {
+            if (type === 'closed' && open_date && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date)) {
+              isTemporaryClosed = true;
             }
 
-            const isToday = DAY_TO_INDEX[day] === selectDay;
+            if (
+              type === 'reduced' &&
+              open_date &&
+              close_date &&
+              time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date) &&
+              time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(date)
+            ) {
+              isReduced = true;
+              [oh, om] = time.dateToTimeStr(time.dateTimeStrToDate(open_date)).split(':');
+              [ch, cm] = time.dateToTimeStr(time.dateTimeStrToDate(close_date)).split(':');
+            }
+          });
 
-            const [oh, om] = open_time.split(':');
-            const [ch, cm] = close_time.split(':');
+          const isToday = date.getDay() === expeditionDate.getDay();
 
-            return (
-              <Box
-                key={id}
+          return (
+            <Box
+              key={i}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography
+                variant="body2"
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  color: isToday ? 'black' : 'text.secondary',
+                  fontWeight: isToday ? 'bold' : 'normal',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: isToday ? 'black' : 'text.secondary',
-                    fontWeight: isToday ? 'bold' : 'normal',
-                  }}
-                >
-                  {time.engDayToKor(day)}
-                </Typography>
-
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: isToday ? 'black' : 'text.secondary',
-                    fontWeight: isToday ? 'bold' : 'normal',
-                  }}
-                >
-                  {is_closed ? '정기 휴무' : `${oh}:${om} - ${ch}:${cm}`}
-                </Typography>
-              </Box>
-            );
-          })}
+                {DAYS_OF_KOR[date.getDay()]}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: isToday ? 'black' : 'text.secondary',
+                  fontWeight: isToday ? 'bold' : 'normal',
+                }}
+              >
+                {is_closed
+                  ? '정기 휴무'
+                  : `${isTemporaryClosed ? '(임시 휴일) ' : isReduced ? '(단축 운영)' : ''} ${oh}:${om} - ${ch}:${cm}`}
+              </Typography>
+            </Box>
+          );
+        })}
     </Box>
   );
 }
