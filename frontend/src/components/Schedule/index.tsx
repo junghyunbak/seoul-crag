@@ -146,7 +146,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                         } else if (isFirst) {
                           const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.open_date));
 
-                          left = ((1440 - minutes) / 1440) * 100;
+                          left = (minutes / 1440) * 100;
                           right = 0;
                         } else if (isLast) {
                           const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.close_date));
