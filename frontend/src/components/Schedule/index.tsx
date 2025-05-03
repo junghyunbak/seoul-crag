@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 
 import { useFilter } from '@/hooks';
 
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore, min } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore } from 'date-fns';
 
 import holidayData from './holidays.ko.json';
 
