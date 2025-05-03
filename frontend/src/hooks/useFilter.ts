@@ -147,15 +147,23 @@ export function useFilter() {
 
       if (
         (crag.futureSchedules || []).some(({ type, open_date, close_date }) => {
-          if (type === 'closed') {
-            return time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate);
+          if (time.dateToDateStr(expeditionDate) !== time.dateTimeStrToDateStr(open_date)) {
+            return false;
           }
 
-          if (type === 'reduced') {
-            return (
+          if (type === 'closed') {
+            const _isOff = time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate);
+
+            return _isOff;
+          }
+
+          if (type === 'reduced' && time.dateTimeStrToDateStr(open_date) === time.dateTimeStrToDateStr(close_date)) {
+            const _isOff = !(
               isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
               isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
             );
+
+            return _isOff;
           }
 
           return false;
