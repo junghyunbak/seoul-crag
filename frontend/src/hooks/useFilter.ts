@@ -120,59 +120,61 @@ export function useFilter() {
 
   const getCragIsOff = useCallback(
     (crag: Crag) => {
-      if (crag.openingHourOfWeek) {
-        const todayOpeningHour = crag.openingHourOfWeek.find(
-          (openingHour) => openingHour.day == DAYS_OF_WEEK[expeditionDay]
-        );
+      /**
+       * 원정 날짜의 요일에 해당하는 운영 정보가 있을 경우 계산
+       */
+      const todayOpeningHour = (crag?.openingHourOfWeek || []).find(
+        (openingHour) => openingHour.day == DAYS_OF_WEEK[expeditionDay]
+      );
 
-        if (todayOpeningHour) {
-          const { is_closed, open_time, close_time } = todayOpeningHour;
+      if (todayOpeningHour) {
+        const { is_closed, open_time, close_time } = todayOpeningHour;
 
-          if (is_closed) {
-            return true;
-          }
+        if (is_closed) {
+          return true;
+        }
 
-          if (
-            !(
-              open_time &&
-              close_time &&
-              isBefore(time.timeStrToDate(open_time, expeditionDate), expeditionDate) &&
-              isBefore(expeditionDate, time.timeStrToDate(close_time, expeditionDate))
-            )
-          ) {
-            return true;
-          }
+        if (
+          !(
+            open_time &&
+            close_time &&
+            isBefore(time.timeStrToDate(open_time, expeditionDate), expeditionDate) &&
+            isBefore(expeditionDate, time.timeStrToDate(close_time, expeditionDate))
+          )
+        ) {
+          return true;
         }
       }
 
-      if (
-        (crag.futureSchedules || []).some(({ type, open_date, close_date }) => {
-          if (time.dateToDateStr(expeditionDate) !== time.dateTimeStrToDateStr(open_date)) {
-            return false;
-          }
-
-          if (type === 'closed') {
-            const _isOff = time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate);
-
-            return _isOff;
-          }
-
-          if (type === 'reduced' && time.dateTimeStrToDateStr(open_date) === time.dateTimeStrToDateStr(close_date)) {
-            const _isOff = !(
-              isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
-              isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
-            );
-
-            return _isOff;
-          }
-
+      return (crag.futureSchedules || []).some(({ type, open_date, close_date }) => {
+        /**
+         * 오늘 스케줄이 아닌경우 넘어감.
+         */
+        if (time.dateToDateStr(expeditionDate) !== time.dateTimeStrToDateStr(open_date)) {
           return false;
-        })
-      ) {
-        return true;
-      }
+        }
 
-      return false;
+        if (type === 'closed') {
+          return true;
+        }
+
+        /**
+         * 하루 이상의 범위일 경우 무시
+         *
+         * 24시간 이상으로 운영하는 암장은 없음.
+         */
+        if (type === 'reduced' && time.dateTimeStrToDateStr(open_date) === time.dateTimeStrToDateStr(close_date)) {
+          /**
+           * 단축 운영 시간 밖일 경우 off로 판단.
+           */
+          return !(
+            isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
+            isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
+          );
+        }
+
+        return false;
+      });
     },
     [expeditionDay, expeditionDate]
   );
