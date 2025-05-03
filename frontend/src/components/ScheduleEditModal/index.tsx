@@ -89,11 +89,10 @@ export function ScheduleEditModal({
                 slotProps={{
                   htmlInput: {
                     max: closeDate,
-                    step: 1,
                   },
                 }}
                 onChange={(e) => {
-                  setOpenDate(e.target.value);
+                  setOpenDate(time.normalizeToFullTimestamp(e.target.value));
                 }}
               />
               <TextField
@@ -102,11 +101,10 @@ export function ScheduleEditModal({
                 slotProps={{
                   htmlInput: {
                     min: openDate,
-                    step: 1,
                   },
                 }}
                 onChange={(e) => {
-                  setCloseDate(e.target.value);
+                  setCloseDate(time.normalizeToFullTimestamp(e.target.value));
                 }}
               />
             </Box>

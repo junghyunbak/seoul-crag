@@ -22,11 +22,10 @@ export function SelectExpeditionTime() {
         slotProps={{
           htmlInput: {
             min: time.getCurrentDateTimeStr(),
-            step: 1,
           },
         }}
         onChange={(e) => {
-          updateSelectDate(time.dateTimeStrToDate(e.target.value));
+          updateSelectDate(time.dateTimeStrToDate(time.normalizeToFullTimestamp(e.target.value)));
         }}
       />
       {selectDate && (

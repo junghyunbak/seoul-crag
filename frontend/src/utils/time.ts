@@ -63,6 +63,12 @@ export function engDayToKor(engDay: OpeningHourDayType) {
   }
 }
 
+export function normalizeToFullTimestamp(datetime: string): string {
+  return datetime.length === 16
+    ? `${datetime}:00` // ex: '2025-05-01T22:30' → '2025-05-01T22:30:00'
+    : datetime;
+}
+
 /**
  * [date]
  * yyyy-MM-dd
@@ -89,3 +95,4 @@ export const dateTimeStrToDate = (str: string) => parse(str, "yyyy-MM-dd'T'HH:mm
 export const dateTimeStrToDateStr = (str: string) => dateToDateStr(dateTimeStrToDate(str));
 
 export const timeStrToDate = (str: string, baseDate: Date = new Date()) => parse(str, 'HH:mm:ss', baseDate);
+
