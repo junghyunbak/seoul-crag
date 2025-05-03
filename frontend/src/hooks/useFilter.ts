@@ -136,8 +136,6 @@ export function useFilter() {
 
         if (
           !(
-            open_time &&
-            close_time &&
             isBefore(time.timeStrToDate(open_time, expeditionDate), expeditionDate) &&
             isBefore(expeditionDate, time.timeStrToDate(close_time, expeditionDate))
           )

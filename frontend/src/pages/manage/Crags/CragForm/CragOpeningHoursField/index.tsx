@@ -66,13 +66,11 @@ export function CragOpeningHoursField() {
     const weeklyHours: WeeklyHours = { ...initialWeeklyHours };
 
     openingHours.forEach(({ day, open_time, close_time, is_closed }) => {
-      if (open_time && close_time) {
-        weeklyHours[day] = {
-          is_closed,
-          open: time.timeStrToMinutes(open_time),
-          close: time.timeStrToMinutes(close_time),
-        };
-      }
+      weeklyHours[day] = {
+        is_closed,
+        open: time.timeStrToMinutes(open_time),
+        close: time.timeStrToMinutes(close_time),
+      };
     });
 
     setHours(weeklyHours);

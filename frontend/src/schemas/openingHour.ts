@@ -13,8 +13,8 @@ export const openingHourScheme = z.object({
     z.literal('friday'),
     z.literal('saturday'),
   ]),
-  open_time: z.union([timeSchema, z.null()]).optional(),
-  close_time: z.union([timeSchema, z.null()]).optional(),
+  open_time: timeSchema,
+  close_time: timeSchema,
   is_closed: z.boolean(),
 });
 

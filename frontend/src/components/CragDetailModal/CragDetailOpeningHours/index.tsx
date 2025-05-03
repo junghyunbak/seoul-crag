@@ -39,13 +39,10 @@ export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
 
           const { open_time, close_time, is_closed } = openingHour;
 
-          if (!open_time || !close_time) {
-            return null;
-          }
-
           let [oh, om] = open_time.split(':');
           let [ch, cm] = close_time.split(':');
 
+          const isToday = date.getDay() === expeditionDate.getDay();
           let isTemporaryClosed = false;
           let isReduced = false;
 
@@ -64,8 +61,6 @@ export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
               [ch, cm] = time.dateToTimeStr(time.dateTimeStrToDate(close_date)).split(':');
             }
           });
-
-          const isToday = date.getDay() === expeditionDate.getDay();
 
           return (
             <Box

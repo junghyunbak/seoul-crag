@@ -28,10 +28,10 @@ export class GymOpeningHour {
   @Column()
   day: WeekDay;
 
-  @Column({ type: 'time', nullable: true })
+  @Column({ type: 'time' })
   open_time: string;
 
-  @Column({ type: 'time', nullable: true })
+  @Column({ type: 'time' })
   close_time: string;
 
   @Column({ default: false })
