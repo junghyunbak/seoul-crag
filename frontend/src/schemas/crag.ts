@@ -1,3 +1,4 @@
+import { dateScheme } from '@/schemas/common/date';
 import { imageTypeScheme } from '@/schemas/image';
 import { openingHoursScheme } from '@/schemas/openingHour';
 import { schedulesScheme } from '@/schemas/schedule';
@@ -16,7 +17,7 @@ export const cragScheme = z.object({
   imageTypes: z.union([z.array(imageTypeScheme), z.null()]).optional(),
   futureSchedules: z.union([schedulesScheme, z.null()]).optional(),
   openingHourOfWeek: z.union([openingHoursScheme, z.null()]).optional(),
-  opened_at: z.union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.null()]).optional(),
+  opened_at: z.union([dateScheme, z.null()]).optional(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 });

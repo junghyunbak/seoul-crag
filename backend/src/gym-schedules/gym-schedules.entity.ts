@@ -20,7 +20,6 @@ export class GymSchedule {
 
   @Column({
     type: 'timestamp',
-    nullable: true,
     transformer: {
       from: (val: Date | null) =>
         val ? format(val, "yyyy-MM-dd'T'HH:mm:ss") : null,
@@ -31,7 +30,6 @@ export class GymSchedule {
 
   @Column({
     type: 'timestamp',
-    nullable: true,
     transformer: {
       from: (val: Date | null) =>
         val ? format(val, "yyyy-MM-dd'T'HH:mm:ss") : null,
