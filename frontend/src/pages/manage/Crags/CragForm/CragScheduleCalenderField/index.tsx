@@ -1,15 +1,22 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { ScheduleCalendar } from '@/components/ScheduleCalendar';
-
 import { useFetchSchedules, useMutateAddSchedule, useMutateDeleteSchedule, useMutateUpdateSchedule } from '@/hooks';
+
+import { subMonths, addMonths } from 'date-fns';
+
+import { Schedule } from '@/components/Schedule';
+import { ScheduleEditModal } from '@/components/ScheduleEditModal';
+import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 
 export function CragScheduleCalenderField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
+
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null | undefined>(undefined);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const { schedules, refetch } = useFetchSchedules(crag.id);
 
@@ -35,19 +42,39 @@ export function CragScheduleCalenderField() {
   });
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <Typography variant="h6">운영 일정</Typography>
 
-      <ScheduleCalendar
+      <ScheduleMonthNavigation
+        currentMonth={currentMonth}
+        onPrev={() => setCurrentMonth((prev) => subMonths(prev, 1))}
+        onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}
+      />
+
+      <Schedule
+        currentMonth={currentMonth}
         schedules={schedules || []}
-        onDelete={async (id) => {
-          deleteScheduleMutation.mutate({ cragId: crag.id, scheduleId: id });
+        onScheduleElementClick={(schedule) => {
+          setSelectedSchedule(schedule);
         }}
-        onUpdate={async ({ id, type, reason }) => {
-          updateScheduleMutation.mutate({ cragId: crag.id, scheduleId: id, type, reason });
+      />
+
+      <ScheduleEditModal
+        schedule={selectedSchedule}
+        onClick={() => {
+          setSelectedSchedule(null);
         }}
-        onCreate={async ({ date, type, reason }) => {
-          addScheduleMutation.mutate({ cragId: crag.id, date, type, reason });
+        onClose={() => {
+          setSelectedSchedule(undefined);
+        }}
+        onDelete={async (scheduleId) => {
+          deleteScheduleMutation.mutate({ cragId: crag.id, scheduleId });
+        }}
+        onUpdate={async (scheduleId, openDate, closeDate, type) => {
+          updateScheduleMutation.mutate({ cragId: crag.id, scheduleId, openDate, closeDate, type });
+        }}
+        onCreate={async (openDate, closeDate, type) => {
+          addScheduleMutation.mutate({ cragId: crag.id, openDate, closeDate, type });
         }}
       />
     </Box>

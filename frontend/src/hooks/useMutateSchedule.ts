@@ -4,19 +4,19 @@ import { api } from '@/api/axios';
 
 type AddScheduleMutateParams = {
   cragId: string;
-  date: string;
   type: ScheduleType;
-  reason: string | null | undefined;
+  openDate: Schedule['open_date'];
+  closeDate: Schedule['close_date'];
 };
 
 export function useMutateAddSchedule({ onSettled }: MutateOptions<void, DefaultError, AddScheduleMutateParams>) {
   const addScheduleMutation = useMutation<void, DefaultError, AddScheduleMutateParams>({
-    mutationFn: async ({ cragId, date, type, reason }) => {
+    mutationFn: async ({ cragId, openDate, closeDate, type }) => {
       await api.post(`/gyms/${cragId}/schedules`, {
         gymId: cragId,
-        date,
         type,
-        reason,
+        open_date: openDate,
+        close_date: closeDate,
       });
     },
     onSettled,
@@ -44,16 +44,18 @@ export function useMutateDeleteSchedule({ onSettled }: MutateOptions<void, Defau
 type UpdateScheduleMutateParams = {
   cragId: string;
   scheduleId: string;
-  reason: string | null | undefined;
   type: ScheduleType;
+  openDate: Schedule['open_date'];
+  closeDate: Schedule['close_date'];
 };
 
 export function useMutateUpdateSchedule({ onSettled }: MutateOptions<void, DefaultError, UpdateScheduleMutateParams>) {
   const updateScheduleMutation = useMutation<void, DefaultError, UpdateScheduleMutateParams>({
-    mutationFn: async ({ cragId, scheduleId, reason, type }) => {
+    mutationFn: async ({ cragId, scheduleId, openDate, closeDate, type }) => {
       await api.patch(`/gyms/${cragId}/schedules/${scheduleId}`, {
         type,
-        reason,
+        open_date: openDate,
+        close_date: closeDate,
       });
     },
     onSettled,

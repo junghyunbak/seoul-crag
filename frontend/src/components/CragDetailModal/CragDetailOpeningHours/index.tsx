@@ -1,18 +1,12 @@
 import { Box, Typography } from '@mui/material';
 
-import { engDayToKor } from '@/components/WeeklyHoursSilder';
+import { time } from '@/utils';
+
 import { useFilter } from '@/hooks';
+
 import { getDay } from 'date-fns';
 
-const dayToIndex: Record<OpeningHourDayType, number> = {
-  sunday: 0,
-  monday: 1,
-  tuesday: 2,
-  wednesday: 3,
-  thursday: 4,
-  friday: 5,
-  saturday: 6,
-};
+import { DAY_TO_INDEX } from '@/constants/time';
 
 interface CragDetailOpeningHoursProps {
   crag: Crag | undefined | null;
@@ -34,13 +28,13 @@ export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
       </Typography>
       {crag.openingHourOfWeek &&
         crag.openingHourOfWeek
-          .sort((a, b) => (dayToIndex[a.day] < dayToIndex[b.day] ? -1 : 1))
+          .sort((a, b) => (DAY_TO_INDEX[a.day] < DAY_TO_INDEX[b.day] ? -1 : 1))
           .map(({ id, day, open_time, close_time, is_closed }) => {
             if (!(open_time && close_time)) {
               return null;
             }
 
-            const isToday = dayToIndex[day] === selectDay;
+            const isToday = DAY_TO_INDEX[day] === selectDay;
 
             const [oh, om] = open_time.split(':');
             const [ch, cm] = close_time.split(':');
@@ -61,7 +55,7 @@ export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
                     fontWeight: isToday ? 'bold' : 'normal',
                   }}
                 >
-                  {engDayToKor(day)}
+                  {time.engDayToKor(day)}
                 </Typography>
 
                 <Typography

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Typography, styled } from '@mui/material';
+
+import { Typography } from '@mui/material';
+
 import { useFilter } from '@/hooks';
 
-const dayToKor = ['일', '월', '화', '수', '목', '금', '토'];
+import { DAYS_OF_KOR } from '@/constants/time';
 
 function formatTimeParts(date: Date) {
   return {
@@ -10,19 +12,9 @@ function formatTimeParts(date: Date) {
     minutes: date.getMinutes().toString().padStart(2, '0'),
     month: (date.getMonth() + 1).toString().padStart(2, '0'),
     date: date.getDate().toString().padStart(2, '0'),
-    day: dayToKor[date.getDay()],
+    day: DAYS_OF_KOR[date.getDay()],
   };
 }
-
-// 깜빡이는 콜론 컴포넌트 정의
-const BlinkingColon = styled('span')(() => ({
-  animation: 'blink 1s step-start infinite',
-  '@keyframes blink': {
-    '50%': {
-      opacity: 0,
-    },
-  },
-}));
 
 export default function CurrentTime() {
   const [time, setTime] = useState(new Date());
@@ -49,7 +41,20 @@ export default function CurrentTime() {
       sx={{ color: 'black', textShadow: '-1px 0 white,0 1px white,1px 0 white,0 -1px white', fontFamily: 'DS-Digital' }}
     >
       {`${month}월 ${date}일 (${day}) ${hours}`}
-      <BlinkingColon>:</BlinkingColon>
+      <Typography
+        component="span"
+        variant="h4"
+        sx={{
+          animation: selectDate ? 'none' : 'blink 1s step-start infinite',
+          '@keyframes blink': {
+            '50%': {
+              opacity: 0,
+            },
+          },
+        }}
+      >
+        :
+      </Typography>
       {minutes}
     </Typography>
   );

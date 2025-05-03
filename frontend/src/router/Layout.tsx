@@ -17,7 +17,6 @@ import { time } from '@/utils';
 
 const CragDetailModal = lazy(() => import('@/components/CragDetailModal'));
 const StoryImage = lazy(() => import('@/components/StoryImage'));
-const StorySchedule = lazy(() => import('@/components/StorySchedule'));
 
 export function Layout() {
   return (
@@ -32,7 +31,6 @@ export function Layout() {
                 <StoryImage imageType="interior" />
                 <StoryImage imageType="shower" />
 
-                <StorySchedule />
                 <CragDetailModal />
               </LoadNaverMap>
             </Suspense>

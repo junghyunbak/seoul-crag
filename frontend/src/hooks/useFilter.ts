@@ -3,10 +3,13 @@ import { useCallback, useMemo } from 'react';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { format, parse, isBefore, getDay } from 'date-fns';
+import { isBefore, getDay } from 'date-fns';
 
-import { daysOfWeek } from '@/components/WeeklyHoursSilder';
+import { DAYS_OF_WEEK } from '@/constants/time';
 
+import { time } from '@/utils';
+
+// TODO: 커스텀 훅 테스트코드 작성
 export function useFilter() {
   const [isOpenFilterSheet] = useStore(useShallow((s) => [s.isOpenFilterSheet]));
 
@@ -17,50 +20,23 @@ export function useFilter() {
 
   const [selectDate] = useStore(useShallow((s) => [s.selectDate]));
 
-  const YYYYMMDDToday = useMemo(() => format(new Date(), 'yyyy-MM-dd'), []);
-  const YYYYMMDDExpedition = useMemo(
-    () => (selectDate ? format(selectDate, 'yyyy-MM-dd') : YYYYMMDDToday),
-    [YYYYMMDDToday, selectDate]
-  );
+  const expeditionDate = useMemo(() => selectDate || new Date(), [selectDate]);
+  const expeditionDay = getDay(expeditionDate);
 
-  const DayExpedition = useMemo(() => daysOfWeek[getDay(selectDate || new Date())], [selectDate]);
+  const passAllFilter = useCallback(() => true, []);
 
   const filterShower = useMemo(
     () =>
       isFilterShower
         ? (crag: Crag) => {
-            return crag.imageTypes?.includes('shower') || false;
-          }
-        : () => true,
-    [isFilterShower]
-  );
+            if (!crag.imageTypes) {
+              return false;
+            }
 
-  const filterNonSetting = useMemo(
-    () =>
-      isFilterNonSetting
-        ? (crag: Crag) => {
-            return !(crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'setup' && format(date, 'yyyy-MM-dd') === YYYYMMDDExpedition
-            );
+            return crag.imageTypes.includes('shower');
           }
-        : () => {
-            return true;
-          },
-    [isFilterNonSetting, YYYYMMDDExpedition]
-  );
-
-  const filterNewSetting = useMemo(
-    () =>
-      isFilterNewSetting
-        ? (crag: Crag) => {
-            return (crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'new' && format(date, 'yyyy-MM-dd') === YYYYMMDDExpedition
-            );
-          }
-        : () => {
-            return true;
-          },
-    [isFilterNewSetting, YYYYMMDDExpedition]
+        : passAllFilter,
+    [isFilterShower, passAllFilter]
   );
 
   const filterTodayRemove = useMemo(
@@ -68,10 +44,41 @@ export function useFilter() {
       isFilterTodayRemove
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ type, date }) => type === 'remove' && format(date, 'yyyy-MM-dd') === YYYYMMDDExpedition
+              ({ open_date }) =>
+                open_date && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
             )
-        : () => true,
-    [isFilterTodayRemove, YYYYMMDDExpedition]
+        : passAllFilter,
+    [isFilterTodayRemove, passAllFilter, expeditionDate]
+  );
+
+  const filterNewSetting = useMemo(
+    () =>
+      isFilterNewSetting
+        ? (crag: Crag) =>
+            (crag.futureSchedules || []).some(
+              ({ close_date }) =>
+                close_date && time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
+            )
+        : passAllFilter,
+    [isFilterNewSetting, passAllFilter, expeditionDate]
+  );
+
+  const filterNonSetting = useMemo(
+    () =>
+      isFilterNonSetting
+        ? (crag: Crag) =>
+            !(crag.futureSchedules || []).some(
+              ({ type, open_date, close_date }) =>
+                type === 'setup' &&
+                open_date &&
+                close_date &&
+                isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
+                isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
+            )
+        : () => {
+            return true;
+          },
+    [isFilterNonSetting, expeditionDate]
   );
 
   const filterCount = useMemo(() => {
@@ -117,37 +124,55 @@ export function useFilter() {
 
   const getCragIsOff = useCallback(
     (crag: Crag) => {
-      let _isOff = false;
-
-      if (crag.futureSchedules) {
-        _isOff = crag.futureSchedules.some(
-          (schedule) => schedule.type === 'closed' && format(schedule.date, 'yyyy-MM-dd') === YYYYMMDDExpedition
-        );
-      }
-
       if (crag.openingHourOfWeek) {
-        const todayOpeningHour = crag.openingHourOfWeek.find((openingHour) => openingHour.day == DayExpedition);
+        const todayOpeningHour = crag.openingHourOfWeek.find(
+          (openingHour) => openingHour.day == DAYS_OF_WEEK[expeditionDay]
+        );
 
         if (todayOpeningHour) {
-          if (todayOpeningHour.is_closed) {
-            _isOff = true;
-          } else {
-            if (todayOpeningHour.close_time && todayOpeningHour.open_time) {
-              /**
-               * 원정 날짜만 고려하고, 시간은 현재를 기준으로 하고 있기 때문에 new Date() 사용
-               */
-              const openTime = parse(todayOpeningHour.open_time, 'HH:mm:ss', new Date());
-              const closeTime = parse(todayOpeningHour.close_time, 'HH:mm:ss', new Date());
+          const { is_closed, open_time, close_time } = todayOpeningHour;
 
-              _isOff = !(isBefore(openTime, new Date()) && isBefore(new Date(), closeTime));
-            }
+          if (is_closed) {
+            return true;
+          }
+
+          if (
+            !(
+              open_time &&
+              close_time &&
+              isBefore(time.timeStrToDate(open_time, expeditionDate), expeditionDate) &&
+              isBefore(expeditionDate, time.timeStrToDate(close_time, expeditionDate))
+            )
+          ) {
+            return true;
           }
         }
       }
 
-      return _isOff;
+      if (
+        (crag.futureSchedules || []).some(({ type, open_date, close_date }) => {
+          if (type === 'closed') {
+            return open_date && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate);
+          }
+
+          if (type === 'reduced') {
+            return (
+              open_date &&
+              close_date &&
+              isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
+              isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
+            );
+          }
+
+          return false;
+        })
+      ) {
+        return true;
+      }
+
+      return false;
     },
-    [YYYYMMDDExpedition, DayExpedition]
+    [expeditionDay, expeditionDate]
   );
 
   const getFilteredCragCount = useCallback(
@@ -172,10 +197,9 @@ export function useFilter() {
     isFilterShower,
     isFilterTodayRemove,
 
-    YYYYMMDDExpedition,
-    YYYYMMDDToday,
-
     selectDate,
+
+    expeditionDate,
 
     getCragIsFiltered,
     getCragIsOff,

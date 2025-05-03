@@ -55,8 +55,11 @@ export class GymsService {
             .subQuery()
             .select(`JSON_AGG(s)`)
             .from(GymSchedule, 's')
-            .where('s.gymId = gym.id')
-            .andWhere(`s.open_date >= date_trunc('month', CURRENT_DATE)`),
+            .where('s.gymId = gym.id'),
+        /**
+         * 지난 모든 일정도 가져오도록 임시 수정
+         */
+        //.andWhere(`s.open_date >= date_trunc('month', CURRENT_DATE)`),
         'futureSchedules',
       )
       .addSelect(

@@ -2,11 +2,13 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-import { WeeklyHoursSlider, WeeklyHours, daysOfWeek } from '@/components/WeeklyHoursSilder';
+import { WeeklyHoursSlider, WeeklyHours } from '@/components/WeeklyHoursSilder';
+
+import { DAYS_OF_WEEK } from '@/constants/time';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import dayjs from 'dayjs';
+import { time } from '@/utils';
 
 import { useFetchOpeningHours, useMutateCragOpeningHour } from '@/hooks';
 
@@ -24,15 +26,6 @@ const initialWeeklyHours: WeeklyHours = {
   friday: { is_closed: false, open: defaultOpen, close: defaultClose },
   saturday: { is_closed: false, open: defaultHolidayOpen, close: defaultHoildayClose },
 };
-
-function minutesToTimeStr(mins: number): string {
-  return dayjs().startOf('day').add(mins, 'minute').format('HH:mm');
-}
-
-function timeStrToMinutes(time: string): number {
-  const [h, m] = time.split(':').map(Number);
-  return h * 60 + m;
-}
 
 export function CragOpeningHoursField() {
   const { crag } = useContext(cragFormContext);
@@ -76,8 +69,8 @@ export function CragOpeningHoursField() {
       if (open_time && close_time) {
         weeklyHours[day] = {
           is_closed,
-          open: timeStrToMinutes(open_time),
-          close: timeStrToMinutes(close_time),
+          open: time.timeStrToMinutes(open_time),
+          close: time.timeStrToMinutes(close_time),
         };
       }
     });
@@ -87,7 +80,7 @@ export function CragOpeningHoursField() {
 
   const handleWeeklyHoursChange = (next: WeeklyHours) => {
     setHours((prev) => {
-      for (const day of daysOfWeek) {
+      for (const day of DAYS_OF_WEEK) {
         if (prev[day] !== next[day]) {
           if (timerRef.current[day]) {
             clearTimeout(timerRef.current[day]);
@@ -99,8 +92,8 @@ export function CragOpeningHoursField() {
             changeCragOpeningHourMutation.mutate({
               cragId: crag.id,
               day,
-              openTime: minutesToTimeStr(open),
-              closeTime: minutesToTimeStr(close),
+              openTime: time.minutesToTimeStr(open),
+              closeTime: time.minutesToTimeStr(close),
               isClosed: is_closed,
             });
           }, 1000);

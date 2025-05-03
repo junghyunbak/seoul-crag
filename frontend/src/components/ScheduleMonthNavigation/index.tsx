@@ -4,7 +4,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { format } from 'date-fns';
 
-interface MonthNavigationProps {
+interface ScheduleMonthNavigationProps {
   currentMonth: Date;
   onPrev: () => void;
   onNext: () => void;
@@ -12,7 +12,13 @@ interface MonthNavigationProps {
   fontColor?: string;
 }
 
-export function MonthNavigation({ currentMonth, onPrev, onNext, readonly = false, fontColor }: MonthNavigationProps) {
+export function ScheduleMonthNavigation({
+  currentMonth,
+  onPrev,
+  onNext,
+  readonly = false,
+  fontColor,
+}: ScheduleMonthNavigationProps) {
   return (
     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
       {!readonly && (

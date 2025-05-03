@@ -1,20 +1,13 @@
 import { z } from 'zod';
 
-export const scheduleTypeScheme = z.union([
-  z.literal('closed'),
-  z.literal('setup'),
-  z.literal('lesson'),
-  z.literal('etc'),
-  z.literal('new'),
-  z.literal('remove'),
-]);
+export const scheduleTypeScheme = z.union([z.literal('closed'), z.literal('setup'), z.literal('reduced')]);
+export const timeYYYYMMDDTHHMMSSScheme = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/);
 
 export const scheduleScheme = z.object({
   id: z.string(),
   type: scheduleTypeScheme,
-  reason: z.union([z.string(), z.null()]).optional(),
-  is_regular: z.boolean().optional(),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  open_date: z.union([timeYYYYMMDDTHHMMSSScheme, z.null()]),
+  close_date: z.union([timeYYYYMMDDTHHMMSSScheme, z.null()]),
   created_at: z.coerce.date(),
 });
 

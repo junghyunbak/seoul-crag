@@ -11,13 +11,16 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING, SIZE } from '@/constants';
 
-import { useFetchCrag, useFetchImages, useNaverMap } from '@/hooks';
+import { useFetchCrag, useFetchImages, useFilter, useNaverMap } from '@/hooks';
 
 import { Map } from '@/components/Map';
-import { ScheduleCalendar } from '@/components/ScheduleCalendar';
+import { Schedule } from '@/components/Schedule';
+import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 import { ImageWithSource } from '@/components/ImageWithSource';
 import { CragDetailOpeningHours } from '@/components/CragDetailModal/CragDetailOpeningHours';
 import CommentSection from '@/components/Comments';
+
+import { subMonths, addMonths } from 'date-fns';
 
 import { urlService } from '@/utils';
 
@@ -61,15 +64,37 @@ interface CragDetailProps {
 }
 
 function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
-  /**
-   * y, x축 동시 스크롤로 인한 ux 저하 이슈 해결을 위해 비활성화
-   */
-  const [, /*currentSlide*/ setCurrentSlide] = useState(0);
+  const { expeditionDate } = useFilter();
 
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
+  const [currentMonth, setCurrentMonth] = useState(expeditionDate);
+
+  /**
+   * y, x축 동시 스크롤로 인한 ux 저하 이슈 해결을 위해 슬라이드 비활성화.
+   */
+  const [, setCurrentSlide] = useState(0);
+
+  const [sliderRef] = useKeenSlider({
+    loop: true,
+    mode: 'snap',
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel);
+    },
+  });
+
+  /**
+   * 선택된 날짜에 따라 시작 달력 월 변경
+   */
+  useEffect(() => {
+    setCurrentMonth(expeditionDate);
+  }, [expeditionDate]);
+
+  /**
+   * 상단바 스타일 조정을 위한 observer 등록
+   */
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -87,14 +112,6 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
 
     return () => observer.disconnect();
   }, [isOpen]);
-
-  const [sliderRef] = useKeenSlider({
-    loop: true,
-    mode: 'snap',
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel);
-    },
-  });
 
   return (
     <CustomSheet
@@ -224,10 +241,17 @@ function CragDetail({ onClose, crag, images, isOpen }: CragDetailProps) {
                     일정표
                   </Typography>
 
-                  {/**
-                   * // [ ]: 미래 일정만 보여지도록 수정
-                   */}
-                  <ScheduleCalendar schedules={crag.futureSchedules || []} readOnly />
+                  <ScheduleMonthNavigation
+                    currentMonth={currentMonth}
+                    onPrev={() => setCurrentMonth((prev) => subMonths(prev, 1))}
+                    onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}
+                  />
+                  <Schedule
+                    currentMonth={currentMonth}
+                    schedules={crag.futureSchedules || []}
+                    onScheduleElementClick={() => {}}
+                    readOnly
+                  />
                 </Box>
 
                 <Divider />

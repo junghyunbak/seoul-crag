@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
+import { CreateGymScheduleDto } from 'src/gym-schedules/dto/create-gym-schedules.dto';
 
-export class UpdateGymScheduleDto extends PartialType(CreateGymDto) {}
+export class UpdateGymScheduleDto extends PartialType(CreateGymScheduleDto) {}

@@ -1,42 +1,10 @@
 import React, { useState } from 'react';
+
 import { Box, Slider, Typography, Stack, Switch, FormControlLabel, Button } from '@mui/material';
 
-export const daysOfWeek: OpeningHourDayType[] = [
-  'sunday',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-];
+import { DAYS_OF_WEEK } from '@/constants/time';
 
-export function engDayToKor(engDay: OpeningHourDayType) {
-  switch (engDay) {
-    case 'sunday':
-      return '일요일';
-    case 'monday':
-      return '월요일';
-    case 'tuesday':
-      return '화요일';
-    case 'wednesday':
-      return '수요일';
-    case 'thursday':
-      return '목요일';
-    case 'friday':
-      return '금요일';
-    case 'saturday':
-      return '토요일';
-    default:
-      return '';
-  }
-}
-
-function formatTime(minutes: number) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-}
+import { time } from '@/utils';
 
 export type DayRange = {
   is_closed: boolean;
@@ -57,7 +25,7 @@ export const WeeklyHoursSlider: React.FC<WeeklyHoursSliderProps> = ({ hours, onC
   return (
     <Box width="100%">
       <Stack width="100%">
-        {daysOfWeek.map((day) => {
+        {DAYS_OF_WEEK.map((day) => {
           return <SliderContent key={day} hours={hours} onChange={onChange} locked={locked} day={day} />;
         })}
       </Stack>
@@ -113,7 +81,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="subtitle1" gutterBottom>
-        {engDayToKor(day)}
+        {time.engDayToKor(day)}
       </Typography>
 
       <Box
@@ -142,7 +110,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
             value={[open, close]}
             onChange={(_, val) => handleSliderChange(day, val as number[])}
             valueLabelDisplay="on"
-            valueLabelFormat={(val) => formatTime(val)}
+            valueLabelFormat={(val) => time.minutesToTimeStr(val)}
           />
         </Box>
       </Box>
