@@ -57,10 +57,6 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
 
         {days.map((day, i) => {
           const filteredSchedules = schedules.filter(({ open_date, close_date }) => {
-            if (!open_date || !close_date) {
-              return false;
-            }
-
             const openDate = time.dateTimeStrToDate(open_date);
             const closeDate = time.dateTimeStrToDate(close_date);
 

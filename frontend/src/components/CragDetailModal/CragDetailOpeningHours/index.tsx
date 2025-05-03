@@ -50,14 +50,12 @@ export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
           let isReduced = false;
 
           (crag?.futureSchedules || []).forEach(({ type, open_date, close_date }) => {
-            if (type === 'closed' && open_date && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date)) {
+            if (type === 'closed' && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date)) {
               isTemporaryClosed = true;
             }
 
             if (
               type === 'reduced' &&
-              open_date &&
-              close_date &&
               time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date) &&
               time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(date)
             ) {

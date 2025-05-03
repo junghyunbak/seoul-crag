@@ -44,8 +44,7 @@ export function useFilter() {
       isFilterTodayRemove
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ open_date }) =>
-                open_date && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
+              ({ open_date }) => time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
             )
         : passAllFilter,
     [isFilterTodayRemove, passAllFilter, expeditionDate]
@@ -56,8 +55,7 @@ export function useFilter() {
       isFilterNewSetting
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ close_date }) =>
-                close_date && time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
+              ({ close_date }) => time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
             )
         : passAllFilter,
     [isFilterNewSetting, passAllFilter, expeditionDate]
@@ -70,8 +68,6 @@ export function useFilter() {
             !(crag.futureSchedules || []).some(
               ({ type, open_date, close_date }) =>
                 type === 'setup' &&
-                open_date &&
-                close_date &&
                 isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
                 isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
             )
@@ -152,13 +148,11 @@ export function useFilter() {
       if (
         (crag.futureSchedules || []).some(({ type, open_date, close_date }) => {
           if (type === 'closed') {
-            return open_date && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate);
+            return time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate);
           }
 
           if (type === 'reduced') {
             return (
-              open_date &&
-              close_date &&
               isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
               isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
             );
