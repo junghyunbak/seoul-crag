@@ -33,7 +33,7 @@ const BarContainer = styled(Box)({
   top: 8,
   left: 8,
   right: 8,
-  height: 4,
+  height: 3,
   overflow: 'hidden',
   display: 'flex',
   gap: 4,
@@ -46,9 +46,10 @@ const Segment = styled(Box, {
   flex: 1,
   height: '100%',
   backgroundColor: complete ? '#fff' : 'rgba(255,255,255,0.2)',
-  borderRadius: 4,
+  borderRadius: 2,
   position: 'relative',
   overflow: 'hidden',
+  boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
 }));
 
 const Thumb = styled(Box)({
@@ -311,13 +312,13 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           {contents[Math.min(index.value, contents.length - 1)]}
         </Box>
 
-        <TranslateBar index={index} count={contents.length} duration={duration} onNext={goNext} paused={paused} />
-
         <Box
           sx={{
             position: 'absolute',
             zIndex: 5,
             top: 0,
+
+            background: 'linear-gradient(to bottom, #33333373, transparent)',
 
             width: '100%',
             p: 2,
@@ -360,6 +361,8 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             </IconButton>
           </Box>
         </Box>
+
+        <TranslateBar index={index} count={contents.length} duration={duration} onNext={goNext} paused={paused} />
 
         {!isMobile && (
           <>
