@@ -44,7 +44,8 @@ export function useFilter() {
       isFilterTodayRemove
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ open_date }) => time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
+              ({ type, open_date }) =>
+                type === 'setup' && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
             )
         : passAllFilter,
     [isFilterTodayRemove, passAllFilter, expeditionDate]
@@ -55,7 +56,8 @@ export function useFilter() {
       isFilterNewSetting
         ? (crag: Crag) =>
             (crag.futureSchedules || []).some(
-              ({ close_date }) => time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
+              ({ type, close_date }) =>
+                type === 'setup' && time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
             )
         : passAllFilter,
     [isFilterNewSetting, passAllFilter, expeditionDate]
@@ -93,6 +95,7 @@ export function useFilter() {
       }
 
       if (isFilterNonSetting) {
+        console.log('1');
         _isFiltered &&= filterNonSetting(crag);
       }
 
