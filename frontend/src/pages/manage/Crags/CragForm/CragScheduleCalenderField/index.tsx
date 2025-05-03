@@ -6,11 +6,13 @@ import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import { useFetchSchedules, useMutateAddSchedule, useMutateDeleteSchedule, useMutateUpdateSchedule } from '@/hooks';
 
-import { subMonths, addMonths } from 'date-fns';
+import { subMonths, addMonths, isBefore, isEqual } from 'date-fns';
 
 import { Schedule } from '@/components/Schedule';
 import { ScheduleEditModal } from '@/components/ScheduleEditModal';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
+
+import { time } from '@/utils';
 
 export function CragScheduleCalenderField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -71,10 +73,24 @@ export function CragScheduleCalenderField() {
           deleteScheduleMutation.mutate({ cragId: crag.id, scheduleId });
         }}
         onUpdate={async (scheduleId, openDate, closeDate, type) => {
-          updateScheduleMutation.mutate({ cragId: crag.id, scheduleId, openDate, closeDate, type });
+          if (
+            isEqual(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate)) ||
+            isBefore(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate))
+          ) {
+            updateScheduleMutation.mutate({ cragId: crag.id, scheduleId, openDate, closeDate, type });
+          } else {
+            alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
+          }
         }}
         onCreate={async (openDate, closeDate, type) => {
-          addScheduleMutation.mutate({ cragId: crag.id, openDate, closeDate, type });
+          if (
+            isEqual(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate)) ||
+            isBefore(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate))
+          ) {
+            addScheduleMutation.mutate({ cragId: crag.id, openDate, closeDate, type });
+          } else {
+            alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
+          }
         }}
       />
     </Box>
