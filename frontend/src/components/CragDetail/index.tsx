@@ -11,15 +11,15 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFetchCrag, useFetchImages, useFilter, useNaverMap } from '@/hooks';
+import { useFetchCrag, useFetchImages, useFilter } from '@/hooks';
 
-import { Map } from '@/components/Map';
 import { Schedule } from '@/components/Schedule';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 import { ImageWithSource } from '@/components/ImageWithSource';
 
 import { CragDetailOpeningHours } from '@/components/CragDetail/CragDetailOpeningHours';
 import { CragDetailComment } from './CragDetailComments';
+import { CragDetailLocation } from './CragDetailLocation';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -268,7 +268,7 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 상세 위치
               </Typography>
-              <CragLocation crag={crag} />
+              <CragDetailLocation crag={crag} />
             </Box>
 
             <Divider />
@@ -303,48 +303,5 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
         </Box>
       </Box>
     </motion.div>
-  );
-}
-
-interface CragLocationProps {
-  crag: Crag;
-}
-
-/**
- * portal에서 맵 ref를 연결하면 동작하지 않음.
- */
-function CragLocation({ crag }: CragLocationProps) {
-  const { map, mapRef } = useNaverMap(
-    () => ({
-      draggable: false,
-      pinchZoom: false,
-      scrollWheel: false,
-      keyboardShortcuts: false,
-      disableDoubleClickZoom: true,
-      disableTwoFingerTapZoom: true,
-      disableDoubleTapZoom: true,
-      disableKineticPan: true,
-      zoom: 15,
-    }),
-    []
-  );
-
-  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
-
-  useEffect(() => {
-    if (map && crag && marker) {
-      const latLng = new naver.maps.LatLng(crag.latitude, crag.longitude);
-
-      map.setCenter(latLng);
-      marker.setPosition(latLng);
-    }
-  }, [crag, map, marker]);
-
-  return (
-    <Box sx={{ width: '100%', aspectRatio: '1/1' }}>
-      <Map map={map} mapRef={mapRef}>
-        <Map.Marker.Default onCreate={setMarker} />
-      </Map>
-    </Box>
   );
 }
