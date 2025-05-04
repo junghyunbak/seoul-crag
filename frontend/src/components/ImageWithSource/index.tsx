@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import { Box } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
@@ -6,6 +8,20 @@ interface ImageWithSourceProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function ImageWithSource({ image, className }: ImageWithSourceProps) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(false);
+
+    const img = new Image();
+
+    img.onload = async () => {
+      setLoaded(true);
+    };
+
+    img.src = image.url;
+  }, [image]);
+
   return (
     <div
       style={{
@@ -15,15 +31,17 @@ export function ImageWithSource({ image, className }: ImageWithSourceProps) {
       }}
       className={className}
     >
-      <Box
-        component="img"
-        src={image.url}
-        sx={{
-          width: '100%',
-          userSelect: 'none',
-          objectFit: 'cover',
-        }}
-      />
+      {loaded && (
+        <Box
+          component="img"
+          src={image.url}
+          sx={{
+            width: '100%',
+            userSelect: 'none',
+            objectFit: 'cover',
+          }}
+        />
+      )}
 
       <Box
         sx={{
