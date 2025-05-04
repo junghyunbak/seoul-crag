@@ -208,6 +208,10 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
               </Stack>
             </Stack>
 
+            <Typography variant="caption" color="text.secondary">{`최근 정보 갱신일 · ${new Date(
+              crag.updated_at
+            ).toLocaleDateString()}`}</Typography>
+
             <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }} component="pre">
               {crag.description}
             </Typography>
