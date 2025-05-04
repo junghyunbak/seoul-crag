@@ -14,4 +14,8 @@ export class UpdateGymDto extends PartialType(CreateGymDto) {
   @IsOptional()
   @IsDateString()
   opened_at: string;
+
+  @IsOptional()
+  @IsString()
+  short_name: string;
 }

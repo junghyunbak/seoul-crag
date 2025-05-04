@@ -99,6 +99,7 @@ export class GymsService {
         openingHourOfWeek: raw.openingHourOfWeek,
         opened_at: raw.gym_opened_at,
         comments: raw.gym_comments,
+        short_name: raw.gym_short_name,
       };
 
       gymWithImages.push(gymWithImage);
@@ -135,6 +136,7 @@ export class GymsService {
       openingHourOfWeek: rawGym.openingHourOfWeek,
       opened_at: rawGym.gym_opened_at,
       comments: rawGym.gym_comments,
+      short_name: rawGym.gym_short_name,
     };
 
     return gymWithImage;

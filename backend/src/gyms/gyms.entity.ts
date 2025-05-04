@@ -20,6 +20,9 @@ export class Gym {
   name: string;
 
   @Column({ type: 'text', nullable: true })
+  short_name?: string;
+
+  @Column({ type: 'text', nullable: true })
   description?: string;
 
   @Column({ type: 'text', nullable: true })

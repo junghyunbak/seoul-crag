@@ -153,7 +153,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
     }
 
     return _features;
-  }, [crag, setSelectCragDetailId, setShowerStory]);
+  }, [crag, setScheduleStory, setSelectCragDetailId, setShowerStory]);
 
   const handleMarkerClick = () => {
     setSelectCragId(crag.id);
@@ -240,7 +240,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
               textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
             }}
           >
-            {crag.name}
+            {crag.short_name || crag.name}
           </Typography>
         </Box>
       )}

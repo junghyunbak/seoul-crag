@@ -8,6 +8,7 @@ import { z } from 'zod';
 export const cragScheme = z.object({
   id: z.string(),
   name: z.string(),
+  short_name: z.union([z.string(), z.null()]),
   description: z.string(),
   latitude: z.number(),
   longitude: z.number(),

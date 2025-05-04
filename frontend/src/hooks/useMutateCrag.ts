@@ -20,6 +20,26 @@ export function useMutateCragName({ onSettled }: MutationOptions<void, DefaultEr
   return { changeCragNameMutation };
 }
 
+type ChangeCragShortNameMutateParmas = {
+  cragId: string;
+  name: string;
+};
+
+export function useMutateCragShortName({
+  onSettled,
+}: MutationOptions<void, DefaultError, ChangeCragShortNameMutateParmas>) {
+  const changeCragShortNameMutation = useMutation<void, DefaultError, ChangeCragShortNameMutateParmas>({
+    mutationFn: async ({ cragId, name }) => {
+      await api.patch(`/gyms/${cragId}`, {
+        short_name: name,
+      });
+    },
+    onSettled,
+  });
+
+  return { changeCragShortNameMutation };
+}
+
 type ChangeCragWebsitUrlMutateParams = {
   cragId: string;
   websiteUrl: string;

@@ -15,6 +15,7 @@ import { CragDescriptionField } from '@/pages/manage/Crags/CragForm/CragDescript
 import { CragWebsiteUrlField } from '@/pages/manage/Crags/CragForm/CragWebsiteUrlField';
 import { CragThumbnailField } from '@/pages/manage/Crags/CragForm/CragThumbnailField';
 import { CragOpenedAtField } from '@/pages/manage/Crags/CragForm/CragOpenedAtField';
+import { CragShortNameField } from '@/pages/manage/Crags/CragForm/CragShortNameField';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -56,7 +57,10 @@ export function CragForm({ initialCrag }: CragFormProps) {
             <CragPositionField />
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, overflow: 'hidden' }}>
-            <CragNameField />
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <CragNameField />
+              <CragShortNameField />
+            </Box>
             <CragAreaField />
             <CragImagesField imageType="interior" />
           </Box>
