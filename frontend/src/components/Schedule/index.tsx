@@ -45,7 +45,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
             size={{ xs: 1 }}
             key={`empty-${idx}`}
             sx={{
-              height: { md: 124, xs: 100 },
+              height: 100,
               borderRight: '1px solid #ccc',
               borderBottom: '1px solid #ccc',
               p: 0.5,
@@ -86,7 +86,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
               sx={{
                 borderRight: (i + emptyStart) % 7 === 6 ? 'none' : '1px solid #ccc',
                 borderBottom: currentWeek === lastWeek ? 'none' : '1px solid #ccc',
-                height: { md: 124, xs: 100 },
+                height: 100,
                 position: 'relative',
                 pt: 0.5,
                 display: 'flex',
@@ -171,6 +171,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                         <Box
                           sx={{
                             flex: 1,
+                            overflow: 'hidden',
                             bgcolor: SCHEDULE_TYPE_TO_COLORS[schedule.type],
                             px: { md: 1, xs: 0.5 },
                             py: 0.2,
@@ -210,7 +211,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
               borderRight: emptyEnd - 1 === idx ? 'none' : '1px solid #ccc',
             }}
             sx={{
-              height: { md: 124, xs: 100 },
+              height: 100,
               p: 0.5,
               pl: 0,
               pb: 0,

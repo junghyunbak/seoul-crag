@@ -1,8 +1,9 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
-import Shower from '@mui/icons-material/Shower';
+import ShowerIcon from '@mui/icons-material/Shower';
 import InfoIcon from '@mui/icons-material/Info';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { grey } from '@mui/material/colors';
 
 import { useCragArea, useFilter } from '@/hooks';
@@ -74,6 +75,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
+  const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const { getCragIsOff, getCragIsFiltered } = useFilter();
 
   const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
@@ -125,6 +127,14 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
     const _features: Feature[] = [];
 
     _features.push({
+      icon: <CalendarMonthIcon />,
+      callback: () => {
+        setScheduleStory(crag.id);
+      },
+      disabled: false,
+    });
+
+    _features.push({
       icon: <InfoIcon color="primary" />,
       callback: () => {
         setSelectCragDetailId(crag.id);
@@ -134,7 +144,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
 
     if (crag.imageTypes?.includes('shower')) {
       _features.push({
-        icon: <Shower />,
+        icon: <ShowerIcon />,
         callback: () => {
           setShowerStory(crag.id);
         },
