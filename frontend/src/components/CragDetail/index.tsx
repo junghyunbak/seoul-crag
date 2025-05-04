@@ -68,10 +68,7 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
 
   const [currentMonth, setCurrentMonth] = useState(expeditionDate);
 
-  /**
-   * y, x축 동시 스크롤로 인한 ux 저하 이슈 해결을 위해 슬라이드 비활성화.
-   */
-  const [, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const [sliderRef] = useKeenSlider({
     loop: true,
@@ -159,13 +156,35 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
         }}
       >
         {/* 이미지 슬라이더 */}
-        {images && images.length > 0 && (
-          <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: 'relative' }}>
+          {images && images.length > 0 && (
             <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-              <ImageWithSource className="keen-slider__slide" image={images[0]} />
+              {images.map((image, i) => (
+                <ImageWithSource className="keen-slider__slide" key={i} image={image} />
+              ))}
             </Box>
-          </Box>
-        )}
+          )}
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={1}
+            sx={{ position: 'absolute', bottom: 8, width: '100%' }}
+          >
+            {images &&
+              images.map((_, i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    bgcolor: currentSlide === i ? 'primary.main' : 'grey.400',
+                    transition: 'all 0.3s',
+                  }}
+                />
+              ))}
+          </Stack>
+        </Box>
 
         {/* 상단바 스타일 조정을 위한 sentinel */}
         <Box
