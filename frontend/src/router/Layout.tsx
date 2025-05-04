@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary, FallbackRender } from '@sentry/react';
 import { Outlet } from 'react-router';
 
 import { QueryParamProvider } from 'use-query-params';
@@ -21,7 +21,7 @@ const StoryImage = lazy(() => import('@/components/StoryImage'));
 export function Layout() {
   return (
     <Box sx={{ position: 'fixed', inset: 0 }}>
-      <ErrorBoundary FallbackComponent={Fallback}>
+      <ErrorBoundary fallback={Fallback}>
         <QueryProvider>
           <QueryParamProvider adapter={ReactRouter7Adapter}>
             <Suspense fallback={<Splash />}>
@@ -41,7 +41,7 @@ export function Layout() {
   );
 }
 
-function Fallback({ error }: FallbackProps) {
+const Fallback: FallbackRender = ({ error }) => {
   const errorCode = (() => {
     if (error instanceof AxiosError) {
       return error.status;
@@ -85,7 +85,7 @@ function Fallback({ error }: FallbackProps) {
       </Button>
     </Box>
   );
-}
+};
 
 function Splash() {
   return (
