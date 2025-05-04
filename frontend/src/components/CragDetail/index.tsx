@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 import { Box, Typography, IconButton, Stack, Divider } from '@mui/material';
 import Share from '@mui/icons-material/Share';
@@ -42,12 +43,13 @@ export default function CragDetail() {
     setSelectCragDetailId(null);
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {typeof selectCragDetailId === 'string' && (
         <CragDetailContent onClose={handleSheetClose} crag={crag} images={images} />
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 

@@ -10,5 +10,5 @@ export const filter = 101;
 export const cragList = 102;
 
 export const story = 1000;
-export const menu = 1001;
-export const cragDetail = 1002;
+export const cragDetail = 1001;
+export const menu = 1002;
