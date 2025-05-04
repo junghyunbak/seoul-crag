@@ -10,7 +10,7 @@ export function useMutateLogout() {
       await api.post('/auth/logout');
     },
     onSuccess() {
-      queryClient.clear();
+      queryClient.removeQueries({ queryKey: ['me'] });
     },
   });
 
