@@ -5,11 +5,15 @@ import TuneIcon from '@mui/icons-material/Tune';
 import PersonIcon from '@mui/icons-material/PersonOutline';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
-import { useQueryParam, BooleanParam, StringParam } from 'use-query-params';
+import { useQueryParam, BooleanParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
-import { useFetchImages, useFilter, useModifyCragList, useModifyFilter } from '@/hooks';
+
+import { useFilter, useModifyCragList, useModifyFilter } from '@/hooks';
+
 import { useStore } from '@/store';
+
+import { CragThumbnailImages } from '@/components/CragThumbnailImages';
 
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   '& .MuiBadge-badge': {
@@ -93,34 +97,5 @@ export function Controller() {
         </Stack>
       </Paper>
     </Box>
-  );
-}
-
-function CragThumbnailImages() {
-  const [selectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
-  const [, setInteriorStory] = useQueryParam(QUERY_STRING.STORY_INTERIOR, StringParam);
-
-  const { images } = useFetchImages(selectCragId, 'interior');
-
-  if (!images || images.length === 0) {
-    return;
-  }
-
-  return (
-    <Box
-      component="img"
-      src={images[0].url}
-      sx={{
-        width: '120px',
-        aspectRatio: '2/1',
-        objectFit: 'cover',
-        border: '1px solid white',
-        boxShadow: 2,
-        cursor: 'pointer',
-      }}
-      onClick={() => {
-        setInteriorStory(selectCragId);
-      }}
-    />
   );
 }

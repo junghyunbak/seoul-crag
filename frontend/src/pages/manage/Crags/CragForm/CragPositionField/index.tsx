@@ -8,6 +8,7 @@ import { useMutateCragLocation, useNaverMap } from '@/hooks';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { cragsContext } from '@/pages/manage/Crags/index.context';
+import { CragThumbnailImages } from '@/components/CragThumbnailImages';
 
 import { Map } from '@/components/Map';
 
@@ -94,14 +95,33 @@ export function CragPositionField() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        flex: 1,
+        width: '100%',
         gap: 1,
       }}
     >
-      <Map map={map} mapRef={mapRef}>
-        <Map.Polygon.Boundary />
-        <Map.Marker.Crag crag={crag} crags={crags} onCreate={setLocMarker} />
-      </Map>
+      <Box
+        sx={{
+          display: 'flex',
+          width: '100%',
+          aspectRatio: '1/1',
+          position: 'relative',
+        }}
+      >
+        <Map map={map} mapRef={mapRef}>
+          <Map.Polygon.Boundary />
+          <Map.Marker.Crag crag={crag} crags={crags} onCreate={setLocMarker} />
+        </Map>
+
+        <Box
+          sx={{
+            position: 'absolute',
+            right: 8,
+            bottom: 8,
+          }}
+        >
+          <CragThumbnailImages />
+        </Box>
+      </Box>
 
       <Button variant={mapEnabled ? 'contained' : 'outlined'} onClick={handleMapLocChangeButtonClick}>
         {mapEnabled ? '수정 완료' : '위치 수정'}

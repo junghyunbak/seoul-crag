@@ -50,9 +50,7 @@ export function CragForm({ initialCrag }: CragFormProps) {
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', width: '100%' }}>
           <Box
             sx={{
-              display: 'flex',
               width: { md: '400px', xs: '100%' },
-              aspectRatio: '1/1',
             }}
           >
             <CragPositionField />
