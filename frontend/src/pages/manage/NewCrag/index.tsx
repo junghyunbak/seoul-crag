@@ -12,7 +12,12 @@ export function NewCrag() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  const { map, mapRef } = useNaverMap(() => ({}), []);
+  const { map, mapRef } = useNaverMap(
+    () => ({
+      zoom: 10,
+    }),
+    []
+  );
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
