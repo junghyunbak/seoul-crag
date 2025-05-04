@@ -25,6 +25,11 @@ export function SelectExpeditionTime() {
           },
         }}
         onChange={(e) => {
+          if (!e.target.value) {
+            updateSelectDate(null);
+            return;
+          }
+
           updateSelectDate(time.dateTimeStrToDate(time.normalizeToFullTimestamp(e.target.value)));
         }}
       />
