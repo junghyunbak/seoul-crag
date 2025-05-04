@@ -47,11 +47,6 @@ const sidebarList: SidebarList = [
         pathname: urlService.getAbsolutePath('/manage/crags'),
         title: '내 암장 관리',
       },
-      {
-        icon: <Dashboard />,
-        pathname: urlService.getAbsolutePath('/manage/dashborad'),
-        title: '대시보드',
-      },
     ],
   },
   {
@@ -66,6 +61,11 @@ const sidebarList: SidebarList = [
         icon: <Foundation />,
         pathname: urlService.getAbsolutePath('/manage/new-crag'),
         title: '암장 추가',
+      },
+      {
+        icon: <Dashboard />,
+        pathname: urlService.getAbsolutePath('/manage/dashborad'),
+        title: '대시보드',
       },
     ],
   },

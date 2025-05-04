@@ -1,7 +1,7 @@
-import { Controller, Post, Req, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, Body, UseGuards, Get } from '@nestjs/common';
 import { AppVisitedService } from './app-visited.service';
 import { Request } from 'express';
-import { OptionalJwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { JwtAuthGuard, OptionalJwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { isJwtParsedUser } from 'src/utils/typeguard';
 
 @Controller('visit')
@@ -25,5 +25,11 @@ export class AppVisitedController {
     })();
 
     await this.appVisitedService.logVisit(userId, ip, body.url);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getVisitStats() {
+    return await this.appVisitedService.getVisitStats();
   }
 }
