@@ -138,11 +138,8 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                       case 'reduced':
                       case 'setup': {
                         if (isFirst && isLast) {
-                          const endMinutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.close_date));
-                          const startMinutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.open_date));
-
-                          left = (startMinutes / 1440) * 100;
-                          right = ((1440 - endMinutes) / 1440) * 100;
+                          left = 0;
+                          right = 0;
                         } else if (isFirst) {
                           const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.open_date));
 
