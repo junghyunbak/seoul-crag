@@ -12,8 +12,6 @@ import { JwtService } from '@nestjs/jwt';
 
 import type { Request, Response } from 'express';
 
-import { AuthGuard } from '@nestjs/passport';
-
 import { type AppConfig } from 'src/config/env.validation';
 import { ConfigService } from '@nestjs/config';
 
@@ -29,6 +27,7 @@ import * as ms from 'ms';
 
 import { JwtParsedUser } from 'src/types/auth';
 import { isPassportUser } from 'src/utils/typeguard';
+import { KakaoAuthGuard } from './kakao/kakao.guard';
 
 const accessTokenExpires: ms.StringValue = '15m';
 const refreshTokenExpires: ms.StringValue = '14d';
@@ -45,13 +44,13 @@ export class AuthController {
   ) {}
 
   @Get('kakao')
-  @UseGuards(AuthGuard('kakao'))
+  @UseGuards(KakaoAuthGuard)
   kakaoLogin() {}
 
   // 🔽️🔽️🔽️🔽️🔽️🔽️🔽️🔽️🔽️
 
   @Get('kakao/redirect')
-  @UseGuards(AuthGuard('kakao'))
+  @UseGuards(KakaoAuthGuard)
   async kakaoRedirect(@Req() req: Request, @Res() res: Response) {
     try {
       if (!req.user || !isPassportUser(req.user)) {
@@ -94,7 +93,9 @@ export class AuthController {
       return res.redirect('/login-fail');
     }
 
-    return res.redirect('/?menu=1');
+    const returnTo = (req.query?.state as string) || '/?menu=1';
+
+    return res.redirect(decodeURIComponent(returnTo));
   }
 
   @Post('logout')

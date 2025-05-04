@@ -126,7 +126,7 @@ export function Menu() {
   const { logoutMutation } = useMutateLogout();
 
   const handleLoginButtonClick = () => {
-    window.location.href = '/api/auth/kakao';
+    window.location.href = `/api/auth/kakao?returnTo=${encodeURIComponent(`/${window.location.search}`)}`;
   };
 
   const handleLogoutButtonClick = () => {
