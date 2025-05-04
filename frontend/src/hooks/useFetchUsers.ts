@@ -27,6 +27,13 @@ export function useFetchMe() {
     queryFn: async () => {
       const { data } = await api.get('/users/me');
 
+      /**
+       * 로깅
+       */
+      await api.post('/visit', {
+        url: window.location.href,
+      });
+
       const user = userScheme.parse(data);
 
       return user;
