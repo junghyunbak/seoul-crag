@@ -1,7 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
 
-import { useQueryParam, StringParam } from 'use-query-params';
-
 import { Box, Button } from '@mui/material';
 
 import { useMutateCragLocation, useNaverMap } from '@/hooks';
@@ -11,8 +9,6 @@ import { cragsContext } from '@/pages/manage/Crags/index.context';
 import { CragThumbnailImages } from '@/components/CragThumbnailImages';
 
 import { Map } from '@/components/Map';
-
-import { QUERY_STRING } from '@/constants';
 
 export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -26,8 +22,6 @@ export function CragPositionField() {
       revalidateCrag();
     },
   });
-
-  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { map, mapRef } = useNaverMap(
     () => ({
@@ -74,7 +68,7 @@ export function CragPositionField() {
     return function cleanup() {
       map.removeListener(centerChangeListener);
     };
-  }, [map, locMarker, setSelectCragId]);
+  }, [map, locMarker]);
 
   const handleMapLocChangeButtonClick = async () => {
     if (mapEnabled && map) {
