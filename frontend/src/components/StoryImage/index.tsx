@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { createPortal } from 'react-dom';
 
@@ -34,6 +34,16 @@ export default function StoryImage({ imageType }: StoryImageProps) {
 
   // TODO: crag 객체 내 imageType -> images가 된다면 필요없어질 fetch
   const { images } = useFetchImages(cragId, imageType);
+
+  /**
+   * preload images
+   */
+  useEffect(() => {
+    (images || []).forEach((image) => {
+      const img = new Image();
+      img.src = image.url;
+    });
+  }, [images]);
 
   return createPortal(
     <AnimatePresence>
