@@ -12,7 +12,7 @@ import '@/assets/fonts/index.css';
 import * as Sentry from '@sentry/react';
 
 Sentry.init({
-  dsn: 'https://2a903d9270df609c8d6c89ad14185efc@o4508379534458880.ingest.us.sentry.io/4509263291744257',
+  dsn: 'https://673026ed1c9b3da95c831f91524722e1@o4509263823241216.ingest.de.sentry.io/4509263825666128',
   sendDefaultPii: true,
 });
 
