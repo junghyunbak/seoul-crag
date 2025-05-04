@@ -15,6 +15,8 @@ import { ScheduleMonthNavigation } from '../ScheduleMonthNavigation';
 
 import { AnimatePresence } from 'framer-motion';
 
+import { addMonths } from 'date-fns';
+
 export default function StorySchedule() {
   const [scheduleStoryCragId, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
@@ -27,7 +29,7 @@ export default function StorySchedule() {
       {scheduleStoryCragId && crag && (
         <StorySlider
           crag={crag}
-          contents={[expeditionDate].map((date) => (
+          contents={[expeditionDate, addMonths(expeditionDate, 1)].map((date) => (
             <Box
               sx={{
                 display: 'flex',
