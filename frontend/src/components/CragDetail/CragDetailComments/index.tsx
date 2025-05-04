@@ -18,12 +18,14 @@ import { commentsScheme } from '@/schemas/comment';
 import { isBefore } from 'date-fns';
 import { grey } from '@mui/material/colors';
 import { useFetchMe } from '@/hooks';
+import { BooleanParam, useQueryParam } from 'use-query-params';
+import { QUERY_STRING } from '@/constants';
 
-interface CommentSectionProps {
+interface CragDetailCommentProps {
   cragId: string;
 }
 
-export default function CommentSection({ cragId }: CommentSectionProps) {
+export function CragDetailComment({ cragId }: CragDetailCommentProps) {
   const { data: comments, isLoading, refetch } = useComments(cragId);
   const { createCommentMutation } = useMutateCreateComment();
 
@@ -137,6 +139,8 @@ export function CommentForm({ onSubmit, isSubmitting }: CommentFormProps) {
   const [content, setContent] = useState('');
   const [isAdminOnly, setIsAdminOnly] = useState(false);
 
+  const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
+
   const { user } = useFetchMe();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -182,9 +186,17 @@ export function CommentForm({ onSubmit, isSubmitting }: CommentFormProps) {
           label="관리자만 보기"
         />
 
-        <Button variant="contained" type="submit" disabled={isSubmitting || !content.trim()}>
-          작성
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          {!user && (
+            <Button variant="contained" onClick={() => setIsMenuOpen(true)}>
+              로그인
+            </Button>
+          )}
+
+          <Button variant="contained" type="submit" disabled={isSubmitting || !content.trim()}>
+            작성
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

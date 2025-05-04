@@ -17,7 +17,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { time } from '@/utils';
 
-const CragDetailModal = lazy(() => import('@/components/CragDetailModal'));
+const CragDetail = lazy(() => import('@/components/CragDetail'));
 const StoryImage = lazy(() => import('@/components/StoryImage'));
 
 export function Layout() {
@@ -33,7 +33,7 @@ export function Layout() {
                 <StoryImage imageType="interior" />
                 <StoryImage imageType="shower" />
 
-                <CragDetailModal />
+                <CragDetail />
               </LoadNaverMap>
             </Suspense>
           </QueryParamProvider>

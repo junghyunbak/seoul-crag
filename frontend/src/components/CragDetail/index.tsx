@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-import { Box, Typography, IconButton, Stack, Divider, styled } from '@mui/material';
+import { Box, Typography, IconButton, Stack, Divider } from '@mui/material';
 import Share from '@mui/icons-material/Share';
 import Edit from '@mui/icons-material/Edit';
 import Close from '@mui/icons-material/Close';
@@ -17,8 +17,9 @@ import { Map } from '@/components/Map';
 import { Schedule } from '@/components/Schedule';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 import { ImageWithSource } from '@/components/ImageWithSource';
-import { CragDetailOpeningHours } from '@/components/CragDetailModal/CragDetailOpeningHours';
-import CommentSection from '@/components/Comments';
+
+import { CragDetailOpeningHours } from '@/components/CragDetail/CragDetailOpeningHours';
+import { CragDetailComment } from './CragDetailComments';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -31,7 +32,7 @@ import { zIndex } from '@/styles';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 
-export default function CragDetailModal() {
+export default function CragDetail() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
 
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });
@@ -43,18 +44,20 @@ export default function CragDetailModal() {
 
   return (
     <AnimatePresence>
-      {typeof selectCragDetailId === 'string' && <CragDetail onClose={handleSheetClose} crag={crag} images={images} />}
+      {typeof selectCragDetailId === 'string' && (
+        <CragDetailContent onClose={handleSheetClose} crag={crag} images={images} />
+      )}
     </AnimatePresence>
   );
 }
 
-interface CragDetailProps {
+interface CragDetailContentProps {
   crag: Crag | null | undefined;
   images: Image[] | null | undefined;
   onClose: () => void;
 }
 
-function CragDetail({ onClose, crag, images }: CragDetailProps) {
+function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
   const { expeditionDate } = useFilter();
 
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
@@ -270,7 +273,7 @@ function CragDetail({ onClose, crag, images }: CragDetailProps) {
 
             <Divider />
 
-            <CommentSection cragId={crag.id} />
+            <CragDetailComment cragId={crag.id} />
           </Box>
         )}
 
