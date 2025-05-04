@@ -80,7 +80,9 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
         const angleDeg = (angleRad * 180) / Math.PI;
         const angle = (angleDeg + 450) % 360;
 
-        const roundedAngle = Math.round(angle / 10) * 10;
+        const GROUP_ANGLE = 30;
+
+        const roundedAngle = Math.round(angle / GROUP_ANGLE) * GROUP_ANGLE;
 
         if (!grouped[roundedAngle]) {
           // ✅ 화면 중심 기준 외부점
