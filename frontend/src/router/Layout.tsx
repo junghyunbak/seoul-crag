@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { ErrorBoundary, FallbackRender } from '@sentry/react';
 import { Outlet } from 'react-router';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+
+import * as Sentry from '@sentry/react';
 
 import { QueryParamProvider } from 'use-query-params';
 
@@ -21,7 +23,7 @@ const StoryImage = lazy(() => import('@/components/StoryImage'));
 export function Layout() {
   return (
     <Box sx={{ position: 'fixed', inset: 0 }}>
-      <ErrorBoundary fallback={Fallback}>
+      <ErrorBoundary FallbackComponent={Fallback}>
         <QueryProvider>
           <QueryParamProvider adapter={ReactRouter7Adapter}>
             <Suspense fallback={<Splash />}>
@@ -41,7 +43,9 @@ export function Layout() {
   );
 }
 
-const Fallback: FallbackRender = ({ error }) => {
+const Fallback = ({ error }: FallbackProps) => {
+  Sentry.captureException(error);
+
   const errorCode = (() => {
     if (error instanceof AxiosError) {
       return error.status;
@@ -80,8 +84,8 @@ const Fallback: FallbackRender = ({ error }) => {
         {errorMessage}
       </Typography>
 
-      <Button variant="contained" onClick={() => (window.location.href = '/?menu=1')}>
-        로그인
+      <Button variant="contained" onClick={() => (window.location.href = `/${errorCode === 401 ? '?menu=1' : ''}`)}>
+        {errorCode === 401 ? '로그인' : '홈으로'}
       </Button>
     </Box>
   );
