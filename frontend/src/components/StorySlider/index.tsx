@@ -14,7 +14,8 @@ import { motion, animate, useMotionValue } from 'framer-motion';
 
 import { useDrag } from '@use-gesture/react';
 
-import { SIZE } from '@/constants';
+import { QUERY_STRING, SIZE } from '@/constants';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 const DimmedMotionDiv = styled(motion.div)``;
 const ContentMotionDiv = styled(motion.div)``;
@@ -156,6 +157,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
 
   useEffect(() => {
     if (index.value === contents.length) {
@@ -333,6 +335,13 @@ export const StorySlider: React.FC<StorySliderProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: 1,
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              if (crag) {
+                setPaused(true);
+                setSelectCragId(crag.id);
+              }
             }}
           >
             <Avatar sx={{ width: 32, height: 32 }} src={crag?.thumbnail_url || ''}>
