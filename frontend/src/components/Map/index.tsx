@@ -7,6 +7,7 @@ import { Marker, Polygon } from '@/components/Map/overlays';
 const mockCrag: Crag = {
   id: '',
   name: '',
+  short_name: '',
   description: '',
   latitude: 0,
   longitude: 0,
