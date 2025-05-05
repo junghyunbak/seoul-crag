@@ -223,7 +223,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       {/**
        * 제목
        */}
-      {zoomLevel > 11 && (
+      {(zoomLevel > 11 || isSelect) && (
         <Box
           sx={{
             /**
