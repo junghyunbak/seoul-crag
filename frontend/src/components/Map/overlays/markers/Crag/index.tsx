@@ -84,6 +84,18 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
   const isOff = getCragIsOff(crag);
   const isFiltered = getCragIsFiltered(crag);
 
+  const isTitleShown = (() => {
+    if (isSelect) {
+      return true;
+    }
+
+    if (isOff) {
+      return false;
+    }
+
+    return zoomLevel > 11;
+  })();
+
   /**
    * 마커 초기화
    */
@@ -235,7 +247,7 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       {/**
        * 제목
        */}
-      {(zoomLevel > 11 || isSelect) && (
+      {isTitleShown && (
         <Box
           sx={{
             /**
