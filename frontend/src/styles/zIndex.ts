@@ -1,5 +1,6 @@
-export const cragMarkerUnactive = 0;
-export const cragMarkerAcive = 1;
+export const cragMarkerOff = 0;
+export const cragMarkerUnactive = 1;
+export const cragMarkerAcive = 2;
 
 export const controller = 101;
 export const marquee = 102;

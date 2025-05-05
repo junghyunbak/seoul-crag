@@ -117,8 +117,20 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       return;
     }
 
-    marker.setZIndex(isSelect ? zIndex.cragMarkerAcive : zIndex.cragMarkerUnactive);
-  }, [marker, isSelect]);
+    const markerZIndex = (() => {
+      if (isSelect) {
+        return zIndex.cragMarkerAcive;
+      }
+
+      if (isOff) {
+        return zIndex.cragMarkerOff;
+      }
+
+      return zIndex.cragMarkerUnactive;
+    })();
+
+    marker.setZIndex(markerZIndex);
+  }, [marker, isSelect, isOff]);
 
   /**
    * 방사형 메뉴 계산
