@@ -86,11 +86,6 @@ export function ScheduleEditModal({
               <TextField
                 type="datetime-local"
                 value={openDate}
-                slotProps={{
-                  htmlInput: {
-                    max: closeDate,
-                  },
-                }}
                 onChange={(e) => {
                   setOpenDate(time.normalizeToFullTimestamp(e.target.value));
                 }}
@@ -98,11 +93,6 @@ export function ScheduleEditModal({
               <TextField
                 type="datetime-local"
                 value={closeDate}
-                slotProps={{
-                  htmlInput: {
-                    min: openDate,
-                  },
-                }}
                 onChange={(e) => {
                   setCloseDate(time.normalizeToFullTimestamp(e.target.value));
                 }}
