@@ -124,6 +124,39 @@ export function useFilter() {
   const getCragIsOff = useCallback(
     (crag: Crag) => {
       /**
+       * ⚠️ 스케줄에 추가된 운영이 선적용되어야 함.
+       */
+      for (const { type, open_date, close_date } of crag.futureSchedules || []) {
+        /**
+         * 오늘 스케줄이 아닌경우 넘어감.
+         */
+        if (time.dateToDateStr(expeditionDate) !== time.dateTimeStrToDateStr(open_date)) {
+          continue;
+        }
+
+        if (type === 'closed') {
+          return true;
+        }
+
+        if (type === 'reduced') {
+          /**
+           * 하루 이상의 범위일 경우 무시 => 24시간 이상으로 운영하는 암장은 없음.
+           */
+          if (time.dateTimeStrToDateStr(open_date) !== time.dateTimeStrToDateStr(close_date)) {
+            continue;
+          }
+
+          /**
+           * 단축 운영 시간 밖일 경우 off로 판단.
+           */
+          return !(
+            isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
+            isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
+          );
+        }
+      }
+
+      /**
        * 원정 날짜의 요일에 해당하는 운영 정보가 있을 경우 계산
        */
       const todayOpeningHour = (crag?.openingHourOfWeek || []).find(
@@ -147,35 +180,7 @@ export function useFilter() {
         }
       }
 
-      return (crag.futureSchedules || []).some(({ type, open_date, close_date }) => {
-        /**
-         * 오늘 스케줄이 아닌경우 넘어감.
-         */
-        if (time.dateToDateStr(expeditionDate) !== time.dateTimeStrToDateStr(open_date)) {
-          return false;
-        }
-
-        if (type === 'closed') {
-          return true;
-        }
-
-        /**
-         * 하루 이상의 범위일 경우 무시
-         *
-         * 24시간 이상으로 운영하는 암장은 없음.
-         */
-        if (type === 'reduced' && time.dateTimeStrToDateStr(open_date) === time.dateTimeStrToDateStr(close_date)) {
-          /**
-           * 단축 운영 시간 밖일 경우 off로 판단.
-           */
-          return !(
-            isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
-            isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
-          );
-        }
-
-        return false;
-      });
+      return false;
     },
     [expeditionDay, expeditionDate]
   );
