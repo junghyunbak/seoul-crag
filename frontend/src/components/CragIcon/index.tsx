@@ -4,10 +4,9 @@ interface CragIconProps {
   width: number;
   isSelect?: boolean;
   isClose?: boolean;
-  counting?: boolean;
 }
 
-export function CragIcon({ width, isSelect = false, isClose = false, counting = false }: CragIconProps) {
+export function CragIcon({ width, isSelect = false, isClose = false }: CragIconProps) {
   const mountainTopBg = (() => {
     return '#F6EED6';
   })();
@@ -33,27 +32,6 @@ export function CragIcon({ width, isSelect = false, isClose = false, counting = 
         userSelect: 'none',
       }}
     >
-      {counting && (
-        <div
-          className="count"
-          style={{
-            position: 'absolute',
-            border: '3px solid #52634A',
-            background: '#F6EED6',
-            borderRadius: '50%',
-            width: '30px',
-            aspectRatio: '1/1',
-            top: '-20px',
-            zIndex: -1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontWeight: 'bold',
-            color: '#52634A',
-          }}
-        />
-      )}
-
       {isClose && (
         <Box
           sx={{

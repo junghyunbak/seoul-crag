@@ -3,11 +3,8 @@ import { useContext, useEffect } from 'react';
 import { renderToString } from 'react-dom/server';
 
 import { mapContext } from '@/components/Map/index.context';
-import { CragIcon } from '@/components/CragIcon';
 
 import { Box } from '@mui/material';
-
-import { CRAG_CLUSTER_MARKER_SIZE } from '@/constants/size';
 
 interface ClusterProps {
   markers: naver.maps.Marker[];
@@ -25,7 +22,26 @@ export function Cluster({ markers }: ClusterProps) {
       disableClickZoom: false,
       icons: [
         {
-          content: renderToString(<CragIcon width={CRAG_CLUSTER_MARKER_SIZE} counting />),
+          content: renderToString(
+            <div
+              className="count"
+              style={{
+                position: 'absolute',
+                border: '3px solid #52634A',
+                background: '#F6EED6',
+                borderRadius: '50%',
+                width: '30px',
+                aspectRatio: '1/1',
+                top: '-20px',
+                zIndex: -1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontWeight: 'bold',
+                color: '#52634A',
+              }}
+            />
+          ),
         },
       ],
       indexGenerator: [0],
