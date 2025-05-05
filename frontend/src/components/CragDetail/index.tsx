@@ -24,7 +24,7 @@ import { CragDetailLocation } from './CragDetailLocation';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { subMonths, addMonths } from 'date-fns';
+import { subMonths, addMonths, format } from 'date-fns';
 
 import { urlService } from '@/utils';
 
@@ -227,9 +227,9 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
               </Stack>
             </Stack>
 
-            <Typography variant="caption" color="text.secondary">{`최근 정보 갱신일 · ${new Date(
-              crag.updated_at
-            ).toLocaleDateString()}`}</Typography>
+            <Typography variant="caption" color="text.secondary">
+              {`최근 정보 갱신일 · ${format(new Date(crag.updated_at), 'yyyy년 MM월 dd일')}`}
+            </Typography>
 
             <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }} component="pre">
               {crag.description}
