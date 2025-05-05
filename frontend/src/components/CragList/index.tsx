@@ -92,8 +92,7 @@ export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          px: 1,
-          py: 0.5,
+          p: 1.5,
           background: '#f5f6f5',
           borderRadius: 1,
           gap: 1,
