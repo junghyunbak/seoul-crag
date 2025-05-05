@@ -204,9 +204,11 @@ import { useMap, useModifyCragList } from '@/hooks';
 import { QUERY_STRING } from '@/constants';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { zIndex } from '@/styles';
+import { useShallow } from 'zustand/shallow';
+import { useStore } from '@/store';
 
 export function CragListModal({ crags, open, onClose }: { crags: Crag[]; open: boolean; onClose: () => void }) {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useStore(useShallow((s) => [s.search, s.setSearch]));
   const [sort, setSort] = useState<SortType>('distance');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 

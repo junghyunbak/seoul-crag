@@ -23,6 +23,9 @@ type StoreState = {
 
   zoomLevel: number;
   setZoomLevel: (zoomLevel: number) => void;
+
+  search: string;
+  setSearch: (search: string) => void;
 } & ReturnType<typeof createFilterSlice>;
 
 export const useStore = create<StoreState>()(
@@ -64,6 +67,11 @@ export const useStore = create<StoreState>()(
       setZoomLevel(zoomLevel) {
         set(() => ({ zoomLevel }));
       },
+
+      search: '',
+      setSearch(search) {
+        set(() => ({ search }));
+      },
     }),
     {
       name: 'zustandStore',
@@ -77,6 +85,7 @@ export const useStore = create<StoreState>()(
           lastLat,
           lastLng,
           zoomLevel,
+          search,
         } = state;
 
         return {
@@ -88,6 +97,7 @@ export const useStore = create<StoreState>()(
           lastLat,
           lastLng,
           zoomLevel,
+          search,
         };
       },
     }
