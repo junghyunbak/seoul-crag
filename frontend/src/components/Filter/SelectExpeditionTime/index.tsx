@@ -1,12 +1,16 @@
 import { Box, IconButton, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import DatePicker from 'react-datepicker';
+
 import { useFilter, useModifyFilter } from '@/hooks';
 
-import { time } from '@/utils';
+import { ko } from 'date-fns/locale';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 export function SelectExpeditionTime() {
-  const { selectDate } = useFilter();
+  const { expeditionDate, selectDate } = useFilter();
 
   const handleResetSelectDateButtonClick = () => {
     updateSelectDate(null);
@@ -16,23 +20,29 @@ export function SelectExpeditionTime() {
 
   return (
     <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-      <TextField
-        type="datetime-local"
-        value={time.dateToDateTimeStr(selectDate || new Date())}
-        slotProps={{
-          htmlInput: {
-            min: time.getCurrentDateTimeStr(),
-          },
-        }}
-        onChange={(e) => {
-          if (!e.target.value) {
-            updateSelectDate(null);
-            return;
-          }
-
-          updateSelectDate(time.dateTimeStrToDate(time.normalizeToFullTimestamp(e.target.value)));
-        }}
+      <DatePicker
+        selected={expeditionDate}
+        onChange={updateSelectDate}
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="time"
+        locale={ko}
+        dateFormat="yyyy년 M월 d일 h:mm"
+        popperPlacement="bottom-start"
+        customInput={
+          <TextField
+            variant="outlined"
+            size="small"
+            slotProps={{
+              htmlInput: {
+                readOnly: true,
+              },
+            }}
+          />
+        }
       />
+
       {selectDate && (
         <IconButton onClick={handleResetSelectDateButtonClick}>
           <DeleteIcon />
