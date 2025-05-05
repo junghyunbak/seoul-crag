@@ -1,14 +1,15 @@
 export const cragMarkerUnactive = 0;
 export const cragMarkerAcive = 1;
 
-export const controller = 11;
-export const edgeMarker = 12;
-export const timer = 13;
+export const controller = 101;
+export const marquee = 102;
+export const edgeMarker = 103;
+export const timer = 104;
 
-export const openMenu = 100;
-export const filter = 101;
-export const cragList = 102;
+export const openMenu = 1000;
+export const filter = 1001;
+export const cragList = 1002;
 
-export const story = 1000;
-export const cragDetail = 1001;
-export const menu = 1002;
+export const story = 10000;
+export const cragDetail = 10001;
+export const menu = 10002;

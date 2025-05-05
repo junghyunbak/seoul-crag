@@ -23,6 +23,8 @@ import CurrentTime from '@/components/CurrentTime';
 
 import { zIndex } from '@/styles';
 
+import NoticeMarquee from '@/components/Marquee';
+
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
 
@@ -182,6 +184,16 @@ export default function Main() {
       <Filter />
 
       <ZoomChange />
+
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          zIndex: zIndex.marquee,
+        }}
+      >
+        <NoticeMarquee />
+      </Box>
 
       {markers && <AngularEdgeMarkers crags={crags} />}
     </Box>
