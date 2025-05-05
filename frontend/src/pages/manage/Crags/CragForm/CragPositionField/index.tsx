@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 
 import { Box, Button } from '@mui/material';
 
-import { useMutateCragLocation, useNaverMap } from '@/hooks';
+import { useMap, useMutateCragLocation, useNaverMap } from '@/hooks';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { cragsContext } from '@/pages/manage/Crags/index.context';
@@ -13,6 +13,8 @@ import { Map } from '@/components/Map';
 export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
   const { crags } = useContext(cragsContext);
+
+  const { boundary } = useMap();
 
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
@@ -27,6 +29,10 @@ export function CragPositionField() {
     () => ({
       zoom: 15,
       keyboardShortcuts: false,
+      maxBounds: new naver.maps.LatLngBounds(
+        new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
+        new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
+      ),
     }),
     []
   );
