@@ -10,6 +10,12 @@ import holidayData from './holidays.ko.json';
 import { DAY_LABELS, SCHEDULE_TYPE_TO_COLORS, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
 import { time } from '@/utils';
 
+const SCHEDULE_TYPE_TO_INDEX: Record<ScheduleType, number> = {
+  setup: 0,
+  closed: 1,
+  reduced: 2,
+};
+
 interface ScheduleProps {
   currentMonth: Date;
   schedules: Schedule[];
@@ -56,22 +62,24 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
         ))}
 
         {days.map((day, i) => {
-          const filteredSchedules = schedules.filter(({ open_date, close_date }) => {
-            const openDate = time.dateTimeStrToDate(open_date);
-            const closeDate = time.dateTimeStrToDate(close_date);
+          const filteredSchedules = schedules
+            .sort((a, b) => (SCHEDULE_TYPE_TO_INDEX[a.type] < SCHEDULE_TYPE_TO_INDEX[b.type] ? -1 : 1))
+            .filter(({ open_date, close_date }) => {
+              const openDate = time.dateTimeStrToDate(open_date);
+              const closeDate = time.dateTimeStrToDate(close_date);
 
-            /**
-             * 0시 ~ 23분 59분 59초 | 0시 ~ 23시 59분 59초 | 0시 ~ 23시 59분 59초
-             *                <---^--->            <---^--->
-             *                  (day)               (dayEnd)
-             *
-             * 하루 사이에 걸친 일정을 체크하기 위해 경계값을 기준으로 비교함.
-             */
-            const dayStart = day;
-            const dayEnd = new Date(day.getTime() + 1000 * 60 * 60 * 24 - 1);
+              /**
+               * 0시 ~ 23분 59분 59초 | 0시 ~ 23시 59분 59초 | 0시 ~ 23시 59분 59초
+               *                <---^--->            <---^--->
+               *                  (day)               (dayEnd)
+               *
+               * 하루 사이에 걸친 일정을 체크하기 위해 경계값을 기준으로 비교함.
+               */
+              const dayStart = day;
+              const dayEnd = new Date(day.getTime() + 1000 * 60 * 60 * 24 - 1);
 
-            return isBefore(openDate, dayEnd) && isBefore(dayStart, closeDate);
-          });
+              return isBefore(openDate, dayEnd) && isBefore(dayStart, closeDate);
+            });
 
           const scheduleDateStr = time.dateToDateStr(day);
           const expeditionDateStr = time.dateToDateStr(expeditionDate);
