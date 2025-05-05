@@ -89,10 +89,6 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
       return true;
     }
 
-    if (isOff) {
-      return false;
-    }
-
     return zoomLevel > 11;
   })();
 

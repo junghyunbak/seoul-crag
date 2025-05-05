@@ -16,7 +16,6 @@ import { QUERY_STRING } from '@/constants';
 import { Map } from '@/components/Map';
 import { Controller } from '@/components/Controller';
 import { Menu } from '@/components/Menu';
-import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 import { Filter } from '@/components/Filter';
 import { CragListModal } from '@/components/CragList';
 import CurrentTime from '@/components/CurrentTime';
@@ -194,8 +193,6 @@ export default function Main() {
       >
         <NoticeMarquee />
       </Box>
-
-      {markers && <AngularEdgeMarkers crags={crags} />}
     </Box>
   );
 }

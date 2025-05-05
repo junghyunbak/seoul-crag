@@ -1,3 +1,5 @@
+import { Box } from '@mui/material';
+
 interface CragIconProps {
   width: number;
   isSelect?: boolean;
@@ -7,28 +9,16 @@ interface CragIconProps {
 
 export function CragIcon({ width, isSelect = false, isClose = false, counting = false }: CragIconProps) {
   const mountainTopBg = (() => {
-    if (isClose) {
-      return 'white';
-    }
-
     return '#F6EED6';
   })();
 
   const mountainBottomBg = (() => {
-    if (isClose) {
-      return '#848585';
-    }
-
     return '#8A9969';
   })();
 
   const borderColor = (() => {
     if (isSelect) {
       return 'black';
-    }
-
-    if (isClose) {
-      return '#515151';
     }
 
     return '#52634A';
@@ -64,6 +54,26 @@ export function CragIcon({ width, isSelect = false, isClose = false, counting = 
         />
       )}
 
+      {isClose && (
+        <Box
+          sx={{
+            border: '1px solid #363d3e',
+            py: 0.25,
+            px: 0.4,
+            fontSize: '0.5rem',
+            fontWeight: 'bold',
+            position: 'absolute',
+            top: '20%',
+            background: '#4f5555',
+            borderRadius: '2px',
+            color: 'white',
+            transform: 'rotate(-5deg)',
+          }}
+        >
+          CLOSED
+        </Box>
+      )}
+
       <svg width={`${width}px`} viewBox="0 0 90 69" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g filter={isSelect ? 'url(#filter0_d_366_2)' : ''}>
           <path
@@ -81,7 +91,7 @@ export function CragIcon({ width, isSelect = false, isClose = false, counting = 
           <path
             d="M44.7701 37.4671L37.1765 27.5736H32.5036C28.2979 28.0392 25.7017 25.0517 24.9294 23.4998M44.7701 37.4671L48.8589 42.7048C49.2483 43.2868 50.8449 44.4507 54.116 44.4507H55.2842M44.7701 37.4671L53.97 23.4998M24.9294 23.4998L37.1765 3.13079C37.7606 2.16084 39.3962 0.919304 41.2654 3.71276L53.97 23.4998M24.9294 23.4998L6.21827 54.3442C5.63415 55.8962 5.8678 59 11.4753 59H80.4014C82.5197 59 84.8561 56.7053 83.6879 54.3442L61.1254 18.844C60.1519 17.2921 58.7889 15.9673 57.0366 18.844L53.97 23.4998M55.2842 44.4507H58.7889C58.5942 45.0327 57.8544 45.9639 56.4525 45.0327L55.2842 44.4507Z"
             stroke={borderColor}
-            strokeWidth={isSelect ? 5 : 4}
+            strokeWidth={4}
           />
         </g>
 
