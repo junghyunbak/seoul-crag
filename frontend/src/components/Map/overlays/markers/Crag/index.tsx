@@ -6,7 +6,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { grey } from '@mui/material/colors';
 
-import { useCragArea, useFilter } from '@/hooks';
+import { useFilter } from '@/hooks';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -21,6 +21,7 @@ import { zIndex } from '@/styles';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
+/*
 function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
   const MIN_AREA = minArea;
   const MAX_AREA = maxArea;
@@ -44,6 +45,7 @@ function getMarkerSizeFromArea(area: number | null | undefined, minArea: number,
   // 마커 크기로 매핑
   return MIN_SIZE + ratio * (MAX_SIZE - MIN_SIZE);
 }
+  */
 
 const BASE_ANGLE = -135;
 const RADIUS = 70;
@@ -62,7 +64,7 @@ interface CragMarkerProps {
   forCluster?: boolean;
 }
 
-export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMarkerProps) {
+export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProps) {
   const { map } = useContext(mapContext);
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
@@ -71,14 +73,13 @@ export function Crag({ crag, crags, onCreate, idx, forCluster = false }: CragMar
 
   const [zoomLevel] = useStore(useShallow((s) => [s.zoomLevel]));
 
-  const { cragArea } = useCragArea(crags);
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const { getCragIsOff, getCragIsFiltered } = useFilter();
 
-  const markerWidth = getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
+  const markerWidth = (SIZE.CRAG_MARKER_MAX_SIZE + SIZE.CRAG_MARKER_MIN_SIZE) / 2; // getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
 
   const isSelect = crag.id === selectCragId;
   const isOff = getCragIsOff(crag);
