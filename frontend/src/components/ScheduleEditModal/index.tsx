@@ -109,7 +109,7 @@ export function ScheduleEditModal({
                 timeFormat="HH:mm"
                 timeIntervals={30}
                 locale={ko}
-                dateFormat="yyyy년 M월 d일 h:mm"
+                dateFormat="yyyy.MM.dd  h:mm a"
                 popperPlacement="bottom-start"
                 customInput={
                   <TextField
@@ -131,7 +131,7 @@ export function ScheduleEditModal({
                 timeFormat="HH:mm"
                 timeIntervals={30}
                 locale={ko}
-                dateFormat="yyyy년 M월 d일 h:mm"
+                dateFormat="yyyy.MM.dd  h:mm a"
                 popperPlacement="bottom-end"
                 customInput={
                   <TextField

@@ -28,7 +28,7 @@ export function SelectExpeditionTime() {
         timeIntervals={15}
         timeCaption="time"
         locale={ko}
-        dateFormat="yyyy년 M월 d일 h:mm"
+        dateFormat="yyyy.MM.dd  h:mm a"
         popperPlacement="bottom-start"
         customInput={
           <TextField
