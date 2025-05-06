@@ -73,24 +73,10 @@ export function CragScheduleCalenderField() {
           deleteScheduleMutation.mutate({ cragId: crag.id, scheduleId });
         }}
         onUpdate={async (scheduleId, openDate, closeDate, type) => {
-          if (
-            isEqual(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate)) ||
-            isBefore(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate))
-          ) {
-            updateScheduleMutation.mutate({ cragId: crag.id, scheduleId, openDate, closeDate, type });
-          } else {
-            alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
-          }
+          updateScheduleMutation.mutate({ cragId: crag.id, scheduleId, openDate, closeDate, type });
         }}
         onCreate={async (openDate, closeDate, type) => {
-          if (
-            isEqual(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate)) ||
-            isBefore(time.dateTimeStrToDate(openDate), time.dateTimeStrToDate(closeDate))
-          ) {
-            addScheduleMutation.mutate({ cragId: crag.id, openDate, closeDate, type });
-          } else {
-            alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
-          }
+          addScheduleMutation.mutate({ cragId: crag.id, openDate, closeDate, type });
         }}
       />
     </Box>

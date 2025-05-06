@@ -17,6 +17,11 @@ import { SCHEDULE_TYPES, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
 
 import { time } from '@/utils';
 
+import DatePicker from 'react-datepicker';
+import { ko } from 'date-fns/locale';
+import 'react-datepicker/dist/react-datepicker.css';
+import { isBefore, isEqual } from 'date-fns';
+
 interface ScheduleEditModalProps {
   /**
    * object : 일정 변경
@@ -24,6 +29,8 @@ interface ScheduleEditModalProps {
    * undefined: 모달 close
    */
   schedule: Schedule | null | undefined;
+  initOpenDate?: Date;
+  initCloseDate?: Date;
   onClick: () => void;
   onClose: () => void;
   onDelete: (scheduleId: string) => void;
@@ -33,6 +40,8 @@ interface ScheduleEditModalProps {
 
 export function ScheduleEditModal({
   schedule,
+  initOpenDate = new Date(),
+  initCloseDate = new Date(),
   onClick,
   onClose,
   onDelete,
@@ -40,8 +49,8 @@ export function ScheduleEditModal({
   onUpdate = () => {},
 }: ScheduleEditModalProps) {
   const [scheduleType, setScheduleType] = useState<ScheduleType>('closed');
-  const [openDate, setOpenDate] = useState(time.getCurrentDateTimeStr());
-  const [closeDate, setCloseDate] = useState(time.getCurrentDateTimeStr());
+  const [openDate, setOpenDate] = useState(initOpenDate);
+  const [closeDate, setCloseDate] = useState(initCloseDate);
 
   useEffect(() => {
     if (schedule?.type) {
@@ -49,11 +58,11 @@ export function ScheduleEditModal({
     }
 
     if (schedule?.open_date) {
-      setOpenDate(schedule.open_date);
+      setOpenDate(time.dateTimeStrToDate(schedule.open_date));
     }
 
     if (schedule?.close_date) {
-      setCloseDate(schedule.close_date);
+      setCloseDate(time.dateTimeStrToDate(schedule.close_date));
     }
   }, [schedule]);
 
@@ -63,7 +72,17 @@ export function ScheduleEditModal({
         일정 추가
       </Button>
 
-      <Dialog open={schedule !== undefined} onClose={onClose}>
+      <Dialog
+        open={schedule !== undefined}
+        onClose={onClose}
+        slotProps={{
+          paper: {
+            sx: {
+              overflow: 'visible',
+            },
+          },
+        }}
+      >
         <DialogTitle>{schedule ? '일정 편집' : '일정 추가'}</DialogTitle>
 
         <DialogContent>
@@ -83,19 +102,48 @@ export function ScheduleEditModal({
             </Select>
 
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <TextField
-                type="datetime-local"
-                value={openDate}
-                onChange={(e) => {
-                  setOpenDate(time.normalizeToFullTimestamp(e.target.value));
-                }}
+              <DatePicker
+                selected={openDate}
+                onChange={(date) => setOpenDate(date || new Date())}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={30}
+                locale={ko}
+                dateFormat="yyyy년 M월 d일 h:mm"
+                popperPlacement="bottom-start"
+                customInput={
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    slotProps={{
+                      htmlInput: {
+                        readOnly: true,
+                      },
+                    }}
+                  />
+                }
               />
-              <TextField
-                type="datetime-local"
-                value={closeDate}
-                onChange={(e) => {
-                  setCloseDate(time.normalizeToFullTimestamp(e.target.value));
-                }}
+
+              <DatePicker
+                selected={closeDate}
+                onChange={(date) => setCloseDate(date || new Date())}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={30}
+                locale={ko}
+                dateFormat="yyyy년 M월 d일 h:mm"
+                popperPlacement="bottom-end"
+                customInput={
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    slotProps={{
+                      htmlInput: {
+                        readOnly: true,
+                      },
+                    }}
+                  />
+                }
               />
             </Box>
           </Stack>
@@ -120,7 +168,17 @@ export function ScheduleEditModal({
             <Button
               variant="contained"
               onClick={() => {
-                onUpdate(schedule.id, openDate, closeDate, scheduleType);
+                if (!(isBefore(openDate, closeDate) || isEqual(openDate, closeDate))) {
+                  alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
+                  return;
+                }
+
+                onUpdate(
+                  schedule.id,
+                  time.dateToDateTimeStr(openDate),
+                  time.dateToDateTimeStr(closeDate),
+                  scheduleType
+                );
                 onClose();
               }}
             >
@@ -130,7 +188,12 @@ export function ScheduleEditModal({
             <Button
               variant="contained"
               onClick={() => {
-                onCreate(openDate, closeDate, scheduleType);
+                if (!(isBefore(openDate, closeDate) || isEqual(openDate, closeDate))) {
+                  alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
+                  return;
+                }
+
+                onCreate(time.dateToDateTimeStr(openDate), time.dateToDateTimeStr(closeDate), scheduleType);
                 onClose();
               }}
             >
