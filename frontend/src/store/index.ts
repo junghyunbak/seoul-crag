@@ -19,26 +19,10 @@ export const useStore = create<StoreState>()(
     {
       name: 'zustandStore',
       partialize(state) {
-        const {
-          isOpenFilterSheet,
-          isFilterNewSetting,
-          isFilterNonSetting,
-          isFilterShower,
-          isFilterTodayRemove,
-          lastLat,
-          lastLng,
-          zoomLevel,
-          isSearchOpen,
-          searchSortOption,
-          searchKeyword,
-        } = state;
+        const { filter, lastLat, lastLng, zoomLevel, isSearchOpen, searchSortOption, searchKeyword } = state;
 
         return {
-          isOpenFilterSheet,
-          isFilterNewSetting,
-          isFilterNonSetting,
-          isFilterShower,
-          isFilterTodayRemove,
+          filter,
           lastLat,
           lastLng,
           zoomLevel,

@@ -17,7 +17,7 @@ export function Footer() {
         flexDirection: 'column',
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', p: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', p: 2 }}>
         <GpsButton />
         <CragThumbnailImages />
       </Box>

@@ -48,12 +48,12 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
-  const { getCragIsOff, getCragIsFiltered } = useFilter();
+  const { isCragFilter, isCragOff } = useFilter(crag);
 
   const markerWidth = SIZE.CRAG_MARKER_WIDTH;
+
   const isSelect = crag.id === selectCragId;
-  const isOff = getCragIsOff(crag);
-  const isFiltered = getCragIsFiltered(crag);
+
   const isTitleShown = (() => {
     if (isSelect) {
       return true;
@@ -100,7 +100,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         return zIndex.cragMarkerAcive;
       }
 
-      if (isOff) {
+      if (isCragOff) {
         return zIndex.cragMarkerOff;
       }
 
@@ -108,7 +108,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     })();
 
     marker.setZIndex(markerZIndex);
-  }, [marker, isSelect, isOff]);
+  }, [marker, isSelect, isCragOff]);
 
   /**
    * 방사형 메뉴 계산
@@ -155,8 +155,8 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       sx={{
         position: 'absolute',
         transform: 'translate(-50%, -100%)',
-        opacity: !isFiltered ? 0.3 : 1,
-        pointerEvents: !isFiltered ? 'none' : 'auto',
+        opacity: !isCragFilter ? 0.3 : 1,
+        pointerEvents: !isCragFilter ? 'none' : 'auto',
       }}
     >
       {/**
@@ -166,7 +166,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         {/**
          * 아이콘
          */}
-        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} />
+        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isCragOff} />
 
         {/**
          * 방사형 메뉴

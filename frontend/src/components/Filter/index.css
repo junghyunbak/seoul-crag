@@ -1,0 +1,5 @@
+.keen-slider__slide {
+  min-width: auto !important;
+  width: auto !important;
+  flex-shrink: 0;
+}

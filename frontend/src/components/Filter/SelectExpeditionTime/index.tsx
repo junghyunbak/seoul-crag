@@ -12,17 +12,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 export function SelectExpeditionTime() {
   const { expeditionDate, selectDate } = useFilter();
 
-  const handleResetSelectDateButtonClick = () => {
-    updateSelectDate(null);
-  };
-
-  const { updateSelectDate } = useModifyFilter();
+  const { updateFilter } = useModifyFilter();
 
   return (
     <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
       <DatePicker
         selected={expeditionDate}
-        onChange={updateSelectDate}
+        onChange={(date) => updateFilter({ date })}
         showTimeSelect
         timeFormat="HH:mm"
         timeIntervals={15}
@@ -44,7 +40,7 @@ export function SelectExpeditionTime() {
       />
 
       {selectDate && (
-        <IconButton onClick={handleResetSelectDateButtonClick}>
+        <IconButton onClick={() => updateFilter({ date: null })}>
           <DeleteIcon />
         </IconButton>
       )}

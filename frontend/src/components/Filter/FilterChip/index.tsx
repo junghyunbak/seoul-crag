@@ -1,0 +1,50 @@
+import { Box, Typography, useTheme } from '@mui/material';
+
+interface FilterChipProps {
+  isSelect: boolean;
+  onClick: () => void;
+  label: string;
+  emoji: string;
+}
+
+export function FilterChip({ isSelect, onClick, label, emoji }: FilterChipProps) {
+  const theme = useTheme();
+
+  return (
+    <Box
+      className=""
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.5,
+        cursor: 'pointer',
+        width: 'fit-content',
+        py: 1,
+        px: 1.5,
+        borderRadius: 3,
+        background: isSelect ? theme.palette.primary.main : theme.palette.grey[100],
+        boxShadow: 1,
+      }}
+      onClick={onClick}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+          width: 21,
+          height: 21,
+
+          fontSize: '1rem',
+        }}
+      >
+        {emoji}
+      </Box>
+
+      <Typography fontSize={'1rem'} color={isSelect ? 'white' : theme.palette.text.primary}>
+        {label}
+      </Typography>
+    </Box>
+  );
+}

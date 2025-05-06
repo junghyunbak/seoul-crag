@@ -2,6 +2,7 @@ import { MenuButton } from '@/components/MenuButton';
 import { SearchInput } from '@/components/SearchInput';
 import { Box } from '@mui/material';
 import { zIndex } from '@/styles';
+import { Filter } from '@/components/Filter';
 
 export function Topbar() {
   return (
@@ -21,14 +22,26 @@ export function Topbar() {
           width: '100%',
           maxWidth: 'sm',
           display: 'flex',
+          flexDirection: 'column',
           gap: 1,
-          p: 1,
         }}
       >
-        <Box sx={{ flex: 1 }}>
-          <SearchInput />
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            gap: 1,
+            p: 2,
+            pb: 0,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <SearchInput />
+          </Box>
+          <MenuButton />
         </Box>
-        <MenuButton />
+
+        <Filter />
       </Box>
     </Box>
   );
