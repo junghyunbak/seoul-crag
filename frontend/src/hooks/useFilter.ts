@@ -38,26 +38,28 @@ export function useFilter(crag: Crag | null = null) {
       return true;
     }
 
-    if (filter.isShower && crag.imageTypes) {
-      return crag.imageTypes.includes('shower');
+    let isFilter = true;
+
+    if (filter.isShower) {
+      isFilter &&= (crag.imageTypes || []).includes('shower');
     }
 
-    if (filter.isTodayRemove && crag.futureSchedules) {
-      return crag.futureSchedules.some(
+    if (filter.isTodayRemove) {
+      isFilter &&= (crag.futureSchedules || []).some(
         ({ type, open_date }) =>
           type === 'setup' && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
       );
     }
 
-    if (filter.isNewSetting && crag.futureSchedules) {
-      return crag.futureSchedules.some(
+    if (filter.isNewSetting) {
+      isFilter &&= (crag.futureSchedules || []).some(
         ({ type, close_date }) =>
           type === 'setup' && time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
       );
     }
 
-    if (filter.isNonSetting && crag.futureSchedules) {
-      return crag.futureSchedules.some(
+    if (filter.isNonSetting) {
+      isFilter &&= !(crag.futureSchedules || []).some(
         ({ type, open_date, close_date }) =>
           type === 'setup' &&
           isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
@@ -65,7 +67,7 @@ export function useFilter(crag: Crag | null = null) {
       );
     }
 
-    return true;
+    return isFilter;
   })();
 
   const isCragOff = (() => {
