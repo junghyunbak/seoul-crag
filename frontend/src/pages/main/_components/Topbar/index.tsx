@@ -15,6 +15,7 @@ export function Topbar() {
         zIndex: zIndex.topbar,
         display: 'flex',
         justifyContent: 'center',
+        pointerEvents: 'none',
       }}
     >
       <Box
@@ -24,6 +25,7 @@ export function Topbar() {
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
+          pointerEvents: 'auto',
         }}
       >
         <Box
