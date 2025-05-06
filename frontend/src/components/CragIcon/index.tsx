@@ -16,10 +16,6 @@ export function CragIcon({ width, isSelect = false, isClose = false }: CragIconP
   })();
 
   const borderColor = (() => {
-    if (isSelect) {
-      return 'black';
-    }
-
     return '#52634A';
   })();
 
@@ -30,6 +26,9 @@ export function CragIcon({ width, isSelect = false, isClose = false }: CragIconP
         display: 'flex',
         justifyContent: 'center',
         userSelect: 'none',
+        transform: isSelect ? 'scale(1.4)' : 'scale(1)',
+        transition: 'transform 0.3s ease',
+        transformOrigin: 'bottom',
       }}
     >
       {isClose && (
@@ -53,7 +52,7 @@ export function CragIcon({ width, isSelect = false, isClose = false }: CragIconP
       )}
 
       <svg width={`${width}px`} viewBox="0 0 90 69" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g filter={isSelect ? 'url(#filter0_d_366_2)' : ''}>
+        <g filter="url(#filter0_d_366_2)">
           <path
             d="M37.1765 3.13079L24.9294 23.4998C25.7017 25.0517 28.2979 28.0392 32.5036 27.5736H37.1765L44.7701 37.4671L53.97 23.4998L41.2654 3.71276C39.3962 0.919304 37.7606 2.16084 37.1765 3.13079Z"
             fill={mountainTopBg}
