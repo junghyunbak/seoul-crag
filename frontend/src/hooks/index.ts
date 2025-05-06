@@ -3,7 +3,6 @@
  */
 export * from './useMap';
 export * from './useFilter';
-export * from './useSelectDate';
 export * from './useNaverMap';
 export * from './useSearch';
 export * from './useZoom';
