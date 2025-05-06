@@ -12,9 +12,13 @@ export function MenuButton() {
       onClick={() => {
         setIsMenuOpen((prev) => !prev);
       }}
-      endIcon={<MenuIcon />}
+      sx={{
+        p: 1.5,
+        minWidth: 'auto',
+        aspectRatio: '1/1',
+      }}
     >
-      메뉴
+      <MenuIcon />
     </Button>
   );
 }
