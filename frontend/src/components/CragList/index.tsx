@@ -21,7 +21,6 @@ export function CragList({ crags }: CragListProps) {
       const latLng = await getGpsLatLng();
 
       if (!latLng) {
-        alert('GPS를 가져올 수 없습니다.');
         return;
       }
 
