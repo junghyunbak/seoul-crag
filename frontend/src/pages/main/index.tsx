@@ -146,6 +146,7 @@ export default function Main() {
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
+      <Topbar />
       <Map map={map} mapRef={mapRef}>
         <Map.Polygon.Boundary />
         {crags?.map((crag, i) => (
@@ -154,13 +155,10 @@ export default function Main() {
         <Map.Marker.Cluster markers={markers} />
         <Map.Marker.Gps />
       </Map>
+      <Footer />
 
       <Menu />
-
       <Search />
-
-      <Topbar />
-      <Footer />
     </Box>
   );
 }
