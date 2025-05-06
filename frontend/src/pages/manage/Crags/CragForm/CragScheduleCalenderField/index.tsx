@@ -12,8 +12,6 @@ import { Schedule } from '@/components/Schedule';
 import { ScheduleEditModal } from '@/components/ScheduleEditModal';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 
-import { time } from '@/utils';
-
 export function CragScheduleCalenderField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
