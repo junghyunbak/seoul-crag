@@ -16,10 +16,9 @@ import { useFetchCrag, useFetchImages, useFilter } from '@/hooks';
 
 import { Schedule } from '@/components/Schedule';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
-import { ImageWithSource } from '@/components/ImageWithSource';
 
 import { CragDetailOpeningHours } from '@/components/CragDetail/CragDetailOpeningHours';
-import { CragDetailComment } from './CragDetailComments';
+import { CragDetailComment } from './CragDetailComment';
 import { CragDetailLocation } from './CragDetailLocation';
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -29,9 +28,7 @@ import { subMonths, addMonths, format } from 'date-fns';
 import { urlService } from '@/utils';
 
 import { zIndex } from '@/styles';
-
-import { useKeenSlider } from 'keen-slider/react';
-import 'keen-slider/keen-slider.min.css';
+import { CragDetailHero } from '@/components/CragDetail/CragDetailHero';
 
 export default function CragDetail() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
@@ -67,15 +64,6 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
 
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(expeditionDate);
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const [sliderRef] = useKeenSlider({
-    loop: true,
-    mode: 'snap',
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel);
-    },
-  });
 
   /**
    * 상단바 스타일 조정을 위한 observer 등록
@@ -148,35 +136,7 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
         }}
       >
         {/* 이미지 슬라이더 */}
-        <Box sx={{ position: 'relative' }}>
-          {images && images.length > 0 && (
-            <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
-              {images.map((image, i) => (
-                <ImageWithSource className="keen-slider__slide" key={i} image={image} />
-              ))}
-            </Box>
-          )}
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={1}
-            sx={{ position: 'absolute', bottom: 8, width: '100%' }}
-          >
-            {images &&
-              images.map((_, i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    bgcolor: currentSlide === i ? 'primary.main' : 'grey.400',
-                    transition: 'all 0.3s',
-                  }}
-                />
-              ))}
-          </Stack>
-        </Box>
+        <CragDetailHero images={images} />
 
         {/* 상단바 스타일 조정을 위한 sentinel */}
         <Box
