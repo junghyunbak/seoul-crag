@@ -1,28 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 
-import { useCragList, useFetchCrags, useModifyCragList } from '@/hooks';
+import { useFetchCrags, useModifyZoom } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
 import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
 
 import { QUERY_STRING } from '@/constants';
 
 import { Map } from '@/components/Map';
-import { Controller } from '@/components/Controller';
 import { Menu } from '@/components/Menu';
-import { Filter } from '@/components/Filter';
-import { CragListModal } from '@/components/CragList';
-import CurrentTime from '@/components/CurrentTime';
-
-import { zIndex } from '@/styles';
-
-import NoticeMarquee from '@/components/Marquee';
+import { Search } from '@/components/Search';
+import { Topbar } from './_components/Topbar';
+import { Footer } from './_components/Footer';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -32,18 +26,16 @@ export default function Main() {
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const { crags } = useFetchCrags();
-  const { mapRef, boundary } = useMap();
-  const { isCragListModalOpen } = useCragList();
-
-  const [gpsLatLng] = useStore(useShallow((s) => [s.gpsLatLng]));
+  const { mapRef, boundary, lastLat, lastLng } = useMap();
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
 
+  const { updateMap } = useModifyMap();
+  const { updateZoomLevel } = useModifyZoom();
+
   const { map } = useNaverMap(
     () => {
-      const { lastLat, lastLng } = useStore.getState();
-
       return {
         gl: true,
         customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
@@ -56,12 +48,9 @@ export default function Main() {
         ),
       };
     },
-    [boundary],
+    [boundary, lastLat, lastLng],
     mapRef
   );
-
-  const { updateMap } = useModifyMap();
-  const { updateIsCragListModalOpen } = useModifyCragList();
 
   /**
    * 기존에 선택된 마커가 있다면 이동
@@ -124,6 +113,23 @@ export default function Main() {
     };
   }, [map, setSelectCragId]);
 
+  /**
+   * 맵 줌 레벨 변경 시 반영
+   */
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const zoomChangedListener = map.addListener('zoom_changed', (zoom: number) => {
+      updateZoomLevel(zoom);
+    });
+
+    return function cleanup() {
+      map.removeListener(zoomChangedListener);
+    };
+  }, [map, updateZoomLevel]);
+
   const handleMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number) => {
     if (idx === -1) {
       return;
@@ -138,10 +144,6 @@ export default function Main() {
     });
   }, []);
 
-  const handleCragListClose = () => {
-    updateIsCragListModalOpen(false);
-  };
-
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
       <Map map={map} mapRef={mapRef}>
@@ -150,108 +152,15 @@ export default function Main() {
           <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}
         <Map.Marker.Cluster markers={markers} />
-        {gpsLatLng.lat !== -1 && gpsLatLng.lng !== -1 && <Map.Marker.Gps gpsLatLng={gpsLatLng} />}
+        <Map.Marker.Gps />
       </Map>
 
       <Menu />
 
-      <CragListModal crags={crags || []} open={isCragListModalOpen} onClose={handleCragListClose} />
+      <Search />
 
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: '10%',
-          zIndex: zIndex.controller,
-        }}
-      >
-        <Controller />
-      </Box>
-
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: zIndex.timer,
-        }}
-      >
-        <CurrentTime />
-      </Box>
-
-      <MapLoading />
-
-      <Filter />
-
-      <ZoomChange />
-
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          zIndex: zIndex.marquee,
-        }}
-      >
-        <NoticeMarquee />
-      </Box>
+      <Topbar />
+      <Footer />
     </Box>
-  );
-}
-
-function ZoomChange() {
-  const { map } = useMap();
-
-  useEffect(() => {
-    if (!map) {
-      return;
-    }
-
-    const zoomChangedListener = map.addListener('zoom_changed', (zoom: number) => {
-      useStore.getState().setZoomLevel(zoom);
-    });
-
-    return function cleanup() {
-      map.removeListener(zoomChangedListener);
-    };
-  }, [map]);
-
-  return <div />;
-}
-
-function MapLoading() {
-  const { map } = useMap();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (!map) {
-      return;
-    }
-
-    const dragStartListener = map.addListener('dragstart', () => {
-      setIsLoading(true);
-    });
-
-    const dragEndListener = map.addListener('dragend', () => {
-      setIsLoading(false);
-    });
-
-    const zoomStartListener = map.addListener('zoomstart', () => {
-      setIsLoading(true);
-    });
-
-    const zoomEndListener = map.addListener('zoomend', () => {
-      setIsLoading(false);
-    });
-
-    return function cleanup() {
-      map.removeListener(dragStartListener);
-      map.removeListener(dragEndListener);
-      map.removeListener(zoomStartListener);
-      map.removeListener(zoomEndListener);
-    };
-  }, [map]);
-
-  return (
-    <Box sx={{ position: 'fixed', top: 0, right: 0 }}>{isLoading && <CircularProgress sx={{ color: 'white' }} />}</Box>
   );
 }

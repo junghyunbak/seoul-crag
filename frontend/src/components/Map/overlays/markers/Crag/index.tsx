@@ -1,10 +1,10 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import ShowerIcon from '@mui/icons-material/Shower';
 import InfoIcon from '@mui/icons-material/Info';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { grey } from '@mui/material/colors';
 
 import { useFilter } from '@/hooks';
 
@@ -18,34 +18,8 @@ import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 
 import { zIndex } from '@/styles';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
 
-/*
-function getMarkerSizeFromArea(area: number | null | undefined, minArea: number, maxArea: number): number {
-  const MIN_AREA = minArea;
-  const MAX_AREA = maxArea;
-  const MIN_SIZE = SIZE.CRAG_MARKER_MIN_SIZE;
-  const MAX_SIZE = SIZE.CRAG_MARKER_MAX_SIZE;
-
-  if (area === null || area === undefined || isNaN(area)) {
-    return MIN_SIZE; // null인 경우 최소 크기
-  }
-
-  if (minArea === maxArea) {
-    return (MIN_SIZE + MAX_SIZE) / 2;
-  }
-
-  // 면적 값을 10~1000 사이로 클램핑
-  const clamped = Math.max(MIN_AREA, Math.min(MAX_AREA, area));
-
-  // 정규화 (0 ~ 1)
-  const ratio = (clamped - MIN_AREA) / (MAX_AREA - MIN_AREA);
-
-  // 마커 크기로 매핑
-  return MIN_SIZE + ratio * (MAX_SIZE - MIN_SIZE);
-}
-  */
+import { useZoom } from '@/hooks';
 
 const BASE_ANGLE = -135;
 const RADIUS = 70;
@@ -66,25 +40,20 @@ interface CragMarkerProps {
 
 export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProps) {
   const { map } = useContext(mapContext);
-
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
-
   const markerRef = useRef<HTMLDivElement>(null);
 
-  const [zoomLevel] = useStore(useShallow((s) => [s.zoomLevel]));
-
+  const { zoomLevel } = useZoom();
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const { getCragIsOff, getCragIsFiltered } = useFilter();
 
-  const markerWidth = (SIZE.CRAG_MARKER_MAX_SIZE + SIZE.CRAG_MARKER_MIN_SIZE) / 2; // getMarkerSizeFromArea(crag.area, cragArea.minCragArea, cragArea.maxCragArea);
-
+  const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
   const isOff = getCragIsOff(crag);
   const isFiltered = getCragIsFiltered(crag);
-
   const isTitleShown = (() => {
     if (isSelect) {
       return true;

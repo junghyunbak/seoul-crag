@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/shallow';
 
 export function useModifyMap() {
   const [setMap] = useStore(useShallow((s) => [s.setMap]));
+  const [setGpsLatLng] = useStore(useShallow((s) => [s.setGpsLatLng]));
 
   const updateMap = useCallback(
     (map: naver.maps.Map) => {
@@ -12,5 +13,12 @@ export function useModifyMap() {
     [setMap]
   );
 
-  return { updateMap };
+  const updateGpsLatLng = useCallback(
+    (lat: number, lng: number) => {
+      setGpsLatLng(lat, lng);
+    },
+    [setGpsLatLng]
+  );
+
+  return { updateMap, updateGpsLatLng };
 }

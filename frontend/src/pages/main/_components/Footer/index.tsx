@@ -1,0 +1,27 @@
+import { GpsButton } from '@/components/GpsButton';
+import { NoticeMarquee } from '@/components/NoticeMarquee';
+import { zIndex } from '@/styles';
+import { Box } from '@mui/material';
+import { CragThumbnailImages } from '@/components/CragThumbnailImages';
+
+export function Footer() {
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: zIndex.footer,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', p: 1 }}>
+        <GpsButton />
+        <CragThumbnailImages />
+      </Box>
+      <NoticeMarquee />
+    </Box>
+  );
+}

@@ -6,16 +6,9 @@ import { useMap } from '@/hooks';
 
 import { Box } from '@mui/material';
 
-interface GpsProps {
-  gpsLatLng: {
-    lat: number;
-    lng: number;
-  };
-}
-
-export function Gps({ gpsLatLng }: GpsProps) {
+export function Gps() {
   const { map } = useContext(mapContext);
-  const { boundary } = useMap();
+  const { boundary, gpsLatLng } = useMap();
 
   const markerRef = useRef<HTMLDivElement>(null);
 
@@ -24,26 +17,13 @@ export function Gps({ gpsLatLng }: GpsProps) {
       return;
     }
 
-    const latLng = new naver.maps.LatLng(gpsLatLng.lat, gpsLatLng.lng);
-
     const marker = new naver.maps.Marker({
       map,
-      position: latLng,
+      position: new naver.maps.LatLng(gpsLatLng.lat, gpsLatLng.lng),
       icon: {
         content: markerRef.current,
       },
     });
-
-    const latLngBounds = new naver.maps.LatLngBounds(
-      new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
-      new naver.maps.LatLng(boundary.rb.y, boundary.rb.x)
-    );
-
-    if (latLngBounds.hasLatLng(latLng)) {
-      map.setCenter(latLng);
-    } else {
-      alert('서울 지역 밖을 벗어났습니다.');
-    }
 
     return function cleanup() {
       marker.setMap(null);

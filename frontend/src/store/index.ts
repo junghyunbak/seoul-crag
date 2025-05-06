@@ -2,76 +2,19 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { createFilterSlice } from '@/store/slices/filter';
+import { createSearchSlice } from '@/store/slices/search';
+import { createMapSlice } from '@/store/slices/map';
 
-type StoreState = {
-  isCragListModalOpen: boolean;
-  setIsCragListModalOpen: (isOpen: boolean) => void;
-
-  map: naver.maps.Map | null;
-  setMap: (map: naver.maps.Map) => void;
-
-  mapRef: React.RefObject<HTMLDivElement | null>;
-
-  lastLat: number;
-  setLastLat: (lat: number) => void;
-
-  lastLng: number;
-  setLastLng: (lng: number) => void;
-
-  gpsLatLng: { lat: number; lng: number };
-  setGpsLatLng: (lat: number, lng: number) => void;
-
-  zoomLevel: number;
-  setZoomLevel: (zoomLevel: number) => void;
-
-  search: string;
-  setSearch: (search: string) => void;
-} & ReturnType<typeof createFilterSlice>;
+type StoreState = ReturnType<typeof createMapSlice> &
+  ReturnType<typeof createFilterSlice> &
+  ReturnType<typeof createSearchSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get, store) => ({
       ...createFilterSlice(set, get, store),
-
-      isCragListModalOpen: false,
-      setIsCragListModalOpen(isOpen) {
-        set(() => ({ isCragListModalOpen: isOpen }));
-      },
-
-      map: null,
-      setMap(map) {
-        set(() => ({ map }));
-      },
-
-      mapRef: { current: null },
-
-      lastLat: -1,
-      setLastLat(lat) {
-        set(() => ({ lastLat: lat }));
-      },
-
-      lastLng: -1,
-      setLastLng(lng) {
-        set(() => ({ lastLng: lng }));
-      },
-
-      gpsLatLng: {
-        lat: -1,
-        lng: -1,
-      },
-      setGpsLatLng(lat, lng) {
-        set(() => ({ gpsLatLng: { lat, lng } }));
-      },
-
-      zoomLevel: 12,
-      setZoomLevel(zoomLevel) {
-        set(() => ({ zoomLevel }));
-      },
-
-      search: '',
-      setSearch(search) {
-        set(() => ({ search }));
-      },
+      ...createSearchSlice(set, get, store),
+      ...createMapSlice(set, get, store),
     }),
     {
       name: 'zustandStore',
@@ -85,7 +28,9 @@ export const useStore = create<StoreState>()(
           lastLat,
           lastLng,
           zoomLevel,
-          search,
+          isSearchOpen,
+          searchSortOption,
+          searchKeyword,
         } = state;
 
         return {
@@ -97,7 +42,9 @@ export const useStore = create<StoreState>()(
           lastLat,
           lastLng,
           zoomLevel,
-          search,
+          isSearchOpen,
+          searchSortOption,
+          searchKeyword,
         };
       },
     }
