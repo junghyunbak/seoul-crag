@@ -62,12 +62,11 @@ interface CragDetailContentProps {
 function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
   const { expeditionDate } = useFilter();
 
-  const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(expeditionDate);
-
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [sliderRef] = useKeenSlider({
@@ -77,13 +76,6 @@ function CragDetailContent({ onClose, crag, images }: CragDetailContentProps) {
       setCurrentSlide(slider.track.details.rel);
     },
   });
-
-  /**
-   * 선택된 날짜에 따라 시작 달력 월 변경
-   */
-  useEffect(() => {
-    setCurrentMonth(expeditionDate);
-  }, [expeditionDate]);
 
   /**
    * 상단바 스타일 조정을 위한 observer 등록

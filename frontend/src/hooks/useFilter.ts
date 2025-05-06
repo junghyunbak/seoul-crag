@@ -26,7 +26,7 @@ export function useFilter(crag: Crag | null = null) {
     return parseDate;
   })();
 
-  const expeditionDate = useMemo(() => selectDate || new Date(), [selectDate]);
+  const expeditionDate = selectDate || new Date();
   const expeditionDay = getDay(expeditionDate);
 
   /**
