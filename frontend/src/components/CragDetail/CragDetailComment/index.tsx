@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+
 import { Box, Typography, CircularProgress } from '@mui/material';
 
 import { useQuery, useMutation, DefaultError } from '@tanstack/react-query';
@@ -9,25 +11,23 @@ import { commentsScheme } from '@/schemas/comment';
 import { CommentList } from '@/components/CragDetail/CragDetailComment/CragDetailCommentList';
 import { CommentForm } from '@/components/CragDetail/CragDetailComment/CragDetailForm';
 
-interface CragDetailCommentProps {
-  cragId: string;
-}
+import { CragDetailContext } from '@/components/CragDetail/index.context';
 
-export function CragDetailComment({ cragId }: CragDetailCommentProps) {
-  const { data: comments, isLoading, refetch } = useComments(cragId);
+export function CragDetailComment() {
+  const { crag } = useContext(CragDetailContext);
+
+  const { comments, isLoading, refetch } = useComments(crag?.id);
+
   const { createCommentMutation } = useMutateCreateComment();
 
-  const { mutate: createComment, status } = createCommentMutation;
-
-  const isSubmitting = status === 'pending';
+  const isSubmitting = createCommentMutation.status === 'pending';
 
   const handleSubmit = (form: { content: string; isAdminOnly: boolean }) => {
-    createComment(
-      { ...form, cragId },
-      {
-        onSuccess: () => refetch(),
-      }
-    );
+    if (!crag) {
+      return;
+    }
+
+    createCommentMutation.mutate({ ...form, cragId: crag.id }, { onSuccess: () => refetch() });
   };
 
   return (
@@ -44,17 +44,28 @@ export function CragDetailComment({ cragId }: CragDetailCommentProps) {
 }
 
 // [ ]: 커스텀 훅 폴더로 이동
-const useComments = (gymId: string) =>
-  useQuery({
-    queryKey: ['comments', gymId],
+const useComments = (cragId: string | undefined) => {
+  const {
+    data: comments,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['comments', cragId],
     queryFn: async () => {
-      const { data } = await api.get(`/comments/gym/${gymId}`);
+      if (!cragId) {
+        return null;
+      }
+
+      const { data } = await api.get(`/comments/gym/${cragId}`);
 
       const comments = commentsScheme.parse(data);
 
       return comments;
     },
   });
+
+  return { comments, isLoading, refetch };
+};
 
 type CreateCommentMutateParams = {
   content: string;

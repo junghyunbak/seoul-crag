@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { Box, Stack } from '@mui/material';
 
 import { ImageWithSource } from '@/components/ImageWithSource';
 
+import { CragDetailContext } from '@/components/CragDetail/index.context';
+
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 
-interface CragDetailHeroProps {
-  images: Image[] | null | undefined;
-}
-
-export function CragDetailHero({ images }: CragDetailHeroProps) {
+export function CragDetailHero() {
+  const { images } = useContext(CragDetailContext);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [sliderRef] = useKeenSlider({

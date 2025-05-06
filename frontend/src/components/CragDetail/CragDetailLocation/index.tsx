@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { Map } from '@/components/Map';
 
@@ -38,10 +38,15 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
   }, [crag, map, marker]);
 
   return (
-    <Box sx={{ width: '100%', aspectRatio: '1/1' }}>
-      <Map map={map} mapRef={mapRef}>
-        <Map.Marker.Default onCreate={setMarker} />
-      </Map>
-    </Box>
+    <>
+      <Typography variant="h6" fontWeight={600} gutterBottom>
+        상세 위치
+      </Typography>
+      <Box sx={{ width: '100%', aspectRatio: '1/1' }}>
+        <Map map={map} mapRef={mapRef}>
+          <Map.Marker.Default onCreate={setMarker} />
+        </Map>
+      </Box>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+
 import { Box, Typography } from '@mui/material';
 
 import { time } from '@/utils';
@@ -8,11 +10,10 @@ import { addDays } from 'date-fns';
 
 import { DAY_TO_INDEX, DAYS_OF_KOR } from '@/constants/time';
 
-interface CragDetailOpeningHoursProps {
-  crag: Crag | undefined | null;
-}
+import { CragDetailContext } from '@/components/CragDetail/index.context';
 
-export function CragDetailOpeningHours({ crag }: CragDetailOpeningHoursProps) {
+export function CragDetailOpeningHours() {
+  const { crag } = useContext(CragDetailContext);
   const { expeditionDate } = useFilter();
 
   if (!crag) {
