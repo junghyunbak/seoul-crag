@@ -6,7 +6,7 @@ declare global {
   type SortOption = 'distance' | 'newest' | 'size';
 
   type Filter = {
-    date: Date | null;
+    date: string | null;
     isShower: boolean;
     isNonSetting: boolean;
     isNewSetting: boolean;

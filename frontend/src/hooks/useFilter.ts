@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { isBefore, getDay } from 'date-fns';
+import { isBefore, getDay, isValid } from 'date-fns';
 
 import { DAYS_OF_WEEK } from '@/constants/time';
 
@@ -12,7 +12,19 @@ import { time } from '@/utils';
 export function useFilter(crag: Crag | null = null) {
   const [filter] = useStore(useShallow((s) => [s.filter]));
 
-  const selectDate = filter.date;
+  const selectDate = (() => {
+    if (!filter.date) {
+      return null;
+    }
+
+    const parseDate = time.dateTimeStrToDate(filter.date);
+
+    if (!isValid(parseDate)) {
+      return null;
+    }
+
+    return parseDate;
+  })();
 
   const expeditionDate = useMemo(() => selectDate || new Date(), [selectDate]);
   const expeditionDay = getDay(expeditionDate);

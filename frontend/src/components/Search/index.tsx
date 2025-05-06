@@ -24,7 +24,7 @@ interface SearchContentProps {
   isOpen: boolean;
 }
 
-const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps) => {
+const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { crags } = useFetchCrags();
@@ -40,7 +40,10 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps) => {
   }, [isOpen]);
 
   return (
-    <Box sx={{ background: 'white', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{ background: 'white', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+      ref={ref}
+    >
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
         <IconButton onClick={() => updateIsSearchOpen(false)}>
           <ArrowBackIosNewIcon />
