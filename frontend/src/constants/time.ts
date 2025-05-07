@@ -21,4 +21,14 @@ export const DAY_STR_TO_INDEX: Record<OpeningHourDayType, number> = {
   saturday: 6,
 };
 
-export const DAYS_OF_KOR = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+export const DAY_STR_TO_KOR: Record<OpeningHourDayType, string> = {
+  sunday: '일요일',
+  monday: '월요일',
+  tuesday: '화요일',
+  wednesday: '수요일',
+  thursday: '목요일',
+  friday: '금요일',
+  saturday: '토요일',
+};
+
+export const DAYS_OF_KOR = Object.values(DAY_STR_TO_KOR);

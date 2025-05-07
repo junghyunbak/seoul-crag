@@ -25,8 +25,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
   const openingHour = openingHourOfWeek.find(({ day }) => DAY_STR_TO_INDEX[day] === date.getDay());
 
   const current = new DateService(date);
-  let open = new DateService(DateService.timeToDate(openingHour?.open_time || '', date));
-  let close = new DateService(DateService.timeToDate(openingHour?.close_time || '', date));
+  let open = new DateService(DateService.timeStrToDate(openingHour?.open_time || '', date));
+  let close = new DateService(DateService.timeStrToDate(openingHour?.close_time || '', date));
 
   const hasShower = imageTypes.some((type) => type === 'shower');
   const isRegularyClosed = openingHour?.is_closed || false;

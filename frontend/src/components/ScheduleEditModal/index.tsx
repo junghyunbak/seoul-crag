@@ -15,12 +15,13 @@ import {
 
 import { SCHEDULE_TYPES, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
 
-import { time } from '@/utils';
-
 import DatePicker from 'react-datepicker';
-import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+
 import { isBefore, isEqual } from 'date-fns';
+import { ko } from 'date-fns/locale';
+
+import { DateService } from '@/utils/time';
 
 interface ScheduleEditModalProps {
   /**
@@ -53,17 +54,18 @@ export function ScheduleEditModal({
   const [closeDate, setCloseDate] = useState(initCloseDate);
 
   useEffect(() => {
-    if (schedule?.type) {
-      setScheduleType(schedule.type);
+    if (!schedule) {
+      return;
     }
 
-    if (schedule?.open_date) {
-      setOpenDate(time.dateTimeStrToDate(schedule.open_date));
-    }
+    const { type, open_date, close_date } = schedule;
 
-    if (schedule?.close_date) {
-      setCloseDate(time.dateTimeStrToDate(schedule.close_date));
-    }
+    const open = new DateService(open_date);
+    const close = new DateService(close_date);
+
+    setScheduleType(type);
+    setOpenDate(open.date);
+    setCloseDate(close.date);
   }, [schedule]);
 
   return (
@@ -175,8 +177,8 @@ export function ScheduleEditModal({
 
                 onUpdate(
                   schedule.id,
-                  time.dateToDateTimeStr(openDate),
-                  time.dateToDateTimeStr(closeDate),
+                  DateService.dateToDateTimeStr(openDate),
+                  DateService.dateToDateTimeStr(closeDate),
                   scheduleType
                 );
                 onClose();
@@ -193,7 +195,11 @@ export function ScheduleEditModal({
                   return;
                 }
 
-                onCreate(time.dateToDateTimeStr(openDate), time.dateToDateTimeStr(closeDate), scheduleType);
+                onCreate(
+                  DateService.dateToDateTimeStr(openDate),
+                  DateService.dateToDateTimeStr(closeDate),
+                  scheduleType
+                );
                 onClose();
               }}
             >

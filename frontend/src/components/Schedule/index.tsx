@@ -8,7 +8,8 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore }
 import holidayData from './holidays.ko.json';
 
 import { DAY_LABELS, SCHEDULE_TYPE_TO_COLORS, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
-import { time } from '@/utils';
+
+import { DateService } from '@/utils/time';
 
 const SCHEDULE_TYPE_TO_INDEX: Record<ScheduleType, number> = {
   setup: 0,
@@ -62,11 +63,13 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
         ))}
 
         {days.map((day, i) => {
+          const current = new DateService(day);
+
           const filteredSchedules = schedules
             .sort((a, b) => (SCHEDULE_TYPE_TO_INDEX[a.type] < SCHEDULE_TYPE_TO_INDEX[b.type] ? -1 : 1))
             .filter(({ open_date, close_date }) => {
-              const openDate = time.dateTimeStrToDate(open_date);
-              const closeDate = time.dateTimeStrToDate(close_date);
+              const open = new DateService(open_date);
+              const close = new DateService(close_date);
 
               /**
                * 0시 ~ 23분 59분 59초 | 0시 ~ 23시 59분 59초 | 0시 ~ 23시 59분 59초
@@ -78,19 +81,16 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
               const dayStart = day;
               const dayEnd = new Date(day.getTime() + 1000 * 60 * 60 * 24 - 1);
 
-              return isBefore(openDate, dayEnd) && isBefore(dayStart, closeDate);
+              return isBefore(open.date, dayEnd) && isBefore(dayStart, close.date);
             });
 
-          const scheduleDateStr = time.dateToDateStr(day);
-          const expeditionDateStr = time.dateToDateStr(exp.date);
-
-          const isToday = scheduleDateStr === expeditionDateStr;
+          const isToday = current.dateStr === exp.dateStr;
           const currentWeek = Math.ceil((emptyStart + i + 1) / 7);
 
           return (
             <Grid
               size={{ xs: 1 }}
-              key={scheduleDateStr}
+              key={current.dateStr}
               sx={{
                 borderRight: (i + emptyStart) % 7 === 6 ? 'none' : '1px solid #ccc',
                 borderBottom: currentWeek === lastWeek ? 'none' : '1px solid #ccc',
@@ -107,7 +107,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                 sx={{
                   background: isToday ? '#1976d2' : undefined,
                   borderRadius: isToday ? '50%' : undefined,
-                  color: isHoliday(scheduleDateStr, day) ? 'error.main' : undefined,
+                  color: isHoliday(current.dateStr, day) ? 'error.main' : undefined,
                   width: 24,
                   height: 24,
                   display: 'inline-flex',
@@ -133,13 +133,18 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                   }}
                 >
                   {filteredSchedules.map((schedule, i, arr) => {
-                    const isFirst = time.dateTimeStrToDateStr(schedule.open_date) === scheduleDateStr;
-                    const isLast = time.dateTimeStrToDateStr(schedule.close_date) === scheduleDateStr;
+                    const { open_date, close_date, type, id } = schedule;
+
+                    const sopen = new DateService(open_date);
+                    const sclose = new DateService(close_date);
+
+                    const isFirst = sopen.dateStr === current.dateStr;
+                    const isLast = sclose.dateStr === current.dateStr;
 
                     let left = 0;
                     let right = 0;
 
-                    switch (schedule.type) {
+                    switch (type) {
                       case 'closed': {
                         break;
                       }
@@ -149,15 +154,11 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                           left = 0;
                           right = 0;
                         } else if (isFirst) {
-                          const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.open_date));
-
-                          left = (minutes / 1440) * 100;
+                          left = (sopen.minute / 1440) * 100;
                           right = 0;
                         } else if (isLast) {
-                          const minutes = time.getTodayMinutesFromDate(time.dateTimeStrToDate(schedule.close_date));
-
                           left = 0;
-                          right = ((1440 - minutes) / 1440) * 100;
+                          right = ((1440 - sclose.minute) / 1440) * 100;
                         }
 
                         break;
@@ -166,7 +167,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
 
                     return (
                       <Box
-                        key={schedule.id}
+                        key={id}
                         sx={{
                           width: '100%',
                           display: 'flex',
@@ -177,7 +178,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                           sx={{
                             flex: 1,
                             overflow: 'hidden',
-                            bgcolor: SCHEDULE_TYPE_TO_COLORS[schedule.type],
+                            bgcolor: SCHEDULE_TYPE_TO_COLORS[type],
                             px: { md: 1, xs: 0.5 },
                             py: 0.2,
                             mb: arr.length - 1 === i ? 0.5 : 0,
@@ -195,7 +196,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
                               fontSize: { md: 12, xs: 8 },
                             }}
                           >
-                            {SCHEDULE_TYPE_TO_LABELS[schedule.type]}
+                            {SCHEDULE_TYPE_TO_LABELS[type]}
                           </Typography>
                         </Box>
                         <Box sx={{ width: `${right}%` }} />

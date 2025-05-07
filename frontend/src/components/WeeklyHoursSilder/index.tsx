@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Box, Slider, Typography, Stack, Switch, FormControlLabel, Button } from '@mui/material';
 
-import { DAYS_OF_WEEK } from '@/constants/time';
+import { DAY_STR_TO_KOR, DAYS_OF_WEEK } from '@/constants/time';
 
 import { time } from '@/utils';
 
@@ -81,7 +81,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="subtitle1" gutterBottom>
-        {time.engDayToKor(day)}
+        {DAY_STR_TO_KOR[day]}
       </Typography>
 
       <Box
