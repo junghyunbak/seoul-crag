@@ -95,7 +95,7 @@ export const timeStrToDate = (str: string, baseDate: Date = new Date()) => parse
 export class DateService {
   private _date: Date;
 
-  constructor(date: Date | string | undefined | null) {
+  constructor(date: Date | string | undefined) {
     if (date instanceof Date) {
       this._date = date;
 
@@ -105,12 +105,12 @@ export class DateService {
     if (typeof date === 'string') {
       const parseDate = new Date(date);
 
-      this._date = isValid(parseDate) ? parseDate : new Date();
+      this._date = isValid(parseDate) ? parseDate : new Date(0);
 
       return;
     }
 
-    this._date = new Date();
+    this._date = new Date(0);
   }
 
   get date() {
@@ -141,7 +141,7 @@ export class DateService {
     const parsedDate = parse(str, 'HH:mm:ss', baseDate);
 
     if (!isValid(parsedDate)) {
-      return new Date();
+      return new Date(0);
     }
 
     return parsedDate;

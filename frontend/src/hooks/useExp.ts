@@ -8,7 +8,7 @@ export function useExp() {
 
   const isExpSelect = expDateTimeStr !== null;
 
-  const exp = new DateService(expDateTimeStr);
+  const exp = new DateService(expDateTimeStr || new Date());
 
   return { exp, isExpSelect };
 }
