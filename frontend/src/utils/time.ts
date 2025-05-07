@@ -89,13 +89,11 @@ export function getTodayMinutesFromDate(date: Date) {
 export const getCurrentDateTimeStr = () => format(new Date(), "yyyy-MM-dd'T'HH:mm:ss");
 
 export const dateToDateStr = (date: Date) => format(date, 'yyyy-MM-dd');
-
 export const dateToDateTimeStr = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
-
 export const dateToTimeStr = (date: Date) => format(date, 'HH:mm:ss');
+export const dateToYearMonthStr = (date: Date) => format(date, 'yyyy-MM');
 
 export const dateTimeStrToDate = (str: string) => parse(str, "yyyy-MM-dd'T'HH:mm:ss", new Date());
-
 export const dateTimeStrToDateStr = (str: string) => dateToDateStr(dateTimeStrToDate(str));
 
 export const timeStrToDate = (str: string, baseDate: Date = new Date()) => parse(str, 'HH:mm:ss', baseDate);

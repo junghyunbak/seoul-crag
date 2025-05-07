@@ -1,15 +1,19 @@
-import { useMemo } from 'react';
+import React from 'react';
 
 import { Box, IconButton, useTheme } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import ShowerIcon from '@mui/icons-material/Shower';
 import InfoIcon from '@mui/icons-material/Info';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useQueryParam, StringParam } from 'use-query-params';
+
 import { QUERY_STRING } from '@/constants';
+
+import { useFilter } from '@/hooks';
 
 const BASE_ANGLE = -135;
 const RADIUS = 70;
@@ -32,57 +36,50 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
 
   const theme = useTheme();
 
-  const features = useMemo<Feature[]>(() => {
-    const _features: Feature[] = [];
+  const { isShowerExist, isScheduleExist } = useFilter(crag);
 
-    _features.push({
-      icon: <CalendarMonthIcon />,
-      callback: () => {
-        setScheduleStory(crag.id);
+  const features: Feature[] = (() => {
+    return [
+      {
+        icon: (
+          <IconWrapper disable={!isScheduleExist}>
+            <CalendarMonthIcon />
+          </IconWrapper>
+        ),
+        callback: () => {
+          setScheduleStory(crag.id);
+        },
+        disabled: !isScheduleExist,
       },
-      disabled: false,
-    });
-
-    _features.push({
-      icon: (
-        <Box
-          sx={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <ShowerIcon sx={{ position: 'absolute' }} />
-          {!crag.imageTypes?.includes('shower') && (
-            <Box
-              sx={{
-                position: 'absolute',
-                width: '20px',
-                borderTop: '2px solid white',
-                borderBottom: '2px solid currentColor',
-                transform: 'rotate(45deg)',
-              }}
-            />
-          )}
-        </Box>
-      ),
-      callback: () => {
-        setShowerStory(crag.id);
+      {
+        icon: (
+          <IconWrapper disable={!isShowerExist}>
+            <ShowerIcon />
+          </IconWrapper>
+        ),
+        callback: () => {
+          setShowerStory(crag.id);
+        },
+        disabled: !isShowerExist,
       },
-      disabled: crag.imageTypes ? !crag.imageTypes.includes('shower') : true,
-    });
-
-    _features.push({
-      icon: <InfoIcon color="primary" />,
-      callback: () => {
-        setSelectCragDetailId(crag.id);
+      {
+        icon: (
+          <IconWrapper disable>
+            <HourglassTopIcon />
+          </IconWrapper>
+        ),
+        callback: () => {},
+        disabled: false,
       },
-      disabled: false,
-    });
-
-    return _features;
-  }, [crag, setScheduleStory, setSelectCragDetailId, setShowerStory]);
+      {
+        icon: <InfoIcon color="primary" />,
+        callback: () => {
+          setSelectCragDetailId(crag.id);
+        },
+        disabled: false,
+      },
+    ];
+  })();
 
   return (
     <AnimatePresence>
@@ -123,5 +120,35 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
           );
         })}
     </AnimatePresence>
+  );
+}
+
+interface IconWrapperProps extends React.PropsWithChildren {
+  disable: boolean;
+}
+
+function IconWrapper({ disable, children }: IconWrapperProps) {
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {children}
+      {disable && (
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '21px',
+            borderTop: '2px solid white',
+            borderBottom: '2px solid currentColor',
+            transform: 'rotate(45deg)',
+          }}
+        />
+      )}
+    </Box>
   );
 }

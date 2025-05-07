@@ -27,6 +27,25 @@ export function useFilter(crag: Crag | null = null) {
   const expeditionDate = selectDate || new Date();
   const expeditionDay = getDay(expeditionDate);
 
+  const isShowerExist = (() => {
+    if (!crag) {
+      return false;
+    }
+
+    return (crag.imageTypes || []).some((type) => type === 'shower');
+  })();
+  const isScheduleExist = (() => {
+    if (!crag) {
+      return false;
+    }
+
+    return (crag.futureSchedules || []).some(
+      ({ open_date, close_date }) =>
+        time.dateToYearMonthStr(expeditionDate) === time.dateToYearMonthStr(time.dateTimeStrToDate(open_date)) ||
+        time.dateToYearMonthStr(expeditionDate) === time.dateToYearMonthStr(time.dateTimeStrToDate(close_date))
+    );
+  })();
+
   /**
    * true: 지도에 출력
    * false: 지도에 출력하지 않음
@@ -141,5 +160,7 @@ export function useFilter(crag: Crag | null = null) {
     expeditionDate,
     isCragFilter,
     isCragOff,
+    isShowerExist,
+    isScheduleExist,
   };
 }

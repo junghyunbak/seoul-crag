@@ -25,6 +25,7 @@ export function CragDetailOpeningHours() {
       <Typography variant="h6" fontWeight={600} gutterBottom>
         이용 시간
       </Typography>
+
       {Array(7)
         .fill(null)
         .map((_, i) => {
@@ -44,6 +45,7 @@ export function CragDetailOpeningHours() {
           let [ch, cm] = close_time.split(':');
 
           const isToday = date.getDay() === expeditionDate.getDay();
+
           let isTemporaryClosed = false;
           let isReduced = false;
 
@@ -80,6 +82,7 @@ export function CragDetailOpeningHours() {
               >
                 {DAYS_OF_KOR[date.getDay()]}
               </Typography>
+
               <Typography
                 variant="body2"
                 sx={{
