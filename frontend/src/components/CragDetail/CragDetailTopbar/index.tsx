@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 
 import { Box, Typography, IconButton } from '@mui/material';
-import Close from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 
@@ -17,9 +18,7 @@ export function CragDetailTopbar({ isScrolled }: CragDetailTopbarProps) {
       sx={{
         position: 'absolute',
         top: 0,
-        py: 1,
-        pl: 2,
-        pr: 1,
+        p: 1,
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -29,10 +28,41 @@ export function CragDetailTopbar({ isScrolled }: CragDetailTopbarProps) {
         zIndex: 1,
       }}
     >
-      <Box>{isScrolled && <Typography variant="h6">{crag?.name}</Typography>}</Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flex: 1,
+          overflow: 'hidden',
+        }}
+      >
+        <IconButton sx={{ color: isScrolled ? 'black' : 'white' }} onClick={onClose}>
+          <ArrowBackIosNewIcon />
+        </IconButton>
+
+        {isScrolled && (
+          <Box
+            sx={{
+              flex: 1,
+              overflow: 'hidden',
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {crag?.name}
+            </Typography>
+          </Box>
+        )}
+      </Box>
 
       <IconButton sx={{ color: isScrolled ? 'black' : 'white' }} onClick={onClose}>
-        <Close />
+        <CloseIcon />
       </IconButton>
     </Box>
   );
