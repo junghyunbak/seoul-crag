@@ -7,12 +7,12 @@ export class CreateOpeningHourDto {
 
   @IsOptional()
   @IsString()
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
   open_time?: string;
 
   @IsOptional()
   @IsString()
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/)
   close_time?: string;
 
   @IsOptional()
