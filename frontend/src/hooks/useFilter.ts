@@ -203,6 +203,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
     isOff,
     isFiltered,
     isReduced,
+    isNewSetting,
+    isTodayRemove,
 
     hasShower,
 

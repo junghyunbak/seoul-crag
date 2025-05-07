@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 import { DAYS_OF_KOR } from '@/constants/time';
 
-import { useFilter } from '@/hooks';
+import { useExp, useFilter } from '@/hooks';
 
 const TextWithBg = styled(Typography)({
   fontWeight: 'bold',
@@ -29,7 +29,11 @@ interface StoryOperationPageProps {
 }
 
 export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
-  const { open, close, isReduced, isRegularyClosed, isTemporaryClosed } = useFilter(crag, date);
+  const { exp } = useExp();
+  const { open, close, isReduced, isRegularyClosed, isTemporaryClosed, isNewSetting, isTodayRemove, current } =
+    useFilter(crag, date);
+
+  const isToday = exp.dateStr === current.dateStr;
 
   return (
     <Box
@@ -52,7 +56,7 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
         }}
       >
         <Text variant="h2">{format(date, 'yyyy.MM.dd')}</Text>
-        <Text variant="h2">{DAYS_OF_KOR[date.getDay()]}</Text>
+        <Text variant="h2">{DAYS_OF_KOR[date.getDay()] + (isToday ? '(오늘)' : '')}</Text>
         {isRegularyClosed ? (
           <TextWithBg variant="h2">정기 휴일</TextWithBg>
         ) : isTemporaryClosed ? (
@@ -69,6 +73,8 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
                 color: isReduced ? 'yellow' : 'white',
               }}
             >{`${format(close.date, 'a hh:mm')}`}</TextWithBg>
+            {isTodayRemove && <Text variant="h3">🍂오늘 탈거</Text>}
+            {isNewSetting && <Text variant="h3">✨New Setting!</Text>}
           </>
         )}
       </Box>
