@@ -9,6 +9,7 @@ import { useSearch } from '@/hooks/useSearch';
 
 import { SORT_OPTIONS } from '@/constants/crag';
 import { CragList } from '@/components/CragList';
+import { Filter } from '@/components/Filter';
 
 export function Search() {
   const { isSearchOpen } = useSearch();
@@ -58,6 +59,10 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
       </Box>
 
       <Divider />
+
+      <Box sx={{ pt: 2 }}>
+        <Filter />
+      </Box>
 
       <Box sx={{ p: 2, width: '100%' }}>
         <Select

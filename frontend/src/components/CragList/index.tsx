@@ -1,10 +1,14 @@
-import { Box } from '@mui/material';
-import { useMap, useModifyMap } from '@/hooks';
-import { CragListItem } from './CragListItem';
-import { calculateDistance } from '@/utils';
-import { useSearch } from '@/hooks';
 import { useEffect } from 'react';
-import { getGpsLatLng } from '@/utils';
+
+import { Box } from '@mui/material';
+
+import { useMap, useModifyMap } from '@/hooks';
+
+import { calculateDistance, getGpsLatLng } from '@/utils';
+
+import { useSearch } from '@/hooks';
+
+import { CragListItem } from './CragListItem';
 
 interface CragListProps {
   crags: Crag[];
@@ -12,7 +16,7 @@ interface CragListProps {
 
 export function CragList({ crags }: CragListProps) {
   const { gpsLatLng } = useMap();
-  const { searchKeyword, searchSortOption } = useSearch();
+  const { searchSortOption } = useSearch();
 
   const { updateGpsLatLng } = useModifyMap();
 
@@ -30,23 +34,15 @@ export function CragList({ crags }: CragListProps) {
 
   return (
     <Box sx={{ p: 2, overflowY: 'auto', width: '100%', height: '100%' }}>
-      {getFilteredSortedCrags(crags, searchKeyword, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag) => (
+      {getSortedCrags(crags, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag) => (
         <CragListItem key={crag.id} crag={crag} />
       ))}
     </Box>
   );
 }
 
-function getFilteredSortedCrags(
-  crags: Crag[],
-  keyword: string,
-  sortOption: SortOption,
-  userLat?: number,
-  userLng?: number
-): Crag[] {
-  const filtered = crags.filter((crag) => crag.name.toLowerCase().includes(keyword));
-
-  const sorted = [...filtered].sort((a, b) => {
+function getSortedCrags(crags: Crag[], sortOption: SortOption, userLat?: number, userLng?: number): Crag[] {
+  const sorted = [...crags].sort((a, b) => {
     if (sortOption === 'distance' && userLat !== undefined && userLng !== undefined) {
       const distA = calculateDistance(userLat, userLng, a.latitude, a.longitude);
       const distB = calculateDistance(userLat, userLng, b.latitude, b.longitude);
