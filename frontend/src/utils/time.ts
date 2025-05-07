@@ -33,13 +33,9 @@ export function sleep(ms: number) {
   });
 }
 
+// TODO: HH:mm -> HH:mm:ss 로 바꿔야 하는 것 아닌가
 export function minutesToTimeStr(mins: number): string {
   return dayjs().startOf('day').add(mins, 'minute').format('HH:mm');
-}
-
-export function timeStrToMinutes(time: string): number {
-  const [h, m] = time.split(':').map(Number);
-  return h * 60 + m;
 }
 
 export function engDayToKor(engDay: OpeningHourDayType) {
@@ -86,8 +82,6 @@ export function getTodayMinutesFromDate(date: Date) {
  * [js date object]
  * Date
  */
-export const getCurrentDateTimeStr = () => format(new Date(), "yyyy-MM-dd'T'HH:mm:ss");
-
 export const dateToDateStr = (date: Date) => format(date, 'yyyy-MM-dd');
 export const dateToDateTimeStr = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 export const dateToTimeStr = (date: Date) => format(date, 'HH:mm:ss');
@@ -151,5 +145,15 @@ export class DateService {
     }
 
     return parsedDate;
+  }
+
+  static getCurrentDateTimeStr() {
+    return format(new Date(), "yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  static timeStrToMinute(timeStr: string) {
+    const [h, m] = timeStr.split(':').map(Number);
+
+    return h * 60 + m;
   }
 }

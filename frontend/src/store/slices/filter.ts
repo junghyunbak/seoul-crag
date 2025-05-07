@@ -1,5 +1,6 @@
 import { type StateCreator } from 'zustand';
-import { time } from '@/utils';
+
+import { DateService } from '@/utils/time';
 
 type FilterSliceType = {
   filter: Filter;
@@ -25,7 +26,7 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set): FilterSli
     }));
   },
 
-  expDateTimeStr: time.getCurrentDateTimeStr(),
+  expDateTimeStr: DateService.getCurrentDateTimeStr(),
   setExpDateTimeStr(expDateTimeStr) {
     set(() => ({ expDateTimeStr }));
   },
