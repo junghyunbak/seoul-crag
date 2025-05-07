@@ -11,7 +11,7 @@ import { StoryOperationPage } from '@/components/StoryOperation/StoryOperationPa
 
 import { AnimatePresence } from 'framer-motion';
 
-import { DAY_TO_INDEX } from '@/constants/time';
+import { addDays } from 'date-fns';
 
 export default function StoryOperation() {
   const [operationStoryCragId, setOperationStory] = useQueryParam(QUERY_STRING.STORY_OPERATION, StringParam);
@@ -25,16 +25,13 @@ export default function StoryOperation() {
       {operationStoryCragId && crag && (
         <StorySlider
           crag={crag}
-          contents={(crag.openingHourOfWeek || [])
-            .sort((a, b) => {
-              return (
-                ((DAY_TO_INDEX[a.day] - exp.date.getDay() + 7) % 7) -
-                ((DAY_TO_INDEX[b.day] - exp.date.getDay() + 7) % 7)
-              );
-            })
-            .map((openingHour) => (
-              <StoryOperationPage crag={crag} openingHour={openingHour} />
-            ))}
+          contents={Array(7)
+            .fill(null)
+            .map((_, i) => {
+              const date = addDays(exp.date, i);
+
+              return <StoryOperationPage key={i} crag={crag} date={date} />;
+            })}
           onClose={() => setOperationStory(null)}
           onComplete={() => setOperationStory(null)}
           initPaused

@@ -1,18 +1,11 @@
+import { useCallback } from 'react';
+
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
 import { format, isValid, isWithinInterval, parse } from 'date-fns';
-import { useCallback } from 'react';
 
-const dayStrToDay: Record<OpeningHourDayType, number> = {
-  sunday: 0,
-  monday: 1,
-  tuesday: 2,
-  wednesday: 3,
-  thursday: 4,
-  friday: 5,
-  saturday: 6,
-};
+import { DAY_STR_TO_INDEX } from '@/constants/time';
 
 export class DateService {
   private _date: Date;
@@ -110,7 +103,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
   const imageTypes = (crag && crag.imageTypes) || [];
   const schedules = (crag && crag.futureSchedules) || [];
   const openingHourOfWeek = (crag && crag.openingHourOfWeek) || [];
-  const openingHour = openingHourOfWeek.find(({ day }) => dayStrToDay[day] === date.getDay());
+  const openingHour = openingHourOfWeek.find(({ day }) => DAY_STR_TO_INDEX[day] === date.getDay());
 
   const current = new DateService(date);
   let open = new DateService(DateService.timeToDate(openingHour?.open_time || '', date));

@@ -1,9 +1,10 @@
 import { Box, Typography, styled } from '@mui/material';
 
-import { time } from '@/utils';
-import { addDays, format } from 'date-fns';
-import { DAY_TO_INDEX } from '@/constants/time';
-import { useExp } from '@/hooks';
+import { format } from 'date-fns';
+
+import { DAYS_OF_KOR } from '@/constants/time';
+
+import { useFilter } from '@/hooks';
 
 const TextWithBg = styled(Typography)({
   fontWeight: 'bold',
@@ -24,45 +25,11 @@ const Text = styled(Typography)({
 
 interface StoryOperationPageProps {
   crag: Crag;
-  openingHour: OpeningHour;
+  date: Date;
 }
 
-export function StoryOperationPage({ crag, openingHour }: StoryOperationPageProps) {
-  const { day, open_time, close_time, is_closed } = openingHour;
-
-  const { exp } = useExp();
-
-  const date = addDays(exp.date, (DAY_TO_INDEX[day] - exp.date.getDay() + 7) % 7);
-
-  let openDate = time.timeStrToDate(open_time);
-  let closeDate = time.timeStrToDate(close_time);
-  let isReduced = false;
-
-  const isClosed = (() => {
-    if (is_closed) {
-      return true;
-    }
-
-    return (crag?.futureSchedules || []).some(({ type, open_date }) => {
-      if (type === 'closed' && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date)) {
-        return true;
-      }
-
-      return false;
-    });
-  })();
-
-  (crag?.futureSchedules || []).forEach(({ type, open_date, close_date }) => {
-    if (
-      type === 'reduced' &&
-      time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(date) &&
-      time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(date)
-    ) {
-      isReduced = true;
-      openDate = time.dateTimeStrToDate(open_date);
-      closeDate = time.dateTimeStrToDate(close_date);
-    }
-  });
+export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
+  const { open, close, isReduced, isRegularyClosed, isTemporaryClosed } = useFilter(crag, date);
 
   return (
     <Box
@@ -85,13 +52,15 @@ export function StoryOperationPage({ crag, openingHour }: StoryOperationPageProp
         }}
       >
         <Text variant="h2">{format(date, 'yyyy.MM.dd')}</Text>
-        <Text variant="h2">{day.charAt(0).toUpperCase() + day.slice(1)}</Text>
-        {isClosed ? (
-          <TextWithBg variant="h2">Off</TextWithBg>
+        <Text variant="h2">{DAYS_OF_KOR[date.getDay()]}</Text>
+        {isRegularyClosed ? (
+          <TextWithBg variant="h2">정기 휴일</TextWithBg>
+        ) : isTemporaryClosed ? (
+          <TextWithBg variant="h2">임시 휴일</TextWithBg>
         ) : (
           <>
             <TextWithBg variant="h3" sx={{ color: isReduced ? 'yellow' : 'white' }}>{`${format(
-              openDate,
+              open.date,
               'a hh:mm'
             )} ~`}</TextWithBg>
             <TextWithBg
@@ -99,7 +68,7 @@ export function StoryOperationPage({ crag, openingHour }: StoryOperationPageProp
               sx={{
                 color: isReduced ? 'yellow' : 'white',
               }}
-            >{`${format(closeDate, 'a hh:mm')}`}</TextWithBg>
+            >{`${format(close.date, 'a hh:mm')}`}</TextWithBg>
           </>
         )}
       </Box>

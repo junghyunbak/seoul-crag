@@ -29,7 +29,7 @@ export function CragDetailOpeningHours() {
         .map((_, i) => {
           const date = addDays(exp.date, i);
 
-          return <OpeningInfo crag={crag} date={date} />;
+          return <OpeningInfo key={i} crag={crag} date={date} />;
         })}
     </Box>
   );

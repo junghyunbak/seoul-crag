@@ -11,7 +11,7 @@ export const DAYS_OF_WEEK: OpeningHourDayType[] = [
   'saturday',
 ];
 
-export const DAY_TO_INDEX: Record<OpeningHourDayType, number> = {
+export const DAY_STR_TO_INDEX: Record<OpeningHourDayType, number> = {
   sunday: 0,
   monday: 1,
   tuesday: 2,
@@ -21,4 +21,4 @@ export const DAY_TO_INDEX: Record<OpeningHourDayType, number> = {
   saturday: 6,
 };
 
-export const DAYS_OF_KOR = ['일', '월', '화', '수', '목', '금', '토'];
+export const DAYS_OF_KOR = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
