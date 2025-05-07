@@ -38,7 +38,7 @@ export function Filter() {
 
   return (
     <Box className="filter">
-      <Box ref={sliderRef} className="keen-slider">
+      <Box ref={sliderRef} className="keen-slider" sx={{ zIndex: 1 }}>
         <KeenElementWrapper>
           <DatePicker
             selected={expeditionDate}
