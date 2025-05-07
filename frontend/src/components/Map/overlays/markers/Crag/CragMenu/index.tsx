@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { IconButton } from '@mui/material';
+import { Box, IconButton, useTheme } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import ShowerIcon from '@mui/icons-material/Shower';
 import InfoIcon from '@mui/icons-material/Info';
@@ -30,6 +30,8 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
+  const theme = useTheme();
+
   const features = useMemo<Feature[]>(() => {
     const _features: Feature[] = [];
 
@@ -42,22 +44,42 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
     });
 
     _features.push({
+      icon: (
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ShowerIcon sx={{ position: 'absolute' }} />
+          {!crag.imageTypes?.includes('shower') && (
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '20px',
+                borderTop: '2px solid white',
+                borderBottom: '2px solid currentColor',
+                transform: 'rotate(45deg)',
+              }}
+            />
+          )}
+        </Box>
+      ),
+      callback: () => {
+        setShowerStory(crag.id);
+      },
+      disabled: crag.imageTypes ? !crag.imageTypes.includes('shower') : true,
+    });
+
+    _features.push({
       icon: <InfoIcon color="primary" />,
       callback: () => {
         setSelectCragDetailId(crag.id);
       },
       disabled: false,
     });
-
-    if (crag.imageTypes?.includes('shower')) {
-      _features.push({
-        icon: <ShowerIcon />,
-        callback: () => {
-          setShowerStory(crag.id);
-        },
-        disabled: false,
-      });
-    }
 
     return _features;
   }, [crag, setScheduleStory, setSelectCragDetailId, setShowerStory]);
@@ -90,9 +112,10 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
                   width: 40,
                   height: 40,
                   '&:hover': { bgcolor: grey[100] },
+                  color: theme.palette.grey[600],
+                  pointerEvents: feature.disabled ? 'none' : 'auto',
                 }}
                 onClick={feature.callback}
-                disabled={feature.disabled}
               >
                 {feature.icon}
               </IconButton>
