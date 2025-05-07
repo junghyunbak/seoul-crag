@@ -8,7 +8,6 @@ import { DAYS_OF_WEEK } from '@/constants/time';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { time } from '@/utils';
 import { DateService } from '@/utils/time';
 
 import { useFetchOpeningHours, useMutateCragOpeningHour } from '@/hooks';
@@ -91,8 +90,8 @@ export function CragOpeningHoursField() {
             changeCragOpeningHourMutation.mutate({
               cragId: crag.id,
               day,
-              openTime: time.minutesToTimeStr(open),
-              closeTime: time.minutesToTimeStr(close),
+              openTime: DateService.minuteToTimeStr(open),
+              closeTime: DateService.minuteToTimeStr(close),
               isClosed: is_closed,
             });
           }, 1000);

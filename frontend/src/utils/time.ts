@@ -9,11 +9,6 @@ export function sleep(ms: number) {
   });
 }
 
-// TODO: HH:mm -> HH:mm:ss 로 바꿔야 하는 것 아닌가
-export function minutesToTimeStr(mins: number): string {
-  return dayjs().startOf('day').add(mins, 'minute').format('HH:mm');
-}
-
 export class DateService {
   private _date: Date;
 
@@ -81,5 +76,9 @@ export class DateService {
     const [h, m] = timeStr.split(':').map(Number);
 
     return h * 60 + m;
+  }
+
+  static minuteToTimeStr(minute: number) {
+    return dayjs().startOf('day').add(minute, 'minute').format('HH:mm:ss');
   }
 }

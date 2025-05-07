@@ -4,7 +4,7 @@ import { Box, Slider, Typography, Stack, Switch, FormControlLabel, Button } from
 
 import { DAY_STR_TO_KOR, DAYS_OF_WEEK } from '@/constants/time';
 
-import { time } from '@/utils';
+import { DateService } from '@/utils/time';
 
 export type DayRange = {
   is_closed: boolean;
@@ -110,7 +110,7 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
             value={[open, close]}
             onChange={(_, val) => handleSliderChange(day, val as number[])}
             valueLabelDisplay="on"
-            valueLabelFormat={(val) => time.minutesToTimeStr(val)}
+            valueLabelFormat={(val) => DateService.minuteToTimeStr(val)}
           />
         </Box>
       </Box>
