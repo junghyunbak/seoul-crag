@@ -21,7 +21,7 @@ export function CragThumbnailImages() {
       component="img"
       src={images[0].url}
       sx={{
-        width: '120px',
+        width: '150px',
         aspectRatio: '2/1',
         objectFit: 'cover',
         border: '1px solid white',
