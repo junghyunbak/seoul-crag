@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Box, IconButton, useTheme } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import ShowerIcon from '@mui/icons-material/Shower';
 import InfoIcon from '@mui/icons-material/Info';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -37,42 +37,31 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
 
   const theme = useTheme();
 
-  const { isShowerExist, isScheduleExist, isOperationExist } = useFilter(crag);
+  const { hasShower } = useFilter(crag);
 
+  // TODO: 일정 존재여부, 운영 시간 존재 여부에 따라 disabled 설정하기.
   const features: Feature[] = (() => {
     return [
       {
-        icon: (
-          <IconWrapper disable={!isScheduleExist}>
-            <CalendarMonthIcon />
-          </IconWrapper>
-        ),
+        icon: <CalendarMonthIcon />,
         callback: () => {
           setScheduleStory(crag.id);
         },
-        disabled: !isScheduleExist,
+        disabled: false,
       },
       {
-        icon: (
-          <IconWrapper disable={!isShowerExist}>
-            <ShowerIcon />
-          </IconWrapper>
-        ),
+        icon: <ShowerIcon />,
         callback: () => {
           setShowerStory(crag.id);
         },
-        disabled: !isShowerExist,
+        disabled: !hasShower,
       },
       {
-        icon: (
-          <IconWrapper disable={!isOperationExist}>
-            <HourglassTopIcon />
-          </IconWrapper>
-        ),
+        icon: <AccessTimeIcon />,
         callback: () => {
           setOperationStory(crag.id);
         },
-        disabled: !isOperationExist,
+        disabled: false,
       },
       {
         icon: <InfoIcon color="primary" />,
@@ -113,9 +102,9 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
                   height: 40,
                   '&:hover': { bgcolor: grey[100] },
                   color: theme.palette.grey[600],
-                  pointerEvents: feature.disabled ? 'none' : 'auto',
                 }}
                 onClick={feature.callback}
+                disabled={feature.disabled}
               >
                 {feature.icon}
               </IconButton>
@@ -123,35 +112,5 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
           );
         })}
     </AnimatePresence>
-  );
-}
-
-interface IconWrapperProps extends React.PropsWithChildren {
-  disable: boolean;
-}
-
-function IconWrapper({ disable, children }: IconWrapperProps) {
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {children}
-      {disable && (
-        <Box
-          sx={{
-            position: 'absolute',
-            width: '21px',
-            borderTop: '2px solid white',
-            borderBottom: '2px solid currentColor',
-            transform: 'rotate(45deg)',
-          }}
-        />
-      )}
-    </Box>
   );
 }

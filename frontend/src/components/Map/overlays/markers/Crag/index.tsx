@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-import { useFilter } from '@/hooks';
+import { useExp, useFilter } from '@/hooks';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -31,7 +31,9 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
 
   const { zoomLevel } = useZoom();
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
-  const { isCragFilter, isCragOff } = useFilter(crag);
+
+  const { exp } = useExp();
+  const { isFiltered, isOff } = useFilter(crag, exp.date);
 
   const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
@@ -81,7 +83,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         return zIndex.cragMarkerAcive;
       }
 
-      if (isCragOff) {
+      if (isOff) {
         return zIndex.cragMarkerOff;
       }
 
@@ -89,7 +91,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     })();
 
     marker.setZIndex(markerZIndex);
-  }, [marker, isSelect, isCragOff]);
+  }, [marker, isSelect, isOff]);
 
   return (
     <Box
@@ -97,13 +99,12 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       sx={{
         position: 'absolute',
         transform: 'translate(-50%, -100%)',
-        opacity: !isCragFilter ? 0.3 : 1,
-        pointerEvents: !isCragFilter ? 'none' : 'auto',
+        opacity: !isFiltered ? 0.3 : 1,
       }}
     >
       <Box onClick={() => setSelectCragId(crag.id)} sx={{ position: 'relative', display: 'flex' }}>
         <CragMenu crag={crag} isSelect={isSelect} />
-        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isCragOff} />
+        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} />
       </Box>
 
       {isTitleShown && (

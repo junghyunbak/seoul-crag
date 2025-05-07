@@ -6,7 +6,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFetchCrag, useFilter } from '@/hooks';
+import { useExp, useFetchCrag } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
 
@@ -20,14 +20,14 @@ export default function StorySchedule() {
 
   const { crag } = useFetchCrag({ cragId: scheduleStoryCragId });
 
-  const { expeditionDate } = useFilter();
+  const { exp } = useExp();
 
   return createPortal(
     <AnimatePresence>
       {scheduleStoryCragId && crag && (
         <StorySlider
           crag={crag}
-          contents={[expeditionDate].map((date) => (
+          contents={[exp.date].map((date) => (
             <Box
               sx={{
                 display: 'flex',

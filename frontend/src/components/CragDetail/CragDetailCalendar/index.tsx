@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 
-import { useFilter } from '@/hooks';
+import { useExp } from '@/hooks';
 
 import { Box, Typography } from '@mui/material';
 
@@ -14,9 +14,9 @@ import { CragDetailContext } from '@/components/CragDetail/index.context';
 export function CragDetailCalendar() {
   const { crag } = useContext(CragDetailContext);
 
-  const { expeditionDate } = useFilter();
+  const { exp } = useExp();
 
-  const [currentMonth, setCurrentMonth] = useState(expeditionDate);
+  const [currentMonth, setCurrentMonth] = useState(exp.date);
 
   if (!crag) {
     return null;

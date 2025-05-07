@@ -3,7 +3,7 @@ import { Box, Typography, styled } from '@mui/material';
 import { time } from '@/utils';
 import { addDays, format } from 'date-fns';
 import { DAY_TO_INDEX } from '@/constants/time';
-import { useFilter } from '@/hooks';
+import { useExp } from '@/hooks';
 
 const TextWithBg = styled(Typography)({
   fontWeight: 'bold',
@@ -30,9 +30,9 @@ interface StoryOperationPageProps {
 export function StoryOperationPage({ crag, openingHour }: StoryOperationPageProps) {
   const { day, open_time, close_time, is_closed } = openingHour;
 
-  const { expeditionDate } = useFilter(crag);
+  const { exp } = useExp();
 
-  const date = addDays(expeditionDate, (DAY_TO_INDEX[day] - expeditionDate.getDay() + 7) % 7);
+  const date = addDays(exp.date, (DAY_TO_INDEX[day] - exp.date.getDay() + 7) % 7);
 
   let openDate = time.timeStrToDate(open_time);
   let closeDate = time.timeStrToDate(close_time);

@@ -4,7 +4,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFetchCrag, useFilter } from '@/hooks';
+import { useExp, useFetchCrag } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
 import { StoryOperationPage } from '@/components/StoryOperation/StoryOperationPage';
@@ -18,7 +18,7 @@ export default function StoryOperation() {
 
   const { crag } = useFetchCrag({ cragId: operationStoryCragId });
 
-  const { expeditionDay } = useFilter();
+  const { exp } = useExp();
 
   return createPortal(
     <AnimatePresence>
@@ -27,7 +27,10 @@ export default function StoryOperation() {
           crag={crag}
           contents={(crag.openingHourOfWeek || [])
             .sort((a, b) => {
-              return ((DAY_TO_INDEX[a.day] - expeditionDay + 7) % 7) - ((DAY_TO_INDEX[b.day] - expeditionDay + 7) % 7);
+              return (
+                ((DAY_TO_INDEX[a.day] - exp.date.getDay() + 7) % 7) -
+                ((DAY_TO_INDEX[b.day] - exp.date.getDay() + 7) % 7)
+              );
             })
             .map((openingHour) => (
               <StoryOperationPage crag={crag} openingHour={openingHour} />

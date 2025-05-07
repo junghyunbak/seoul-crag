@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box } from '@mui/material';
 
-import { useFilter, useModifyFilter } from '@/hooks';
+import { DateService, useExp, useFilter, useModifyExp, useModifyFilter } from '@/hooks';
 
 import DatePicker from 'react-datepicker';
 
@@ -12,8 +12,6 @@ import { useKeenSlider } from 'keen-slider/react';
 
 import { ko } from 'date-fns/locale';
 
-import { time } from '@/utils';
-
 import { InputFilterChip } from './FilterChip';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -21,8 +19,10 @@ import 'keen-slider/keen-slider.min.css';
 import './index.css';
 
 export function Filter() {
-  const { filter, expeditionDate } = useFilter();
+  const { exp, isExpSelect } = useExp();
+  const { filter } = useFilter();
 
+  const { updateExpDateTimeStr } = useModifyExp();
   const { updateFilter } = useModifyFilter();
 
   const [sliderRef] = useKeenSlider<HTMLDivElement>({
@@ -41,8 +41,8 @@ export function Filter() {
       <Box ref={sliderRef} className="keen-slider" sx={{ zIndex: 1 }}>
         <KeenElementWrapper>
           <DatePicker
-            selected={expeditionDate}
-            onChange={(date) => date && updateFilter({ date: time.dateToDateTimeStr(date) })}
+            selected={exp.date}
+            onChange={(date) => date && updateExpDateTimeStr(DateService.dateToDateTimeStr(date))}
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={15}
@@ -52,10 +52,10 @@ export function Filter() {
             popperPlacement="bottom-start"
             customInput={
               <InputFilterChip
-                isSelect={filter.date !== null}
+                isSelect={isExpSelect}
                 emoji="🚀"
                 onDelete={() => {
-                  updateFilter({ date: null });
+                  updateExpDateTimeStr(null);
                 }}
               />
             }

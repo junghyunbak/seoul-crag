@@ -1,7 +1,7 @@
 import { Box, Typography, Stack, Paper } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
-import { useFilter } from '@/hooks';
+import { useExp } from '@/hooks';
 
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore } from 'date-fns';
 
@@ -24,7 +24,7 @@ interface ScheduleProps {
 }
 
 export function Schedule({ schedules, currentMonth, onScheduleElementClick, readOnly = false }: ScheduleProps) {
-  const { expeditionDate } = useFilter();
+  const { exp } = useExp();
 
   const start = startOfMonth(currentMonth);
   const end = endOfMonth(currentMonth);
@@ -82,7 +82,7 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
             });
 
           const scheduleDateStr = time.dateToDateStr(day);
-          const expeditionDateStr = time.dateToDateStr(expeditionDate);
+          const expeditionDateStr = time.dateToDateStr(exp.date);
 
           const isToday = scheduleDateStr === expeditionDateStr;
           const currentWeek = Math.ceil((emptyStart + i + 1) / 7);

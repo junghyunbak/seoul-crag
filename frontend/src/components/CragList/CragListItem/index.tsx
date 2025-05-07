@@ -4,14 +4,15 @@ import { useMap } from '@/hooks/useMap';
 import { useModifySearch } from '@/hooks/useModifySearch';
 import { calculateDistance } from '@/utils';
 import { QUERY_STRING } from '@/constants';
-import { useFilter, useSearch } from '@/hooks';
+import { useExp, useFilter, useSearch } from '@/hooks';
 
 interface CragListItemProps {
   crag: Crag;
 }
 
 export function CragListItem({ crag }: CragListItemProps) {
-  const { isCragOff, isCragFilter } = useFilter(crag);
+  const { exp } = useExp();
+  const { isOff, isFiltered } = useFilter(crag, exp.date);
   const { searchKeyword } = useSearch();
   const { map, gpsLatLng } = useMap();
   const theme = useTheme();
@@ -25,7 +26,7 @@ export function CragListItem({ crag }: CragListItemProps) {
       ? calculateDistance(gpsLatLng.lat, gpsLatLng.lng, crag.latitude, crag.longitude)
       : null;
 
-  if (!isCragFilter || !crag.name.includes(searchKeyword)) {
+  if (!isFiltered || !crag.name.includes(searchKeyword)) {
     return null;
   }
 
@@ -70,10 +71,10 @@ export function CragListItem({ crag }: CragListItemProps) {
 
         <Typography
           variant="body2"
-          color={isCragOff ? theme.palette.text.secondary : theme.palette.success.main}
-          fontWeight={isCragOff ? 'normal' : 'bold'}
+          color={isOff ? theme.palette.text.secondary : theme.palette.success.main}
+          fontWeight={isOff ? 'normal' : 'bold'}
         >
-          {isCragOff ? '영업 종료' : '운영중'}
+          {isOff ? '영업 종료' : '운영중'}
         </Typography>
       </Box>
     </Box>

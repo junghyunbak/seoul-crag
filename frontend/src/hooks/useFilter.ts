@@ -1,175 +1,221 @@
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { getDay, isValid, isWithinInterval } from 'date-fns';
+import { format, isValid, isWithinInterval, parse } from 'date-fns';
+import { useCallback } from 'react';
 
-import { DAYS_OF_WEEK } from '@/constants/time';
+const dayStrToDay: Record<OpeningHourDayType, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+};
 
-import { time } from '@/utils';
+export class DateService {
+  private _date: Date;
 
-export function useFilter(crag: Crag | null = null) {
+  constructor(date: Date | string | undefined | null) {
+    if (date instanceof Date) {
+      this._date = date;
+
+      return;
+    }
+
+    if (typeof date === 'string') {
+      const parseDate = new Date(date);
+
+      this._date = isValid(parseDate) ? parseDate : new Date();
+
+      return;
+    }
+
+    this._date = new Date();
+  }
+
+  get date() {
+    return this._date;
+  }
+
+  get dateTimeStr() {
+    return format(this._date, "yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  get dateStr() {
+    return format(this._date, 'yyyy-MM-dd');
+  }
+
+  get timeStr() {
+    return format(this._date, 'HH:mm:ss');
+  }
+
+  static dateTimeStrToDate(str: string) {
+    return parse(str, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+  }
+
+  static dateToDateTimeStr(date: Date) {
+    return format(date, "yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  static timeToDate(str: string, baseDate: Date) {
+    const parsedDate = parse(str, 'HH:mm:ss', baseDate);
+
+    if (!isValid(parsedDate)) {
+      return new Date();
+    }
+
+    return parsedDate;
+  }
+}
+
+export function useExp() {
+  const [expDateTimeStr] = useStore(useShallow((s) => [s.expDateTimeStr]));
+
+  const isExpSelect = expDateTimeStr !== null;
+
+  const exp = new DateService(expDateTimeStr);
+
+  return { exp, isExpSelect };
+}
+
+export function useModifyExp() {
+  const [setExpDateTimeStr] = useStore(useShallow((s) => [s.setExpDateTimeStr]));
+
+  const updateExpDateTimeStr = useCallback(
+    (dateTime: string | null) => {
+      setExpDateTimeStr(dateTime);
+    },
+    [setExpDateTimeStr]
+  );
+
+  return {
+    updateExpDateTimeStr,
+  };
+}
+
+/**
+ * 휴무           (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)
+ * 단축 운영       (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)
+ * 세팅           (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)
+ * 요일별 운영 여부  (timeStr, HH:mm:ss)
+ * 날짜           (date)
+ */
+
+// TEST: 해당 요일이 정기 휴무 날이지만 단축 운영 정보가 있다면, 운영 시간을 기준으로 isClosed가 계산되어야 한다.
+export function useFilter(crag?: Crag, date = new Date()) {
   const [filter] = useStore(useShallow((s) => [s.filter]));
 
-  const selectDate = (() => {
-    if (!filter.date) {
-      return null;
-    }
+  const imageTypes = (crag && crag.imageTypes) || [];
+  const schedules = (crag && crag.futureSchedules) || [];
+  const openingHourOfWeek = (crag && crag.openingHourOfWeek) || [];
+  const openingHour = openingHourOfWeek.find(({ day }) => dayStrToDay[day] === date.getDay());
 
-    const parseDate = time.dateTimeStrToDate(filter.date);
+  const current = new DateService(date);
+  let open = new DateService(DateService.timeToDate(openingHour?.open_time || '', date));
+  let close = new DateService(DateService.timeToDate(openingHour?.close_time || '', date));
 
-    if (!isValid(parseDate)) {
-      return null;
-    }
+  const hasShower = imageTypes.some((type) => type === 'shower');
+  const isRegularyClosed = openingHour?.is_closed || false;
 
-    return parseDate;
-  })();
-
-  const expeditionDate = selectDate || new Date();
-  const expeditionDay = getDay(expeditionDate);
-
-  const isOperationExist = (() => {
-    if (!crag) {
-      return false;
-    }
-
-    return (crag.openingHourOfWeek?.length || 0) > 0;
-  })();
-  const isShowerExist = (() => {
-    if (!crag) {
-      return false;
-    }
-
-    return (crag.imageTypes || []).some((type) => type === 'shower');
-  })();
-  const isScheduleExist = (() => {
-    if (!crag) {
-      return false;
-    }
-
-    return (crag.futureSchedules || []).some(
-      ({ open_date, close_date }) =>
-        time.dateToYearMonthStr(expeditionDate) === time.dateToYearMonthStr(time.dateTimeStrToDate(open_date)) ||
-        time.dateToYearMonthStr(expeditionDate) === time.dateToYearMonthStr(time.dateTimeStrToDate(close_date))
-    );
-  })();
+  let isTemporaryClosed = false;
+  let isOff = false;
+  let isSetup = false;
+  let isFiltered = true;
+  let isReduced = false;
+  let isNewSetting = false;
+  let isTodayRemove = false;
 
   /**
-   * true: 지도에 출력
-   * false: 지도에 출력하지 않음
+   * 1. 임시 휴무, 단축 운영, 세팅중 여부 계산
    */
-  const isCragFilter = (() => {
-    if (!crag) {
-      return true;
-    }
+  schedules.forEach(({ type, open_date, close_date }) => {
+    const _open = new DateService(open_date);
+    const _close = new DateService(close_date);
 
-    let isFilter = true;
-
-    if (filter.isShower) {
-      isFilter &&= (crag.imageTypes || []).includes('shower');
-    }
-
-    if (filter.isTodayRemove) {
-      isFilter &&= (crag.futureSchedules || []).some(
-        ({ type, open_date }) =>
-          type === 'setup' && time.dateTimeStrToDateStr(open_date) === time.dateToDateStr(expeditionDate)
-      );
-    }
-
-    if (filter.isNewSetting) {
-      isFilter &&= (crag.futureSchedules || []).some(
-        ({ type, close_date }) =>
-          type === 'setup' && time.dateTimeStrToDateStr(close_date) === time.dateToDateStr(expeditionDate)
-      );
-    }
-
-    if (filter.isNonSetting) {
-      isFilter &&= !(crag.futureSchedules || []).some(
-        ({ type, open_date, close_date }) =>
-          type === 'setup' &&
-          isWithinInterval(expeditionDate, {
-            start: time.dateTimeStrToDate(open_date),
-            end: time.dateTimeStrToDate(close_date),
-          })
-      );
-    }
-
-    return isFilter;
-  })();
-
-  const isCragOff = (() => {
-    if (!crag) {
-      return true;
-    }
-
-    /**
-     * 스케줄의 운영 정보 반영
-     *
-     * - 휴무일
-     * - 단축 운영
-     *
-     * (⚠ 암장의 기본 운영 정보보다 먼저 적용되어야 함.)
-     */
-    for (const { type, open_date, close_date } of crag.futureSchedules || []) {
-      // 오늘 스케줄이 아닌경우 패스
-      if (time.dateToDateStr(expeditionDate) !== time.dateTimeStrToDateStr(open_date)) {
-        continue;
-      }
-
-      if (type === 'closed') {
-        return true;
-      }
-
-      if (type === 'reduced') {
-        // 하루 이상의 범위일 경우 무시. 24시간 이상으로 운영하는 암장은 없음.
-        if (time.dateTimeStrToDateStr(open_date) !== time.dateTimeStrToDateStr(close_date)) {
-          continue;
-        }
-
-        // 단축 운영 시간 밖일 경우 off로 판단.
-        // 당일 '단축 운영' 정보가 있다는 것은 기본 운영 정보를 무시해야 하므로 여기서 바로 반환.
-        return !isWithinInterval(expeditionDate, {
-          start: time.dateTimeStrToDate(open_date),
-          end: time.dateTimeStrToDate(close_date),
-        });
+    if (type === 'closed') {
+      if (current.dateStr === _open.dateStr) {
+        isTemporaryClosed = true;
+        isOff = true;
       }
     }
 
-    /**
-     * 암장의 기본 운영 정보 반영
-     */
-    const todayOpeningHour = (crag?.openingHourOfWeek || []).find(
-      (openingHour) => openingHour.day == DAYS_OF_WEEK[expeditionDay]
-    );
+    if (type === 'reduced') {
+      if (current.dateStr === _open.dateStr && current.dateStr === _close.dateStr) {
+        isReduced = true;
 
-    if (todayOpeningHour) {
-      const { is_closed, open_time, close_time } = todayOpeningHour;
-
-      if (is_closed) {
-        return true;
+        open = _open;
+        close = _close;
       }
+    }
 
+    if (type === 'setup') {
       if (
-        !isWithinInterval(expeditionDate, {
-          start: time.timeStrToDate(open_time, expeditionDate),
-          end: time.timeStrToDate(close_time, expeditionDate),
+        isWithinInterval(current.date, {
+          start: _open.date,
+          end: _close.date,
         })
       ) {
-        return true;
+        isSetup = true;
+      }
+
+      if (current.dateStr === _open.dateStr) {
+        isTodayRemove = true;
+      }
+
+      if (current.dateStr === _close.dateStr) {
+        isNewSetting = true;
       }
     }
+  });
 
-    return false;
-  })();
+  /**
+   * 2. 최종 운영시간을 기반으로 현재 운영 여부(isClosed) 상태를 업데이트
+   */
+  if (
+    !isWithinInterval(current.date, {
+      start: open.date,
+      end: close.date,
+    })
+  ) {
+    isOff = true;
+  }
+
+  /**
+   * 3. 구한 정보들을 기반으로, 필터 상태에 따라 필터 여부(isFiltered) 상태를 업데이트
+   */
+  if (filter.isShower) {
+    isFiltered &&= hasShower;
+  }
+
+  if (filter.isNonSetting) {
+    isFiltered &&= !isSetup;
+  }
+
+  if (filter.isNewSetting) {
+    isFiltered &&= isNewSetting;
+  }
+
+  if (filter.isTodayRemove) {
+    isFiltered &&= isTodayRemove;
+  }
 
   return {
     filter,
-    selectDate,
-    expeditionDate,
-    expeditionDay,
-    isCragFilter,
-    isCragOff,
-    isShowerExist,
-    isScheduleExist,
-    isOperationExist,
+
+    isRegularyClosed,
+    isTemporaryClosed,
+
+    isOff,
+    isFiltered,
+    isReduced,
+
+    hasShower,
+
+    open,
+    close,
+
+    current,
   };
 }
