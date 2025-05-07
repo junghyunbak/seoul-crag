@@ -6,6 +6,7 @@ export * from './useFilter';
 export * from './useNaverMap';
 export * from './useSearch';
 export * from './useZoom';
+export * from './useExp';
 
 export * from './useCrag';
 
@@ -17,6 +18,7 @@ export * from './useModifyFilter';
 export * from './useModifySelectDate';
 export * from './useModifySearch';
 export * from './useModifyZoom';
+export * from './useModifyExp';
 
 /**
  * fetch

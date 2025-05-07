@@ -1,92 +1,11 @@
-import { useCallback } from 'react';
-
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { format, isValid, isWithinInterval, parse } from 'date-fns';
+import { DateService } from '@/utils/time';
+
+import { isWithinInterval } from 'date-fns';
 
 import { DAY_STR_TO_INDEX } from '@/constants/time';
-
-export class DateService {
-  private _date: Date;
-
-  constructor(date: Date | string | undefined | null) {
-    if (date instanceof Date) {
-      this._date = date;
-
-      return;
-    }
-
-    if (typeof date === 'string') {
-      const parseDate = new Date(date);
-
-      this._date = isValid(parseDate) ? parseDate : new Date();
-
-      return;
-    }
-
-    this._date = new Date();
-  }
-
-  get date() {
-    return this._date;
-  }
-
-  get dateTimeStr() {
-    return format(this._date, "yyyy-MM-dd'T'HH:mm:ss");
-  }
-
-  get dateStr() {
-    return format(this._date, 'yyyy-MM-dd');
-  }
-
-  get timeStr() {
-    return format(this._date, 'HH:mm:ss');
-  }
-
-  static dateTimeStrToDate(str: string) {
-    return parse(str, "yyyy-MM-dd'T'HH:mm:ss", new Date());
-  }
-
-  static dateToDateTimeStr(date: Date) {
-    return format(date, "yyyy-MM-dd'T'HH:mm:ss");
-  }
-
-  static timeToDate(str: string, baseDate: Date) {
-    const parsedDate = parse(str, 'HH:mm:ss', baseDate);
-
-    if (!isValid(parsedDate)) {
-      return new Date();
-    }
-
-    return parsedDate;
-  }
-}
-
-export function useExp() {
-  const [expDateTimeStr] = useStore(useShallow((s) => [s.expDateTimeStr]));
-
-  const isExpSelect = expDateTimeStr !== null;
-
-  const exp = new DateService(expDateTimeStr);
-
-  return { exp, isExpSelect };
-}
-
-export function useModifyExp() {
-  const [setExpDateTimeStr] = useStore(useShallow((s) => [s.setExpDateTimeStr]));
-
-  const updateExpDateTimeStr = useCallback(
-    (dateTime: string | null) => {
-      setExpDateTimeStr(dateTime);
-    },
-    [setExpDateTimeStr]
-  );
-
-  return {
-    updateExpDateTimeStr,
-  };
-}
 
 /**
  * 휴무           (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)

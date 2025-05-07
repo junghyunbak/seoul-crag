@@ -1,4 +1,4 @@
-import { format, parse } from 'date-fns';
+import { format, parse, isValid } from 'date-fns';
 import dayjs from 'dayjs';
 
 export function convert24ToCustom12HourFormat(hour: number): string {
@@ -97,3 +97,59 @@ export const dateTimeStrToDate = (str: string) => parse(str, "yyyy-MM-dd'T'HH:mm
 export const dateTimeStrToDateStr = (str: string) => dateToDateStr(dateTimeStrToDate(str));
 
 export const timeStrToDate = (str: string, baseDate: Date = new Date()) => parse(str, 'HH:mm:ss', baseDate);
+
+export class DateService {
+  private _date: Date;
+
+  constructor(date: Date | string | undefined | null) {
+    if (date instanceof Date) {
+      this._date = date;
+
+      return;
+    }
+
+    if (typeof date === 'string') {
+      const parseDate = new Date(date);
+
+      this._date = isValid(parseDate) ? parseDate : new Date();
+
+      return;
+    }
+
+    this._date = new Date();
+  }
+
+  get date() {
+    return this._date;
+  }
+
+  get dateTimeStr() {
+    return format(this._date, "yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  get dateStr() {
+    return format(this._date, 'yyyy-MM-dd');
+  }
+
+  get timeStr() {
+    return format(this._date, 'HH:mm:ss');
+  }
+
+  static dateTimeStrToDate(str: string) {
+    return parse(str, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+  }
+
+  static dateToDateTimeStr(date: Date) {
+    return format(date, "yyyy-MM-dd'T'HH:mm:ss");
+  }
+
+  static timeToDate(str: string, baseDate: Date) {
+    const parsedDate = parse(str, 'HH:mm:ss', baseDate);
+
+    if (!isValid(parsedDate)) {
+      return new Date();
+    }
+
+    return parsedDate;
+  }
+}
