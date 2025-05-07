@@ -1,7 +1,7 @@
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { isBefore, getDay, isValid } from 'date-fns';
+import { getDay, isValid, isWithinInterval } from 'date-fns';
 
 import { DAYS_OF_WEEK } from '@/constants/time';
 
@@ -60,8 +60,10 @@ export function useFilter(crag: Crag | null = null) {
       isFilter &&= !(crag.futureSchedules || []).some(
         ({ type, open_date, close_date }) =>
           type === 'setup' &&
-          isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
-          isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
+          isWithinInterval(expeditionDate, {
+            start: time.dateTimeStrToDate(open_date),
+            end: time.dateTimeStrToDate(close_date),
+          })
       );
     }
 
@@ -99,10 +101,10 @@ export function useFilter(crag: Crag | null = null) {
 
         // 단축 운영 시간 밖일 경우 off로 판단.
         // 당일 '단축 운영' 정보가 있다는 것은 기본 운영 정보를 무시해야 하므로 여기서 바로 반환.
-        return !(
-          isBefore(time.dateTimeStrToDate(open_date), expeditionDate) &&
-          isBefore(expeditionDate, time.dateTimeStrToDate(close_date))
-        );
+        return !isWithinInterval(expeditionDate, {
+          start: time.dateTimeStrToDate(open_date),
+          end: time.dateTimeStrToDate(close_date),
+        });
       }
     }
 
@@ -121,10 +123,10 @@ export function useFilter(crag: Crag | null = null) {
       }
 
       if (
-        !(
-          isBefore(time.timeStrToDate(open_time, expeditionDate), expeditionDate) &&
-          isBefore(expeditionDate, time.timeStrToDate(close_time, expeditionDate))
-        )
+        !isWithinInterval(expeditionDate, {
+          start: time.timeStrToDate(open_time, expeditionDate),
+          end: time.timeStrToDate(close_time, expeditionDate),
+        })
       ) {
         return true;
       }
