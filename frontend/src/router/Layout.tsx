@@ -16,10 +16,11 @@ import { AxiosError } from 'axios';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { time } from '@/utils';
-import StorySchedule from '@/components/StorySchedule';
 
 const CragDetail = lazy(() => import('@/components/CragDetail'));
 const StoryImage = lazy(() => import('@/components/StoryImage'));
+const StorySchedule = lazy(() => import('@/components/StorySchedule'));
+const StoryOperation = lazy(() => import('@/components/StoryOperation'));
 
 export function Layout() {
   return (
@@ -34,6 +35,7 @@ export function Layout() {
                 <StoryImage imageType="interior" />
                 <StoryImage imageType="shower" />
                 <StorySchedule />
+                <StoryOperation />
 
                 <CragDetail />
               </LoadNaverMap>

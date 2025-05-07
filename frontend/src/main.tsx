@@ -7,6 +7,7 @@ import { theme } from '@/styles/theme.ts';
 import App from './App.tsx';
 
 import './index.css';
+import '@/assets/fonts/index.css';
 
 import * as Sentry from '@sentry/react';
 

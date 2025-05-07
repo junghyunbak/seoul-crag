@@ -27,6 +27,13 @@ export function useFilter(crag: Crag | null = null) {
   const expeditionDate = selectDate || new Date();
   const expeditionDay = getDay(expeditionDate);
 
+  const isOperationExist = (() => {
+    if (!crag) {
+      return false;
+    }
+
+    return (crag.openingHourOfWeek?.length || 0) > 0;
+  })();
   const isShowerExist = (() => {
     if (!crag) {
       return false;
@@ -158,9 +165,11 @@ export function useFilter(crag: Crag | null = null) {
     filter,
     selectDate,
     expeditionDate,
+    expeditionDay,
     isCragFilter,
     isCragOff,
     isShowerExist,
     isScheduleExist,
+    isOperationExist,
   };
 }

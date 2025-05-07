@@ -33,10 +33,11 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
   const [, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
+  const [, setOperationStory] = useQueryParam(QUERY_STRING.STORY_OPERATION, StringParam);
 
   const theme = useTheme();
 
-  const { isShowerExist, isScheduleExist } = useFilter(crag);
+  const { isShowerExist, isScheduleExist, isOperationExist } = useFilter(crag);
 
   const features: Feature[] = (() => {
     return [
@@ -64,12 +65,14 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
       },
       {
         icon: (
-          <IconWrapper disable>
+          <IconWrapper disable={!isOperationExist}>
             <HourglassTopIcon />
           </IconWrapper>
         ),
-        callback: () => {},
-        disabled: false,
+        callback: () => {
+          setOperationStory(crag.id);
+        },
+        disabled: !isOperationExist,
       },
       {
         icon: <InfoIcon color="primary" />,
