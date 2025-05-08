@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import {
   parseISO,
   startOfWeek,
@@ -16,20 +16,14 @@ import {
   format,
 } from 'date-fns';
 import { SCHEDULE_TYPE_TO_LABELS } from '@/constants';
+import holidayData from './holidays.ko.json';
+import { DateService } from '@/utils/time';
 
 const BAR_HEIGHT = 16;
 const BAR_GAP = 2;
 const DAYS_PER_WEEK = 7;
 const MINUTES_IN_DAY = 1440;
 const CELL_HEIGHT = 76;
-
-interface Schedule {
-  id: string;
-  type: 'closed' | 'setup' | 'reduced';
-  open_date: string;
-  close_date: string;
-  created_at: Date;
-}
 
 interface ScheduleChunk {
   id: string;
@@ -148,6 +142,10 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
   const chunks = preprocessSchedules(schedules, calendarStart);
   const totalDays = differenceInCalendarDays(calendarEnd, calendarStart) + 1;
 
+  const holiday2025 = holidayData[2025];
+
+  const theme = useTheme();
+
   const stackMap = new Map<string, ScheduleChunk[]>();
 
   chunks.forEach((chunk) => {
@@ -193,6 +191,8 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
           const key = `${weekIndex}-${dayIndex}`;
           const barStack = stackMap.get(key) ?? [];
 
+          const isHoliday = holiday2025.includes(new DateService(currentDate).dateStr);
+
           return (
             <Grid
               size={{ xs: 1 }}
@@ -205,7 +205,15 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
                 borderBottom: '1px solid #ddd',
               }}
             >
-              <Box sx={{ position: 'absolute', top: 4, left: 4, fontSize: '0.75rem', color: '#555' }}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 4,
+                  left: 4,
+                  fontSize: '0.75rem',
+                  color: isHoliday ? theme.palette.error.main : '#555',
+                }}
+              >
                 {i === 0 || addDays(calendarStart, i - 1).getMonth() !== currentDate.getMonth()
                   ? `${format(currentDate, 'M/d')}`
                   : format(currentDate, 'd')}
