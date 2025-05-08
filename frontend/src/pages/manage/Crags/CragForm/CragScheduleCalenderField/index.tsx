@@ -4,13 +4,13 @@ import { Box, Typography } from '@mui/material';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { useFetchSchedules, useMutateAddSchedule, useMutateDeleteSchedule, useMutateUpdateSchedule } from '@/hooks';
+import { useMutateAddSchedule, useMutateDeleteSchedule, useMutateUpdateSchedule } from '@/hooks';
 
-import { subMonths, addMonths } from 'date-fns';
+import { subMonths, addMonths, format } from 'date-fns';
 
-import { Schedule } from '@/components/Schedule';
 import { ScheduleEditModal } from '@/components/ScheduleEditModal';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
+import { Calendar } from '@/components/Calendar';
 
 export function CragScheduleCalenderField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -18,25 +18,20 @@ export function CragScheduleCalenderField() {
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null | undefined>(undefined);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const { schedules, refetch } = useFetchSchedules(crag.id);
-
   const { addScheduleMutation } = useMutateAddSchedule({
     onSettled() {
-      refetch();
       revalidateCrag();
     },
   });
 
   const { deleteScheduleMutation } = useMutateDeleteSchedule({
     onSettled() {
-      refetch();
       revalidateCrag();
     },
   });
 
   const { updateScheduleMutation } = useMutateUpdateSchedule({
     onSettled() {
-      refetch();
       revalidateCrag();
     },
   });
@@ -51,12 +46,10 @@ export function CragScheduleCalenderField() {
         onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}
       />
 
-      <Schedule
-        currentMonth={currentMonth}
-        schedules={schedules || []}
-        onScheduleElementClick={(schedule) => {
-          setSelectedSchedule(schedule);
-        }}
+      <Calendar
+        schedules={crag.futureSchedules || []}
+        targetMonth={format(currentMonth, 'yyyy-MM')}
+        onScheduleClick={(schedule) => setSelectedSchedule(schedule)}
       />
 
       <ScheduleEditModal

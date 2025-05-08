@@ -43,6 +43,7 @@ interface ScheduleChunk {
   stackIndex?: number;
   leftRatio?: number;
   rightRatio?: number;
+  schedule: Schedule;
 }
 
 function getCalendarRange(monthStr: string) {
@@ -88,6 +89,7 @@ function preprocessSchedules(schedules: Schedule[], calendarStart: Date): Schedu
         dayStartIndex,
         span,
         showText: isFirstChunk,
+        schedule: s,
       };
 
       if (isFirstChunk) {
@@ -137,9 +139,10 @@ function preprocessSchedules(schedules: Schedule[], calendarStart: Date): Schedu
 interface CalendarProps {
   schedules: Schedule[];
   targetMonth: string;
+  onScheduleClick: (schedule: Schedule) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) => {
+export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onScheduleClick }) => {
   const weekdayLabels = ['일', '월', '화', '수', '목', '금', '토'];
   const { start: calendarStart, end: calendarEnd } = getCalendarRange(targetMonth);
   const chunks = preprocessSchedules(schedules, calendarStart);
@@ -237,6 +240,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                     }}
+                    onClick={() => onScheduleClick(chunk.schedule)}
                   >
                     {chunk.showText ? SCHEDULE_TYPE_TO_LABELS[chunk.type] : ''}
                   </Box>
