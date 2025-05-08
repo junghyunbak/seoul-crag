@@ -4,7 +4,6 @@ import { useFetchCrags, useModifySearch } from '@/hooks';
 
 import { Modal, Box, InputBase, Divider, IconButton, Select, MenuItem } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import CloseIcon from '@mui/icons-material/Close';
 
 import { useSearch } from '@/hooks/useSearch';
 
@@ -57,9 +56,6 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
           onChange={(e) => updateSearchKeyword(e.target.value)}
           placeholder="클라이밍장 검색"
         />
-        <IconButton onClick={() => updateIsSearchOpen(false)}>
-          <CloseIcon />
-        </IconButton>
       </Box>
 
       <Divider />
