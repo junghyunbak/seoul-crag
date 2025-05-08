@@ -95,7 +95,14 @@ export function useFilter(crag?: Crag, date = new Date()) {
   }
 
   /**
-   * 3. 구한 정보들을 기반으로, 필터 상태에 따라 필터 여부(isFiltered) 상태를 업데이트
+   * 3. 단축 운영 정보가 없다면, 정기 휴무 정보를 isOff에 반영
+   */
+  if (!isReduced) {
+    isOff ||= isRegularyClosed;
+  }
+
+  /**
+   * 4. 구한 정보들을 기반으로, 필터 상태에 따라 필터 여부(isFiltered) 상태를 업데이트
    */
   if (filter.isShower) {
     isFiltered &&= hasShower;
