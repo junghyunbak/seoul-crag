@@ -56,7 +56,9 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
         }}
       >
         <Text variant="h2">{format(date, 'yyyy.MM.dd')}</Text>
+
         <Text variant="h2">{DAYS_OF_KOR[date.getDay()] + (isToday ? '(오늘)' : '')}</Text>
+
         {isRegularyClosed ? (
           <TextWithBg variant="h2">정기 휴일</TextWithBg>
         ) : isTemporaryClosed ? (
@@ -67,13 +69,16 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
               open.date,
               'a hh:mm'
             )} ~`}</TextWithBg>
+
             <TextWithBg
               variant="h3"
               sx={{
                 color: isReduced ? 'yellow' : 'white',
               }}
             >{`${format(close.date, 'a hh:mm')}`}</TextWithBg>
-            {isTodayRemove && <Text variant="h3">🍂오늘 탈거</Text>}
+
+            {isTodayRemove && <Text variant="h3">🍂탈거</Text>}
+
             {isNewSetting && <Text variant="h3">✨New Setting!</Text>}
           </>
         )}
