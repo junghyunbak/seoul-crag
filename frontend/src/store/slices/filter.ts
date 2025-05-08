@@ -1,7 +1,5 @@
 import { type StateCreator } from 'zustand';
 
-import { DateService } from '@/utils/time';
-
 type FilterSliceType = {
   filter: Filter;
   setFilter: (fn: (filter: Filter) => Filter) => void;
@@ -26,7 +24,7 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set): FilterSli
     }));
   },
 
-  expDateTimeStr: DateService.getCurrentDateTimeStr(),
+  expDateTimeStr: null,
   setExpDateTimeStr(expDateTimeStr) {
     set(() => ({ expDateTimeStr }));
   },
