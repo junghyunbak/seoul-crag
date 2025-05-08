@@ -3,9 +3,7 @@ import Grid from '@mui/material/Grid';
 
 import { useExp } from '@/hooks';
 
-import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore } from 'date-fns';
-
-import { SCHEDULE_TYPE_TO_INDEX } from '@/constants';
+import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, parseISO } from 'date-fns';
 
 import { DateService } from '@/utils/time';
 
@@ -14,6 +12,7 @@ import { ScheduleWrapper } from './ScheduleWrapper';
 import holidayData from './holidays.ko.json';
 import { ScheduleHeader } from './ScheduleHeader';
 import { ScheduleElement } from './ScheduleElement';
+import { useMemo } from 'react';
 
 interface ScheduleProps {
   currentMonth: Date;
@@ -36,6 +35,31 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
   const lastWeek = Math.ceil((emptyStart + days.length) / 7);
   const emptyEnd = lastWeek * 7 - emptyStart - days.length;
 
+  const dateToSchedule = useMemo(() => {
+    const map = new Map<string, Schedule[]>();
+
+    schedules.forEach((schedule) => {
+      const { open_date, close_date } = schedule;
+
+      const start = parseISO(open_date);
+      const end = parseISO(close_date);
+
+      eachDayOfInterval({ start, end }).forEach((date) => {
+        const dateStr = new DateService(date).dateStr;
+
+        const _schedules = map.get(dateStr) || [];
+
+        _schedules.push(schedule);
+
+        map.set(dateStr, _schedules);
+      });
+    });
+
+    return map;
+  }, [schedules]);
+
+  console.log(dateToSchedule);
+
   return (
     <Paper>
       <Grid container columns={7}>
@@ -48,42 +72,27 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
         {days.map((day, i) => {
           const current = new DateService(day);
 
-          const filteredSchedules = schedules
-            .sort((a, b) => (SCHEDULE_TYPE_TO_INDEX[a.type] < SCHEDULE_TYPE_TO_INDEX[b.type] ? -1 : 1))
-            .filter(({ open_date, close_date }) => {
-              const open = new DateService(open_date);
-              const close = new DateService(close_date);
-
-              /**
-               * 0시 ~ 23분 59분 59초 | 0시 ~ 23시 59분 59초 | 0시 ~ 23시 59분 59초
-               *                <---^--->            <---^--->
-               *                  (day)               (dayEnd)
-               *
-               * 하루 사이에 걸친 일정을 체크하기 위해 경계값을 기준으로 비교함.
-               */
-              const dayStart = day;
-              const dayEnd = new Date(day.getTime() + 1000 * 60 * 60 * 24 - 1);
-
-              return isBefore(open.date, dayEnd) && isBefore(dayStart, close.date);
-            });
+          const currentWeek = Math.ceil((emptyStart + i + 1) / 7);
 
           const isToday = current.dateStr === exp.dateStr;
-          const currentWeek = Math.ceil((emptyStart + i + 1) / 7);
+          const isHoliday = holidays.includes(current.dateStr);
+          const isLastLine = currentWeek === lastWeek;
+          const isRightCorner = (i + emptyStart) % 7 === 6;
 
           return (
             <ScheduleWrapper
               key={current.dateStr}
-              isLastLine={currentWeek === lastWeek}
-              isRightCorner={(i + emptyStart) % 7 === 6}
-              isToday={isToday}
-              isHoliday={holidays.includes(current.dateStr)}
               date={day}
+              isToday={isToday}
+              isHoliday={isHoliday}
+              isLastLine={isLastLine}
+              isRightCorner={isRightCorner}
             >
               <ScheduleElement
-                schedules={filteredSchedules}
-                onScheduleElementClick={onScheduleElementClick}
                 current={current}
                 readOnly={readOnly}
+                schedules={dateToSchedule.get(current.dateStr) || []}
+                onScheduleElementClick={onScheduleElementClick}
               />
             </ScheduleWrapper>
           );

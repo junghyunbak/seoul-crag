@@ -32,11 +32,11 @@ export function ScheduleElement({
         {schedules.map((schedule) => {
           const { open_date, close_date, type, id } = schedule;
 
-          const sopen = new DateService(open_date);
-          const sclose = new DateService(close_date);
+          const open = new DateService(open_date);
+          const close = new DateService(close_date);
 
-          const isFirst = sopen.dateStr === current.dateStr;
-          const isLast = sclose.dateStr === current.dateStr;
+          const isFirst = open.dateStr === current.dateStr;
+          const isLast = close.dateStr === current.dateStr;
 
           let leftPer = 0;
           let rightPer = 0;
@@ -51,11 +51,11 @@ export function ScheduleElement({
                 leftPer = 0;
                 rightPer = 0;
               } else if (isFirst) {
-                leftPer = (sopen.minute / 1440) * 100;
+                leftPer = (open.minute / 1440) * 100;
                 rightPer = 0;
               } else if (isLast) {
                 leftPer = 0;
-                rightPer = ((1440 - sclose.minute) / 1440) * 100;
+                rightPer = ((1440 - close.minute) / 1440) * 100;
               }
 
               break;

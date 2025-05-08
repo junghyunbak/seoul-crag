@@ -29,13 +29,16 @@ export function ScheduleElementRecord({
       }}
     >
       <Box sx={{ width: `${leftPer}%` }} />
+
       <Box
         sx={{
-          flex: 1,
-          overflow: 'hidden',
-          bgcolor: SCHEDULE_TYPE_TO_COLORS[schedule.type],
+          width: '100%',
+
           px: { md: 1, xs: 0.5 },
           py: 0.2,
+        }}
+        style={{
+          backgroundColor: SCHEDULE_TYPE_TO_COLORS[schedule.type],
           borderTopLeftRadius: isFirst ? 4 : 0,
           borderBottomLeftRadius: isFirst ? 4 : 0,
           borderTopRightRadius: isLast ? 4 : 0,
@@ -53,6 +56,7 @@ export function ScheduleElementRecord({
           {SCHEDULE_TYPE_TO_LABELS[schedule.type]}
         </Typography>
       </Box>
+
       <Box sx={{ width: `${rightPer}%` }} />
     </Box>
   );
