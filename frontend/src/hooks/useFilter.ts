@@ -104,8 +104,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
       end: close.date,
     });
   } else {
-    isOpen &&= isTemporaryClosed;
-    isOpen &&= isRegularyClosed;
+    isOpen &&= !isTemporaryClosed;
+    isOpen &&= !isRegularyClosed;
   }
 
   if (filter.isShower) {
