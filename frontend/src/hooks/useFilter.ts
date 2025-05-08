@@ -14,33 +14,42 @@ import { DAY_STR_TO_INDEX } from '@/constants/time';
  * 요일별 운영 여부  (timeStr, HH:mm:ss)
  * 날짜           (date)
  */
-
-// TEST: 해당 요일이 정기 휴무 날이지만 단축 운영 정보가 있다면, 운영 시간을 기준으로 isClosed가 계산되어야 한다.
 export function useFilter(crag?: Crag, date = new Date()) {
   const [filter] = useStore(useShallow((s) => [s.filter]));
+
+  let isOpen = true;
+  let isFiltered = true;
+
+  let isRegularyClosed = false;
+  let isTemporaryClosed = false;
+
+  let isSetup = false;
+  let isReduced = false;
+  let isNewSetting = false;
+  let isTodayRemove = false;
 
   const imageTypes = (crag && crag.imageTypes) || [];
   const schedules = (crag && crag.futureSchedules) || [];
   const openingHourOfWeek = (crag && crag.openingHourOfWeek) || [];
   const openingHour = openingHourOfWeek.find(({ day }) => DAY_STR_TO_INDEX[day] === date.getDay());
 
+  if (openingHour?.is_closed) {
+    isRegularyClosed = true;
+  }
+
+  const hasShower = imageTypes.some((type) => type === 'shower');
+
   const current = new DateService(date);
   let open = new DateService(DateService.timeStrToDate(openingHour?.open_time || '', date));
   let close = new DateService(DateService.timeStrToDate(openingHour?.close_time || '', date));
 
-  const hasShower = imageTypes.some((type) => type === 'shower');
-  const isRegularyClosed = openingHour?.is_closed || false;
-
-  let isTemporaryClosed = false;
-  let isOff = false;
-  let isSetup = false;
-  let isFiltered = true;
-  let isReduced = false;
-  let isNewSetting = false;
-  let isTodayRemove = false;
-
   /**
-   * 1. 임시 휴무, 단축 운영, 세팅중 여부 계산
+   * 스케줄로부터 다음 상태 계산
+   *
+   * - 임시 휴무
+   * - 단축 운영
+   * - 세팅 여부
+   * - 오늘 탈거
    */
   schedules.forEach(({ type, open_date, close_date }) => {
     const _open = new DateService(open_date);
@@ -49,7 +58,6 @@ export function useFilter(crag?: Crag, date = new Date()) {
     if (type === 'closed') {
       if (current.dateStr === _open.dateStr) {
         isTemporaryClosed = true;
-        isOff = true;
       }
     }
 
@@ -83,27 +91,23 @@ export function useFilter(crag?: Crag, date = new Date()) {
   });
 
   /**
-   * 2. 최종 운영시간을 기반으로 현재 운영 여부(isClosed) 상태를 업데이트
+   * 구한 암장 상태로부터
+   *
+   * - 열림 여부 (and)
+   * - 필터 여부 (and)
+   *
+   * 를 계산
    */
-  if (
-    !isWithinInterval(current.date, {
+  if (isReduced) {
+    isOpen &&= isWithinInterval(current.date, {
       start: open.date,
       end: close.date,
-    })
-  ) {
-    isOff = true;
+    });
+  } else {
+    isOpen &&= isTemporaryClosed;
+    isOpen &&= isRegularyClosed;
   }
 
-  /**
-   * 3. 단축 운영 정보가 없다면, 정기 휴무 정보를 isOff에 반영
-   */
-  if (!isReduced) {
-    isOff ||= isRegularyClosed;
-  }
-
-  /**
-   * 4. 구한 정보들을 기반으로, 필터 상태에 따라 필터 여부(isFiltered) 상태를 업데이트
-   */
   if (filter.isShower) {
     isFiltered &&= hasShower;
   }
@@ -126,7 +130,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
     isRegularyClosed,
     isTemporaryClosed,
 
-    isOff,
+    isOff: !isOpen,
     isFiltered,
     isReduced,
     isNewSetting,

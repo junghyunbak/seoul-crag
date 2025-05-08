@@ -66,6 +66,30 @@ describe('스케줄에 따른 암장 상태 검사', () => {
     expect(result.current.isOff).toBe(true);
   });
 
+  it('오늘 날짜가 임시 휴무일 경우, isOff 상태가 true여야 한다.', () => {
+    const { result } = renderHook(() => {
+      const { isOff } = useFilter(
+        {
+          ...mockCrag,
+          futureSchedules: [
+            {
+              id: '',
+              type: 'closed',
+              open_date: dateTimeStr,
+              close_date: dateTimeStr,
+              created_at: new Date(),
+            },
+          ],
+        },
+        today
+      );
+
+      return { isOff };
+    });
+
+    expect(result.current.isOff).toBe(true);
+  });
+
   it('오늘 날짜가 정기 휴무이지만, 단축 일정이 존재할 경우 isOff 상태가 false이어야 한다.', () => {
     const { result } = renderHook(() => {
       const { isOff } = useFilter(
@@ -86,6 +110,37 @@ describe('스케줄에 따른 암장 상태 검사', () => {
               open_date: dateTimeStr,
               close_date: dateTimeStr,
               type: 'reduced',
+              created_at: new Date(),
+            },
+          ],
+        },
+        today
+      );
+
+      return { isOff };
+    });
+
+    expect(result.current.isOff).toBe(false);
+  });
+
+  it('오늘 날짜가 임시 휴무이지만, 단축 일정이 존재할 경우 isOff 상태가 false이어야 한다.', () => {
+    const { result } = renderHook(() => {
+      const { isOff } = useFilter(
+        {
+          ...mockCrag,
+          futureSchedules: [
+            {
+              id: '',
+              open_date: dateTimeStr,
+              close_date: dateTimeStr,
+              type: 'reduced',
+              created_at: new Date(),
+            },
+            {
+              id: '',
+              type: 'closed',
+              open_date: dateTimeStr,
+              close_date: dateTimeStr,
               created_at: new Date(),
             },
           ],
