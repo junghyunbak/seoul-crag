@@ -196,7 +196,9 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
               sx={{ height: `${CELL_HEIGHT}px`, position: 'relative', px: 1, border: '1px solid #ddd' }}
             >
               <Box sx={{ position: 'absolute', top: 4, left: 4, fontSize: '0.75rem', color: '#555' }}>
-                {format(currentDate, 'd')}
+                {i === 0 || addDays(calendarStart, i - 1).getMonth() !== currentDate.getMonth()
+                  ? `${format(currentDate, 'M/d')}`
+                  : format(currentDate, 'd')}
               </Box>
 
               {barStack.map((chunk) => {
