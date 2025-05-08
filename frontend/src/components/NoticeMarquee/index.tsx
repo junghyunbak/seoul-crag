@@ -31,7 +31,14 @@ export function NoticeMarquee() {
           }
 
           return (
-            <Typography key={index} fontSize="0.875rem" color="white">
+            <Typography
+              key={index}
+              sx={{
+                color: 'white',
+                fontSize: '0.875rem',
+                userSelect: 'none',
+              }}
+            >
               {noticeText}
             </Typography>
           );
