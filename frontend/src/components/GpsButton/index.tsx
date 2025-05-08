@@ -42,7 +42,7 @@ export function GpsButton() {
 
           if (latLngBounds.hasLatLng(latLng) && map) {
             updateGpsLatLng(gpsLatLng.lat, gpsLatLng.lng);
-            map.setCenter(latLng);
+            map.panTo(latLng);
           } else {
             alert('서울 지역 밖을 벗어났습니다.');
           }
