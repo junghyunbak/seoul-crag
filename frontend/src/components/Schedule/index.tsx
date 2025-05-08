@@ -1,21 +1,19 @@
-import { Box, Typography, Stack, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import { useExp } from '@/hooks';
 
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore } from 'date-fns';
+import { startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore } from 'date-fns';
 
-import holidayData from './holidays.ko.json';
-
-import { DAY_LABELS, SCHEDULE_TYPE_TO_COLORS, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
+import { SCHEDULE_TYPE_TO_INDEX } from '@/constants';
 
 import { DateService } from '@/utils/time';
 
-const SCHEDULE_TYPE_TO_INDEX: Record<ScheduleType, number> = {
-  setup: 0,
-  closed: 1,
-  reduced: 2,
-};
+import { ScheduleWrapper } from './ScheduleWrapper';
+
+import holidayData from './holidays.ko.json';
+import { ScheduleHeader } from './ScheduleHeader';
+import { ScheduleElement } from './ScheduleElement';
 
 interface ScheduleProps {
   currentMonth: Date;
@@ -27,39 +25,24 @@ interface ScheduleProps {
 export function Schedule({ schedules, currentMonth, onScheduleElementClick, readOnly = false }: ScheduleProps) {
   const { exp } = useExp();
 
+  const holidays: string[] = holidayData[2025];
+
   const start = startOfMonth(currentMonth);
   const end = endOfMonth(currentMonth);
+
   const days = eachDayOfInterval({ start, end });
+
   const emptyStart = getDay(start);
-  const holidays: string[] = holidayData[2025];
   const lastWeek = Math.ceil((emptyStart + days.length) / 7);
   const emptyEnd = lastWeek * 7 - emptyStart - days.length;
-  const isHoliday = (iso: string, date: Date) => holidays.includes(iso) || getDay(date) === 0;
 
   return (
     <Paper>
       <Grid container columns={7}>
-        {DAY_LABELS.map((label, i) => (
-          <Grid size={{ xs: 1 }} key={label} sx={{ borderRight: i === 6 ? 'none' : '1px solid #ccc' }}>
-            <Typography align="center" fontWeight={600} sx={{ color: i === 0 ? 'error.main' : undefined }}>
-              {label}
-            </Typography>
-          </Grid>
-        ))}
+        <ScheduleHeader />
 
         {Array.from({ length: emptyStart }).map((_, idx) => (
-          <Grid
-            size={{ xs: 1 }}
-            key={`empty-${idx}`}
-            sx={{
-              height: 100,
-              borderRight: '1px solid #ccc',
-              borderBottom: '1px solid #ccc',
-              p: 0.5,
-              pl: 0,
-              pb: 0,
-            }}
-          />
+          <ScheduleWrapper key={`empty-${idx}`} />
         ))}
 
         {days.map((day, i) => {
@@ -88,141 +71,26 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
           const currentWeek = Math.ceil((emptyStart + i + 1) / 7);
 
           return (
-            <Grid
-              size={{ xs: 1 }}
+            <ScheduleWrapper
               key={current.dateStr}
-              sx={{
-                borderRight: (i + emptyStart) % 7 === 6 ? 'none' : '1px solid #ccc',
-                borderBottom: currentWeek === lastWeek ? 'none' : '1px solid #ccc',
-                height: 100,
-                position: 'relative',
-                pt: 0.5,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
+              isLastLine={currentWeek === lastWeek}
+              isRightCorner={(i + emptyStart) % 7 === 6}
+              isToday={isToday}
+              isHoliday={holidays.includes(current.dateStr)}
+              date={day}
             >
-              <Typography
-                align="center"
-                variant="body2"
-                sx={{
-                  background: isToday ? '#1976d2' : undefined,
-                  borderRadius: isToday ? '50%' : undefined,
-                  color: isHoliday(current.dateStr, day) ? 'error.main' : undefined,
-                  width: 24,
-                  height: 24,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mx: 'auto',
-                }}
-              >
-                {format(day, 'd')}
-              </Typography>
-
-              <Stack mt={0.5} sx={{ flex: 1, overflow: 'hidden' }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    height: '100%',
-                    overflowY: 'scroll',
-                    gap: 0.5,
-                    scrollbarWidth: 'none',
-                    '&::-webkit-scrollbar': { display: 'none' },
-                  }}
-                >
-                  {filteredSchedules.map((schedule, i, arr) => {
-                    const { open_date, close_date, type, id } = schedule;
-
-                    const sopen = new DateService(open_date);
-                    const sclose = new DateService(close_date);
-
-                    const isFirst = sopen.dateStr === current.dateStr;
-                    const isLast = sclose.dateStr === current.dateStr;
-
-                    let left = 0;
-                    let right = 0;
-
-                    switch (type) {
-                      case 'closed': {
-                        break;
-                      }
-                      case 'reduced':
-                      case 'setup': {
-                        if (isFirst && isLast) {
-                          left = 0;
-                          right = 0;
-                        } else if (isFirst) {
-                          left = (sopen.minute / 1440) * 100;
-                          right = 0;
-                        } else if (isLast) {
-                          left = 0;
-                          right = ((1440 - sclose.minute) / 1440) * 100;
-                        }
-
-                        break;
-                      }
-                    }
-
-                    return (
-                      <Box
-                        key={id}
-                        sx={{
-                          width: '100%',
-                          display: 'flex',
-                        }}
-                      >
-                        <Box sx={{ width: `${left}%` }} />
-                        <Box
-                          sx={{
-                            flex: 1,
-                            overflow: 'hidden',
-                            bgcolor: SCHEDULE_TYPE_TO_COLORS[type],
-                            px: { md: 1, xs: 0.5 },
-                            py: 0.2,
-                            mb: arr.length - 1 === i ? 0.5 : 0,
-                            borderTopLeftRadius: isFirst ? 4 : 0,
-                            borderBottomLeftRadius: isFirst ? 4 : 0,
-                            borderTopRightRadius: isLast ? 4 : 0,
-                            borderBottomRightRadius: isLast ? 4 : 0,
-                            cursor: readOnly ? 'default' : 'pointer',
-                          }}
-                          onClick={() => onScheduleElementClick(schedule)}
-                        >
-                          <Typography
-                            sx={{
-                              color: 'white',
-                              fontSize: { md: 12, xs: 8 },
-                            }}
-                          >
-                            {SCHEDULE_TYPE_TO_LABELS[type]}
-                          </Typography>
-                        </Box>
-                        <Box sx={{ width: `${right}%` }} />
-                      </Box>
-                    );
-                  })}
-                </Box>
-              </Stack>
-            </Grid>
+              <ScheduleElement
+                schedules={filteredSchedules}
+                onScheduleElementClick={onScheduleElementClick}
+                current={current}
+                readOnly={readOnly}
+              />
+            </ScheduleWrapper>
           );
         })}
 
         {Array.from({ length: emptyEnd }).map((_, idx) => (
-          <Grid
-            size={{ xs: 1 }}
-            key={`empty-${idx}`}
-            style={{
-              borderRight: emptyEnd - 1 === idx ? 'none' : '1px solid #ccc',
-            }}
-            sx={{
-              height: 100,
-              p: 0.5,
-              pl: 0,
-              pb: 0,
-            }}
-          />
+          <ScheduleWrapper key={`empty-${idx}`} isRightCorner={emptyEnd - 1 === idx} isLastLine />
         ))}
       </Grid>
     </Paper>
