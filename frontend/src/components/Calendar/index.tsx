@@ -245,7 +245,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
                       height: BAR_HEIGHT,
                       backgroundColor: colorMap[chunk.type],
                       borderRadius: 0.5,
-                      px: 1,
+                      pl: 0.25,
                       color: 'white',
                       fontSize: 12,
                       display: 'flex',
