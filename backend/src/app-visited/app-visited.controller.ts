@@ -3,6 +3,8 @@ import { AppVisitedService } from './app-visited.service';
 import { Request } from 'express';
 import { JwtAuthGuard, OptionalJwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { isJwtParsedUser } from 'src/utils/typeguard';
+import { Roles } from 'src/auth/roles/roles.decorator';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
 
 @Controller('visit')
 export class AppVisitedController {
@@ -27,9 +29,10 @@ export class AppVisitedController {
     await this.appVisitedService.logVisit(userId, ip, body.url);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles('owner')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async getVisitStats() {
-    return await this.appVisitedService.getVisitStats();
+    return await this.appVisitedService.getRecentVisitedStats();
   }
 }

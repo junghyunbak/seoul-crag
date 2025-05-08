@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { api } from '@/api/axios';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,6 +14,8 @@ export function Dashboard() {
 type VisitData = {
   date: string;
   count: number;
+  unique_visitors: number;
+  signed_users: number;
 };
 
 function VisitChart() {
@@ -35,12 +37,36 @@ function VisitChart() {
       </Typography>
 
       <ResponsiveContainer width="100%" height="90%">
-        <LineChart data={data}>
-          <XAxis dataKey="date" interval="preserveStartEnd" />
-          <YAxis allowDecimals={false} />
+        <ComposedChart data={data}>
+          <XAxis dataKey="date" />
+          <YAxis yAxisId="left" allowDecimals={false} />
+          <YAxis yAxisId="right" orientation="right" allowDecimals={false} />
           <Tooltip />
-          <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={2} />
-        </LineChart>
+          <Legend />
+
+          {/* 막대: 전체 방문 수 */}
+          <Bar yAxisId="left" dataKey="count" fill="#8884d8" name="전체 방문 수" />
+
+          {/* 선: 고유 방문자 */}
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey="unique_visitors"
+            stroke="#82ca9d"
+            strokeWidth={2}
+            name="고유 방문자 수"
+          />
+
+          {/* 선: 회원 방문자 */}
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey="signed_users"
+            stroke="#ffc658"
+            strokeWidth={2}
+            name="회원 방문자 수"
+          />
+        </ComposedChart>
       </ResponsiveContainer>
     </Paper>
   );
