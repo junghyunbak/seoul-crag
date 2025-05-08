@@ -9,11 +9,11 @@ import { QUERY_STRING } from '@/constants';
 import { useExp, useFetchCrag } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
-
-import { Schedule } from '../Schedule';
-import { ScheduleMonthNavigation } from '../ScheduleMonthNavigation';
+import { Calendar } from '@/components/Calendar';
 
 import { AnimatePresence } from 'framer-motion';
+
+import { format } from 'date-fns';
 
 export default function StorySchedule() {
   const [scheduleStoryCragId, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
@@ -33,20 +33,13 @@ export default function StorySchedule() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                background: 'white',
               }}
             >
-              <ScheduleMonthNavigation
-                currentMonth={date}
-                readonly
-                fontColor="white"
-                onPrev={() => {}}
-                onNext={() => {}}
-              />
-              <Schedule
+              <Calendar
                 schedules={crag.futureSchedules || []}
-                readOnly
-                currentMonth={date}
-                onScheduleElementClick={() => {}}
+                onScheduleClick={() => {}}
+                targetMonth={format(date, 'yyyy-MM')}
               />
             </Box>
           ))}
