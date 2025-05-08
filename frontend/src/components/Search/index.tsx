@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { useFetchCrags, useModifySearch } from '@/hooks';
 
 import { Modal, Box, InputBase, Divider, IconButton, Select, MenuItem } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { useSearch } from '@/hooks/useSearch';
@@ -56,6 +57,11 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
           onChange={(e) => updateSearchKeyword(e.target.value)}
           placeholder="클라이밍장 검색"
         />
+        {searchKeyword && (
+          <IconButton size="small" onClick={() => updateSearchKeyword('')}>
+            <CloseIcon />
+          </IconButton>
+        )}
       </Box>
 
       <Divider />
