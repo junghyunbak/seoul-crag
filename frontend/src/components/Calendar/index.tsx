@@ -15,6 +15,7 @@ import {
   addMilliseconds,
   format,
 } from 'date-fns';
+import { SCHEDULE_TYPE_TO_LABELS } from '@/constants';
 
 const BAR_HEIGHT = 16;
 const BAR_GAP = 2;
@@ -193,7 +194,13 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
             <Grid
               size={{ xs: 1 }}
               key={i}
-              sx={{ height: `${CELL_HEIGHT}px`, position: 'relative', px: 1, border: '1px solid #ddd' }}
+              sx={{
+                height: `${CELL_HEIGHT}px`,
+                position: 'relative',
+                px: 1,
+                borderRight: i % 7 === 6 ? 'none' : '1px solid #ddd',
+                borderBottom: '1px solid #ddd',
+              }}
             >
               <Box sx={{ position: 'absolute', top: 4, left: 4, fontSize: '0.75rem', color: '#555' }}>
                 {i === 0 || addDays(calendarStart, i - 1).getMonth() !== currentDate.getMonth()
@@ -220,7 +227,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
                       width: `${widthPercent}%`,
                       height: BAR_HEIGHT,
                       backgroundColor: colorMap[chunk.type],
-                      borderRadius: 1,
+                      borderRadius: 0.5,
                       px: 1,
                       color: 'white',
                       fontSize: 12,
@@ -231,7 +238,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
                       textOverflow: 'ellipsis',
                     }}
                   >
-                    {chunk.showText ? chunk.type : ''}
+                    {chunk.showText ? SCHEDULE_TYPE_TO_LABELS[chunk.type] : ''}
                   </Box>
                 );
               })}
