@@ -18,6 +18,7 @@ import {
 import { SCHEDULE_TYPE_TO_LABELS } from '@/constants';
 import holidayData from './holidays.ko.json';
 import { DateService } from '@/utils/time';
+import { useExp } from '@/hooks';
 
 const BAR_HEIGHT = 16;
 const BAR_GAP = 2;
@@ -145,6 +146,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
   const holiday2025 = holidayData[2025];
 
   const theme = useTheme();
+  const { exp } = useExp();
 
   const stackMap = new Map<string, ScheduleChunk[]>();
 
@@ -185,13 +187,15 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
 
       <Grid container columns={DAYS_PER_WEEK} wrap="wrap">
         {Array.from({ length: totalDays }).map((_, i) => {
-          const currentDate = addDays(calendarStart, i);
+          const current = new DateService(addDays(calendarStart, i));
+
           const weekIndex = Math.floor(i / DAYS_PER_WEEK);
           const dayIndex = i % DAYS_PER_WEEK;
           const key = `${weekIndex}-${dayIndex}`;
           const barStack = stackMap.get(key) ?? [];
 
-          const isHoliday = holiday2025.includes(new DateService(currentDate).dateStr);
+          const isHoliday = holiday2025.includes(current.dateStr);
+          const isToday = exp.dateStr === current.dateStr;
 
           return (
             <Grid
@@ -212,11 +216,13 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
                   left: 4,
                   fontSize: '0.75rem',
                   color: isHoliday ? theme.palette.error.main : '#555',
+                  textDecoration: isToday ? 'underline' : undefined,
+                  fontWeight: isToday ? 'bold' : 'normal',
                 }}
               >
-                {i === 0 || addDays(calendarStart, i - 1).getMonth() !== currentDate.getMonth()
-                  ? `${format(currentDate, 'M/d')}`
-                  : format(currentDate, 'd')}
+                {i === 0 || addDays(calendarStart, i - 1).getMonth() !== current.date.getMonth()
+                  ? `${format(current.date, 'M/d')}`
+                  : format(current.date, 'd')}
               </Box>
 
               {barStack.map((chunk) => {
