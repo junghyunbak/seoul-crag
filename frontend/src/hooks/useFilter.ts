@@ -98,12 +98,12 @@ export function useFilter(crag?: Crag, date = new Date()) {
    *
    * 를 계산
    */
-  if (isReduced) {
-    isOpen &&= isWithinInterval(current.date, {
-      start: open.date,
-      end: close.date,
-    });
-  } else {
+  isOpen &&= isWithinInterval(current.date, {
+    start: open.date,
+    end: close.date,
+  });
+
+  if (!isReduced) {
     isOpen &&= !isTemporaryClosed;
     isOpen &&= !isRegularyClosed;
   }
