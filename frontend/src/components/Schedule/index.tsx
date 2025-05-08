@@ -58,8 +58,6 @@ export function Schedule({ schedules, currentMonth, onScheduleElementClick, read
     return map;
   }, [schedules]);
 
-  console.log(dateToSchedule);
-
   return (
     <Paper>
       <Grid container columns={7}>

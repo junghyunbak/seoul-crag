@@ -42,10 +42,10 @@ export function ScheduleElement({
           let rightPer = 0;
 
           switch (type) {
-            case 'closed': {
+            case 'closed':
+            case 'reduced': {
               break;
             }
-            case 'reduced':
             case 'setup': {
               if (isFirst && isLast) {
                 leftPer = 0;
