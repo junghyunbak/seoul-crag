@@ -139,6 +139,7 @@ interface CalendarProps {
 }
 
 export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) => {
+  const weekdayLabels = ['일', '월', '화', '수', '목', '금', '토'];
   const { start: calendarStart, end: calendarEnd } = getCalendarRange(targetMonth);
   const chunks = preprocessSchedules(schedules, calendarStart);
   const totalDays = differenceInCalendarDays(calendarEnd, calendarStart) + 1;
@@ -158,61 +159,84 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
   };
 
   return (
-    <Grid container columns={DAYS_PER_WEEK} wrap="wrap">
-      {Array.from({ length: totalDays }).map((_, i) => {
-        const currentDate = addDays(calendarStart, i);
-        const weekIndex = Math.floor(i / DAYS_PER_WEEK);
-        const dayIndex = i % DAYS_PER_WEEK;
-        const key = `${weekIndex}-${dayIndex}`;
-        const barStack = stackMap.get(key) ?? [];
-
-        return (
+    <Box>
+      <Grid container columns={DAYS_PER_WEEK}>
+        {weekdayLabels.map((label, idx) => (
           <Grid
             size={{ xs: 1 }}
-            key={i}
-            sx={{ height: `${CELL_HEIGHT}px`, position: 'relative', px: 1, border: '1px solid #ddd' }}
+            key={`weekday-${idx}`}
+            sx={{
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              borderBottom: '1px solid #ccc',
+              color: '#333',
+            }}
           >
-            <Box sx={{ position: 'absolute', top: 4, left: 4, fontSize: '0.75rem', color: '#555' }}>
-              {format(currentDate, 'd')}
-            </Box>
-
-            {barStack.map((chunk) => {
-              const fullMiddleCells = Math.max(0, chunk.span - 2);
-              const leftPercent = (chunk.leftRatio ?? 0) * 100;
-              const widthPercent =
-                chunk.span === 1
-                  ? ((chunk.rightRatio ?? 1) - (chunk.leftRatio ?? 0)) * 100
-                  : (1 - (chunk.leftRatio ?? 0)) * 100 + fullMiddleCells * 100 + (chunk.rightRatio ?? 1) * 100;
-
-              return (
-                <Box
-                  key={chunk.id}
-                  sx={{
-                    position: 'absolute',
-                    zIndex: 1,
-                    top: (chunk.stackIndex ?? 0) * (BAR_HEIGHT + BAR_GAP) + 20,
-                    left: `${leftPercent}%`,
-                    width: `${widthPercent}%`,
-                    height: BAR_HEIGHT,
-                    backgroundColor: colorMap[chunk.type],
-                    borderRadius: 1,
-                    px: 1,
-                    color: 'white',
-                    fontSize: 12,
-                    display: 'flex',
-                    alignItems: 'center',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {chunk.showText ? chunk.type : ''}
-                </Box>
-              );
-            })}
+            {label}
           </Grid>
-        );
-      })}
-    </Grid>
+        ))}
+      </Grid>
+
+      <Grid container columns={DAYS_PER_WEEK} wrap="wrap">
+        {Array.from({ length: totalDays }).map((_, i) => {
+          const currentDate = addDays(calendarStart, i);
+          const weekIndex = Math.floor(i / DAYS_PER_WEEK);
+          const dayIndex = i % DAYS_PER_WEEK;
+          const key = `${weekIndex}-${dayIndex}`;
+          const barStack = stackMap.get(key) ?? [];
+
+          return (
+            <Grid
+              size={{ xs: 1 }}
+              key={i}
+              sx={{ height: `${CELL_HEIGHT}px`, position: 'relative', px: 1, border: '1px solid #ddd' }}
+            >
+              <Box sx={{ position: 'absolute', top: 4, left: 4, fontSize: '0.75rem', color: '#555' }}>
+                {format(currentDate, 'd')}
+              </Box>
+
+              {barStack.map((chunk) => {
+                const fullMiddleCells = Math.max(0, chunk.span - 2);
+                const leftPercent = (chunk.leftRatio ?? 0) * 100;
+                const widthPercent =
+                  chunk.span === 1
+                    ? ((chunk.rightRatio ?? 1) - (chunk.leftRatio ?? 0)) * 100
+                    : (1 - (chunk.leftRatio ?? 0)) * 100 + fullMiddleCells * 100 + (chunk.rightRatio ?? 1) * 100;
+
+                return (
+                  <Box
+                    key={chunk.id}
+                    sx={{
+                      position: 'absolute',
+                      zIndex: 1,
+                      top: (chunk.stackIndex ?? 0) * (BAR_HEIGHT + BAR_GAP) + 20,
+                      left: `${leftPercent}%`,
+                      width: `${widthPercent}%`,
+                      height: BAR_HEIGHT,
+                      backgroundColor: colorMap[chunk.type],
+                      borderRadius: 1,
+                      px: 1,
+                      color: 'white',
+                      fontSize: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {chunk.showText ? chunk.type : ''}
+                  </Box>
+                );
+              })}
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
   );
 };
