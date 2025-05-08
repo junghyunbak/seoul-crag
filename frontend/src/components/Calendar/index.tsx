@@ -1,4 +1,5 @@
 import React from 'react';
+import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
 import {
   parseISO,
@@ -15,10 +16,11 @@ import {
   format,
 } from 'date-fns';
 
-const BAR_HEIGHT = 20;
-const BAR_GAP = 4;
+const BAR_HEIGHT = 16;
+const BAR_GAP = 2;
 const DAYS_PER_WEEK = 7;
 const MINUTES_IN_DAY = 1440;
+const CELL_HEIGHT = 76;
 
 interface Schedule {
   id: string;
@@ -139,21 +141,15 @@ interface CalendarProps {
 export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) => {
   const { start: calendarStart, end: calendarEnd } = getCalendarRange(targetMonth);
   const chunks = preprocessSchedules(schedules, calendarStart);
-  const totalWeeks = differenceInCalendarWeeks(calendarEnd, calendarStart, { weekStartsOn: 0 }) + 1;
+  const totalDays = differenceInCalendarDays(calendarEnd, calendarStart) + 1;
 
   const stackMap = new Map<string, ScheduleChunk[]>();
-  const maxStackByWeek: number[] = Array(totalWeeks).fill(1);
 
   chunks.forEach((chunk) => {
     const key = `${chunk.weekIndex}-${chunk.dayStartIndex}`;
     if (!stackMap.has(key)) stackMap.set(key, []);
     stackMap.get(key)!.push(chunk);
-    if ((chunk.stackIndex ?? 0) + 1 > maxStackByWeek[chunk.weekIndex]) {
-      maxStackByWeek[chunk.weekIndex] = (chunk.stackIndex ?? 0) + 1;
-    }
   });
-
-  const rowHeights = maxStackByWeek.map((n) => `${n * (BAR_HEIGHT + BAR_GAP)}px`).join(' ');
 
   const colorMap = {
     closed: '#d32f2f',
@@ -162,42 +158,24 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
   };
 
   return (
-    <Box
-      display="grid"
-      gridTemplateColumns={`repeat(${DAYS_PER_WEEK}, 1fr)`}
-      gridTemplateRows={rowHeights}
-      position="relative"
-    >
-      {Array.from({ length: totalWeeks * DAYS_PER_WEEK }).map((_, i) => {
+    <Grid container columns={DAYS_PER_WEEK} wrap="wrap">
+      {Array.from({ length: totalDays }).map((_, i) => {
+        const currentDate = addDays(calendarStart, i);
         const weekIndex = Math.floor(i / DAYS_PER_WEEK);
         const dayIndex = i % DAYS_PER_WEEK;
         const key = `${weekIndex}-${dayIndex}`;
         const barStack = stackMap.get(key) ?? [];
 
         return (
-          <Box
+          <Grid
+            size={{ xs: 1 }}
             key={i}
-            sx={{
-              border: '1px solid #ddd',
-              position: 'relative',
-              overflow: 'visible',
-              padding: 1,
-            }}
+            sx={{ height: `${CELL_HEIGHT}px`, position: 'relative', px: 1, border: '1px solid #ddd' }}
           >
-            <Box
-              sx={{
-                position: 'absolute',
-                zIndex: 1,
-                top: 4,
-                left: 4,
-                fontSize: '0.75rem',
-                color: '#555',
-              }}
-            >
-              {format(addDays(calendarStart, i), 'd')}
+            <Box sx={{ position: 'absolute', top: 4, left: 4, fontSize: '0.75rem', color: '#555' }}>
+              {format(currentDate, 'd')}
             </Box>
 
-            {barStack.length === 0 && <Box sx={{ height: BAR_HEIGHT }} />}
             {barStack.map((chunk) => {
               const fullMiddleCells = Math.max(0, chunk.span - 2);
               const leftPercent = (chunk.leftRatio ?? 0) * 100;
@@ -211,9 +189,10 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
                   key={chunk.id}
                   sx={{
                     position: 'absolute',
+                    zIndex: 1,
+                    top: (chunk.stackIndex ?? 0) * (BAR_HEIGHT + BAR_GAP) + 20,
                     left: `${leftPercent}%`,
                     width: `${widthPercent}%`,
-                    top: (chunk.stackIndex ?? 0) * (BAR_HEIGHT + BAR_GAP),
                     height: BAR_HEIGHT,
                     backgroundColor: colorMap[chunk.type],
                     borderRadius: 1,
@@ -231,9 +210,9 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth }) =>
                 </Box>
               );
             })}
-          </Box>
+          </Grid>
         );
       })}
-    </Box>
+    </Grid>
   );
 };
