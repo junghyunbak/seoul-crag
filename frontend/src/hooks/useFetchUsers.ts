@@ -25,14 +25,14 @@ export function useFetchMe() {
   const { data: user, refetch } = useQuery({
     queryKey: ['me'],
     queryFn: async () => {
-      const { data } = await api.get('/users/me');
-
       /**
        * 로깅
        */
       await api.post('/visit', {
         url: window.location.href,
       });
+
+      const { data } = await api.get('/users/me');
 
       const user = userScheme.parse(data);
 

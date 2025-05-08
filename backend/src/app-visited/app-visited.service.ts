@@ -35,7 +35,7 @@ export class AppVisitedService {
     SELECT
       to_char(created_at + interval '9 hours', 'YYYY-MM-DD') AS date,
       COUNT(*) AS count,
-      COUNT(DISTINCT COALESCE(user_id::text, ip)) AS unique_visitors,
+      COUNT(DISTINCT ip) AS unique_visitors,
       COUNT(DISTINCT user_id) FILTER (WHERE user_id IS NOT NULL) AS signed_users
     FROM app_visited
     WHERE created_at >= now() - interval '7 days'
