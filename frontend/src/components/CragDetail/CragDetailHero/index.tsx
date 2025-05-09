@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, useTheme } from '@mui/material';
 
 import { ImageWithSource } from '@/components/ImageWithSource';
 
@@ -12,6 +12,8 @@ import 'keen-slider/keen-slider.min.css';
 export function CragDetailHero() {
   const { images } = useContext(CragDetailContext);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const theme = useTheme();
 
   const [sliderRef] = useKeenSlider({
     loop: true,
@@ -44,7 +46,7 @@ export function CragDetailHero() {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                bgcolor: currentSlide === i ? 'primary.main' : 'grey.400',
+                bgcolor: currentSlide === i ? theme.palette.primary.main : theme.palette.grey[400],
                 transition: 'all 0.3s',
               }}
             />

@@ -1,4 +1,4 @@
-import { IconButton, Paper } from '@mui/material';
+import { IconButton, Paper, useTheme } from '@mui/material';
 
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
@@ -9,10 +9,12 @@ export function GpsButton() {
   const { map, boundary } = useMap();
   const { updateGpsLatLng } = useModifyMap();
 
+  const theme = useTheme();
+
   return (
     <Paper
       sx={{
-        background: '#f4f2ef',
+        background: theme.palette.common.white,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
