@@ -29,10 +29,10 @@ import { useExp } from '@/hooks';
 import { zIndex } from '@/styles';
 
 const BAR_HEIGHT = 16;
+const DAY_HEIGHT = 20;
 const BAR_GAP = 2;
 const DAYS_PER_WEEK = 7;
 const MINUTES_IN_DAY = 1440;
-const CELL_HEIGHT = 76;
 
 interface ScheduleChunk {
   id: string;
@@ -164,6 +164,15 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
     stackMap.get(key)!.push(chunk);
   });
 
+  const maxCellElementCount = Math.max(
+    3,
+    Math.max(
+      ...Array.from(stackMap.values()).map((chunks) => Math.max(...chunks.map((chunk) => (chunk.stackIndex ?? 0) + 1)))
+    )
+  );
+
+  const cellHeight = maxCellElementCount * BAR_HEIGHT + (maxCellElementCount + 1) * BAR_GAP + DAY_HEIGHT;
+
   const colorMap = {
     closed: '#d32f2f',
     setup: '#1976d2',
@@ -210,7 +219,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
               size={{ xs: 1 }}
               key={i}
               sx={{
-                height: `${CELL_HEIGHT}px`,
+                height: `${cellHeight}px`,
                 position: 'relative',
                 px: 1,
                 borderRight: i % 7 === 6 ? 'none' : '1px solid #ddd',
