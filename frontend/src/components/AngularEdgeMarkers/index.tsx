@@ -16,6 +16,8 @@ interface AngularIndicator {
 
 interface AngularEdgeMarkersProps {
   crags: Crag[] | undefined | null;
+  indicatorColor?: string;
+  type?: 'gps' | 'crag';
 }
 
 // ✅ 교차점 계산 함수
@@ -41,7 +43,11 @@ function projectToScreenEdge(targetX: number, targetY: number, centerX: number, 
   return { x, y };
 }
 
-export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
+export default function AngularEdgeMarkers({
+  crags,
+  indicatorColor = 'black',
+  type = 'crag',
+}: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
   const { exp } = useExp();
@@ -65,7 +71,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
       crags.forEach((crag) => {
         const { isFiltered } = getCragStats(crag, exp.date);
 
-        if (!isFiltered) {
+        if (type === 'crag' && !isFiltered) {
           return;
         }
 
@@ -160,7 +166,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
               sx={{
                 width: 12,
                 height: 12,
-                background: 'black',
+                background: indicatorColor,
                 clipPath: 'polygon(50% 0%, 100% 100%, 50% 80%, 0% 100%)', //'polygon(50% 0%, 0% 50%, 100% 50%)',
                 position: 'absolute',
                 top: 0,

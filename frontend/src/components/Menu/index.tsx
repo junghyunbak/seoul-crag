@@ -49,9 +49,9 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enabledEdgeIndicator } = useMap();
+  const { enabledEdgeIndicator, enabledGpsIndicator } = useMap();
 
-  const { updateEnabledEdgeIndicator } = useModifyMap();
+  const { updateEnabledEdgeIndicator, updateEnabledGpsIndicator } = useModifyMap();
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose} sx={{ zIndex: zIndex.menu }}>
@@ -133,6 +133,17 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
                 />
               }
               label="화면 밖 암장 표시"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enabledGpsIndicator}
+                  onChange={() => {
+                    updateEnabledGpsIndicator(!enabledGpsIndicator);
+                  }}
+                />
+              }
+              label="화면 밖 내 위치 표시"
             />
           </Box>
         </Box>

@@ -20,6 +20,9 @@ type MapSliceType = {
 
   enabledEdgeIndicator: boolean;
   setEnabledEdgeIndicator: (enabled: boolean) => void;
+
+  enabledGpsIndicator: boolean;
+  setEnabledGpsIndicator: (enabled: boolean) => void;
 };
 
 export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType => ({
@@ -56,5 +59,10 @@ export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType =>
   enabledEdgeIndicator: false,
   setEnabledEdgeIndicator(enabled) {
     set(() => ({ enabledEdgeIndicator: enabled }));
+  },
+
+  enabledGpsIndicator: true,
+  setEnabledGpsIndicator(enabled) {
+    set(() => ({ enabledGpsIndicator: enabled }));
   },
 });

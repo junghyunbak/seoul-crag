@@ -10,6 +10,7 @@ export function useMap() {
   const [mapRef] = useStore(useShallow((s) => [s.mapRef]));
   const [gpsLatLng] = useStore(useShallow((s) => [s.gpsLatLng]));
   const [enabledEdgeIndicator] = useStore(useShallow((s) => [s.enabledEdgeIndicator]));
+  const [enabledGpsIndicator] = useStore(useShallow((s) => [s.enabledGpsIndicator]));
 
   const lastLat = useRef(useStore.getState().lastLat).current;
   const lastLng = useRef(useStore.getState().lastLng).current;
@@ -40,5 +41,5 @@ export function useMap() {
     };
   }, []);
 
-  return { map, mapRef, boundary, gpsLatLng, lastLat, lastLng, enabledEdgeIndicator };
+  return { map, mapRef, boundary, gpsLatLng, lastLat, lastLng, enabledEdgeIndicator, enabledGpsIndicator };
 }

@@ -42,8 +42,9 @@ export function GpsButton() {
 
           const latLng = new naver.maps.LatLng(gpsLatLng.lat, gpsLatLng.lng);
 
-          if (latLngBounds.hasLatLng(latLng) && map) {
-            updateGpsLatLng(gpsLatLng.lat, gpsLatLng.lng);
+          updateGpsLatLng(gpsLatLng.lat, gpsLatLng.lng);
+
+          if (latLngBounds.hasLatLng(latLng)) {
             map.panTo(latLng);
           } else {
             alert('서울 지역 밖을 벗어났습니다.');

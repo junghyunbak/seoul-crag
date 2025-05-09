@@ -9,7 +9,7 @@ export function Footer() {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 0,
+        bottom: 20,
         left: 0,
         right: 0,
         zIndex: zIndex.footer,

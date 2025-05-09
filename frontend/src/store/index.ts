@@ -29,6 +29,7 @@ export const useStore = create<StoreState>()(
           searchKeyword,
           expDateTimeStr,
           enabledEdgeIndicator,
+          enabledGpsIndicator,
         } = state;
 
         return {
@@ -41,6 +42,7 @@ export const useStore = create<StoreState>()(
           searchKeyword,
           expDateTimeStr,
           enabledEdgeIndicator,
+          enabledGpsIndicator,
         };
       },
     }
