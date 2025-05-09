@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test": "jest",
+    "test": "jest --watch",
     "preview": "vite preview",
     "serve": "npx serve -p 5173 -s ./dist",
     "serve:pm2": "npm run build && pm2 delete seoul-crag-frontend && pm2 start \"npm run serve\" --name seoul-crag-frontend",

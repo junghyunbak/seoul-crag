@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 import { DAYS_OF_KOR } from '@/constants/time';
 
-import { useExp, useFilter } from '@/hooks';
+import { useFilter } from '@/hooks';
 
 const TextWithBg = styled(Typography)({
   fontWeight: 'bold',
@@ -29,11 +29,7 @@ interface StoryOperationPageProps {
 }
 
 export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
-  const { exp } = useExp();
-  const { open, close, isReduced, isRegularyClosed, isTemporaryClosed, isNewSetting, isTodayRemove, current } =
-    useFilter(crag, date);
-
-  const isToday = exp.dateStr === current.dateStr;
+  const { open, close, isReduced, isTemporaryClosed, isNewSetting, isTodayRemove, isOperate } = useFilter(crag, date);
 
   return (
     <Box
@@ -57,13 +53,9 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
       >
         <Text variant="h2">{format(date, 'yyyy.MM.dd')}</Text>
 
-        <Text variant="h2">{DAYS_OF_KOR[date.getDay()] + (isToday ? '(오늘)' : '')}</Text>
+        <Text variant="h2">{DAYS_OF_KOR[date.getDay()]}</Text>
 
-        {isRegularyClosed ? (
-          <TextWithBg variant="h2">정기 휴일</TextWithBg>
-        ) : isTemporaryClosed ? (
-          <TextWithBg variant="h2">임시 휴일</TextWithBg>
-        ) : (
+        {isOperate ? (
           <>
             <TextWithBg variant="h3" sx={{ color: isReduced ? 'yellow' : 'white' }}>{`${format(
               open.date,
@@ -76,12 +68,13 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
                 color: isReduced ? 'yellow' : 'white',
               }}
             >{`${format(close.date, 'a hh:mm')}`}</TextWithBg>
-
-            {isTodayRemove && <Text variant="h3">🍂탈거</Text>}
-
-            {isNewSetting && <Text variant="h3">✨New Setting!</Text>}
           </>
+        ) : (
+          <TextWithBg variant="h2">{`${isTemporaryClosed ? '임시' : '정기'} 휴일`}</TextWithBg>
         )}
+
+        {isTodayRemove && <Text variant="h3">🍂탈거</Text>}
+        {isNewSetting && <Text variant="h3">✨New Setting!</Text>}
       </Box>
     </Box>
   );

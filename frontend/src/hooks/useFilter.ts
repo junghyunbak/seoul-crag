@@ -32,6 +32,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let isNewSetting = false;
       let isTodayRemove = false;
 
+      let isOperate = false;
+
       const imageTypes = (crag && crag.imageTypes) || [];
       const schedules = (crag && crag.futureSchedules) || [];
       const openingHourOfWeek = (crag && crag.openingHourOfWeek) || [];
@@ -97,11 +99,24 @@ export function useFilter(crag?: Crag, date = new Date()) {
       /**
        * 구한 암장 상태로부터
        *
+       * - 운영 여부
        * - 열림 여부 (and)
        * - 필터 여부 (and)
        *
        * 를 계산
        */
+      isOperate = (() => {
+        if (isTemporaryClosed) {
+          return false;
+        }
+
+        if (isReduced) {
+          return true;
+        }
+
+        return !isRegularyClosed;
+      })();
+
       isOpen &&= isWithinInterval(current.date, {
         start: open.date,
         end: close.date,
@@ -141,6 +156,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         open,
         close,
         current,
+        isOperate,
       };
     },
     [filter]

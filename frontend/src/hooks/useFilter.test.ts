@@ -18,31 +18,39 @@ const mockCrag: Crag = {
 const dateStr = '2025-05-08';
 const timeStr = '09:03:00';
 const dateTimeStr = `${dateStr}T${timeStr}`;
-const today = new DateService(dateTimeStr).date;
+
+const today = new DateService(dateTimeStr);
 
 const todayCloseOpeningHour: OpeningHour = {
   id: '',
-  day: DAYS_OF_WEEK[today.getDay()],
-  open_time: timeStr,
-  close_time: timeStr,
+  day: DAYS_OF_WEEK[today.date.getDay()],
+  open_time: today.timeStr,
+  close_time: today.timeStr,
   is_closed: true,
 };
 
 const todayCloseSchedule: Schedule = {
   id: '',
   type: 'closed',
-  open_date: dateTimeStr,
-  close_date: dateTimeStr,
+  open_date: today.dateTimeStr,
+  close_date: today.dateTimeStr,
   created_at: new Date(),
 };
 
 const todayReduceSchedule: Schedule = {
   id: '',
-  open_date: dateTimeStr,
-  close_date: dateTimeStr,
+  open_date: today.dateTimeStr,
+  close_date: today.dateTimeStr,
   type: 'reduced',
   created_at: new Date(),
 };
+
+/**
+ * 더 나은 네이밍을 위한 임시 변수
+ */
+const closeSchedule = todayCloseSchedule;
+const closeOpeningHour = todayCloseOpeningHour;
+const reduceSchedule = todayReduceSchedule;
 
 describe('이미지 타입 존재여부 검사', () => {
   it('shower 타입의 이미지가 존재할 경우 hasShower가 true여야 한다.', () => {
@@ -81,7 +89,7 @@ describe('기본 운영 일정에 따른 상태 검사.', () => {
             },
           ],
         },
-        today
+        today.date
       );
 
       return { isOff };
@@ -104,7 +112,7 @@ describe('기본 운영 일정에 따른 상태 검사.', () => {
             },
           ],
         },
-        today
+        today.date
       );
 
       return { isOff };
@@ -122,7 +130,7 @@ describe('스케줄에 따른 암장 상태 검사', () => {
           ...mockCrag,
           openingHourOfWeek: [{ ...todayCloseOpeningHour, is_closed: true }],
         },
-        today
+        today.date
       );
 
       return { isOff };
@@ -138,7 +146,7 @@ describe('스케줄에 따른 암장 상태 검사', () => {
           ...mockCrag,
           futureSchedules: [todayCloseSchedule],
         },
-        today
+        today.date
       );
 
       return { isOff };
@@ -155,7 +163,7 @@ describe('스케줄에 따른 암장 상태 검사', () => {
           openingHourOfWeek: [{ ...todayCloseOpeningHour, is_closed: true }],
           futureSchedules: [todayCloseSchedule],
         },
-        today
+        today.date
       );
 
       return { isOff };
@@ -172,7 +180,7 @@ describe('스케줄에 따른 암장 상태 검사', () => {
           openingHourOfWeek: [{ ...todayCloseOpeningHour, is_closed: true }],
           futureSchedules: [todayReduceSchedule],
         },
-        today
+        today.date
       );
 
       return { isOff };
@@ -188,12 +196,166 @@ describe('스케줄에 따른 암장 상태 검사', () => {
           ...mockCrag,
           futureSchedules: [todayCloseSchedule, todayReduceSchedule],
         },
-        today
+        today.date
       );
 
       return { isOff };
     });
 
     expect(result.current.isOff).toBe(false);
+  });
+});
+
+describe('[필터 상태]', () => {});
+
+describe('[오픈 상태]', () => {});
+
+describe('[운영 상태]', () => {
+  describe('단축 일정 존재할 경우', () => {
+    describe('정기 휴무일 경우', () => {
+      describe('임시 휴무일 경우', () => {
+        it('운영하지 않는다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [closeOpeningHour],
+                futureSchedules: [reduceSchedule, closeSchedule],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(false);
+        });
+      });
+
+      describe('임시 휴무가 아닐 경우', () => {
+        it('운영한다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [closeOpeningHour],
+                futureSchedules: [reduceSchedule],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(true);
+        });
+      });
+    });
+
+    describe('정기 휴무가 아닐 경우', () => {
+      describe('임시 휴무일 경우', () => {
+        it('운영하지 않는다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [],
+                futureSchedules: [reduceSchedule, closeSchedule],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(false);
+        });
+      });
+
+      describe('임시 휴무가 아닐 경우', () => {
+        it('운영한다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [],
+                futureSchedules: [reduceSchedule],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(true);
+        });
+      });
+    });
+  });
+
+  describe('단축 일정 존재하지 않을 경우', () => {
+    describe('정기 휴무일 경우', () => {
+      describe('임시 휴무일 경우', () => {
+        it('운영하지 않는다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [closeOpeningHour],
+                futureSchedules: [closeSchedule],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(false);
+        });
+      });
+
+      describe('임시 휴무가 아닐 경우', () => {
+        it('운영하지 않는다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [closeOpeningHour],
+                futureSchedules: [],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(false);
+        });
+      });
+    });
+
+    describe('정기 휴무가 아닐 경우', () => {
+      describe('임시 휴무일 경우', () => {
+        it('운영하지 않는다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [],
+                futureSchedules: [closeSchedule],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(false);
+        });
+      });
+
+      describe('임시 휴무가 아닐 경우', () => {
+        it('운영한다.', () => {
+          const { result } = renderHook(() =>
+            useFilter(
+              {
+                ...mockCrag,
+                openingHourOfWeek: [],
+                futureSchedules: [],
+              },
+              today.date
+            )
+          );
+
+          expect(result.current.isOperate).toBe(true);
+        });
+      });
+    });
   });
 });
