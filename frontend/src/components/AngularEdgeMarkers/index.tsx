@@ -2,11 +2,9 @@ import { useEffect, useState } from 'react';
 
 import { useExp, useFilter, useMap } from '@/hooks';
 
-import { CragIcon } from '@/components/CragIcon';
-
 import { zIndex } from '@/styles';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 interface AngularIndicator {
   x: number;
@@ -21,7 +19,7 @@ interface AngularEdgeMarkersProps {
 }
 
 // ✅ 교차점 계산 함수
-function projectToScreenEdge(targetX: number, targetY: number, centerX: number, centerY: number, padding = 50) {
+function projectToScreenEdge(targetX: number, targetY: number, centerX: number, centerY: number, padding = 5) {
   const dx = targetX - centerX;
   const dy = targetY - centerY;
 
@@ -47,7 +45,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
   const { exp } = useExp();
-  const { filter, getCragStats } = useFilter();
+  const { getCragStats } = useFilter();
   const { map } = useMap();
 
   useEffect(() => {
@@ -64,12 +62,10 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
 
       const grouped: Record<number, AngularIndicator> = {};
 
-      const isFilterExist = Object.values(filter).some((v) => v);
-
       crags.forEach((crag) => {
         const { isFiltered } = getCragStats(crag, exp.date);
 
-        if (!isFiltered || !isFilterExist) {
+        if (!isFiltered) {
           return;
         }
 
@@ -124,7 +120,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, crags, getCragStats, exp, filter]);
+  }, [map, crags, getCragStats, exp]);
 
   return (
     <>
@@ -136,130 +132,36 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
           }}
           sx={{
             position: 'fixed',
-            top: item.y,
-            left: item.x,
             zIndex: zIndex.edgeMarker,
-
-            transform: 'translate(-50%, -50%)',
-
             pointerEvents: 'auto',
-
             width: 'max-content',
             height: 'max-content',
-
             cursor: 'pointer',
           }}
+          style={{
+            top: item.y,
+            left: item.x,
+          }}
         >
-          {/**
-           * arrow background
-           */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: `rotate(${item.angle}deg)`,
-              transformOrigin: 'center center',
-              pointerEvents: 'none',
-            }}
-          >
-            <Box
-              sx={{
-                width: '21px',
-                height: '21px',
-
-                backgroundColor: '#56654b',
-
-                clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-                transform: 'translate(-50%, -180%)',
-
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: -1,
-              }}
-            />
-          </Box>
-
-          {/**
-           * content (border)
-           */}
-          <Box
-            sx={{
-              width: '50px',
-              height: '46px',
-
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-
-              background: '#f7ead6',
-
-              border: '3px solid #56654b',
-              borderRadius: 1,
-
-              position: 'relative',
-
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-
-              overflow: 'hidden',
-            }}
-          >
-            {/**
-             * content (main)
-             */}
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-
-                background: '#f7ead6',
-                overflow: 'hidden',
-
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-
-                gap: '0.25rem',
-
-                zIndex: 1,
-              }}
-            >
-              <Typography
-                style={{
-                  color: '#56654b',
-                  fontSize: '0.875rem',
-                  fontWeight: 'bold',
-                  userSelect: 'none',
-                }}
-              >
-                {item.count}
-              </Typography>
-
-              <CragIcon width={18} />
-            </Box>
-          </Box>
-
           {/**
            * arrow foreground
            */}
           <Box
             sx={{
               position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: `rotate(${item.angle}deg)`,
               transformOrigin: 'center center',
               pointerEvents: 'none',
+            }}
+            style={{
+              transform: `rotate(${item.angle}deg)`,
             }}
           >
             <Box
               sx={{
-                width: '18px',
-                height: '18px',
-                background: '#7e9468',
-                clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-                transform: 'translate(-50%, -180%)',
+                width: 12,
+                height: 12,
+                background: 'black',
+                clipPath: 'polygon(50% 0%, 100% 100%, 50% 80%, 0% 100%)', //'polygon(50% 0%, 0% 50%, 100% 50%)',
                 position: 'absolute',
                 top: 0,
                 left: 0,
