@@ -64,7 +64,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
 
       const grouped: Record<number, AngularIndicator> = {};
 
-      const isFilterExist = Object.values(filter).some((v) => v);
+      const isFilterExist = Object.values(filter).some((v) => typeof v === 'boolean' && v);
 
       crags.forEach((crag) => {
         const { isFiltered } = getCragStats(crag, exp.date);
