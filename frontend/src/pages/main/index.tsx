@@ -17,7 +17,8 @@ import { Menu } from '@/components/Menu';
 import { Search } from '@/components/Search';
 import { Topbar } from './_components/Topbar';
 import { Footer } from './_components/Footer';
-import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
+import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
+import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -27,7 +28,7 @@ export default function Main() {
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const { crags } = useFetchCrags();
-  const { mapRef, boundary, lastLat, lastLng, enabledEdgeIndicator } = useMap();
+  const { mapRef, boundary, lastLat, lastLng } = useMap();
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
@@ -157,40 +158,10 @@ export default function Main() {
         <Map.Marker.Gps />
       </Map>
       <Footer />
-      {enabledEdgeIndicator && <AngularEdgeMarkers crags={crags} />}
+      <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
       <Menu />
       <Search />
     </Box>
-  );
-}
-
-function GpsEdgeIndicator() {
-  const { gpsLatLng, enabledGpsIndicator } = useMap();
-
-  const { lat, lng } = gpsLatLng;
-
-  if (lat === -1 || lng === -1 || !enabledGpsIndicator) {
-    return null;
-  }
-
-  return (
-    <AngularEdgeMarkers
-      indicatorColor="#44a1f6"
-      type="gps"
-      crags={[
-        {
-          id: '',
-          name: '',
-          short_name: null,
-          description: '',
-          latitude: lat,
-          longitude: lng,
-          website_url: null,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      ]}
-    />
   );
 }

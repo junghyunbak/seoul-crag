@@ -43,11 +43,7 @@ function projectToScreenEdge(targetX: number, targetY: number, centerX: number, 
   return { x, y };
 }
 
-export default function AngularEdgeMarkers({
-  crags,
-  indicatorColor = 'black',
-  type = 'crag',
-}: AngularEdgeMarkersProps) {
+export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'crag' }: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
   const { exp } = useExp();
