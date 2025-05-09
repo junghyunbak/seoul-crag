@@ -122,7 +122,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, crags, getCragStats, exp]);
+  }, [map, crags, getCragStats, exp, type]);
 
   return (
     <>
@@ -146,7 +146,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
           }}
         >
           {/**
-           * arrow foreground
+           * 중심 잡아주는 역할을 함.
            */}
           <Box
             sx={{
@@ -163,7 +163,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
                 width: 12,
                 height: 12,
                 background: indicatorColor,
-                clipPath: 'polygon(50% 0%, 100% 100%, 50% 80%, 0% 100%)', //'polygon(50% 0%, 0% 50%, 100% 50%)',
+                clipPath: 'polygon(50% 0%, 100% 100%, 50% 80%, 0% 100%)',
                 position: 'absolute',
                 top: 0,
                 left: 0,
