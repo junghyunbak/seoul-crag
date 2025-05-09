@@ -19,8 +19,17 @@ export const useStore = create<StoreState>()(
     {
       name: 'zustandStore',
       partialize(state) {
-        const { filter, lastLat, lastLng, zoomLevel, isSearchOpen, searchSortOption, searchKeyword, expDateTimeStr } =
-          state;
+        const {
+          filter,
+          lastLat,
+          lastLng,
+          zoomLevel,
+          isSearchOpen,
+          searchSortOption,
+          searchKeyword,
+          expDateTimeStr,
+          enabledEdgeIndicator,
+        } = state;
 
         return {
           filter,
@@ -31,6 +40,7 @@ export const useStore = create<StoreState>()(
           searchSortOption,
           searchKeyword,
           expDateTimeStr,
+          enabledEdgeIndicator,
         };
       },
     }

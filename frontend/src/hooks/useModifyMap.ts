@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/shallow';
 export function useModifyMap() {
   const [setMap] = useStore(useShallow((s) => [s.setMap]));
   const [setGpsLatLng] = useStore(useShallow((s) => [s.setGpsLatLng]));
+  const [setEnabledEdgeIndicator] = useStore(useShallow((s) => [s.setEnabledEdgeIndicator]));
 
   const updateMap = useCallback(
     (map: naver.maps.Map) => {
@@ -20,5 +21,12 @@ export function useModifyMap() {
     [setGpsLatLng]
   );
 
-  return { updateMap, updateGpsLatLng };
+  const updateEnabledEdgeIndicator = useCallback(
+    (enabled: boolean) => {
+      setEnabledEdgeIndicator(enabled);
+    },
+    [setEnabledEdgeIndicator]
+  );
+
+  return { updateMap, updateGpsLatLng, updateEnabledEdgeIndicator };
 }

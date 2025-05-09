@@ -1,12 +1,24 @@
 import React from 'react';
 
-import { useMediaQuery, Box, Drawer, Avatar, Typography, IconButton, Button, Divider, useTheme } from '@mui/material';
+import {
+  FormControlLabel,
+  Switch,
+  useMediaQuery,
+  Box,
+  Drawer,
+  Avatar,
+  Typography,
+  IconButton,
+  Button,
+  Divider,
+  useTheme,
+} from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import Edit from '@mui/icons-material/Edit';
 
-import { useFetchMe, useMutateLogout } from '@/hooks';
+import { useFetchMe, useMutateLogout, useMap, useModifyMap } from '@/hooks';
 
 import { BooleanParam, useQueryParam } from 'use-query-params';
 
@@ -37,11 +49,14 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enabledEdgeIndicator } = useMap();
+
+  const { updateEnabledEdgeIndicator } = useModifyMap();
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose} sx={{ zIndex: zIndex.menu }}>
       <Box sx={{ width: isMobile ? '75vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {user ? (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -78,15 +93,13 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
               </Box>
 
               {user.roles.some(({ name }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin') && (
-                <Box sx={{ mt: 3 }}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    onClick={() => onNavigate(urlService.getAbsolutePath('/manage/crags'))}
-                  >
-                    내 암장 관리
-                  </Button>
-                </Box>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={() => onNavigate(urlService.getAbsolutePath('/manage/crags'))}
+                >
+                  내 암장 관리
+                </Button>
               )}
             </>
           ) : (
@@ -101,13 +114,33 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
               </Button>
             </Box>
           )}
+
+          <Divider />
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enabledEdgeIndicator}
+                  onChange={() => {
+                    updateEnabledEdgeIndicator(!enabledEdgeIndicator);
+                  }}
+                />
+              }
+              label="화면 밖 암장 말풍선"
+            />
+          </Box>
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
         {user && (
           <Box sx={{ p: 2 }}>
-            <Divider sx={{ mb: 2 }} />
             <Button fullWidth startIcon={<LogoutIcon />} variant="outlined" color="error" onClick={onLogout}>
               로그아웃
             </Button>

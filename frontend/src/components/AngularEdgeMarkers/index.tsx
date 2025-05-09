@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { /*useFilter, */ useMap } from '@/hooks';
+import { useExp, useFilter, useMap } from '@/hooks';
 
 import { CragIcon } from '@/components/CragIcon';
 
@@ -46,11 +46,14 @@ function projectToScreenEdge(targetX: number, targetY: number, centerX: number, 
 export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
-  //const { getCragIsFiltered } = useFilter();
+  const { exp } = useExp();
+  const { getCragStats } = useFilter();
   const { map } = useMap();
 
   useEffect(() => {
-    if (!map || !crags || !crags.length || !map.getProjection()) return;
+    if (!map || !map.getProjection() || !crags || !crags.length) {
+      return;
+    }
 
     const projection = map.getProjection();
 
@@ -62,11 +65,11 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
       const grouped: Record<number, AngularIndicator> = {};
 
       crags.forEach((crag) => {
-        /*
-        if (!getCragIsFiltered(crag)) {
+        const { isFiltered } = getCragStats(crag, exp.date);
+
+        if (!isFiltered) {
           return;
         }
-        */
 
         const markerCoord = new naver.maps.LatLng(crag.latitude, crag.longitude);
 
@@ -119,7 +122,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, crags /*, getCragIsFiltered */]);
+  }, [map, crags, getCragStats, exp]);
 
   return (
     <>

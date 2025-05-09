@@ -7,9 +7,9 @@ export const cragMarkerOff = 0;
 export const cragMarkerUnactive = 1;
 export const cragMarkerAcive = 2;
 
-export const edgeMarker = 100;
-export const topbar = 101;
-export const footer = 102;
+export const topbar = 100;
+export const footer = 101;
+export const edgeMarker = 102;
 export const timer = 103;
 
 export const openMenu = 1000;

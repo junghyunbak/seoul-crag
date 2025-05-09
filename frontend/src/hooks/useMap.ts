@@ -1,13 +1,15 @@
+import { useMemo, useRef } from 'react';
+
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
 import seoulGeoData from '@/seoul-geo.json';
-import { useMemo, useRef } from 'react';
 
 export function useMap() {
   const [map] = useStore(useShallow((s) => [s.map]));
   const [mapRef] = useStore(useShallow((s) => [s.mapRef]));
   const [gpsLatLng] = useStore(useShallow((s) => [s.gpsLatLng]));
+  const [enabledEdgeIndicator] = useStore(useShallow((s) => [s.enabledEdgeIndicator]));
 
   const lastLat = useRef(useStore.getState().lastLat).current;
   const lastLng = useRef(useStore.getState().lastLng).current;
@@ -38,5 +40,5 @@ export function useMap() {
     };
   }, []);
 
-  return { map, mapRef, boundary, gpsLatLng, lastLat, lastLng };
+  return { map, mapRef, boundary, gpsLatLng, lastLat, lastLng, enabledEdgeIndicator };
 }

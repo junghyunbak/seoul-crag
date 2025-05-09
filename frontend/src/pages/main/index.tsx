@@ -17,6 +17,7 @@ import { Menu } from '@/components/Menu';
 import { Search } from '@/components/Search';
 import { Topbar } from './_components/Topbar';
 import { Footer } from './_components/Footer';
+import AngularEdgeMarkers from '@/components/AngularEdgeMarkers';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -26,7 +27,7 @@ export default function Main() {
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const { crags } = useFetchCrags();
-  const { mapRef, boundary, lastLat, lastLng } = useMap();
+  const { mapRef, boundary, lastLat, lastLng, enabledEdgeIndicator } = useMap();
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
@@ -156,7 +157,7 @@ export default function Main() {
         <Map.Marker.Gps />
       </Map>
       <Footer />
-
+      {enabledEdgeIndicator && <AngularEdgeMarkers crags={crags} />}
       <Menu />
       <Search />
     </Box>
