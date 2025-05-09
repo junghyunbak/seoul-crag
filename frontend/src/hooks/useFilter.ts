@@ -122,7 +122,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         end: close.date,
       });
 
-      if (!isReduced) {
+      if (!isOperate) {
         isOpen &&= !isTemporaryClosed;
         isOpen &&= !isRegularyClosed;
       }
