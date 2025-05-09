@@ -41,10 +41,24 @@ interface OpeningInfoProps {
 }
 
 function OpeningInfo({ crag, date }: OpeningInfoProps) {
-  const { open, close, isReduced, isRegularyClosed, isTemporaryClosed, current } = useFilter(crag, date);
+  const { open, close, isReduced, isTemporaryClosed, current, isOperate } = useFilter(crag, date);
   const { exp } = useExp();
 
   const isToday = exp.dateStr === current.dateStr;
+
+  const operateTime = (() => {
+    const duration = ` ${format(open.date, 'HH:mm')} - ${format(close.date, 'HH:mm')}`;
+
+    if (isTemporaryClosed) {
+      return `(임시 휴무) ${duration}`;
+    }
+
+    if (isOperate) {
+      return `${isReduced ? '(단축 운영) ' : ''} ${duration}`;
+    }
+
+    return '정기 휴무';
+  })();
 
   return (
     <Box
@@ -70,12 +84,7 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
           fontWeight: isToday ? 'bold' : 'normal',
         }}
       >
-        {isRegularyClosed
-          ? '정기 휴무'
-          : `${isTemporaryClosed ? '(임시 휴일) ' : isReduced ? '(단축 운영)' : ''} ${format(
-              open.date,
-              'HH:mm'
-            )} - ${format(close.date, 'HH:mm')}`}
+        {operateTime}
       </Typography>
     </Box>
   );
