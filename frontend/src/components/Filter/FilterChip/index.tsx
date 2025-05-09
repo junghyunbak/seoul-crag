@@ -24,7 +24,7 @@ export function FilterChip({ isSelect, onClick, label, emoji }: FilterChipProps)
         py: 1,
         px: 1.5,
         borderRadius: 3,
-        background: isSelect ? theme.palette.secondary.main : theme.palette.common.white,
+        background: isSelect ? theme.palette.primary.light : theme.palette.common.white,
         boxShadow: 1,
       }}
       onClick={onClick}
@@ -73,7 +73,7 @@ export const InputFilterChip = React.forwardRef<HTMLInputElement, InputFilterChi
           py: 1,
           px: 1.5,
           borderRadius: 3,
-          background: isSelect ? theme.palette.secondary.main : theme.palette.common.white,
+          background: isSelect ? theme.palette.primary.light : theme.palette.common.white,
           boxShadow: 1,
         }}
         onClick={onClick}
