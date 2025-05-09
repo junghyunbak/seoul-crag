@@ -6,6 +6,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 
+import { zIndex } from '@/styles';
+
 interface CragDetailTopbarProps {
   isScrolled: boolean;
 }
@@ -25,7 +27,7 @@ export function CragDetailTopbar({ isScrolled }: CragDetailTopbarProps) {
         justifyContent: 'space-between',
         background: isScrolled ? 'white' : 'transparent',
         boxShadow: isScrolled ? 1 : 0,
-        zIndex: 1,
+        zIndex: zIndex.cragDetailTopBar,
       }}
     >
       <Box

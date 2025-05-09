@@ -17,6 +17,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { time } from '@/utils';
 
+import { zIndex } from '@/styles';
+
 const CragDetail = lazy(() => import('@/components/CragDetail'));
 const StoryImage = lazy(() => import('@/components/StoryImage'));
 const StorySchedule = lazy(() => import('@/components/StorySchedule'));
@@ -101,7 +103,7 @@ function Splash() {
       sx={{
         position: 'fixed',
         inset: 0,
-        zIndex: 9999,
+        zIndex: zIndex.splash,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

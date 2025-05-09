@@ -1,6 +1,8 @@
 import React from 'react';
+
 import Grid from '@mui/material/Grid';
 import { Box, useTheme } from '@mui/material';
+
 import {
   parseISO,
   startOfWeek,
@@ -15,10 +17,16 @@ import {
   addMilliseconds,
   format,
 } from 'date-fns';
+
 import { SCHEDULE_TYPE_TO_LABELS } from '@/constants';
+
 import holidayData from './holidays.ko.json';
+
 import { DateService } from '@/utils/time';
+
 import { useExp } from '@/hooks';
+
+import { zIndex } from '@/styles';
 
 const BAR_HEIGHT = 16;
 const BAR_GAP = 2;
@@ -238,7 +246,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
                     key={chunk.id}
                     sx={{
                       position: 'absolute',
-                      zIndex: 1,
+                      zIndex: zIndex.calendarChunk,
                       top: (chunk.stackIndex ?? 0) * (BAR_HEIGHT + BAR_GAP) + 20,
                       left: `${leftPercent}%`,
                       width: `${widthPercent}%`,

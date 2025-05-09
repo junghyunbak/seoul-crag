@@ -1,3 +1,8 @@
+export const calendarChunk = 1;
+export const cragDetailTopBar = 2;
+
+export const splash = 1;
+
 export const cragMarkerOff = 0;
 export const cragMarkerUnactive = 1;
 export const cragMarkerAcive = 2;
