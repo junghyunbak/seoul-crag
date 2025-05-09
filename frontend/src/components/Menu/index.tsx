@@ -132,7 +132,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
                   }}
                 />
               }
-              label="화면 밖 암장 말풍선"
+              label="화면 밖 암장 말풍선 (필터 적용 시)"
             />
           </Box>
         </Box>

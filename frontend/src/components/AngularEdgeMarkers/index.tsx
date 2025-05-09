@@ -47,7 +47,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
   const { exp } = useExp();
-  const { getCragStats } = useFilter();
+  const { filter, getCragStats } = useFilter();
   const { map } = useMap();
 
   useEffect(() => {
@@ -64,10 +64,12 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
 
       const grouped: Record<number, AngularIndicator> = {};
 
+      const isFilterExist = Object.values(filter).some((v) => v);
+
       crags.forEach((crag) => {
         const { isFiltered } = getCragStats(crag, exp.date);
 
-        if (!isFiltered) {
+        if (!isFiltered || !isFilterExist) {
           return;
         }
 
@@ -122,7 +124,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, crags, getCragStats, exp]);
+  }, [map, crags, getCragStats, exp, filter]);
 
   return (
     <>
