@@ -83,7 +83,7 @@ export default function AngularEdgeMarkers({ crags }: AngularEdgeMarkersProps) {
         const angleDeg = (angleRad * 180) / Math.PI;
         const angle = (angleDeg + 450) % 360;
 
-        const GROUP_ANGLE = 30;
+        const GROUP_ANGLE = 20;
 
         const roundedAngle = Math.round(angle / GROUP_ANGLE) * GROUP_ANGLE;
 
