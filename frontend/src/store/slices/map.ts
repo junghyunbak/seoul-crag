@@ -53,7 +53,7 @@ export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType =>
     set(() => ({ zoomLevel }));
   },
 
-  enabledEdgeIndicator: true,
+  enabledEdgeIndicator: false,
   setEnabledEdgeIndicator(enabled) {
     set(() => ({ enabledEdgeIndicator: enabled }));
   },
