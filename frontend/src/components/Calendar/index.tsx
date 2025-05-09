@@ -139,6 +139,14 @@ function preprocessSchedules(schedules: Schedule[], calendarStart: Date): Schedu
   return chunks;
 }
 
+const weekdayLabels = Object.freeze(['일', '월', '화', '수', '목', '금', '토']);
+
+const colorMap = {
+  closed: '#d32f2f',
+  setup: '#1976d2',
+  reduced: '#f9a825',
+};
+
 interface CalendarProps {
   schedules: Schedule[];
   targetMonth: string;
@@ -146,7 +154,6 @@ interface CalendarProps {
 }
 
 export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onScheduleClick }) => {
-  const weekdayLabels = ['일', '월', '화', '수', '목', '금', '토'];
   const { start: calendarStart, end: calendarEnd } = getCalendarRange(targetMonth);
   const chunks = preprocessSchedules(schedules, calendarStart);
   const totalDays = differenceInCalendarDays(calendarEnd, calendarStart) + 1;
@@ -172,12 +179,6 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
   );
 
   const cellHeight = maxCellElementCount * BAR_HEIGHT + (maxCellElementCount + 1) * BAR_GAP + DAY_HEIGHT;
-
-  const colorMap = {
-    closed: '#d32f2f',
-    setup: '#1976d2',
-    reduced: '#f9a825',
-  };
 
   return (
     <Box>
