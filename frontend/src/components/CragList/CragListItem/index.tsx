@@ -26,7 +26,7 @@ export function CragListItem({ crag }: CragListItemProps) {
       ? calculateDistance(gpsLatLng.lat, gpsLatLng.lng, crag.latitude, crag.longitude)
       : null;
 
-  if (!isFiltered || !crag.name.includes(searchKeyword)) {
+  if (!isFiltered || !(crag.name.includes(searchKeyword) || crag.short_name?.includes(searchKeyword))) {
     return null;
   }
 
