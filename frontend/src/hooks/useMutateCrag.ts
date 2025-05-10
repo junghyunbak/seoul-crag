@@ -273,7 +273,7 @@ export function useMutateCragThumbnailUpdate({
 
 type CragOpenedAtUpdateMutateParams = {
   cragId: string;
-  openedAt: string;
+  openedAt: string | null;
 };
 
 export function useMutateCragOpenedAtUpdate({

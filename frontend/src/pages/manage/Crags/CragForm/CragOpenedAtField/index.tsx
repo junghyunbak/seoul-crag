@@ -2,23 +2,25 @@ import { useContext, useEffect, useState } from 'react';
 
 import { useMutateCragOpenedAtUpdate } from '@/hooks';
 
-import { Box, TextField } from '@mui/material';
+import { Box, IconButton, TextField } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
-import { format } from 'date-fns';
+import DatePicker from 'react-datepicker';
+
+import { ko } from 'date-fns/locale';
+import { subYears } from 'date-fns';
+
+import { DateService } from '@/utils/time';
 
 export function CragOpenedAtField() {
-  const [openedAtValue, setOpenedAtValue] = useState('');
+  const [date, setDate] = useState(new Date());
 
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
   useEffect(() => {
-    if (crag.opened_at) {
-      setOpenedAtValue(crag.opened_at);
-    } else {
-      setOpenedAtValue(format(new Date(), 'yyyy-MM-dd'));
-    }
+    setDate(new DateService(crag.opened_at || new Date()).date);
   }, [crag]);
 
   const { cragOpenedAtUpdateMutation } = useMutateCragOpenedAtUpdate({
@@ -27,27 +29,43 @@ export function CragOpenedAtField() {
     },
   });
 
-  const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const { value } = e.target;
-
-    setOpenedAtValue(value);
-
-    cragOpenedAtUpdateMutation.mutate({ cragId: crag.id, openedAt: value });
-  };
-
   return (
-    <Box>
-      <TextField
-        label="개설일"
-        type="date"
-        value={openedAtValue}
-        onChange={handleOnChange}
-        slotProps={{
-          inputLabel: {
-            shrink: true,
-          },
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+      }}
+    >
+      <DatePicker
+        selected={date}
+        onChange={(date) => {
+          if (!date) {
+            return;
+          }
+
+          const { dateStr } = new DateService(date);
+
+          cragOpenedAtUpdateMutation.mutate({ cragId: crag.id, openedAt: dateStr });
         }}
+        locale={ko}
+        dateFormat="yyyy년 MM월 dd일"
+        popperPlacement="bottom-start"
+        scrollableMonthYearDropdown
+        showMonthYearDropdown
+        minDate={subYears(new Date(), 7)}
+        maxDate={new Date()}
+        customInput={<TextField label="개설일" />}
       />
+      {crag.opened_at && (
+        <IconButton
+          onClick={() => {
+            cragOpenedAtUpdateMutation.mutate({ cragId: crag.id, openedAt: null });
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
     </Box>
   );
 }
