@@ -1,0 +1,10 @@
+.schedule-edit-modal .react-datepicker-popper {
+  position: static !important;
+  transform: none !important;
+  min-width: 300px !important;
+}
+
+.schedule-edit-modal .react-datepicker__triangle,
+.schedule-edit-modal .react-datepicker-wrapper {
+  display: none;
+}

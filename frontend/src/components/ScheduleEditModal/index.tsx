@@ -23,6 +23,8 @@ import { ko } from 'date-fns/locale';
 
 import { DateService } from '@/utils/time';
 
+import './index.css';
+
 interface ScheduleEditModalProps {
   /**
    * object : 일정 변경
@@ -81,6 +83,7 @@ export function ScheduleEditModal({
           paper: {
             sx: {
               overflow: 'visible',
+              maxWidth: 'none',
             },
           },
         }}
@@ -88,7 +91,7 @@ export function ScheduleEditModal({
         <DialogTitle>{schedule ? '일정 편집' : '일정 추가'}</DialogTitle>
 
         <DialogContent>
-          <Stack spacing={2} mt={1}>
+          <Stack spacing={2} mt={1} className="schedule-edit-modal">
             <Select
               fullWidth
               value={scheduleType}
@@ -103,7 +106,16 @@ export function ScheduleEditModal({
               ))}
             </Select>
 
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 1,
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row',
+                },
+              }}
+            >
               <DatePicker
                 selected={openDate}
                 onChange={(date) => setOpenDate(date || new Date())}
@@ -111,8 +123,8 @@ export function ScheduleEditModal({
                 timeFormat="HH:mm"
                 timeIntervals={30}
                 locale={ko}
+                open
                 dateFormat="yyyy.MM.dd  h:mm a"
-                popperPlacement="bottom-start"
                 customInput={
                   <TextField
                     variant="outlined"
@@ -134,7 +146,7 @@ export function ScheduleEditModal({
                 timeIntervals={30}
                 locale={ko}
                 dateFormat="yyyy.MM.dd  h:mm a"
-                popperPlacement="bottom-end"
+                open
                 customInput={
                   <TextField
                     variant="outlined"
