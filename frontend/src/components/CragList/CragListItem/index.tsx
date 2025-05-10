@@ -38,7 +38,6 @@ export function CragListItem({ crag }: CragListItemProps) {
         display: 'flex',
         alignItems: 'center',
         py: '12px',
-        borderBottom: '1px solid #eee',
         gap: 2,
         cursor: 'pointer',
       }}

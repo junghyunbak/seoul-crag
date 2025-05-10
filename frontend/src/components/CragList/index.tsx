@@ -38,7 +38,14 @@ export function CragList({ crags }: CragListProps) {
   const filteredCrags = crags.filter((crag) => getCragStats(crag, exp.date).isFiltered);
 
   return (
-    <>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Box
         sx={{
           p: 2,
@@ -52,12 +59,17 @@ export function CragList({ crags }: CragListProps) {
 
       <Divider />
 
-      <Box sx={{ p: 2, overflowY: 'auto', width: '100%', height: '100%' }}>
-        {getSortedCrags(filteredCrags, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag) => (
-          <CragListItem key={crag.id} crag={crag} />
-        ))}
+      <Box sx={{ flex: 1, overflow: 'hidden' }}>
+        <Box sx={{ py: 0.5, px: 2, width: '100%', height: '100%', overflowY: 'auto' }}>
+          {getSortedCrags(filteredCrags, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag, i, arr) => (
+            <>
+              <CragListItem key={crag.id} crag={crag} />
+              {i !== arr.length - 1 && <Divider />}
+            </>
+          ))}
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 }
 
