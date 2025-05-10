@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, Divider, Typography, useTheme } from '@mui/material';
 
-import { useMap, useModifyMap } from '@/hooks';
+import { useExp, useFilter, useMap, useModifyMap } from '@/hooks';
 
 import { calculateDistance, getGpsLatLng } from '@/utils';
 
@@ -15,8 +15,11 @@ interface CragListProps {
 }
 
 export function CragList({ crags }: CragListProps) {
+  const { exp } = useExp();
   const { gpsLatLng } = useMap();
   const { searchSortOption } = useSearch();
+  const { getCragStats } = useFilter();
+  const theme = useTheme();
 
   const { updateGpsLatLng } = useModifyMap();
 
@@ -32,12 +35,29 @@ export function CragList({ crags }: CragListProps) {
     })();
   }, [updateGpsLatLng]);
 
+  const filteredCrags = crags.filter((crag) => getCragStats(crag, exp.date).isFiltered);
+
   return (
-    <Box sx={{ p: 2, overflowY: 'auto', width: '100%', height: '100%' }}>
-      {getSortedCrags(crags, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag) => (
-        <CragListItem key={crag.id} crag={crag} />
-      ))}
-    </Box>
+    <>
+      <Box
+        sx={{
+          p: 2,
+          pt: 0,
+        }}
+      >
+        <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+          {`${filteredCrags.length}개의 검색 결과`}
+        </Typography>
+      </Box>
+
+      <Divider />
+
+      <Box sx={{ p: 2, overflowY: 'auto', width: '100%', height: '100%' }}>
+        {getSortedCrags(filteredCrags, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag) => (
+          <CragListItem key={crag.id} crag={crag} />
+        ))}
+      </Box>
+    </>
   );
 }
 

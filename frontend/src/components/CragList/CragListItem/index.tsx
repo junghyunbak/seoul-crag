@@ -1,10 +1,12 @@
 import { Avatar, Box, Typography, useTheme } from '@mui/material';
+
 import { useQueryParam, StringParam } from 'use-query-params';
-import { useMap } from '@/hooks/useMap';
-import { useModifySearch } from '@/hooks/useModifySearch';
+
 import { calculateDistance } from '@/utils';
+
 import { QUERY_STRING } from '@/constants';
-import { useExp, useFilter, useSearch } from '@/hooks';
+
+import { useExp, useFilter, useSearch, useMap, useModifySearch } from '@/hooks';
 
 interface CragListItemProps {
   crag: Crag;
@@ -12,7 +14,7 @@ interface CragListItemProps {
 
 export function CragListItem({ crag }: CragListItemProps) {
   const { exp } = useExp();
-  const { isOff, isFiltered } = useFilter(crag, exp.date);
+  const { isOff } = useFilter(crag, exp.date);
   const { searchKeyword } = useSearch();
   const { map, gpsLatLng } = useMap();
   const theme = useTheme();
@@ -26,7 +28,7 @@ export function CragListItem({ crag }: CragListItemProps) {
       ? calculateDistance(gpsLatLng.lat, gpsLatLng.lng, crag.latitude, crag.longitude)
       : null;
 
-  if (!isFiltered || !(crag.name.includes(searchKeyword) || crag.short_name?.includes(searchKeyword))) {
+  if (!(crag.name.includes(searchKeyword) || crag.short_name?.includes(searchKeyword))) {
     return null;
   }
 

@@ -66,7 +66,11 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
 
       <Divider />
 
-      <Box sx={{ pt: 2 }}>
+      <Box
+        sx={{
+          pt: 2,
+        }}
+      >
         <Filter />
       </Box>
 
@@ -83,8 +87,6 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
           ))}
         </Select>
       </Box>
-
-      <Divider />
 
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <CragList crags={crags || []} />
