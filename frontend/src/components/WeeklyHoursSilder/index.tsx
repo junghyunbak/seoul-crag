@@ -110,7 +110,11 @@ function SliderContent({ hours, day, locked, onChange }: SliderContentProps) {
             value={[open, close]}
             onChange={(_, val) => handleSliderChange(day, val as number[])}
             valueLabelDisplay="on"
-            valueLabelFormat={(val) => DateService.minuteToTimeStr(val)}
+            valueLabelFormat={(val) => {
+              const [HH, mm] = DateService.minuteToTimeStr(val).split(':');
+
+              return `${HH}:${mm}`;
+            }}
           />
         </Box>
       </Box>
