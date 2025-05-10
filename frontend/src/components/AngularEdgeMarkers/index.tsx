@@ -135,7 +135,8 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
           sx={{
             position: 'fixed',
             zIndex: zIndex.edgeMarker,
-            pointerEvents: 'auto',
+            pointerEvents: 'none',
+            userSelect: 'none',
             width: 'max-content',
             height: 'max-content',
             cursor: 'pointer',
@@ -152,7 +153,6 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
             sx={{
               position: 'absolute',
               transformOrigin: 'center center',
-              pointerEvents: 'none',
             }}
             style={{
               transform: `rotate(${item.angle}deg)`,
