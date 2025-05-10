@@ -214,6 +214,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
 
           const isHoliday = holiday2025.includes(current.dateStr);
           const isToday = exp.dateStr === current.dateStr;
+          const isSunday = i % 7 === 0;
 
           return (
             <Grid
@@ -233,7 +234,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
                   top: 4,
                   left: 4,
                   fontSize: '0.75rem',
-                  color: isHoliday ? theme.palette.error.main : '#555',
+                  color: isSunday || isHoliday ? theme.palette.error.main : '#555',
                   textDecoration: isToday ? 'underline' : undefined,
                   fontWeight: isToday ? 'bold' : 'normal',
                 }}
