@@ -83,6 +83,10 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         return zIndex.cragMarkerAcive;
       }
 
+      if (isFiltered) {
+        return zIndex.cragMarkerFiltered;
+      }
+
       if (isOff) {
         return zIndex.cragMarkerOff;
       }
@@ -91,7 +95,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     })();
 
     marker.setZIndex(markerZIndex);
-  }, [marker, isSelect, isOff]);
+  }, [marker, isSelect, isOff, isFiltered]);
 
   return (
     <Box
