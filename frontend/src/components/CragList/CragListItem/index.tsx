@@ -14,7 +14,7 @@ interface CragListItemProps {
 
 export function CragListItem({ crag }: CragListItemProps) {
   const { exp } = useExp();
-  const { isOff, remainSetupDay } = useFilter(crag, exp.date);
+  const { isOff, remainSetupDay, elapseSetupDay } = useFilter(crag, exp.date);
   const { map, gpsLatLng } = useMap();
   const theme = useTheme();
 
@@ -75,8 +75,10 @@ export function CragListItem({ crag }: CragListItemProps) {
           </Typography>
 
           {remainSetupDay !== Infinity && (
-            <Typography variant="body2">{`🍂 D-${remainSetupDay === 0 ? 'day' : remainSetupDay}`}</Typography>
+            <Typography variant="body2">{`🍂 D-${remainSetupDay === 0 ? 'Day' : remainSetupDay}`}</Typography>
           )}
+
+          {elapseSetupDay !== -1 && <Typography variant="body2">{`🔩 D+${elapseSetupDay}`}</Typography>}
         </Box>
       </Box>
     </Box>

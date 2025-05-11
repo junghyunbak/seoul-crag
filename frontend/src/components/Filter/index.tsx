@@ -87,8 +87,8 @@ export function Filter() {
         <KeenElementWrapper>
           <FilterChip
             isSelect={filter.isNewSetting}
-            label="New 세팅"
-            emoji="✨"
+            label="최근 세팅"
+            emoji="🔩"
             onClick={() => updateFilter({ isNewSetting: !filter.isNewSetting })}
           />
         </KeenElementWrapper>

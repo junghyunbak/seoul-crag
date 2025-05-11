@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/shallow';
 
 import { DateService } from '@/utils/time';
 
-import { differenceInDays, isBefore, isWithinInterval } from 'date-fns';
+import { differenceInDays, isAfter, isBefore, isWithinInterval } from 'date-fns';
 
 import { DAY_STR_TO_INDEX } from '@/constants/time';
 
@@ -32,8 +32,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let isSetup = false;
       let isReduced = false;
       let isNewSetting = false;
-      let isSoonRemove = false;
       let isTodayRemove = false;
+
+      let isSoonRemove = false;
+      let isRecentlySetting = false;
 
       let isOperate = false;
 
@@ -53,6 +55,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let close = new DateService(DateService.timeStrToDate(openingHour?.close_time || '', date));
 
       let remainSetupDay = Infinity;
+      let elapseSetupDay = -1;
 
       /**
        * 스케줄로부터 다음 상태 계산
@@ -95,6 +98,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
             remainSetupDay = Math.min(remainSetupDay, differenceInDays(_open.date, date));
           }
 
+          if (isAfter(date, _close.date)) {
+            elapseSetupDay = Math.max(elapseSetupDay, differenceInDays(date, _close.date));
+          }
+
           if (current.dateStr === _open.dateStr) {
             isTodayRemove = true;
           }
@@ -127,6 +134,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
       })();
 
       isSoonRemove = remainSetupDay < 3;
+      isRecentlySetting = elapseSetupDay !== -1 && elapseSetupDay < 3;
 
       isOpen &&= isWithinInterval(current.date, {
         start: open.date,
@@ -146,8 +154,9 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= !isSetup;
       }
 
+      // [ ]: 3일 내 세팅으로 기능 변경됨에 따라 네이밍 수정 필요
       if (filter.isNewSetting) {
-        isFiltered &&= isNewSetting;
+        isFiltered &&= isRecentlySetting;
       }
 
       if (filter.isOuterWall) {
@@ -175,7 +184,9 @@ export function useFilter(crag?: Crag, date = new Date()) {
         current,
         isOperate,
         isOuterWall,
+        isRecentlySetting,
         remainSetupDay,
+        elapseSetupDay,
       };
     },
     [filter]
