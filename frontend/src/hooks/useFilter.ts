@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/shallow';
 
 import { DateService } from '@/utils/time';
 
-import { isWithinInterval } from 'date-fns';
+import { differenceInDays, isBefore, isWithinInterval } from 'date-fns';
 
 import { DAY_STR_TO_INDEX } from '@/constants/time';
 
@@ -30,6 +30,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let isSetup = false;
       let isReduced = false;
       let isNewSetting = false;
+      let isSoonRemove = false;
       let isTodayRemove = false;
 
       let isOperate = false;
@@ -48,6 +49,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
       const current = new DateService(date);
       let open = new DateService(DateService.timeStrToDate(openingHour?.open_time || '', date));
       let close = new DateService(DateService.timeStrToDate(openingHour?.close_time || '', date));
+
+      let remainSetupDay = Infinity;
 
       /**
        * 스케줄로부터 다음 상태 계산
@@ -86,6 +89,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
             isSetup = true;
           }
 
+          if (isBefore(date, _open.date)) {
+            remainSetupDay = Math.min(remainSetupDay, differenceInDays(_open.date, date));
+          }
+
           if (current.dateStr === _open.dateStr) {
             isTodayRemove = true;
           }
@@ -117,6 +124,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
         return !isRegularyClosed;
       })();
 
+      isSoonRemove = remainSetupDay < 3;
+
       isOpen &&= isWithinInterval(current.date, {
         start: open.date,
         end: close.date,
@@ -139,8 +148,9 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isNewSetting;
       }
 
+      // [ ]: 3일 내 탈거로 기능 변경됨에 따라 네이밍 수정 필요
       if (filter.isTodayRemove) {
-        isFiltered &&= isTodayRemove;
+        isFiltered &&= isSoonRemove;
       }
 
       return {
@@ -149,6 +159,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered,
         isReduced,
         isNewSetting,
+        isSoonRemove,
         isTodayRemove,
         isOff: !isOpen,
         isOpen,
@@ -157,6 +168,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         close,
         current,
         isOperate,
+        remainSetupDay,
       };
     },
     [filter]

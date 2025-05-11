@@ -70,6 +70,14 @@ export function Filter() {
         </KeenElementWrapper>
         <KeenElementWrapper>
           <FilterChip
+            isSelect={filter.isTodayRemove}
+            label="탈거 임박"
+            emoji="🍂"
+            onClick={() => updateFilter({ isTodayRemove: !filter.isTodayRemove })}
+          />
+        </KeenElementWrapper>
+        <KeenElementWrapper>
+          <FilterChip
             isSelect={filter.isNewSetting}
             label="New 세팅"
             emoji="✨"
@@ -82,14 +90,6 @@ export function Filter() {
             label="세팅 제외"
             emoji="🚧"
             onClick={() => updateFilter({ isNonSetting: !filter.isNonSetting })}
-          />
-        </KeenElementWrapper>
-        <KeenElementWrapper>
-          <FilterChip
-            isSelect={filter.isTodayRemove}
-            label="오늘 탈거"
-            emoji="🍂"
-            onClick={() => updateFilter({ isTodayRemove: !filter.isTodayRemove })}
           />
         </KeenElementWrapper>
       </Box>

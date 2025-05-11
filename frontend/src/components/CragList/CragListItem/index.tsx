@@ -14,7 +14,7 @@ interface CragListItemProps {
 
 export function CragListItem({ crag }: CragListItemProps) {
   const { exp } = useExp();
-  const { isOff } = useFilter(crag, exp.date);
+  const { isOff, remainSetupDay } = useFilter(crag, exp.date);
   const { map, gpsLatLng } = useMap();
   const theme = useTheme();
 
@@ -65,13 +65,19 @@ export function CragListItem({ crag }: CragListItemProps) {
           {crag.area ? `${crag?.area || '?'}평` : '-'}
         </Typography>
 
-        <Typography
-          variant="body2"
-          color={isOff ? theme.palette.text.secondary : theme.palette.success.main}
-          fontWeight={isOff ? 'normal' : 'bold'}
-        >
-          {isOff ? '영업 종료' : '운영중'}
-        </Typography>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Typography
+            variant="body2"
+            color={isOff ? theme.palette.text.secondary : theme.palette.success.main}
+            fontWeight={isOff ? 'normal' : 'bold'}
+          >
+            {isOff ? '영업 종료' : '운영중'}
+          </Typography>
+
+          {remainSetupDay !== Infinity && (
+            <Typography variant="body2">{`🍂 D-${remainSetupDay === 0 ? 'day' : remainSetupDay}`}</Typography>
+          )}
+        </Box>
       </Box>
     </Box>
   );
