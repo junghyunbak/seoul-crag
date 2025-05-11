@@ -31,7 +31,7 @@ export default function Main() {
   const { mapRef, boundary, lastLat, lastLng } = useMap();
 
   const [initCragId] = useState(selectCragId);
-  const [markers, setMarkers] = useState<naver.maps.Marker[]>([]);
+  const [markers, setMarkers] = useState<(naver.maps.Marker | null)[]>([]);
 
   const { updateMap } = useModifyMap();
   const { updateZoomLevel } = useModifyZoom();
@@ -132,7 +132,7 @@ export default function Main() {
     };
   }, [map, updateZoomLevel]);
 
-  const handleMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number) => {
+  const handleMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number, isFilter: boolean) => {
     if (idx === -1) {
       return;
     }
@@ -140,11 +140,13 @@ export default function Main() {
     setMarkers((prev) => {
       const next = [...prev];
 
-      next[idx] = marker;
+      next[idx] = isFilter ? marker : null;
 
       return next;
     });
   }, []);
+
+  const filteredMarkers = markers.filter((marker) => marker !== null);
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -154,7 +156,7 @@ export default function Main() {
         {crags?.map((crag, i) => (
           <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}
-        <Map.Marker.Cluster markers={markers} />
+        <Map.Marker.Cluster markers={filteredMarkers} />
         <Map.Marker.Gps />
       </Map>
       <Footer />

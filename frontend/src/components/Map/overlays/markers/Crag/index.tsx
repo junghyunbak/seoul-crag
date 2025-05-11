@@ -19,7 +19,7 @@ import { useZoom } from '@/hooks';
 interface CragMarkerProps {
   crag: Crag;
   crags?: Crag[];
-  onCreate?: (marker: naver.maps.Marker, idx: number) => void;
+  onCreate?: (marker: naver.maps.Marker, idx: number, isFilter: boolean) => void;
   idx?: number;
   forCluster?: boolean;
 }
@@ -63,12 +63,12 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
 
     setMarker(cragMarker);
 
-    onCreate?.(cragMarker, idx ?? -1);
+    onCreate?.(cragMarker, idx ?? -1, isFiltered);
 
     return function cleanup() {
       cragMarker.setMap(null);
     };
-  }, [crag, map, onCreate, idx, forCluster]);
+  }, [crag, map, onCreate, idx, forCluster, isFiltered]);
 
   /**
    * 선택 여부에 따라 z축 순서 변경
@@ -83,10 +83,6 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         return zIndex.cragMarkerAcive;
       }
 
-      if (isFiltered) {
-        return zIndex.cragMarkerFiltered;
-      }
-
       if (isOff) {
         return zIndex.cragMarkerOff;
       }
@@ -95,7 +91,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     })();
 
     marker.setZIndex(markerZIndex);
-  }, [marker, isSelect, isOff, isFiltered]);
+  }, [marker, isSelect, isOff]);
 
   return (
     <Box
@@ -103,7 +99,6 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       sx={{
         position: 'absolute',
         transform: 'translate(-50%, -100%)',
-        opacity: !isFiltered ? 0.3 : 1,
       }}
     >
       <Box onClick={() => setSelectCragId(crag.id)} sx={{ position: 'relative', display: 'flex' }}>
