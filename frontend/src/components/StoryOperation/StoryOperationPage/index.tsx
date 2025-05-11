@@ -29,7 +29,7 @@ interface StoryOperationPageProps {
 }
 
 export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
-  const { open, close, isReduced, isTemporaryClosed, isNewSetting, isTodayRemove, isOperate } = useFilter(crag, date);
+  const { open, close, isReduced, isTemporaryClosed, isOperate } = useFilter(crag, date);
 
   return (
     <Box
@@ -72,9 +72,6 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
         ) : (
           <TextWithBg variant="h2">{`${isTemporaryClosed ? '임시' : '정기'} 휴일`}</TextWithBg>
         )}
-
-        {isTodayRemove && <Text variant="h3">🍂탈거</Text>}
-        {isNewSetting && <Text variant="h3">✨New Setting!</Text>}
       </Box>
     </Box>
   );
