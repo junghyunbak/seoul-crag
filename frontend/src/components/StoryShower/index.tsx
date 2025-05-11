@@ -14,7 +14,7 @@ export default function StoryShower() {
 
   return createPortal(
     <AnimatePresence>
-      {showerCragId && crag && (
+      {showerCragId && crag && crag.shower_url !== '' && (
         <StorySlider
           crag={crag}
           contents={[
