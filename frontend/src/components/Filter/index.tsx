@@ -95,7 +95,7 @@ export function Filter() {
         <KeenElementWrapper>
           <FilterChip
             isSelect={filter.isNonSetting}
-            label="세팅 제외"
+            label="세팅 중 제외"
             emoji="🚧"
             onClick={() => updateFilter({ isNonSetting: !filter.isNonSetting })}
           />
