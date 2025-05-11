@@ -14,6 +14,8 @@ const mockCrag: Crag = {
   created_at: new Date(),
   updated_at: new Date(),
   website_url: '',
+  is_outer_wall: false,
+  shower_url: '',
 };
 
 // [ ]: 타입 제거. Children.type 으로 대체 가능.

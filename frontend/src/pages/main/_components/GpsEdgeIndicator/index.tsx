@@ -25,6 +25,8 @@ export function GpsEdgeIndicator() {
           website_url: null,
           created_at: new Date(),
           updated_at: new Date(),
+          is_outer_wall: false,
+          shower_url: '',
         },
       ]}
     />
