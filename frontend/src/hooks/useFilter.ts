@@ -37,7 +37,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
 
       let isOperate = false;
 
-      const imageTypes = (crag && crag.imageTypes) || [];
+      //const imageTypes = (crag && crag.imageTypes) || [];
       const schedules = (crag && crag.futureSchedules) || [];
       const openingHourOfWeek = (crag && crag.openingHourOfWeek) || [];
       const openingHour = openingHourOfWeek.find(({ day }) => DAY_STR_TO_INDEX[day] === date.getDay());
@@ -46,7 +46,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isRegularyClosed = true;
       }
 
-      const hasShower = imageTypes.some((type) => type === 'shower');
+      const hasShower = crag?.shower_url !== ''; //imageTypes.some((type) => type === 'shower');
 
       const current = new DateService(date);
       let open = new DateService(DateService.timeStrToDate(openingHour?.open_time || '', date));

@@ -19,6 +19,7 @@ import { time } from '@/utils';
 
 import { zIndex } from '@/styles';
 
+const StoryShower = lazy(() => import('@/components/StoryShower'));
 const CragDetail = lazy(() => import('@/components/CragDetail'));
 const StoryImage = lazy(() => import('@/components/StoryImage'));
 const StorySchedule = lazy(() => import('@/components/StorySchedule'));
@@ -35,9 +36,9 @@ export function Layout() {
                 <Outlet />
 
                 <StoryImage imageType="interior" />
-                <StoryImage imageType="shower" />
                 <StorySchedule />
                 <StoryOperation />
+                <StoryShower />
 
                 <CragDetail />
               </LoadNaverMap>
