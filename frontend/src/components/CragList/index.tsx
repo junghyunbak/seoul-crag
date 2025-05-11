@@ -43,6 +43,37 @@ export function CragList({ crags }: CragListProps) {
     return isFiltered && isKeywordInclude;
   });
 
+  const { lat, lng } = gpsLatLng;
+
+  const sortedCrags = filteredCrags.sort((a, b) => {
+    if (searchSortOption === 'distance' && lat !== -1 && lng !== -1) {
+      const distA = calculateDistance(lat, lng, a.latitude, a.longitude);
+      const distB = calculateDistance(lat, lng, b.latitude, b.longitude);
+
+      return distA - distB;
+    }
+
+    if (searchSortOption === 'newest') {
+      const aDate = a.opened_at ? new Date(a.opened_at).getTime() : 0;
+      const bDate = b.opened_at ? new Date(b.opened_at).getTime() : 0;
+
+      return bDate - aDate;
+    }
+
+    if (searchSortOption === 'size') {
+      return (b.area ?? 0) - (a.area ?? 0);
+    }
+
+    if (searchSortOption === 'remove') {
+      const { remainSetupDay: aRemainSetupDay } = getCragStats(a, exp.date);
+      const { remainSetupDay: bRemainSetupDay } = getCragStats(b, exp.date);
+
+      return aRemainSetupDay < bRemainSetupDay ? -1 : 1;
+    }
+
+    return 0;
+  });
+
   return (
     <Box
       sx={{
@@ -67,7 +98,7 @@ export function CragList({ crags }: CragListProps) {
 
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <Box sx={{ py: 0.5, px: 2, width: '100%', height: '100%', overflowY: 'auto' }}>
-          {getSortedCrags(filteredCrags, searchSortOption, gpsLatLng?.lat, gpsLatLng?.lng).map((crag, i, arr) => (
+          {sortedCrags.map((crag, i, arr) => (
             <Box key={crag.id}>
               <CragListItem crag={crag} />
               {i !== arr.length - 1 && <Divider />}
@@ -77,25 +108,4 @@ export function CragList({ crags }: CragListProps) {
       </Box>
     </Box>
   );
-}
-
-function getSortedCrags(crags: Crag[], sortOption: SortOption, userLat?: number, userLng?: number): Crag[] {
-  const sorted = [...crags].sort((a, b) => {
-    if (sortOption === 'distance' && userLat !== undefined && userLng !== undefined) {
-      const distA = calculateDistance(userLat, userLng, a.latitude, a.longitude);
-      const distB = calculateDistance(userLat, userLng, b.latitude, b.longitude);
-      return distA - distB;
-    }
-    if (sortOption === 'newest') {
-      const aDate = a.opened_at ? new Date(a.opened_at).getTime() : 0;
-      const bDate = b.opened_at ? new Date(b.opened_at).getTime() : 0;
-      return bDate - aDate;
-    }
-    if (sortOption === 'size') {
-      return (b.area ?? 0) - (a.area ?? 0);
-    }
-    return 0;
-  });
-
-  return sorted;
 }

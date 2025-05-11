@@ -22,7 +22,7 @@ export const createSearchSlice: StateCreator<SearchSliceType> = (set): SearchSli
     set(() => ({ searchKeyword }));
   },
 
-  searchSortOption: 'distance',
+  searchSortOption: 'newest',
   setSearchSortOption(searchSortOption: SortOption) {
     set(() => ({ searchSortOption }));
   },

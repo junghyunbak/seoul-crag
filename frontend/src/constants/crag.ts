@@ -1,7 +1,8 @@
 export const SORT_OPTIONS: Record<SortOption, string> = {
   distance: '거리순',
-  newest: '신규암장순',
+  newest: '신규 암장순',
   size: '암장 크기순',
+  remove: '탈거 임박순',
 };
 
 export const SCHEDULE_TYPE_TO_INDEX: Record<ScheduleType, number> = {
