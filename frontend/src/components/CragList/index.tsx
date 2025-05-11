@@ -17,7 +17,7 @@ interface CragListProps {
 export function CragList({ crags }: CragListProps) {
   const { exp } = useExp();
   const { gpsLatLng } = useMap();
-  const { searchSortOption } = useSearch();
+  const { searchSortOption, searchKeyword } = useSearch();
   const { getCragStats } = useFilter();
   const theme = useTheme();
 
@@ -35,7 +35,13 @@ export function CragList({ crags }: CragListProps) {
     })();
   }, [updateGpsLatLng]);
 
-  const filteredCrags = crags.filter((crag) => getCragStats(crag, exp.date).isFiltered);
+  const filteredCrags = crags.filter((crag) => {
+    const { isFiltered } = getCragStats(crag, exp.date);
+
+    const isKeywordInclude = crag.name.includes(searchKeyword) || crag.short_name?.includes(searchKeyword);
+
+    return isFiltered && isKeywordInclude;
+  });
 
   return (
     <Box

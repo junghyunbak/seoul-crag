@@ -6,7 +6,7 @@ import { calculateDistance } from '@/utils';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useExp, useFilter, useSearch, useMap, useModifySearch } from '@/hooks';
+import { useExp, useFilter, useMap, useModifySearch } from '@/hooks';
 
 interface CragListItemProps {
   crag: Crag;
@@ -15,7 +15,6 @@ interface CragListItemProps {
 export function CragListItem({ crag }: CragListItemProps) {
   const { exp } = useExp();
   const { isOff } = useFilter(crag, exp.date);
-  const { searchKeyword } = useSearch();
   const { map, gpsLatLng } = useMap();
   const theme = useTheme();
 
@@ -27,10 +26,6 @@ export function CragListItem({ crag }: CragListItemProps) {
     gpsLatLng.lat !== -1 && gpsLatLng.lng !== -1
       ? calculateDistance(gpsLatLng.lat, gpsLatLng.lng, crag.latitude, crag.longitude)
       : null;
-
-  if (!(crag.name.includes(searchKeyword) || crag.short_name?.includes(searchKeyword))) {
-    return null;
-  }
 
   return (
     <Box
