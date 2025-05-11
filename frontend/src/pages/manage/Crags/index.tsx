@@ -10,6 +10,7 @@ import { QUERY_STRING } from '@/constants';
 
 import { cragsContext } from '@/pages/manage/Crags/index.context';
 import { MenuItem, Sidebar, Menu } from 'react-pro-sidebar';
+import { isBefore } from 'date-fns';
 
 export function Crags() {
   const { crags } = useFetchCrags();
@@ -52,21 +53,23 @@ export function Crags() {
               },
             }}
           >
-            {crags.map((crag) => (
-              <MenuItem
-                key={crag.id}
-                onClick={() => {
-                  if (selectCragId !== crag.id) {
-                    setSelectCragId(crag.id);
-                  } else {
-                    setSelectCragId(null);
-                  }
-                }}
-                active={selectCragId === crag.id}
-              >
-                {crag.name}
-              </MenuItem>
-            ))}
+            {crags
+              .sort((a, b) => (isBefore(a.created_at, b.created_at) ? -1 : 1))
+              .map((crag) => (
+                <MenuItem
+                  key={crag.id}
+                  onClick={() => {
+                    if (selectCragId !== crag.id) {
+                      setSelectCragId(crag.id);
+                    } else {
+                      setSelectCragId(null);
+                    }
+                  }}
+                  active={selectCragId === crag.id}
+                >
+                  {crag.name}
+                </MenuItem>
+              ))}
           </Menu>
         </Sidebar>
       </Box>
