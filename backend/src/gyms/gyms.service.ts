@@ -100,6 +100,8 @@ export class GymsService {
         opened_at: raw.gym_opened_at,
         comments: raw.gym_comments,
         short_name: raw.gym_short_name,
+        is_outer_wall: raw.gym_is_outer_wall,
+        shower_url: raw.gym_shower_url,
       };
 
       gymWithImages.push(gymWithImage);
@@ -137,6 +139,8 @@ export class GymsService {
       opened_at: rawGym.gym_opened_at,
       comments: rawGym.gym_comments,
       short_name: rawGym.gym_short_name,
+      is_outer_wall: rawGym.gym_is_outer_wall,
+      shower_url: rawGym.gym_shower_url,
     };
 
     return gymWithImage;

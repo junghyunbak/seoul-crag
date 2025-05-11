@@ -27,6 +27,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let isRegularyClosed = false;
       let isTemporaryClosed = false;
 
+      const isOuterWall = crag?.is_outer_wall || false;
+
       let isSetup = false;
       let isReduced = false;
       let isNewSetting = false;
@@ -148,6 +150,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isNewSetting;
       }
 
+      if (filter.isOuterWall) {
+        isFiltered &&= isOuterWall;
+      }
+
       // [ ]: 3일 내 탈거로 기능 변경됨에 따라 네이밍 수정 필요
       if (filter.isTodayRemove) {
         isFiltered &&= isSoonRemove;
@@ -168,6 +174,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         close,
         current,
         isOperate,
+        isOuterWall,
         remainSetupDay,
       };
     },

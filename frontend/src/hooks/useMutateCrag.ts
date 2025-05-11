@@ -2,6 +2,32 @@ import { useMutation, DefaultError, MutationOptions } from '@tanstack/react-quer
 
 import { api } from '@/api/axios';
 
+export function useMutateCragOuterWall() {
+  const changeCragOuterWallMutation = useMutation<void, DefaultError, { cragId: string; isOuterWall: boolean }>({
+    mutationFn: async ({ cragId, isOuterWall }) => {
+      await api.patch(`/gyms/${cragId}`, {
+        is_outer_wall: isOuterWall,
+      });
+    },
+  });
+
+  return { changeCragOuterWallMutation };
+}
+
+export function useMutateCragShowerUrl() {
+  const changeCragShowerUrlMutation = useMutation<void, DefaultError, { cragId: string; showerUrl: string }>({
+    mutationFn: async ({ cragId, showerUrl }) => {
+      await api.patch(`/gyms/${cragId}`, {
+        shower_url: showerUrl,
+      });
+    },
+  });
+
+  return {
+    changeCragShowerUrlMutation,
+  };
+}
+
 type ChangeCragNameMutateParmas = {
   cragId: string;
   name: string;

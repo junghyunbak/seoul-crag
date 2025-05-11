@@ -19,6 +19,21 @@ export class Gym {
   @Column()
   name: string;
 
+  @Column({ type: 'float' })
+  latitude: number;
+
+  @Column({ type: 'float' })
+  longitude: number;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
+  @Column({ type: 'float', nullable: true })
+  area: number;
+
   @Column({ type: 'text', nullable: true })
   short_name?: string;
 
@@ -34,20 +49,11 @@ export class Gym {
   @Column({ type: 'date', nullable: true })
   opened_at: string;
 
-  @Column({ type: 'float' })
-  latitude: number;
+  @Column({ type: 'boolean', default: false })
+  is_outer_wall: boolean;
 
-  @Column({ type: 'float' })
-  longitude: number;
-
-  @Column({ type: 'float', nullable: true })
-  area: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ type: 'text', default: '' })
+  shower_url: string;
 
   @OneToMany(() => GymImage, (image) => image.gym)
   images: GymImage[];

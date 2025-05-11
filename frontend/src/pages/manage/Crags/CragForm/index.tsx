@@ -16,6 +16,8 @@ import { CragWebsiteUrlField } from '@/pages/manage/Crags/CragForm/CragWebsiteUr
 import { CragThumbnailField } from '@/pages/manage/Crags/CragForm/CragThumbnailField';
 import { CragOpenedAtField } from '@/pages/manage/Crags/CragForm/CragOpenedAtField';
 import { CragShortNameField } from '@/pages/manage/Crags/CragForm/CragShortNameField';
+import { CragShowerUrlField } from '@/pages/manage/Crags/CragForm/CragShowerUrlField';
+import { CragOuterWallField } from '@/pages/manage/Crags/CragForm/CragOuterWallField';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -68,7 +70,8 @@ export function CragForm({ initialCrag }: CragFormProps) {
         <CragThumbnailField />
         <CragDescriptionField />
         <CragWebsiteUrlField />
-        <CragImagesField imageType="shower" />
+        <CragShowerUrlField />
+        <CragOuterWallField />
         <CragOpenedAtField />
         <CragOpeningHoursField />
         <CragScheduleCalenderField />

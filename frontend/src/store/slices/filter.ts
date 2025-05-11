@@ -17,6 +17,7 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set): FilterSli
     isNonSetting: false,
     isNewSetting: false,
     isTodayRemove: false,
+    isOuterWall: false,
   },
   setFilter(fn) {
     set((state) => ({

@@ -70,6 +70,14 @@ export function Filter() {
         </KeenElementWrapper>
         <KeenElementWrapper>
           <FilterChip
+            isSelect={filter.isOuterWall}
+            label="외벽"
+            emoji="🧗🏻"
+            onClick={() => updateFilter({ isOuterWall: !filter.isOuterWall })}
+          />
+        </KeenElementWrapper>
+        <KeenElementWrapper>
+          <FilterChip
             isSelect={filter.isTodayRemove}
             label="탈거 임박"
             emoji="🍂"
