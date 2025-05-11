@@ -71,6 +71,16 @@ export function CragList({ crags }: CragListProps) {
       return aRemainSetupDay < bRemainSetupDay ? -1 : 1;
     }
 
+    if (searchSortOption === 'recentSetting') {
+      const { elapseSetupDay: aElapseSetupDay } = getCragStats(a, exp.date);
+      const { elapseSetupDay: bElapseSetupDay } = getCragStats(b, exp.date);
+
+      return (aElapseSetupDay === -1 ? Infinity : aElapseSetupDay) <
+        (bElapseSetupDay === -1 ? Infinity : bElapseSetupDay)
+        ? -1
+        : 1;
+    }
+
     return 0;
   });
 

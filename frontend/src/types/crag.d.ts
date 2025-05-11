@@ -3,7 +3,7 @@ import { cragScheme } from '@/schemas';
 import { z } from 'zod';
 
 declare global {
-  type SortOption = 'distance' | 'newest' | 'size' | 'remove';
+  type SortOption = 'distance' | 'newest' | 'size' | 'remove' | 'recentSetting';
 
   type Filter = {
     isShower: boolean;
