@@ -78,6 +78,14 @@ export function Filter() {
         </KeenElementWrapper>
         <KeenElementWrapper>
           <FilterChip
+            isSelect={filter.isOpen}
+            label="영업중"
+            emoji="🟢"
+            onClick={() => updateFilter({ isOpen: !filter.isOpen })}
+          />
+        </KeenElementWrapper>
+        <KeenElementWrapper>
+          <FilterChip
             isSelect={filter.isTodayRemove}
             label="탈거 임박"
             emoji="🍂"

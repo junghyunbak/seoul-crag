@@ -163,6 +163,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isOuterWall;
       }
 
+      if (filter.isOpen) {
+        isFiltered &&= isOpen;
+      }
+
       // [ ]: 3일 내 탈거로 기능 변경됨에 따라 네이밍 수정 필요
       if (filter.isTodayRemove) {
         isFiltered &&= isSoonRemove;
