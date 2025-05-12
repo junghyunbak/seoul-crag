@@ -43,8 +43,16 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
 
   return (
     <Box
-      sx={{ background: 'white', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+      sx={{
+        background: 'white',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        outline: 'none',
+      }}
       ref={ref}
+      tabIndex={-1}
     >
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
         <IconButton onClick={() => updateIsSearchOpen(false)}>
