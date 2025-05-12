@@ -37,7 +37,7 @@ const SearchContent = React.forwardRef(({ isOpen }: SearchContentProps, ref) => 
 
   useEffect(() => {
     if (isOpen) {
-      inputRef.current?.focus();
+      //inputRef.current?.focus();
     }
   }, [isOpen]);
 
