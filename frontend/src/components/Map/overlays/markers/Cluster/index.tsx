@@ -18,7 +18,7 @@ export function Cluster({ markers }: ClusterProps) {
       map,
       markers,
       maxZoom: 11,
-      gridSize: 70,
+      gridSize: 100,
       disableClickZoom: false,
       icons: [
         {
