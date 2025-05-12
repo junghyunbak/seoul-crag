@@ -44,7 +44,7 @@ export function CragListItem({ crag }: CragListItemProps) {
           cursor: 'pointer',
         }}
         onClick={() => {
-          map?.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 14);
+          map?.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 13);
           updateIsSearchOpen(false);
           setSelectCragId(crag.id);
         }}
