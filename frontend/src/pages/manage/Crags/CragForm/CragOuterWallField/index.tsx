@@ -10,6 +10,9 @@ export function CragOuterWallField() {
 
   return (
     <FormControlLabel
+      sx={{
+        width: 'fit-content',
+      }}
       control={
         <Checkbox
           checked={crag.is_outer_wall}
