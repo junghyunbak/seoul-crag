@@ -37,7 +37,7 @@ export function CragIcon({ width, isSelect = false, isClose = false }: CragIconP
             border: '1px solid #363d3e',
             py: 0.25,
             px: 0.4,
-            fontSize: '0.5rem',
+            fontSize: '0.4rem',
             fontWeight: 'bold',
             position: 'absolute',
             top: '20%',
@@ -45,6 +45,7 @@ export function CragIcon({ width, isSelect = false, isClose = false }: CragIconP
             borderRadius: '2px',
             color: 'white',
             transform: 'rotate(-5deg)',
+            userSelect: 'none',
           }}
         >
           CLOSED
