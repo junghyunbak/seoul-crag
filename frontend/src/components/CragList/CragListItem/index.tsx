@@ -1,4 +1,4 @@
-import { Avatar, Box, Chip, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Typography, useTheme } from '@mui/material';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
