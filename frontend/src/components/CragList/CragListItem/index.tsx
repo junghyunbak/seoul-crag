@@ -104,11 +104,19 @@ export function CragListItem({ crag }: CragListItemProps) {
 
         <Box>
           {remainSetupDay !== Infinity && (
-            <Typography variant="body1">{`🍂 D-${remainSetupDay === 0 ? 'Day' : remainSetupDay}`}</Typography>
+            <Typography variant="body1">{`🍂 ${
+              remainSetupDay === 0 ? '오늘 탈거' : `D-${remainSetupDay}`
+            }`}</Typography>
           )}
         </Box>
 
-        <Box>{elapseSetupDay !== -1 && <Typography variant="body1">{`🔩 D+${elapseSetupDay}`}</Typography>}</Box>
+        <Box>
+          {elapseSetupDay !== -1 && (
+            <Typography variant="body1">{`🔩 ${
+              elapseSetupDay === 0 ? '오늘 세팅' : `D+${elapseSetupDay}`
+            }`}</Typography>
+          )}
+        </Box>
       </Box>
     </Box>
   );

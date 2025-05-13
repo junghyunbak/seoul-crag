@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/shallow';
 
 import { DateService } from '@/utils/time';
 
-import { differenceInDays, isAfter, isBefore, isWithinInterval } from 'date-fns';
+import { differenceInDays, endOfDay, isAfter, isBefore, isWithinInterval, startOfDay } from 'date-fns';
 
 import { DAY_STR_TO_INDEX } from '@/constants/time';
 
@@ -94,11 +94,11 @@ export function useFilter(crag?: Crag, date = new Date()) {
             isSetup = true;
           }
 
-          if (isBefore(date, _open.date)) {
+          if (isBefore(startOfDay(date), _open.date)) {
             remainSetupDay = Math.min(remainSetupDay, differenceInDays(_open.date, date));
           }
 
-          if (isAfter(date, _close.date)) {
+          if (isAfter(endOfDay(date), _close.date)) {
             elapseSetupDay = Math.max(elapseSetupDay, differenceInDays(date, _close.date));
           }
 
