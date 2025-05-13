@@ -31,55 +31,84 @@ export function CragListItem({ crag }: CragListItemProps) {
     <Box
       sx={{
         display: 'flex',
-        alignItems: 'center',
-        py: '12px',
+        flexDirection: 'column',
         gap: 2,
-        cursor: 'pointer',
-      }}
-      onClick={() => {
-        map?.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 14);
-        updateIsSearchOpen(false);
-        setSelectCragId(crag.id);
+        py: '12px',
       }}
     >
-      <Avatar variant="rounded" src={crag.thumbnail_url ?? undefined} alt={crag.name} sx={{ width: 64, height: 64 }}>
-        {!crag.thumbnail_url && crag.name.charAt(0)}
-      </Avatar>
-
       <Box
-        sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          cursor: 'pointer',
+        }}
+        onClick={() => {
+          map?.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 13);
+          updateIsSearchOpen(false);
+          setSelectCragId(crag.id);
+        }}
       >
-        <Typography
-          variant="h6"
+        <Avatar variant="circular" src={crag.thumbnail_url ?? undefined} alt={crag.name} sx={{ width: 64, height: 64 }}>
+          {!crag.thumbnail_url && crag.name.charAt(0)}
+        </Avatar>
+
+        <Box
           sx={{
+            flex: 1,
             overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
           }}
         >
-          {crag.name}
-        </Typography>
-
-        <Typography variant="body2" color="text.secondary">
-          {distance !== null && `${distance.toFixed(1)}km · `}
-          {crag.area ? `${crag?.area || '?'}평` : '-'}
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <Typography
-            variant="body2"
+            variant="h5"
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {crag.name}
+          </Typography>
+
+          <Typography variant="body1" color="text.secondary">
+            {distance !== null && `${distance.toFixed(1)}km · `}
+            {crag.area ? `${crag?.area || '?'}평` : '-'}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          '& > div': {
+            width: '33%',
+            display: 'flex',
+            justifyContent: 'center',
+          },
+        }}
+      >
+        <Box>
+          <Typography
+            variant="body1"
             color={isOff ? theme.palette.text.secondary : theme.palette.success.main}
             fontWeight={isOff ? 'normal' : 'bold'}
           >
-            {isOff ? '영업 종료' : '운영중'}
+            {isOff ? '영업 종료' : '영업중'}
           </Typography>
-
-          {remainSetupDay !== Infinity && (
-            <Typography variant="body2">{`🍂 D-${remainSetupDay === 0 ? 'Day' : remainSetupDay}`}</Typography>
-          )}
-
-          {elapseSetupDay !== -1 && <Typography variant="body2">{`🔩 D+${elapseSetupDay}`}</Typography>}
         </Box>
+
+        <Box>
+          {remainSetupDay !== Infinity && (
+            <Typography variant="body1">{`🍂 D-${remainSetupDay === 0 ? 'Day' : remainSetupDay}`}</Typography>
+          )}
+        </Box>
+
+        <Box>{elapseSetupDay !== -1 && <Typography variant="body1">{`🔩 D+${elapseSetupDay}`}</Typography>}</Box>
       </Box>
     </Box>
   );

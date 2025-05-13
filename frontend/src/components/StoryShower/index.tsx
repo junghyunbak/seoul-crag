@@ -66,7 +66,6 @@ export default function StoryShower() {
           ]}
           onClose={() => setShowerCragId(null)}
           onComplete={() => setShowerCragId(null)}
-          initPaused
         />
       )}
     </AnimatePresence>,
