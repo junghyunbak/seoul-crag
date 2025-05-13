@@ -6,6 +6,10 @@ import { mapContext } from '@/components/Map/index.context';
 
 import { Box } from '@mui/material';
 
+import { CragIcon } from '@/components/CragIcon';
+
+import { SIZE } from '@/constants';
+
 interface ClusterProps {
   markers: naver.maps.Marker[];
 }
@@ -24,23 +28,25 @@ export function Cluster({ markers }: ClusterProps) {
         {
           content: renderToString(
             <div
-              className="count"
               style={{
                 position: 'absolute',
-                border: '3px solid #52634A',
-                background: '#F6EED6',
-                borderRadius: '50%',
-                width: '30px',
-                aspectRatio: '1/1',
-                top: '-20px',
-                zIndex: -1,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontWeight: 'bold',
-                color: '#52634A',
               }}
-            />
+            >
+              <CragIcon width={SIZE.CRAG_MARKER_WIDTH} />
+              <div
+                className="count"
+                style={{
+                  position: 'absolute',
+                  bottom: '-25%',
+                  right: '-25%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontWeight: 'bold',
+                  color: '#52634A',
+                }}
+              />
+            </div>
           ),
         },
       ],
