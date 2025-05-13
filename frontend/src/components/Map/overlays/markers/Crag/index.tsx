@@ -98,12 +98,18 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       ref={markerRef}
       sx={{
         position: 'absolute',
-        transform: 'translate(-50%, -100%)',
+        transform: `translate(-50%, -100%)`,
       }}
     >
       <Box onClick={() => setSelectCragId(crag.id)} sx={{ position: 'relative', display: 'flex' }}>
         <CragMenu crag={crag} isSelect={isSelect} />
-        <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} />
+        <Box
+          sx={{
+            transform: `translate(0, ${isSelect ? '0' : '50%'})`,
+          }}
+        >
+          <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} />
+        </Box>
       </Box>
 
       {isTitleShown && (
@@ -113,7 +119,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
              * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
              */
             position: 'absolute',
-            transform: `translate(calc(-50% + ${markerWidth / 2}px), 0)`,
+            transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${isSelect ? 0 : '50%'})`,
           }}
         >
           <Typography
