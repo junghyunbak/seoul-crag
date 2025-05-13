@@ -30,6 +30,36 @@ export class AppVisitedService {
     await this.visitedRepo.save(record);
   }
 
+  async getHourlyStats24h(): Promise<
+    { kst_hour: string; visit_count: number }[]
+  > {
+    const result = await this.visitedRepo.query(`
+      WITH hours AS (
+        SELECT generate_series(
+          date_trunc('hour', now() + interval '9 hours') - interval '23 hours',
+          date_trunc('hour', now() + interval '9 hours'),
+          interval '1 hour'
+        ) AS kst_hour
+      ),
+      visits AS (
+        SELECT
+          date_trunc('hour', created_at + interval '9 hours') AS kst_hour,
+          COUNT(*) AS visit_count
+        FROM app_visited
+        WHERE created_at >= now() - interval '2 days'
+        GROUP BY kst_hour
+      )
+      SELECT
+        to_char(h.kst_hour, 'YYYY-MM-DD HH24:00') AS kst_hour,
+        COALESCE(v.visit_count, 0) AS visit_count
+      FROM hours h
+      LEFT JOIN visits v ON h.kst_hour = v.kst_hour
+      ORDER BY h.kst_hour ASC
+    `);
+
+    return result;
+  }
+
   async getRecentVisitedStats(): Promise<VisitedStats[]> {
     const raw: VisitedStatsRow[] = await this.visitedRepo.query(`
     SELECT

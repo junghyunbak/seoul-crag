@@ -35,4 +35,11 @@ export class AppVisitedController {
   async getVisitStats() {
     return await this.appVisitedService.getRecentVisitedStats();
   }
+
+  @Roles('owner')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/hourly')
+  async getHourlyVisitStats() {
+    return this.appVisitedService.getHourlyStats24h();
+  }
 }
