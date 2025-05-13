@@ -2,6 +2,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { api } from '@/api/axios';
 import { useQuery } from '@tanstack/react-query';
+import { parse } from 'date-fns';
 
 export function Dashboard() {
   return (
@@ -21,6 +22,7 @@ type VisitDataOfDays = {
 type VisitDataOfHours = {
   kst_hour: number;
   visit_count: number;
+  unique_visit_count: number;
 };
 
 function VisitChart() {
@@ -99,16 +101,27 @@ function VisitChart() {
 
         <ResponsiveContainer width="100%" height="90%">
           <ComposedChart data={visitOfHours}>
-            <XAxis dataKey="kst_hour" />
+            <XAxis
+              dataKey="kst_hour"
+              tickFormatter={(value) => {
+                if (typeof value === 'string') {
+                  const parsedDate = parse(value, 'yyyy-MM-dd HH:mm', new Date());
+
+                  return `${parsedDate.getHours()}시`;
+                }
+
+                return value;
+              }}
+            />
             <YAxis yAxisId="left" allowDecimals={false} />
             <Tooltip />
             <Legend />
 
-            {/* 선: 고유 방문자 */}
+            <Bar yAxisId="left" dataKey="visit_count" fill="#8884d8" name="방문 수" />
             <Line
               yAxisId="left"
               type="monotone"
-              dataKey="visit_count"
+              dataKey="unique_visit_count"
               stroke="#82ca9d"
               strokeWidth={2}
               name="방문자 수"
