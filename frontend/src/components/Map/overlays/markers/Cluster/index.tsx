@@ -44,6 +44,7 @@ export function Cluster({ markers }: ClusterProps) {
                   alignItems: 'center',
                   fontWeight: 'bold',
                   color: '#52634A',
+                  textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
                 }}
               />
             </div>
