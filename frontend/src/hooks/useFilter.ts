@@ -94,11 +94,11 @@ export function useFilter(crag?: Crag, date = new Date()) {
           }
 
           if (isBefore(startOfDay(date), _open.date)) {
-            remainSetupDay = Math.min(remainSetupDay, differenceInDays(_open.date, date));
+            remainSetupDay = Math.min(remainSetupDay, differenceInDays(startOfDay(_open.date), startOfDay(date)));
           }
 
           if (isAfter(endOfDay(date), _close.date)) {
-            elapseSetupDay = Math.max(elapseSetupDay, differenceInDays(date, _close.date));
+            elapseSetupDay = Math.max(elapseSetupDay, differenceInDays(startOfDay(date), startOfDay(_close.date)));
           }
 
           if (current.dateStr === _open.dateStr) {
