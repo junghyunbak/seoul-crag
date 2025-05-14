@@ -160,10 +160,10 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
           >
             <Box
               sx={{
-                width: 12,
-                height: 12,
+                width: 6,
+                aspectRatio: '1/1',
+                borderRadius: '50%',
                 background: indicatorColor,
-                clipPath: 'polygon(50% 0%, 100% 100%, 50% 80%, 0% 100%)',
                 position: 'absolute',
                 top: 0,
                 left: 0,
