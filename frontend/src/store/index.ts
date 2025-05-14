@@ -30,6 +30,7 @@ export const useStore = create<StoreState>()(
           expDateTimeStr,
           enabledEdgeIndicator,
           enabledGpsIndicator,
+          selectTagIds,
         } = state;
 
         return {
@@ -43,6 +44,7 @@ export const useStore = create<StoreState>()(
           expDateTimeStr,
           enabledEdgeIndicator,
           enabledGpsIndicator,
+          selectTagIds,
         };
       },
     }
