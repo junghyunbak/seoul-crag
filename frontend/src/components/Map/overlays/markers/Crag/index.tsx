@@ -108,7 +108,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
             transform: `translate(0, ${isSelect ? '0' : '50%'})`,
           }}
         >
-          <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} />
+          <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} isRect={crag.is_outer_wall} />
         </Box>
       </Box>
 
