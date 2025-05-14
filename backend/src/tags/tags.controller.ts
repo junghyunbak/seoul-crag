@@ -7,8 +7,6 @@ import { Roles } from 'src/auth/roles/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 
-@Roles('owner')
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('tags')
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
@@ -23,11 +21,15 @@ export class TagsController {
     return this.tagsService.findByType(type);
   }
 
+  @Roles('owner')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   create(@Body() createTagDto: CreateTagDto) {
     return this.tagsService.create(createTagDto);
   }
 
+  @Roles('owner')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.tagsService.delete(id);
