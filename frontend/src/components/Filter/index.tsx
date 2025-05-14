@@ -19,9 +19,9 @@ import './index.css';
 import { useTag } from '@/hooks/useTag';
 
 const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
-  board: '보드',
-  climb: '종류',
-  location: '장소',
+  climb: '스타일',
+  board: '트레이닝',
+  location: '환경',
 };
 
 const TAG_TYPE_TO_INDEX: Record<TagType, number> = {
@@ -115,14 +115,6 @@ export function Filter() {
           />
         </KeenElementWrapper>
 
-        {tagTypes
-          .sort((a, b) => (TAG_TYPE_TO_INDEX[a] < TAG_TYPE_TO_INDEX[b] ? -1 : 1))
-          .map((tagType) => {
-            const tags = tagTypeToTags.get(tagType) || [];
-
-            return <TagChip key={tagType} tags={tags} tagType={tagType} />;
-          })}
-
         <KeenElementWrapper>
           <FilterChip
             isSelect={filter.isTodayRemove}
@@ -140,6 +132,14 @@ export function Filter() {
             onClick={() => updateFilter({ isNewSetting: !filter.isNewSetting })}
           />
         </KeenElementWrapper>
+
+        {tagTypes
+          .sort((a, b) => (TAG_TYPE_TO_INDEX[a] < TAG_TYPE_TO_INDEX[b] ? -1 : 1))
+          .map((tagType) => {
+            const tags = tagTypeToTags.get(tagType) || [];
+
+            return <TagChip key={tagType} tags={tags} tagType={tagType} />;
+          })}
 
         <KeenElementWrapper>
           <FilterChip
