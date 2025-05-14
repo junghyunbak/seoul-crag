@@ -23,7 +23,7 @@ export const cragScheme = z.object({
   imageTypes: z.union([z.array(imageTypeScheme), z.null()]).optional(),
   futureSchedules: z.union([schedulesScheme, z.null()]).optional(),
   openingHourOfWeek: z.union([openingHoursScheme, z.null()]).optional(),
-  tags: TagsScheme,
+  tags: TagsScheme.optional(),
 
   opened_at: z.union([dateScheme, z.null()]).optional(),
   created_at: z.coerce.date(),

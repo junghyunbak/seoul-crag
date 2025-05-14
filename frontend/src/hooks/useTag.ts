@@ -3,9 +3,9 @@ import { useShallow } from 'zustand/shallow';
 
 export function useTag() {
   // TODO: modify 훅으로 분리
-  const [selectTagIds, addSelectTagId, removeSelectTagId] = useStore(
-    useShallow((s) => [s.selectTagIds, s.addSelectTagId, s.removeSelectTagId])
+  const [selectTagId, updateSelectTag, removeSelectTag] = useStore(
+    useShallow((s) => [s.selectTagId, s.updateSelectTag, s.removeSelectTag])
   );
 
-  return { selectTagIds, addSelectTagId, removeSelectTagId };
+  return { selectTagId, updateSelectTag, removeSelectTag };
 }

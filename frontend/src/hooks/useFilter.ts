@@ -20,7 +20,7 @@ import { useTag } from '@/hooks/useTag';
  */
 export function useFilter(crag?: Crag, date = new Date()) {
   const [filter] = useStore(useShallow((s) => [s.filter]));
-  const { selectTagIds } = useTag();
+  const { selectTagId } = useTag();
 
   const getCragStats = useCallback(
     (crag: Crag | undefined, date: Date) => {
@@ -174,17 +174,15 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isSoonRemove;
       }
 
-      if (selectTagIds.length > 0) {
-        selectTagIds.forEach((tagId) => {
-          if (!crag) {
-            return;
-          }
+      Object.entries(selectTagId).forEach(([, tagId]) => {
+        if (!crag || !tagId) {
+          return;
+        }
 
-          isFiltered &&= crag.tags.some(({ id }) => {
-            return tagId === id;
-          });
+        isFiltered &&= (crag.tags || []).some(({ id }) => {
+          return tagId === id;
         });
-      }
+      });
 
       return {
         isRegularyClosed,
@@ -207,7 +205,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         elapseSetupDay,
       };
     },
-    [filter, selectTagIds]
+    [filter, selectTagId]
   );
 
   const stats = getCragStats(crag, date);

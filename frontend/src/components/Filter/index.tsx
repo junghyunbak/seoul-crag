@@ -24,10 +24,17 @@ const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   location: '장소',
 };
 
+const TAG_TYPE_TO_INDEX: Record<TagType, number> = {
+  climb: 0,
+  board: 1,
+  location: 2,
+};
+
 export function Filter() {
   const { exp, isExpSelect } = useExp();
   const { filter } = useFilter();
   const { tags } = useFetchTags();
+  //const { selectTagId } = useTag();
 
   const tagTypeToTags = useMemo(() => {
     const _tagTypeToTags = new Map<TagType, Tag[]>();
@@ -63,9 +70,14 @@ export function Filter() {
 
   /**
    * 슬라이더 내부 요소가 유동적으로 변하도록 하는 변수들을 의존성으로 추가하여 재계산.
+   *
+   * 스크롤이 크게 변동할 위험이 존재.
+   *
+   * 크게 변동시킬 위험이 있는 상태 `selectTagId` 에 대해서는 현재 업데이트 비활성화
    */
   useEffect(() => {
     slider.current?.update();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags, exp]);
 
   return (
@@ -103,11 +115,13 @@ export function Filter() {
           />
         </KeenElementWrapper>
 
-        {tagTypes.map((tagType) => {
-          const tags = tagTypeToTags.get(tagType) || [];
+        {tagTypes
+          .sort((a, b) => (TAG_TYPE_TO_INDEX[a] < TAG_TYPE_TO_INDEX[b] ? -1 : 1))
+          .map((tagType) => {
+            const tags = tagTypeToTags.get(tagType) || [];
 
-          return <TagChip key={tagType} tags={tags} tagType={tagType} />;
-        })}
+            return <TagChip key={tagType} tags={tags} tagType={tagType} />;
+          })}
 
         <KeenElementWrapper>
           <FilterChip
@@ -165,13 +179,11 @@ interface TagChipProps {
 function TagChip({ tags, tagType }: TagChipProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { selectTagIds, addSelectTagId, removeSelectTagId } = useTag();
+  const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
 
-  const isTypeSelect = (() => {
-    return tags.some(({ id }) => {
-      return selectTagIds.includes(id);
-    });
-  })();
+  const selectTag = tags.find((tag) => tag.id === selectTagId[tagType]);
+
+  const isTypeSelect = !!selectTag;
 
   return (
     <KeenElementWrapper>
@@ -180,7 +192,7 @@ function TagChip({ tags, tagType }: TagChipProps) {
         onClick={() => {
           setIsOpen(!isOpen);
         }}
-        label={TAG_TYPE_TO_TITLE[tagType]}
+        label={isTypeSelect ? selectTag.name : TAG_TYPE_TO_TITLE[tagType]}
       >
         <Chip.Icon>
           <Box
@@ -198,7 +210,7 @@ function TagChip({ tags, tagType }: TagChipProps) {
         <Chip.SubMenu onClickOutOfMenu={() => setIsOpen(false)}>
           {isOpen &&
             tags.map((tag) => {
-              const isSelect = selectTagIds.includes(tag.id);
+              const isSelect = selectTagId[tagType] === tag.id;
 
               return (
                 <Chip.SubChip
@@ -206,9 +218,9 @@ function TagChip({ tags, tagType }: TagChipProps) {
                   isSelect={isSelect}
                   onClick={() => {
                     if (isSelect) {
-                      removeSelectTagId(tag.id);
+                      removeSelectTag(tag);
                     } else {
-                      addSelectTagId(tag.id);
+                      updateSelectTag(tag);
                     }
                   }}
                   label={tag.name}

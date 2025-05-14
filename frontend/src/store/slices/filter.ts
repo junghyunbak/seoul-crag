@@ -4,9 +4,9 @@ type FilterSliceType = {
   filter: Filter;
   setFilter: (fn: (filter: Filter) => Filter) => void;
 
-  selectTagIds: Tag['id'][];
-  addSelectTagId: (tagId: string) => void;
-  removeSelectTagId: (tagId: string) => void;
+  selectTagId: Partial<Record<Tag['type'], Tag['id']>>;
+  updateSelectTag: (tag: Tag) => void;
+  removeSelectTag: (tag: Tag) => void;
 
   /**
    * dateTime
@@ -35,27 +35,27 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): Filt
     set(() => ({ expDateTimeStr }));
   },
 
-  selectTagIds: [],
-  addSelectTagId(tagId) {
-    const nextTags = [...get().selectTagIds, tagId];
+  selectTagId: {},
+  updateSelectTag(tag) {
+    const nextSelectTag = { ...get().selectTagId };
+
+    nextSelectTag[tag.type] = tag.id;
 
     set(() => ({
-      selectTagIds: nextTags,
+      selectTagId: nextSelectTag,
     }));
   },
-  removeSelectTagId(tagId) {
-    const nextTags = [...get().selectTagIds];
+  removeSelectTag(tag) {
+    const nextSelectTag = { ...get().selectTagId };
 
-    const idx = nextTags.findIndex((_tagId) => _tagId === tagId);
-
-    if (idx === -1) {
+    if (!nextSelectTag[tag.type]) {
       return;
     }
 
-    nextTags.splice(idx, 1);
+    nextSelectTag[tag.type] = undefined;
 
     set(() => ({
-      selectTagIds: nextTags,
+      selectTagId: nextSelectTag,
     }));
   },
 });
