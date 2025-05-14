@@ -22,8 +22,8 @@ export class GymTagsController {
     return this.gymTagsService.create(dto);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.gymTagsService.delete(id);
+  @Delete(':gymId/:tagId')
+  delete(@Param('gymId') gymId: string, @Param('tagId') tagId: string) {
+    return this.gymTagsService.delete(gymId, tagId);
   }
 }

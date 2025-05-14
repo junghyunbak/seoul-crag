@@ -8,8 +8,10 @@ import { GymImage } from '../gym-images/gym-images.entity';
 
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 import { UpdateGymDto } from 'src/gyms/dto/update-gym.dto';
+
 import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
+import { GymTag } from 'src/gym-tags/gym-tags.entity';
 
 type GymField = {
   [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
@@ -18,8 +20,9 @@ type GymField = {
 type ImageType = { imageTypes: string[] };
 type ScheduleType = { futureSchedules: GymSchedule[] };
 type OpeningHourType = { openingHourOfWeek: GymOpeningHour[] };
+type TagType = { tags: GymTag[] };
 
-type JoinedType = ImageType & ScheduleType & OpeningHourType;
+type JoinedType = ImageType & ScheduleType & OpeningHourType & TagType;
 
 type GymJoinedTypes = (GymField & JoinedType)[];
 
@@ -66,6 +69,16 @@ export class GymsService {
         (qb) =>
           qb
             .subQuery()
+            .select(`JSON_AGG(tag)`)
+            .from(GymTag, 't')
+            .leftJoin('t.tag', 'tag')
+            .where('t.gymId = gym.id'),
+        'tags',
+      )
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
             .select(`JSON_AGG(o)`)
             .from(GymOpeningHour, 'o')
             .where('o.gymId = gym.id'),
@@ -107,6 +120,7 @@ export class GymsService {
         imageTypes: raw.imageTypes,
         futureSchedules: raw.futureSchedules,
         openingHourOfWeek: raw.openingHourOfWeek,
+        tags: raw.tags || [],
       };
 
       gymWithImages.push(gymWithImage);
@@ -151,6 +165,7 @@ export class GymsService {
       imageTypes: rawGym.imageTypes,
       futureSchedules: rawGym.futureSchedules,
       openingHourOfWeek: rawGym.openingHourOfWeek,
+      tags: rawGym.tags || [],
     };
 
     return gymWithImage;

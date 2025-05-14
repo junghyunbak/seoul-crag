@@ -11,6 +11,7 @@ import ManageAccounts from '@mui/icons-material/ManageAccounts';
 import MenuOpen from '@mui/icons-material/MenuOpen';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
 import Terrain from '@mui/icons-material/Terrain';
+import TagIcon from '@mui/icons-material/Tag';
 
 import { zIndex } from '@/styles';
 
@@ -66,6 +67,11 @@ const sidebarList: SidebarList = [
         icon: <Dashboard />,
         pathname: urlService.getAbsolutePath('/manage/dashborad'),
         title: '대시보드',
+      },
+      {
+        icon: <TagIcon />,
+        pathname: urlService.getAbsolutePath('/manage/tags'),
+        title: '태그 관리',
       },
     ],
   },

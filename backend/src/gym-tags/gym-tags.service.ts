@@ -23,7 +23,10 @@ export class GymTagsService {
     return this.gymTagRepository.save(gymTag);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.gymTagRepository.delete(id);
+  async delete(gymId: string, tagId: string): Promise<void> {
+    await this.gymTagRepository.delete({
+      gym: { id: gymId },
+      tag: { id: tagId },
+    });
   }
 }
