@@ -10,6 +10,7 @@ import { GymImage } from 'src/gym-images/gym-images.entity';
 import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
 import { Comment } from 'src/comments/comments.entity';
+import { GymTag } from 'src/gym-tags/gym-tags.entity';
 
 @Entity('gyms')
 export class Gym {
@@ -24,12 +25,6 @@ export class Gym {
 
   @Column({ type: 'float' })
   longitude: number;
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 
   @Column({ type: 'float', nullable: true })
   area: number;
@@ -55,6 +50,12 @@ export class Gym {
   @Column({ type: 'text', default: '' })
   shower_url: string;
 
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+
   @OneToMany(() => GymImage, (image) => image.gym)
   images: GymImage[];
 
@@ -66,4 +67,7 @@ export class Gym {
 
   @OneToMany(() => Comment, (comment) => comment.gym)
   comments: Comment[];
+
+  @OneToMany(() => GymTag, (gymTag) => gymTag.gym)
+  gymTags: GymTag[];
 }

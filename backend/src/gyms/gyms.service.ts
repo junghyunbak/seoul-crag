@@ -84,24 +84,29 @@ export class GymsService {
         id: raw.gym_id,
         name: raw.gym_name,
         description: raw.gym_description,
-        thumbnail_url: raw.gym_thumbnail_url,
-        website_url: raw.gym_website_url,
         latitude: raw.gym_latitude,
         longitude: raw.gym_longitude,
+
+        thumbnail_url: raw.gym_thumbnail_url,
+        website_url: raw.gym_website_url,
+        shower_url: raw.gym_shower_url,
         area: raw.gym_area,
+        short_name: raw.gym_short_name,
+        is_outer_wall: raw.gym_is_outer_wall,
+        opened_at: raw.gym_opened_at,
+
         created_at: raw.gym_created_at,
         updated_at: raw.gym_updated_at,
+
+        comments: raw.gym_comments,
         images: raw.gym_images,
         schedules: raw.gym_schedules,
         openingHours: raw.gym_openingHours,
+        gymTags: raw.gym_gymTags,
+
         imageTypes: raw.imageTypes,
         futureSchedules: raw.futureSchedules,
         openingHourOfWeek: raw.openingHourOfWeek,
-        opened_at: raw.gym_opened_at,
-        comments: raw.gym_comments,
-        short_name: raw.gym_short_name,
-        is_outer_wall: raw.gym_is_outer_wall,
-        shower_url: raw.gym_shower_url,
       };
 
       gymWithImages.push(gymWithImage);
@@ -123,24 +128,29 @@ export class GymsService {
       id: rawGym.gym_id,
       name: rawGym.gym_name,
       description: rawGym.gym_description,
-      thumbnail_url: rawGym.gym_thumbnail_url,
-      website_url: rawGym.gym_website_url,
       latitude: rawGym.gym_latitude,
       longitude: rawGym.gym_longitude,
+
+      thumbnail_url: rawGym.gym_thumbnail_url,
+      website_url: rawGym.gym_website_url,
+      shower_url: rawGym.gym_shower_url,
       area: rawGym.gym_area,
+      opened_at: rawGym.gym_opened_at,
+      short_name: rawGym.gym_short_name,
+      is_outer_wall: rawGym.gym_is_outer_wall,
+
       created_at: rawGym.gym_created_at,
       updated_at: rawGym.gym_updated_at,
+
       images: rawGym.gym_images,
       schedules: rawGym.gym_schedules,
+      comments: rawGym.gym_comments,
+      gymTags: rawGym.gym_gymTags,
       openingHours: rawGym.gym_openingHours,
+
       imageTypes: rawGym.imageTypes,
       futureSchedules: rawGym.futureSchedules,
       openingHourOfWeek: rawGym.openingHourOfWeek,
-      opened_at: rawGym.gym_opened_at,
-      comments: rawGym.gym_comments,
-      short_name: rawGym.gym_short_name,
-      is_outer_wall: rawGym.gym_is_outer_wall,
-      shower_url: rawGym.gym_shower_url,
     };
 
     return gymWithImage;
