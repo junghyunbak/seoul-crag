@@ -72,7 +72,7 @@ export function TagEditor({ initialTags = [], tagTypes, onRemove, onAdd }: TagEd
 
     if (!name || tags.find((t) => t.name === name && t.type === type)) return;
 
-    const newTag: Tag = { id: '', name, type };
+    const newTag: Tag = { id: '', name, type, created_at: new Date() };
     const updated = [...tags, newTag];
 
     setTags(updated);
