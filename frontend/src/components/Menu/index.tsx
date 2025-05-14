@@ -55,13 +55,13 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose} sx={{ zIndex: zIndex.menu }}>
-      <Box sx={{ width: isMobile ? '75vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Box sx={{ width: isMobile ? '80vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {user ? (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Avatar src={user.profile_image || ''}>{user.username}</Avatar>
-                <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography
                       variant="h6"
@@ -114,38 +114,39 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
               </Button>
             </Box>
           )}
+        </Box>
 
-          <Divider />
+        <Divider />
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={enabledEdgeIndicator}
-                  onChange={() => {
-                    updateEnabledEdgeIndicator(!enabledEdgeIndicator);
-                  }}
-                />
-              }
-              label="화면 밖 암장 표시"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={enabledGpsIndicator}
-                  onChange={() => {
-                    updateEnabledGpsIndicator(!enabledGpsIndicator);
-                  }}
-                />
-              }
-              label="화면 밖 내 위치 표시"
-            />
-          </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            p: 2,
+          }}
+        >
+          <FormControlLabel
+            control={
+              <Switch
+                checked={enabledEdgeIndicator}
+                onChange={() => {
+                  updateEnabledEdgeIndicator(!enabledEdgeIndicator);
+                }}
+              />
+            }
+            label="화면 밖 암장 표시"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={enabledGpsIndicator}
+                onChange={() => {
+                  updateEnabledGpsIndicator(!enabledGpsIndicator);
+                }}
+              />
+            }
+            label="화면 밖 내 위치 표시"
+          />
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
