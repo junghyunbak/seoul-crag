@@ -13,6 +13,9 @@ type FilterSliceType = {
    */
   expDateTimeStr: string | null;
   setExpDateTimeStr: (expDateTimeStr: string | null) => void;
+
+  currentDate: Date;
+  setCurrentDate: (date: Date) => void;
 };
 
 export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): FilterSliceType => ({
@@ -33,6 +36,11 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): Filt
   expDateTimeStr: null,
   setExpDateTimeStr(expDateTimeStr) {
     set(() => ({ expDateTimeStr }));
+  },
+
+  currentDate: new Date(),
+  setCurrentDate(date) {
+    set(() => ({ currentDate: date }));
   },
 
   selectTagId: {},

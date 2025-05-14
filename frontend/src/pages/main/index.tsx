@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 
-import { useFetchCrags, useModifyZoom } from '@/hooks';
+import { useFetchCrags, useModifyZoom, useSetupExp } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
@@ -35,6 +35,8 @@ export default function Main() {
 
   const { updateMap } = useModifyMap();
   const { updateZoomLevel } = useModifyZoom();
+
+  useSetupExp();
 
   const { map } = useNaverMap(
     () => {

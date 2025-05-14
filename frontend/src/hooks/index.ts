@@ -38,3 +38,8 @@ export * from './useMutateLogout';
 export * from './useMutateCrag';
 export * from './useMutateImage';
 export * from './useMutateSchedule';
+
+/**
+ * setup
+ */
+export * from './useSetupExp';
