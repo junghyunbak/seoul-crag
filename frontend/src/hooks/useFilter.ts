@@ -9,6 +9,8 @@ import { differenceInDays, endOfDay, isAfter, isBefore, isWithinInterval, startO
 
 import { DAY_STR_TO_INDEX } from '@/constants/time';
 
+import { useTag } from '@/hooks/useTag';
+
 /**
  * 휴무           (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)
  * 단축 운영       (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)
@@ -18,6 +20,7 @@ import { DAY_STR_TO_INDEX } from '@/constants/time';
  */
 export function useFilter(crag?: Crag, date = new Date()) {
   const [filter] = useStore(useShallow((s) => [s.filter]));
+  const { selectTagIds } = useTag();
 
   const getCragStats = useCallback(
     (crag: Crag | undefined, date: Date) => {
@@ -171,6 +174,18 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isSoonRemove;
       }
 
+      if (selectTagIds.length > 0) {
+        selectTagIds.forEach((tagId) => {
+          if (!crag) {
+            return;
+          }
+
+          isFiltered &&= crag.tags.some(({ id }) => {
+            return tagId === id;
+          });
+        });
+      }
+
       return {
         isRegularyClosed,
         isTemporaryClosed,
@@ -192,7 +207,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         elapseSetupDay,
       };
     },
-    [filter]
+    [filter, selectTagIds]
   );
 
   const stats = getCragStats(crag, date);
