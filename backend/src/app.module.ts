@@ -22,6 +22,8 @@ import { GymOpeningHoursModule } from 'src/gym-opening-hours/gym-opening-hours.m
 import { ImageModule } from 'src/image/image-module';
 import { CommentsModule } from 'src/comments/comments.module';
 import { AppVisitedModule } from 'src/app-visited/app-visited.module';
+import { GymTagsModule } from 'src/gym-tags/gym-tags.module';
+import { TagsModule } from 'src/tags/tags.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { AppVisitedModule } from 'src/app-visited/app-visited.module';
     GymImagesModule,
     GymScheduleModule,
     GymOpeningHoursModule,
+    GymTagsModule,
+    TagsModule,
     ImageModule,
     CommentsModule,
     AppVisitedModule,
