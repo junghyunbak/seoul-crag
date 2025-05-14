@@ -29,6 +29,7 @@ import { CragDetailUpdateAt } from '@/components/CragDetail/CragDetailUpdateAt';
 import { CragDetailDescription } from '@/components/CragDetail/CragDetailDescription';
 import { CragDetailFooter } from '@/components/CragDetail/CragDetailFooter';
 import { CragDetailCalendar } from '@/components/CragDetail/CragDetailCalendar';
+import { CragDetailTags } from '@/components/CragDetail/CragDetailTags';
 
 export default function CragDetail() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
@@ -115,6 +116,7 @@ function CragDetailContent() {
               </Stack>
             </Stack>
             <CragDetailUpdateAt />
+            <CragDetailTags />
             <CragDetailDescription />
             <CragDetailWebsiteUrl />
             <Divider />
