@@ -28,6 +28,20 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
   useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const listener = map.addListener('zoom_changed', () => {
+      map.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+    });
+
+    return function cleanup() {
+      map.removeListener(listener);
+    };
+  }, [map, crag]);
+
+  useEffect(() => {
     if (map && crag && marker) {
       const latLng = new naver.maps.LatLng(crag.latitude, crag.longitude);
 
