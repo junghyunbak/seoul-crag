@@ -37,7 +37,17 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
       <Typography variant="h6" fontWeight={600} gutterBottom>
         상세 위치
       </Typography>
-      <Box sx={{ width: '100%', aspectRatio: '1/1', position: 'relative' }}>
+
+      <Box
+        sx={{
+          width: '100%',
+          aspectRatio: '1/1',
+          position: 'relative',
+          borderRadius: 1,
+          overflow: 'hidden',
+          border: `1px solid ${theme.palette.divider}`,
+        }}
+      >
         <Map map={map} mapRef={mapRef}>
           <Map.Marker.Default onCreate={setMarker} />
         </Map>
@@ -65,9 +75,6 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
           </IconButton>
         </Paper>
       </Box>
-      <Typography variant="caption" color={'text.secondary'}>
-        * 두 손가락을 이용한 확대/축소만 가능합니다.
-      </Typography>
     </>
   );
 }
