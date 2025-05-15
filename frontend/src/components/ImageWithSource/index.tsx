@@ -37,7 +37,6 @@ export function ImageWithSource({ image, className }: ImageWithSourceProps) {
           src={image.url}
           sx={{
             width: '100%',
-            userSelect: 'none',
             objectFit: 'cover',
           }}
         />

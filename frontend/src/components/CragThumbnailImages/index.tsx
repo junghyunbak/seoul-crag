@@ -27,7 +27,6 @@ export function CragThumbnailImages() {
         border: '1px solid white',
         boxShadow: 2,
         cursor: 'pointer',
-        userSelect: 'none',
       }}
       onClick={() => {
         setInteriorStory(selectCragId);

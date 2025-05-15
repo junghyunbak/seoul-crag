@@ -12,7 +12,6 @@ export function CragIcon({ width, isSelect = false, isClose = false, isRect = fa
         position: 'relative',
         display: 'flex',
         justifyContent: 'center',
-        userSelect: 'none',
         filter: isClose ? 'brightness(0.7)' : undefined,
       }}
     >

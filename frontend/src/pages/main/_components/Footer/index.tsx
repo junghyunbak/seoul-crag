@@ -15,6 +15,7 @@ export function Footer() {
         zIndex: zIndex.footer,
         display: 'flex',
         flexDirection: 'column',
+        userSelect: 'none',
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', p: 2 }}>

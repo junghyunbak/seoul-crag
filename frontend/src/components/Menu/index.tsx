@@ -54,7 +54,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
   const { updateEnabledEdgeIndicator, updateEnabledGpsIndicator } = useModifyMap();
 
   return (
-    <Drawer anchor="right" open={open} onClose={onClose} sx={{ zIndex: zIndex.menu }}>
+    <Drawer anchor="right" open={open} onClose={onClose} sx={{ zIndex: zIndex.menu, userSelect: 'none' }}>
       <Box sx={{ width: isMobile ? '80vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {user ? (

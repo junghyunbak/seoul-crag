@@ -16,6 +16,7 @@ export function Topbar() {
         display: 'flex',
         justifyContent: 'center',
         pointerEvents: 'none',
+        userSelect: 'none',
       }}
     >
       <Box

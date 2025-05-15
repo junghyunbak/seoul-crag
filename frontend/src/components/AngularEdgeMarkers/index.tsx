@@ -136,7 +136,6 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
             position: 'fixed',
             zIndex: zIndex.edgeMarker,
             pointerEvents: 'none',
-            userSelect: 'none',
             width: 'max-content',
             height: 'max-content',
             cursor: 'pointer',

@@ -34,7 +34,6 @@ export function NoticeMarquee() {
               sx={{
                 color: 'white',
                 fontSize: '0.875rem',
-                userSelect: 'none',
               }}
             >
               {noticeText}

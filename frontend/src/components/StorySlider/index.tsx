@@ -260,6 +260,7 @@ export const StorySlider: React.FC<StorySliderProps> = ({
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: zIndex.story,
+        userSelect: 'none',
       }}
     >
       <DimmedMotionDiv
@@ -289,7 +290,6 @@ export const StorySlider: React.FC<StorySliderProps> = ({
           display: 'flex',
           alignItems: 'center',
           touchAction: 'none',
-          userSelect: 'none',
         }}
       >
         <Box
@@ -308,7 +308,6 @@ export const StorySlider: React.FC<StorySliderProps> = ({
             borderRadius: isMobile ? 0 : 1,
             backgroundColor: 'black',
             pointerEvents: 'none',
-            userSelect: 'none',
           }}
         >
           {contents[Math.min(index.value, contents.length - 1)]}
