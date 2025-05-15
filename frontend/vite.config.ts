@@ -10,7 +10,7 @@ export default defineConfig({
     alias: [{ find: '@', replacement: '/src' }],
   },
   server: {
-    allowedHosts: ['xn--2i4b60fr4ae1a.kr'], // 허용할 도메인 추가
+    allowedHosts: ['xn--2i4b60fr4ae1a.kr', 'dev.xn--2i4b60fr4ae1a.kr'], // 허용할 도메인 추가
     host: true, // 외부 접속 허용 (혹은 host: '0.0.0.0')
     port: 5173,
   },
