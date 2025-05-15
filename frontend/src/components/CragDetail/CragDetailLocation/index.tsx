@@ -1,4 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme, Paper, IconButton } from '@mui/material';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
 
 import { Map } from '@/components/Map';
 
@@ -13,13 +14,6 @@ interface CragDetailLocationProps {
 export function CragDetailLocation({ crag }: CragDetailLocationProps) {
   const { map, mapRef } = useNaverMap(
     () => ({
-      draggable: false,
-      scrollWheel: false,
-      keyboardShortcuts: false,
-      disableDoubleClickZoom: true,
-      disableTwoFingerTapZoom: true,
-      disableDoubleTapZoom: true,
-      disableKineticPan: true,
       zoom: 15,
     }),
     []
@@ -27,19 +21,7 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
 
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
-  useEffect(() => {
-    if (!map) {
-      return;
-    }
-
-    const listener = map.addListener('zoom_changed', () => {
-      map.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
-    });
-
-    return function cleanup() {
-      map.removeListener(listener);
-    };
-  }, [map, crag]);
+  const theme = useTheme();
 
   useEffect(() => {
     if (map && crag && marker) {
@@ -55,10 +37,33 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
       <Typography variant="h6" fontWeight={600} gutterBottom>
         상세 위치
       </Typography>
-      <Box sx={{ width: '100%', aspectRatio: '1/1' }}>
+      <Box sx={{ width: '100%', aspectRatio: '1/1', position: 'relative' }}>
         <Map map={map} mapRef={mapRef}>
           <Map.Marker.Default onCreate={setMarker} />
         </Map>
+
+        <Paper
+          sx={{
+            background: theme.palette.common.white,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            left: '0.5rem',
+            bottom: '0.5rem',
+            width: 40,
+            height: 40,
+            zIndex: 1000,
+          }}
+        >
+          <IconButton
+            onClick={() => {
+              map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+            }}
+          >
+            <FmdGoodIcon />
+          </IconButton>
+        </Paper>
       </Box>
       <Typography variant="caption" color={'text.secondary'}>
         * 두 손가락을 이용한 확대/축소만 가능합니다.
