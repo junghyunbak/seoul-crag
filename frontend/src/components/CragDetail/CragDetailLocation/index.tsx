@@ -14,7 +14,6 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
   const { map, mapRef } = useNaverMap(
     () => ({
       draggable: false,
-      pinchZoom: false,
       scrollWheel: false,
       keyboardShortcuts: false,
       disableDoubleClickZoom: true,
@@ -47,6 +46,9 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
           <Map.Marker.Default onCreate={setMarker} />
         </Map>
       </Box>
+      <Typography variant="caption" color={'text.secondary'}>
+        * 두 손가락을 이용한 확대/축소만 가능합니다.
+      </Typography>
     </>
   );
 }
