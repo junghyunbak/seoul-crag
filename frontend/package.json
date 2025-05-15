@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "vite",
+    "dev:stage": "vite --port 5174",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "jest --watch",
