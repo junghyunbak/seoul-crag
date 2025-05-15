@@ -46,7 +46,7 @@ function MapImpl({ map, mapRef, children }: MapProps) {
 
   return (
     <mapContext.Provider value={{ map }}>
-      <Box ref={mapRef} sx={{ width: '100%', height: '100%' }}>
+      <Box ref={mapRef} sx={{ width: '100%', height: '100%', userSelect: 'none' }}>
         <Box sx={{ display: 'none' }}>
           {CragMarkers.map((CragMarker) => CragMarker)}
           {DefaultMarkers.map((DefaultMarker) => DefaultMarker)}
