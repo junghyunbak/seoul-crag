@@ -1,12 +1,58 @@
+import { useEffect } from 'react';
 import { api } from '@/api/axios';
 import { useFetchTags } from '@/hooks';
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
-import { Box, Checkbox, Chip, FormControlLabel, FormGroup, Typography } from '@mui/material';
+import { Box, Chip, Divider, Paper, Typography } from '@mui/material';
 import { DefaultError, useMutation } from '@tanstack/react-query';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { autoUpdate, shift, useFloating } from '@floating-ui/react';
 
 export function CragTagsField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { refs, floatingStyles, update } = useFloating({
+    placement: 'bottom-start',
+    open: isMenuOpen,
+    onOpenChange: setIsMenuOpen,
+    middleware: [shift({ crossAxis: true, padding: 16 })],
+  });
+
+  const {
+    reference: { current: refRef },
+    floating: { current: floatRef },
+  } = refs;
+
+  useEffect(() => {
+    if (!refRef || !floatRef) {
+      return;
+    }
+
+    const cleanup = autoUpdate(refRef, floatRef, update);
+
+    return cleanup;
+  }, [refRef, floatRef, update]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        floatRef instanceof HTMLElement &&
+        !floatRef.contains(target) &&
+        refRef instanceof HTMLElement &&
+        !refRef.contains(target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return function cleanup() {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [floatRef, refRef]);
 
   const { tags } = useFetchTags();
 
@@ -17,11 +63,17 @@ export function CragTagsField() {
         tagId: id,
       });
     },
+    onSuccess: () => {
+      revalidateCrag();
+    },
   });
 
   const removeCragTagMutation = useMutation<void, DefaultError, Tag>({
     mutationFn: async ({ id }) => {
       await api.delete(`gym-tags/${crag.id}/${id}`);
+    },
+    onSuccess() {
+      revalidateCrag();
     },
   });
 
@@ -30,44 +82,106 @@ export function CragTagsField() {
   }
 
   return (
-    <Box>
+    <Box sx={{ position: 'relative' }}>
       <Typography>태그 추가</Typography>
 
-      <FormGroup sx={{ display: 'flex', flexDirection: 'column' }}>
-        {tags.map((tag) => {
-          const isExist = crag.tags?.some((cragTag) => cragTag.id === tag.id);
+      <Box ref={refs.setReference} sx={{ transform: 'translateY(-100%)', pointerEvents: 'none' }}>
+        <Paper
+          sx={{
+            width: '100%',
+            transform: 'translateY(100%)',
+            pointerEvents: 'auto',
+            borderRadius: 1,
+            cursor: 'pointer',
+          }}
+          onClick={() => setIsMenuOpen(true)}
+        >
+          <CragTagList crag={crag} readonly />
+        </Paper>
+      </Box>
 
-          return (
-            <FormControlLabel
-              key={tag.id}
-              control={
-                <Checkbox
-                  checked={isExist}
-                  onChange={(e) => {
-                    if (!e.target.checked) {
-                      removeCragTagMutation.mutate(tag, {
-                        onSuccess() {
-                          revalidateCrag();
-                        },
-                      });
-                    } else {
-                      addCragTagMutation.mutate(tag, {
-                        onSuccess() {
-                          revalidateCrag();
-                        },
-                      });
-                    }
+      {isMenuOpen && (
+        <Paper
+          ref={refs.setFloating}
+          sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}
+          style={{ ...floatingStyles, zIndex: 1000 }}
+        >
+          <CragTagList
+            crag={crag}
+            onClick={(tag) => {
+              removeCragTagMutation.mutate(tag);
+            }}
+          />
+          <Divider />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              width: '100%',
+              alignItems: 'flex-start',
+              p: 1,
+              maxHeight: '50dvh',
+              overflowY: 'auto',
+            }}
+          >
+            {tags.map((tag) => {
+              return (
+                <Chip
+                  key={tag.id}
+                  label={tag.name}
+                  sx={{ flexShrink: 0 }}
+                  size="small"
+                  onClick={() => {
+                    addCragTagMutation.mutate(tag);
                   }}
                 />
-              }
-              label={tag.name}
-            />
-          );
-        })}
-      </FormGroup>
+              );
+            })}
+          </Box>
+        </Paper>
+      )}
+    </Box>
+  );
+}
 
-      {crag.tags?.map((tag) => {
-        return <Chip key={tag.id} label={tag.name} />;
+interface TagListProps {
+  crag: Crag;
+  readonly?: boolean;
+  onClick?: (tag: Tag) => void;
+}
+
+function CragTagList({ crag, onClick, readonly = false }: TagListProps) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 1,
+        width: '100%',
+        p: 1,
+        height: 40,
+      }}
+    >
+      {(crag.tags || []).map((tag) => {
+        return (
+          <Chip
+            key={tag.id}
+            label={tag.name}
+            onDelete={
+              readonly
+                ? undefined
+                : () => {
+                    onClick?.(tag);
+                  }
+            }
+            size="small"
+          />
+        );
       })}
     </Box>
   );

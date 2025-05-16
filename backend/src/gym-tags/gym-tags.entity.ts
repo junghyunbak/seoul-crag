@@ -3,10 +3,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
+  Unique,
 } from 'typeorm';
 import { Gym } from 'src/gyms/gyms.entity';
 import { Tag } from 'src/tags/tags.entity';
 
+@Unique(['gym', 'tag'])
 @Entity('gym_tags')
 export class GymTag {
   @PrimaryGeneratedColumn('uuid')

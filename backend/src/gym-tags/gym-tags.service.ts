@@ -16,10 +16,22 @@ export class GymTagsService {
   }
 
   async create({ gymId, tagId }: CreateGymTagDto): Promise<GymTag> {
+    const existing = await this.gymTagRepository.findOne({
+      where: {
+        gym: { id: gymId },
+        tag: { id: tagId },
+      },
+    });
+
+    if (existing) {
+      return existing; // 이미 존재할 경우 기존 관계 반환
+    }
+
     const gymTag = this.gymTagRepository.create({
       gym: { id: gymId },
       tag: { id: tagId },
     });
+
     return this.gymTagRepository.save(gymTag);
   }
 
