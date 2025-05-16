@@ -33,7 +33,8 @@ export function Crags() {
         sx={{
           width: '100%',
           height: '100%',
-          overflow: 'auto',
+          overflowY: 'auto',
+          overflowX: 'hidden',
         }}
       >
         {!crag ? <CragList /> : <CragForm initialCrag={crag} />}
