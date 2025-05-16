@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, Slider, Typography, Stack, Switch, FormControlLabel, Button } from '@mui/material';
+import { Box, Slider, Typography, Switch, FormControlLabel, Button } from '@mui/material';
 
 import { DAY_STR_TO_KOR, DAYS_OF_WEEK } from '@/constants/time';
 
@@ -23,18 +23,16 @@ export const WeeklyHoursSlider: React.FC<WeeklyHoursSliderProps> = ({ hours, onC
   const [locked, setLocked] = useState(true);
 
   return (
-    <Box width="100%">
-      <Stack width="100%">
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
         {DAYS_OF_WEEK.map((day) => {
           return <SliderContent key={day} hours={hours} onChange={onChange} locked={locked} day={day} />;
         })}
-      </Stack>
-
-      <Box display="flex" justifyContent="flex-end" mb={2}>
-        <Button variant={locked ? 'outlined' : 'contained'} onClick={() => setLocked(!locked)}>
-          {locked ? '편집 잠금 해제' : '편집 잠금'}
-        </Button>
       </Box>
+
+      <Button variant={locked ? 'outlined' : 'contained'} onClick={() => setLocked(!locked)}>
+        {locked ? '편집 잠금 해제' : '편집 잠금'}
+      </Button>
     </Box>
   );
 };

@@ -82,8 +82,8 @@ export function CragTagsField() {
   }
 
   return (
-    <Box sx={{ position: 'relative' }}>
-      <Typography>태그 추가</Typography>
+    <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Typography variant="h6">암장 태그</Typography>
 
       <Box ref={refs.setReference} sx={{ transform: 'translateY(-100%)', pointerEvents: 'none' }}>
         <Paper
@@ -162,9 +162,10 @@ function CragTagList({ crag, onClick, readonly = false }: TagListProps) {
       sx={{
         display: 'flex',
         gap: 1,
+        flexWrap: 'wrap',
         width: '100%',
         p: 1,
-        height: 40,
+        minHeight: 40,
       }}
     >
       {(crag.tags || []).map((tag) => {

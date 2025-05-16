@@ -103,7 +103,7 @@ export function CragOpeningHoursField() {
   };
 
   return (
-    <Box>
+    <Box sx={{ userSelect: 'none' }}>
       <Typography variant="h6">운영 시간</Typography>
       <WeeklyHoursSlider hours={hours} onChange={handleWeeklyHoursChange} />
     </Box>

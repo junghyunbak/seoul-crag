@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 import { useFetchCrag } from '@/hooks';
 
-import { Box } from '@mui/material';
+import { Box, Divider, IconButton, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { CragPositionField } from '@/pages/manage/Crags/CragForm/CragPositionField';
@@ -20,12 +22,18 @@ import { CragShowerUrlField } from '@/pages/manage/Crags/CragForm/CragShowerUrlF
 import { CragOuterWallField } from '@/pages/manage/Crags/CragForm/CragOuterWallField';
 import { CragTagsField } from '@/pages/manage/Crags/CragForm/CragTagsField';
 
+import { useQueryParam, StringParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
+
 interface CragFormProps {
   initialCrag: Crag;
 }
 
 export function CragForm({ initialCrag }: CragFormProps) {
   const [queryEnabled, setQueryEnabled] = useState(false);
+
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { crag, refetch } = useFetchCrag({
     cragId: initialCrag.id,
@@ -50,33 +58,79 @@ export function CragForm({ initialCrag }: CragFormProps) {
         },
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', p: 2 }}>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', width: '100%' }}>
-          <Box
-            sx={{
-              width: { md: '400px', xs: '100%' },
-            }}
-          >
-            <CragPositionField />
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+          <Box sx={{ p: 2, display: 'flex', gap: 2 }}>
+            <IconButton
+              onClick={() => {
+                setSelectCragId(null);
+              }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h4">{crag.name}</Typography>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, overflow: 'hidden' }}>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <CragNameField />
-              <CragShortNameField />
-            </Box>
-            <CragAreaField />
-            <CragImagesField imageType="interior" />
+          <Divider />
+        </Box>
+
+        <Box sx={{ p: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', width: '100%' }}>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, sm: 8, md: 8 }}>
+                    <CragNameField />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 4, md: 4 }}>
+                    <CragShortNameField />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+                    <CragWebsiteUrlField />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6, md: 5 }}>
+                    <CragShowerUrlField />
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 2 }}>
+                    <CragAreaField />
+                  </Grid>
+
+                  <Grid size={{ xs: 12 }}>
+                    <CragDescriptionField />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, sm: 12, md: 6 }}>
+                    <CragTagsField />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                    <CragOuterWallField />
+                  </Grid>
+                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                    <CragOpenedAtField />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, md: 8 }}>
+                    <CragImagesField imageType="interior" />
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 4 }}>
+                    <CragThumbnailField />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 4 }}>
+                <CragPositionField />
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 6 }}>
+                <CragOpeningHoursField />
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <CragScheduleCalenderField />
+              </Grid>
+            </Grid>
           </Box>
         </Box>
-        <CragThumbnailField />
-        <CragDescriptionField />
-        <CragWebsiteUrlField />
-        <CragShowerUrlField />
-        <CragTagsField />
-        <CragOuterWallField />
-        <CragOpenedAtField />
-        <CragOpeningHoursField />
-        <CragScheduleCalenderField />
       </Box>
     </cragFormContext.Provider>
   );

@@ -100,12 +100,15 @@ export function CragPositionField() {
       }}
     >
       <Box
-        sx={{
+        sx={(theme) => ({
           display: 'flex',
           width: '100%',
           aspectRatio: '1/1',
           position: 'relative',
-        }}
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 1,
+          overflow: 'hidden',
+        })}
       >
         <Map map={map} mapRef={mapRef}>
           <Map.Polygon.Boundary />
