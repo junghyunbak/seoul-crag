@@ -1,9 +1,10 @@
 import { DefaultError, useMutation } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { useEffect, useState } from 'react';
-import { Box, Chip, TextField, Button, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, TextField, Button, MenuItem, Select, SelectChangeEvent, Paper } from '@mui/material';
 import { useFetchTags } from '@/hooks';
 import { TAG_NAMES } from '@/constants/tag';
+import { TagList } from '@/pages/manage/Crags/CragForm/CragTagsField';
 
 export function Tags() {
   const { tags, refetch } = useFetchTags();
@@ -26,6 +27,8 @@ export function Tags() {
   return (
     <Box
       sx={{
+        width: '100%',
+        height: '100%',
         p: 2,
       }}
     >
@@ -82,7 +85,14 @@ export function TagEditor({ initialTags = [], tagTypes, onRemove, onAdd }: TagEd
   };
 
   const removeTag = (target: Tag) => {
+    const confirmed = window.confirm('정말 삭제하시겠습니까?');
+
+    if (!confirmed) {
+      return;
+    }
+
     const updated = tags.filter((tag) => tag.name !== target.name || tag.type !== target.type);
+
     setTags(updated);
 
     onRemove?.(target);
@@ -96,19 +106,10 @@ export function TagEditor({ initialTags = [], tagTypes, onRemove, onAdd }: TagEd
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
-      {/* 태그 목록 */}
-      <Box display="flex" flexWrap="wrap" gap={1}>
-        {tags.map((tag) => (
-          <Chip
-            key={`${tag.name}-${tag.type}`}
-            label={`${tag.name} (${tag.type})`}
-            onDelete={() => removeTag(tag)}
-            color="primary"
-            variant="outlined"
-          />
-        ))}
-      </Box>
+    <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Paper>
+        <TagList tags={tags} onClick={removeTag} />
+      </Paper>
 
       {/* 입력 폼 */}
       <Box display="flex" gap={1}>
@@ -119,6 +120,7 @@ export function TagEditor({ initialTags = [], tagTypes, onRemove, onAdd }: TagEd
           onKeyDown={handleKeyDown}
           fullWidth
         />
+
         <Select value={type} onChange={(e: SelectChangeEvent) => setType(e.target.value as TagType)} size="small">
           {tagTypes.map((option) => (
             <MenuItem key={option} value={option}>
@@ -126,6 +128,7 @@ export function TagEditor({ initialTags = [], tagTypes, onRemove, onAdd }: TagEd
             </MenuItem>
           ))}
         </Select>
+
         <Button variant="contained" onClick={addTag}>
           추가
         </Button>

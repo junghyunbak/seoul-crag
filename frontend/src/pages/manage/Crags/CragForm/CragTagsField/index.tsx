@@ -96,7 +96,7 @@ export function CragTagsField() {
           }}
           onClick={() => setIsMenuOpen(true)}
         >
-          <CragTagList crag={crag} readonly />
+          <TagList tags={crag.tags || []} readonly />
         </Paper>
       </Box>
 
@@ -111,8 +111,8 @@ export function CragTagsField() {
           }}
           style={{ ...floatingStyles, zIndex: 1000 }}
         >
-          <CragTagList
-            crag={crag}
+          <TagList
+            tags={crag.tags || []}
             onClick={(tag) => {
               removeCragTagMutation.mutate(tag);
             }}
@@ -151,12 +151,12 @@ export function CragTagsField() {
 }
 
 interface TagListProps {
-  crag: Crag;
+  tags: Tag[];
   readonly?: boolean;
   onClick?: (tag: Tag) => void;
 }
 
-function CragTagList({ crag, onClick, readonly = false }: TagListProps) {
+export function TagList({ tags, onClick, readonly = false }: TagListProps) {
   return (
     <Box
       sx={{
@@ -168,7 +168,7 @@ function CragTagList({ crag, onClick, readonly = false }: TagListProps) {
         minHeight: 40,
       }}
     >
-      {(crag.tags || []).map((tag) => {
+      {tags.map((tag) => {
         return (
           <Chip
             key={tag.id}
