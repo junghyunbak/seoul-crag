@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Box, TextField, Button, MenuItem, Select, SelectChangeEvent, Paper } from '@mui/material';
 import { useFetchTags } from '@/hooks';
 import { TAG_NAMES } from '@/constants/tag';
-import { TagList } from '@/pages/manage/Crags/CragForm/CragTagsField';
+import { TagList } from '@/components/TagList';
 
 export function Tags() {
   const { tags, refetch } = useFetchTags();

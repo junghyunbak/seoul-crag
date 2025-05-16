@@ -6,6 +6,7 @@ import { Box, Chip, Divider, Paper, Typography } from '@mui/material';
 import { DefaultError, useMutation } from '@tanstack/react-query';
 import { useContext, useState } from 'react';
 import { autoUpdate, shift, useFloating } from '@floating-ui/react';
+import { TagList } from '@/components/TagList';
 
 export function CragTagsField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -146,44 +147,6 @@ export function CragTagsField() {
           </Box>
         </Paper>
       )}
-    </Box>
-  );
-}
-
-interface TagListProps {
-  tags: Tag[];
-  readonly?: boolean;
-  onClick?: (tag: Tag) => void;
-}
-
-export function TagList({ tags, onClick, readonly = false }: TagListProps) {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: 1,
-        flexWrap: 'wrap',
-        width: '100%',
-        p: 1,
-        minHeight: 40,
-      }}
-    >
-      {tags.map((tag) => {
-        return (
-          <Chip
-            key={tag.id}
-            label={tag.name}
-            onDelete={
-              readonly
-                ? undefined
-                : () => {
-                    onClick?.(tag);
-                  }
-            }
-            size="small"
-          />
-        );
-      })}
     </Box>
   );
 }

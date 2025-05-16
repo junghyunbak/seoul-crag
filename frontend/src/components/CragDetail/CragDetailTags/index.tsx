@@ -1,5 +1,6 @@
 import { CragDetailContext } from '@/components/CragDetail/index.context';
-import { Box, Chip } from '@mui/material';
+import { TagList } from '@/components/TagList';
+import { Box } from '@mui/material';
 import { useContext } from 'react';
 
 export function CragDetailTags() {
@@ -16,9 +17,7 @@ export function CragDetailTags() {
         gap: 0.5,
       }}
     >
-      {(crag.tags || []).map((tag) => {
-        return <Chip key={tag.id} label={tag.name} size="small" variant="outlined" />;
-      })}
+      <TagList tags={crag.tags || []} readonly removePadding />
     </Box>
   );
 }
