@@ -7,15 +7,14 @@ import { useNaverMap, useMutateCreateCrag } from '@/hooks';
 import { urlService } from '@/utils';
 
 import { Map } from '@/components/Map';
-import { useNavigate } from 'react-router';
+
 import { cragScheme } from '@/schemas';
+
 import { QUERY_STRING } from '@/constants';
 
 export function NewCrag() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-
-  const navigate = useNavigate();
 
   const { map, mapRef } = useNaverMap(
     () => ({
@@ -31,7 +30,7 @@ export function NewCrag() {
       const crag = cragScheme.parse(data);
 
       if (crag) {
-        navigate(`${urlService.getAbsolutePath('/manage/crags')}?${QUERY_STRING.SELECT_CRAG}=${crag.id}`);
+        window.location.href = `${urlService.getAbsolutePath('/manage/crags')}?${QUERY_STRING.SELECT_CRAG}=${crag.id}`;
       }
     },
   });

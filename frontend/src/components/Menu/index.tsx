@@ -28,8 +28,6 @@ import { zIndex } from '@/styles';
 
 import { urlService } from '@/utils';
 
-import { useNavigate } from 'react-router';
-
 interface SidebarMenuProps {
   open: boolean;
   onClose: () => void;
@@ -166,8 +164,6 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
 };
 
 export function Menu() {
-  const navigate = useNavigate();
-
   const [isMenuOpen, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
   const { user } = useFetchMe();
@@ -187,7 +183,7 @@ export function Menu() {
   };
 
   const handleNavigate = (path: string) => {
-    navigate(path);
+    window.location.href = path;
   };
 
   const handleCopyId = () => {

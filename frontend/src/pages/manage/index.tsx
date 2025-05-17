@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, useLocation, Link, useNavigate } from 'react-router';
+import { Outlet, useLocation, Link } from 'react-router';
 
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
@@ -84,8 +84,6 @@ const sidebarList: SidebarList = [
 ];
 
 export default function ManagePage() {
-  const navigate = useNavigate();
-
   const location = useLocation();
 
   const [toggled, setToggled] = useState(false);
@@ -130,7 +128,7 @@ export default function ManagePage() {
             <Typography
               variant="h3"
               sx={{ color: 'black', textDecoration: 'none', cursor: 'pointer' }}
-              onClick={() => navigate('/')}
+              onClick={() => (window.location.href = '/')}
             >
               서울 암장
             </Typography>
