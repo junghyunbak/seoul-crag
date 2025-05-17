@@ -1,8 +1,10 @@
 import { MenuButton } from '@/components/MenuButton';
 import { SearchInput } from '@/components/SearchInput';
-import { Box } from '@mui/material';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import { Badge, Box, Button } from '@mui/material';
 import { zIndex } from '@/styles';
 import { Filter } from '@/components/Filter';
+import { useFetchNotices } from '@/hooks';
 
 export function Topbar() {
   return (
@@ -42,11 +44,33 @@ export function Topbar() {
           <Box sx={{ flex: 1, overflow: 'hidden', pb: '2px' }}>
             <SearchInput />
           </Box>
+          <NoticeButton />
           <MenuButton />
         </Box>
 
         <Filter />
       </Box>
     </Box>
+  );
+}
+
+function NoticeButton() {
+  const { notices } = useFetchNotices(true);
+
+  return (
+    <Button
+      sx={(theme) => ({
+        background: theme.palette.common.white,
+        p: 1.5,
+        minWidth: 'auto',
+        aspectRatio: '1/1',
+        boxShadow: 1,
+      })}
+      onClick={() => {}}
+    >
+      <Badge badgeContent={notices?.length} color="error">
+        <NotificationsNoneIcon />
+      </Badge>
+    </Button>
   );
 }

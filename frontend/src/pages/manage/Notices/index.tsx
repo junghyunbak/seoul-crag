@@ -14,35 +14,16 @@ import {
 import { DefaultError, useMutation, useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
-import { z } from 'zod';
 import { useState } from 'react';
 import { FormTextField } from '@/components/FormTextField';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { useFetchNotices } from '@/hooks';
 
-const NoticeScheme = z.object({
-  id: z.string(),
-  title: z.string(),
-  content: z.string(),
-  category: z.enum(['general', 'update']),
-  isPinned: z.boolean(),
-  visible: z.boolean(),
-  createdAt: z.coerce.date(),
-});
-
-const NoticesScheme = z.array(NoticeScheme);
-
-type Notice = z.infer<typeof NoticeScheme>;
+import { NoticeScheme } from '@/schemas/notice';
 
 export default function Notices() {
-  const { data: notices, refetch } = useQuery({
-    queryKey: ['notices'],
-    queryFn: async () => {
-      const { data } = await api.get('/notices');
-
-      const notices = NoticesScheme.parse(data);
-
-      return notices;
-    },
-  });
+  const { notices, refetch } = useFetchNotices();
 
   const createNoticeMutation = useMutation<void, DefaultError, MyOmit<Notice, 'id' | 'createdAt'>>({
     mutationFn: async ({ title, content, category, isPinned, visible }) => {
@@ -311,7 +292,7 @@ function NoticeItem({ initialNotice, onDelete }: NoticeItemProps) {
       </Button>
 
       <Typography variant="caption" color="textSecondary">
-        {new Date(notice.createdAt).toLocaleDateString()} | {notice.isPinned ? '고정' : '일반'} |{' '}
+        {format(new Date(notice.createdAt), 'yyyy-MM-dd a hh:mm', { locale: ko })}
       </Typography>
     </Box>
   );

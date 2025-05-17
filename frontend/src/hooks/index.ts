@@ -30,6 +30,7 @@ export * from './useFetchRoles';
 export * from './useFetchCrag';
 export * from './useFetchSchedules';
 export * from './useFetchImages';
+export * from './useFetchNotices';
 
 /**
  * mutate
