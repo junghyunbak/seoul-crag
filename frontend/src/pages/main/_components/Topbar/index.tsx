@@ -33,7 +33,7 @@ export function Topbar() {
           sx={{
             width: '100%',
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             gap: 1,
             p: 2,
             pb: 0,
