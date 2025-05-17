@@ -38,7 +38,7 @@ export function Topbar() {
             pb: 0,
           }}
         >
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: 1, overflow: 'hidden' }}>
             <SearchInput />
           </Box>
           <MenuButton />

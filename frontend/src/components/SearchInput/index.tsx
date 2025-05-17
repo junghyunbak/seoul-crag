@@ -57,7 +57,9 @@ export function SearchInput() {
           <SearchIcon sx={{ width: '100%', height: '100%', color: 'text.secondary' }} />
         )}
       </Box>
-      <Typography color="text.secondary">{searchKeyword || '클라이밍장 검색'}</Typography>
+      <Box sx={{ flex: 1, overflow: 'hidden' }}>
+        <Typography color="text.secondary">{searchKeyword || '클라이밍장 검색'}</Typography>
+      </Box>
     </Paper>
   );
 }
