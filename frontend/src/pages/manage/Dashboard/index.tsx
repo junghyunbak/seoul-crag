@@ -23,6 +23,7 @@ type VisitDataOfHours = {
   kst_hour: number;
   visit_count: number;
   unique_visit_count: number;
+  signed_users: number;
 };
 
 function VisitChart() {
@@ -114,17 +115,26 @@ function VisitChart() {
               }}
             />
             <YAxis yAxisId="left" allowDecimals={false} />
+            <YAxis yAxisId="right" orientation="right" allowDecimals={false} />
             <Tooltip />
             <Legend />
 
-            <Bar yAxisId="left" dataKey="visit_count" fill="#8884d8" name="방문 수" />
+            <Bar yAxisId="left" dataKey="visit_count" fill="#8884d8" name="전체 방문 수" />
             <Line
-              yAxisId="left"
+              yAxisId="right"
               type="monotone"
               dataKey="unique_visit_count"
               stroke="#82ca9d"
               strokeWidth={2}
-              name="방문자 수"
+              name="고유 방문자 수"
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="signed_users"
+              stroke="#ffc658"
+              strokeWidth={2}
+              name="회원 방문자 수"
             />
           </ComposedChart>
         </ResponsiveContainer>
