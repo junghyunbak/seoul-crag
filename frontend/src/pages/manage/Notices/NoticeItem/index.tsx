@@ -99,7 +99,7 @@ export function NoticeItem({ initialNotice, onDelete }: NoticeItemProps) {
             }
           );
         }}
-        multilineCount={4}
+        multilineCount={8}
       />
 
       <FormControl fullWidth margin="normal">

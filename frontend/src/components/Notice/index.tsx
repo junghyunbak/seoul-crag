@@ -12,6 +12,9 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+
 const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters elevation={0} square {...props} />)(
   ({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -87,8 +90,8 @@ export function Notice() {
                 gap: 1,
               }}
             >
-              <IconButton>
-                <ArrowBackIosNewIcon onClick={handleModalClose} />
+              <IconButton onClick={handleModalClose}>
+                <ArrowBackIosNewIcon />
               </IconButton>
 
               <Typography variant="h6" component="h2">
@@ -140,9 +143,20 @@ function NoticeItem({ initialExpanded, notice }: NoticeItemProps) {
         <Typography variant="h6">{`${notice.isPinned ? '📌 ' : ''}${notice.title}`}</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography variant="body1" component="pre" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-          {notice.content}
-        </Typography>
+        <Box
+          sx={(theme) => ({
+            '& *': {
+              whiteSpace: 'normal',
+              wordBreak: 'break-all',
+              fontFamily: theme.typography.fontFamily,
+            },
+            '& img': {
+              maxWidth: '100%',
+            },
+          })}
+        >
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>{notice.content}</ReactMarkdown>
+        </Box>
       </AccordionDetails>
     </Accordion>
   );
