@@ -60,20 +60,43 @@ export function Notice() {
   return (
     <Modal open={isNoticeOpen} onClose={handleModalClose}>
       <Box
-        sx={(theme) => ({ width: '100%', height: '100%', bgcolor: theme.palette.background.paper, outline: 'none' })}
+        sx={(theme) => ({
+          width: '100%',
+          height: '100%',
+          bgcolor: theme.palette.background.paper,
+          outline: 'none',
+          position: 'relative',
+          overflowY: 'auto',
+        })}
         tabIndex={-1}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, gap: 1 }}>
-          <IconButton>
-            <ArrowBackIosNewIcon onClick={handleModalClose} />
-          </IconButton>
+        <Box
+          sx={(theme) => ({
+            position: 'sticky',
+            top: 0,
+            zIndex: 1,
+            background: theme.palette.background.paper,
+          })}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              p: 2,
+              gap: 1,
+            }}
+          >
+            <IconButton>
+              <ArrowBackIosNewIcon onClick={handleModalClose} />
+            </IconButton>
 
-          <Typography variant="h6" component="h2">
-            공지사항
-          </Typography>
+            <Typography variant="h6" component="h2">
+              공지사항
+            </Typography>
+          </Box>
+
+          <Divider />
         </Box>
-
-        <Divider />
 
         <Box sx={{ p: 2 }}>
           {(notices || [])
@@ -111,8 +134,14 @@ function NoticeItem({ initialExpanded, notice }: NoticeItemProps) {
 
   return (
     <Accordion key={notice.id} expanded={isExpanded} onChange={() => setIsExpanded((prev) => !prev)}>
-      <AccordionSummary>{`${notice.isPinned ? '📌 ' : ''}${notice.title}`}</AccordionSummary>
-      <AccordionDetails>{notice.content}</AccordionDetails>
+      <AccordionSummary>
+        <Typography variant="h6">{`${notice.isPinned ? '📌 ' : ''}${notice.title}`}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body1" component="pre" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+          {notice.content}
+        </Typography>
+      </AccordionDetails>
     </Accordion>
   );
 }

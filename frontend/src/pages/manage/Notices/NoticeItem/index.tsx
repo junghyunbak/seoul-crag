@@ -99,7 +99,9 @@ export function NoticeItem({ initialNotice, onDelete }: NoticeItemProps) {
             }
           );
         }}
+        multilineCount={4}
       />
+
       <FormControl fullWidth margin="normal">
         <InputLabel>카테고리</InputLabel>
         <Select
