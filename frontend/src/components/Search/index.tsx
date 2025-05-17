@@ -19,8 +19,12 @@ export function Search() {
   const { updateIsSearchOpen, updateSearchKeyword } = useModifySearch();
   const { updateSearchSortOption } = useModifySearch();
 
+  const handleClose = () => {
+    updateIsSearchOpen(false);
+  };
+
   return (
-    <Modal open={isSearchOpen} slots={{ backdrop: () => null }}>
+    <Modal open={isSearchOpen} onClose={handleClose} slots={{ backdrop: () => null }}>
       <Grow in={isSearchOpen}>
         <Box
           sx={{
@@ -34,7 +38,7 @@ export function Search() {
           tabIndex={-1}
         >
           <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconButton onClick={() => updateIsSearchOpen(false)}>
+            <IconButton onClick={handleClose}>
               <ArrowBackIosNewIcon />
             </IconButton>
 
