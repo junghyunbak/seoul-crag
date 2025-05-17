@@ -8,6 +8,7 @@ export * from './useSearch';
 export * from './useZoom';
 export * from './useExp';
 export * from './useFetchTag';
+export * from './useTag';
 
 export * from './useCrag';
 

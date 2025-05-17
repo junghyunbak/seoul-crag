@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import { Box, Paper, Typography, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useMap } from '@/hooks';
+import { useMap, useSearch } from '@/hooks';
 
 import { useModifySearch } from '@/hooks';
 
 export function SearchInput() {
   const { updateIsSearchOpen } = useModifySearch();
+
+  const { searchKeyword } = useSearch();
 
   const { map } = useMap();
 
@@ -55,7 +57,7 @@ export function SearchInput() {
           <SearchIcon sx={{ width: '100%', height: '100%', color: 'text.secondary' }} />
         )}
       </Box>
-      <Typography color="text.secondary">클라이밍장 검색</Typography>
+      <Typography color="text.secondary">{searchKeyword || '클라이밍장 검색'}</Typography>
     </Paper>
   );
 }

@@ -9,7 +9,7 @@ import { differenceInDays, endOfDay, isAfter, isBefore, isWithinInterval, startO
 
 import { DAY_STR_TO_INDEX } from '@/constants/time';
 
-import { useTag } from '@/hooks/useTag';
+import { useTag, useSearch } from '@/hooks';
 
 /**
  * 휴무           (dateTimeStr, yyyy-MM-dd'T'HH:mm:ss)
@@ -21,9 +21,10 @@ import { useTag } from '@/hooks/useTag';
 export function useFilter(crag?: Crag, date = new Date()) {
   const [filter] = useStore(useShallow((s) => [s.filter]));
   const { selectTagId } = useTag();
+  const { searchKeyword } = useSearch();
 
   const getCragStats = useCallback(
-    (crag: Crag | undefined, date: Date) => {
+    (crag: Crag | undefined, date: Date, searchKeyword = '') => {
       let isOpen = true;
       let isFiltered = true;
 
@@ -174,6 +175,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isSoonRemove;
       }
 
+      if (searchKeyword) {
+        isFiltered &&= crag?.name.includes(searchKeyword) || crag?.short_name?.includes(searchKeyword) || false;
+      }
+
       Object.entries(selectTagId).forEach(([, tagId]) => {
         if (!crag || !tagId) {
           return;
@@ -208,7 +213,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
     [filter, selectTagId]
   );
 
-  const stats = getCragStats(crag, date);
+  const stats = getCragStats(crag, date, searchKeyword);
 
   return {
     filter,

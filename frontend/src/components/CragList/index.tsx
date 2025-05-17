@@ -36,11 +36,9 @@ export function CragList({ crags }: CragListProps) {
   }, [updateGpsLatLng]);
 
   const filteredCrags = crags.filter((crag) => {
-    const { isFiltered } = getCragStats(crag, exp.date);
+    const { isFiltered } = getCragStats(crag, exp.date, searchKeyword);
 
-    const isKeywordInclude = crag.name.includes(searchKeyword) || crag.short_name?.includes(searchKeyword);
-
-    return isFiltered && isKeywordInclude;
+    return isFiltered;
   });
 
   const { lat, lng } = gpsLatLng;
