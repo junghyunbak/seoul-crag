@@ -4,14 +4,17 @@ import { persist } from 'zustand/middleware';
 import { createFilterSlice } from '@/store/slices/filter';
 import { createSearchSlice } from '@/store/slices/search';
 import { createMapSlice } from '@/store/slices/map';
+import { createNoticeSlice } from '@/store/slices/notice';
 
 type StoreState = ReturnType<typeof createMapSlice> &
   ReturnType<typeof createFilterSlice> &
-  ReturnType<typeof createSearchSlice>;
+  ReturnType<typeof createSearchSlice> &
+  ReturnType<typeof createNoticeSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get, store) => ({
+      ...createNoticeSlice(set, get, store),
       ...createFilterSlice(set, get, store),
       ...createSearchSlice(set, get, store),
       ...createMapSlice(set, get, store),
@@ -31,6 +34,7 @@ export const useStore = create<StoreState>()(
           enabledEdgeIndicator,
           enabledGpsIndicator,
           selectTagId,
+          readNoticeIds,
         } = state;
 
         return {
@@ -45,6 +49,7 @@ export const useStore = create<StoreState>()(
           enabledEdgeIndicator,
           enabledGpsIndicator,
           selectTagId,
+          readNoticeIds,
         };
       },
     }

@@ -9,6 +9,7 @@ export * from './useZoom';
 export * from './useExp';
 export * from './useFetchTag';
 export * from './useTag';
+export * from './useNotice';
 
 export * from './useCrag';
 
@@ -21,6 +22,7 @@ export * from './useModifySelectDate';
 export * from './useModifySearch';
 export * from './useModifyZoom';
 export * from './useModifyExp';
+export * from './useModifyNotice';
 
 /**
  * fetch

@@ -19,6 +19,7 @@ import { Topbar } from './_components/Topbar';
 import { Footer } from './_components/Footer';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
+import { Notice } from '@/components/Notice';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -166,6 +167,7 @@ export default function Main() {
       <GpsEdgeIndicator />
       <Menu />
       <Search />
+      <Notice />
     </Box>
   );
 }
