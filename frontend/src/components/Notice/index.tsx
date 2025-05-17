@@ -111,9 +111,11 @@ export function Notice() {
               })
               .map((notice) => {
                 const initialExpanded = (() => {
+                  /*
                   if (notice.isPinned) {
                     return true;
                   }
+                  */
 
                   const isRead = readNoticeIds.includes(notice.id);
 
