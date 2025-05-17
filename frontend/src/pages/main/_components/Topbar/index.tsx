@@ -33,12 +33,13 @@ export function Topbar() {
           sx={{
             width: '100%',
             display: 'flex',
+            alignItems: 'center',
             gap: 1,
             p: 2,
             pb: 0,
           }}
         >
-          <Box sx={{ flex: 1, overflow: 'hidden' }}>
+          <Box sx={{ flex: 1, overflow: 'hidden', pb: '2px' }}>
             <SearchInput />
           </Box>
           <MenuButton />
