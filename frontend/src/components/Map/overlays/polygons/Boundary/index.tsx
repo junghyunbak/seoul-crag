@@ -34,7 +34,11 @@ export function Boundary() {
     });
 
     return function cleanup() {
-      newPolygon.setMap(null);
+      const map = newPolygon.getMap();
+
+      if (map && 'getLayer' in map) {
+        newPolygon.setMap(null);
+      }
     };
   }, [map, boundary]);
 
