@@ -2,7 +2,7 @@ type RootPage = '';
 
 type ManagePage = 'manage';
 
-type ManageDownPages = 'crags' | 'dashborad' | 'users' | 'new-crag' | 'tags';
+type ManageDownPages = 'crags' | 'dashborad' | 'users' | 'new-crag' | 'tags' | 'notices';
 
 type Urls = `/${RootPage}` | `/${ManagePage}` | `/${ManagePage}/${ManageDownPages}`;
 

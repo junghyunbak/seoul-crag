@@ -12,6 +12,7 @@ import MenuOpen from '@mui/icons-material/MenuOpen';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
 import Terrain from '@mui/icons-material/Terrain';
 import TagIcon from '@mui/icons-material/Tag';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 import { zIndex } from '@/styles';
 
@@ -72,6 +73,11 @@ const sidebarList: SidebarList = [
         icon: <TagIcon />,
         pathname: urlService.getAbsolutePath('/manage/tags'),
         title: '태그 관리',
+      },
+      {
+        icon: <NotificationsNoneIcon />,
+        pathname: urlService.getAbsolutePath('/manage/notices'),
+        title: '공지 관리',
       },
     ],
   },

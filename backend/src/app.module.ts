@@ -24,6 +24,7 @@ import { CommentsModule } from 'src/comments/comments.module';
 import { AppVisitedModule } from 'src/app-visited/app-visited.module';
 import { GymTagsModule } from 'src/gym-tags/gym-tags.module';
 import { TagsModule } from 'src/tags/tags.module';
+import { NoticeModule } from './notices/notice.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { TagsModule } from 'src/tags/tags.module';
     ImageModule,
     CommentsModule,
     AppVisitedModule,
+    NoticeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

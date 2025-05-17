@@ -18,6 +18,7 @@ import { Tags } from '@/pages/manage/Tags';
 const Main = lazy(() => import('@/pages/main'));
 const ManagePage = lazy(() => import('@/pages/manage'));
 const NotFound = lazy(() => import('@/pages/not-found'));
+const Notices = lazy(() => import('@/pages/manage/Notices'));
 
 // https://github.com/pbeshai/use-query-params/issues/295
 export const ReactRouter7Adapter: QueryParamAdapterComponent = ({ children }) => {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
           {
             path: urlService.getRelativePath('/manage/tags'),
             element: <Tags />,
+          },
+          {
+            path: urlService.getRelativePath('/manage/notices'),
+            element: <Notices />,
           },
         ],
       },
