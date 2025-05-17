@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useExp, useFilter, useMap } from '@/hooks';
+import { useExp, useFilter, useMap, useSearch } from '@/hooks';
 
 import { zIndex } from '@/styles';
 
@@ -47,8 +47,9 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
   const { exp } = useExp();
-  const { getCragStats } = useFilter();
   const { map } = useMap();
+  const { searchKeyword } = useSearch();
+  const { getCragStats } = useFilter();
 
   useEffect(() => {
     if (!map || !map.getProjection() || !crags || !crags.length) {
@@ -65,7 +66,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
       const grouped: Record<number, AngularIndicator> = {};
 
       crags.forEach((crag) => {
-        const { isFiltered } = getCragStats(crag, exp.date);
+        const { isFiltered } = getCragStats(crag, exp.date, searchKeyword);
 
         if (type === 'crag' && !isFiltered) {
           return;
@@ -122,7 +123,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
     return () => {
       naver.maps.Event.removeListener(listener);
     };
-  }, [map, crags, getCragStats, exp, type]);
+  }, [map, crags, getCragStats, exp, type, searchKeyword]);
 
   return (
     <>
