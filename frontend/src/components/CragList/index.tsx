@@ -73,10 +73,7 @@ export function CragList({ crags }: CragListProps) {
       const { elapseSetupDay: aElapseSetupDay } = getCragStats(a, exp.date);
       const { elapseSetupDay: bElapseSetupDay } = getCragStats(b, exp.date);
 
-      return (aElapseSetupDay === -1 ? Infinity : aElapseSetupDay) <
-        (bElapseSetupDay === -1 ? Infinity : bElapseSetupDay)
-        ? -1
-        : 1;
+      return aElapseSetupDay < bElapseSetupDay ? -1 : 1;
     }
 
     return 0;

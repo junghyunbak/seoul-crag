@@ -111,7 +111,7 @@ export function CragListItem({ crag }: CragListItemProps) {
         </Box>
 
         <Box>
-          {elapseSetupDay !== -1 && (
+          {elapseSetupDay !== Infinity && (
             <Typography variant="body1">{`🔩 ${
               elapseSetupDay === 0 ? '오늘 세팅' : `D+${elapseSetupDay}`
             }`}</Typography>

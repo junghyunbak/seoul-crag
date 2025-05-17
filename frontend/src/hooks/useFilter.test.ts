@@ -421,7 +421,7 @@ describe('[필터 상태]', () => {
     });
 
     describe('당일이 아닌 경우', () => {
-      it('하루가 남았을 경우, 경과 일수는 -1 이어야 한다.', () => {
+      it('하루가 남았을 경우, 경과 일수는 Infinity 이어야 한다.', () => {
         const { result } = renderHook(() =>
           useFilter(
             {
@@ -440,7 +440,7 @@ describe('[필터 상태]', () => {
           )
         );
 
-        expect(result.current.elapseSetupDay).toBe(-1);
+        expect(result.current.elapseSetupDay).toBe(Infinity);
       });
 
       it('하루가 지났을 경우, 경과 일수는 1 이어야 한다.', () => {

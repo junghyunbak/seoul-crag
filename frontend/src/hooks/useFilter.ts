@@ -58,7 +58,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let close = new DateService(DateService.timeStrToDate(openingHour?.close_time || '', date));
 
       let remainSetupDay = Infinity;
-      let elapseSetupDay = -1;
+      let elapseSetupDay = Infinity;
 
       /**
        * 스케줄로부터 다음 상태 계산
@@ -102,7 +102,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
           }
 
           if (isAfter(endOfDay(date), _close.date)) {
-            elapseSetupDay = Math.max(elapseSetupDay, differenceInDays(startOfDay(date), startOfDay(_close.date)));
+            elapseSetupDay = Math.min(elapseSetupDay, differenceInDays(startOfDay(date), startOfDay(_close.date)));
           }
 
           if (current.dateStr === _open.dateStr) {
@@ -137,7 +137,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
       })();
 
       isSoonRemove = remainSetupDay < 3;
-      isRecentlySetting = elapseSetupDay !== -1 && elapseSetupDay < 3;
+      isRecentlySetting = elapseSetupDay < 3;
 
       isOpen &&= isWithinInterval(current.date, {
         start: open.date,

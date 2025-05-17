@@ -18,7 +18,6 @@ export * from './useCrag';
  */
 export * from './useModifyMap';
 export * from './useModifyFilter';
-export * from './useModifySelectDate';
 export * from './useModifySearch';
 export * from './useModifyZoom';
 export * from './useModifyExp';
