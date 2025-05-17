@@ -83,9 +83,17 @@ export function Notice() {
               return isAfter(a.createdAt, b.createdAt) ? -1 : 1;
             })
             .map((notice) => {
-              const isRead = readNoticeIds.includes(notice.id);
+              const initialExpanded = (() => {
+                if (notice.isPinned) {
+                  return true;
+                }
 
-              return <NoticeItem key={notice.id} isRead={isRead} notice={notice} />;
+                const isRead = readNoticeIds.includes(notice.id);
+
+                return !isRead;
+              })();
+
+              return <NoticeItem key={notice.id} initialExpanded={initialExpanded} notice={notice} />;
             })}
         </Box>
       </Box>
@@ -94,16 +102,16 @@ export function Notice() {
 }
 
 interface NoticeItemProps {
-  isRead: boolean;
+  initialExpanded?: boolean;
   notice: Notice;
 }
 
-function NoticeItem({ isRead, notice }: NoticeItemProps) {
-  const [isExpanded, setIsExpanded] = useState(!isRead);
+function NoticeItem({ initialExpanded, notice }: NoticeItemProps) {
+  const [isExpanded, setIsExpanded] = useState(initialExpanded);
 
   return (
     <Accordion key={notice.id} expanded={isExpanded} onChange={() => setIsExpanded((prev) => !prev)}>
-      <AccordionSummary>{notice.title}</AccordionSummary>
+      <AccordionSummary>{`${notice.isPinned ? '📌 ' : ''}${notice.title}`}</AccordionSummary>
       <AccordionDetails>{notice.content}</AccordionDetails>
     </Accordion>
   );
