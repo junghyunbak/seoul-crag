@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Outlet, useLocation, Link } from 'react-router';
+import { Outlet, useLocation, Link, useNavigate } from 'react-router';
 
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
-import { Link as MuiLink, Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import Dashboard from '@mui/icons-material/Dashboard';
 import Foundation from '@mui/icons-material/Foundation';
@@ -84,6 +84,8 @@ const sidebarList: SidebarList = [
 ];
 
 export default function ManagePage() {
+  const navigate = useNavigate();
+
   const location = useLocation();
 
   const [toggled, setToggled] = useState(false);
@@ -125,9 +127,13 @@ export default function ManagePage() {
           }}
         >
           <Box sx={{ p: '0 20px', m: '32px 0 8px 0' }}>
-            <MuiLink href={'/'} variant="h3" sx={{ color: 'black', textDecoration: 'none' }}>
+            <Typography
+              variant="h3"
+              sx={{ color: 'black', textDecoration: 'none', cursor: 'pointer' }}
+              onClick={() => navigate('/')}
+            >
               서울 암장
-            </MuiLink>
+            </Typography>
           </Box>
 
           {sidebarList.map((sidebarItem, i) => {
