@@ -89,8 +89,6 @@ GROUP BY date
 ORDER BY date ASC;
     `);
 
-    console.log('raw', raw);
-
     return raw.map(
       (row): VisitedStats => ({
         date: row.date,
