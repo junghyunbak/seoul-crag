@@ -33,6 +33,10 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//, /^\/uploads\//],
+      },
       devOptions: {
         enabled: true, // 개발 서버에서도 PWA 테스트 가능
       },
