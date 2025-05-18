@@ -156,7 +156,7 @@ function VisitChart() {
 
             <Line yAxisId="left" type="monotone" dataKey="web_visitors" stroke="#82ca9d" strokeWidth={2} name="웹" />
 
-            <Line yAxisId="left" type="monotone" dataKey="pwa_visitor" stroke="#ffc658" strokeWidth={2} name="PWA" />
+            <Line yAxisId="left" type="monotone" dataKey="pwa_visitors" stroke="#ffc658" strokeWidth={2} name="PWA" />
           </ComposedChart>
         </ResponsiveContainer>
       </Paper>
