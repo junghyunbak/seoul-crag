@@ -2,19 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppVisited } from './app-visited.entity';
 import { Repository } from 'typeorm';
-
-export interface VisitedStatsRow {
-  date: string;
-  count: string;
-  unique_visitors: string;
-  signed_users: string;
-}
+import { CreateAppVisitedDto } from './dto/create-app-visited.dto';
 
 export interface VisitedStats {
   date: string;
   count: number;
   unique_visitors: number;
   signed_users: number;
+  pwa_visitors: number;
+  web_visitors: number;
 }
 
 @Injectable()
@@ -24,8 +20,17 @@ export class AppVisitedService {
     private readonly visitedRepo: Repository<AppVisited>,
   ) {}
 
-  async logVisit(userId: string | null, ip: string, url: string) {
-    const record = this.visitedRepo.create({ user_id: userId, ip, url });
+  async logVisit(
+    userId: string | null,
+    ip: string,
+    { url, is_pwa }: CreateAppVisitedDto,
+  ) {
+    const record = this.visitedRepo.create({
+      user_id: userId,
+      ip,
+      url,
+      is_pwa,
+    });
 
     await this.visitedRepo.save(record);
   }
@@ -70,17 +75,21 @@ export class AppVisitedService {
   }
 
   async getRecentVisitedStats(): Promise<VisitedStats[]> {
-    const raw: VisitedStatsRow[] = await this.visitedRepo.query(`
+    const raw: VisitedStats[] = await this.visitedRepo.query(`
       SELECT
-        to_char(created_at + interval '9 hours', 'YYYY-MM-DD') AS date,
-        COUNT(*) AS count,
-        COUNT(DISTINCT ip) AS unique_visitors,
-        COUNT(DISTINCT user_id) FILTER (WHERE user_id IS NOT NULL) AS signed_users
-      FROM app_visited
-      WHERE created_at >= now() - interval '7 days'
-      GROUP BY date
-      ORDER BY date ASC;
+  to_char(created_at + interval '9 hours', 'YYYY-MM-DD') AS date,
+  COUNT(*) AS count,
+  COUNT(DISTINCT ip) AS unique_visitors,
+  COUNT(DISTINCT user_id) FILTER (WHERE user_id IS NOT NULL) AS signed_users,
+  COUNT(DISTINCT ip) FILTER (WHERE is_pwa = true) AS pwa_visitors,
+  COUNT(DISTINCT ip) FILTER (WHERE is_pwa = false) AS web_visitors
+FROM app_visited
+WHERE created_at >= now() - interval '7 days'
+GROUP BY date
+ORDER BY date ASC;
     `);
+
+    console.log('raw', raw);
 
     return raw.map(
       (row): VisitedStats => ({
@@ -88,6 +97,8 @@ export class AppVisitedService {
         count: Number(row.count),
         unique_visitors: Number(row.unique_visitors),
         signed_users: Number(row.signed_users),
+        pwa_visitors: Number(row.pwa_visitors),
+        web_visitors: Number(row.web_visitors),
       }),
     );
   }

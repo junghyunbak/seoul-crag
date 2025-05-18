@@ -17,6 +17,8 @@ type VisitDataOfDays = {
   count: number;
   unique_visitors: number;
   signed_users: number;
+  pwa_visitors: number;
+  web_visitors: number;
 };
 
 type VisitDataOfHours = {
@@ -136,6 +138,25 @@ function VisitChart() {
               strokeWidth={2}
               name="회원 방문자 수"
             />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </Paper>
+
+      <Paper sx={{ width: '100%', height: 400, p: 2 }}>
+        <Typography variant="h6" gutterBottom>
+          환경별 방문 통계
+        </Typography>
+
+        <ResponsiveContainer width="100%" height="90%">
+          <ComposedChart data={visitOfDays}>
+            <XAxis dataKey="date" />
+            <YAxis yAxisId="left" allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+
+            <Line yAxisId="left" type="monotone" dataKey="web_visitors" stroke="#82ca9d" strokeWidth={2} name="웹" />
+
+            <Line yAxisId="left" type="monotone" dataKey="pwa_visitor" stroke="#ffc658" strokeWidth={2} name="PWA" />
           </ComposedChart>
         </ResponsiveContainer>
       </Paper>

@@ -19,6 +19,9 @@ export class AppVisited {
   @Column()
   url: string;
 
+  @Column({ type: 'boolean', default: false })
+  is_pwa: boolean;
+
   @CreateDateColumn()
   created_at: Date;
 }

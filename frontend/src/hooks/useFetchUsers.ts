@@ -25,11 +25,16 @@ export function useFetchMe() {
   const { data: user, refetch } = useQuery({
     queryKey: ['me'],
     queryFn: async () => {
+      const isPwa =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        ('standalone' in window.navigator && window.navigator.standalone === true);
+
       /**
        * 로깅
        */
       await api.post('/visit', {
         url: window.location.href,
+        is_pwa: isPwa,
       });
 
       const { data } = await api.get('/users/me');

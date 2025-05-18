@@ -5,6 +5,7 @@ import { JwtAuthGuard, OptionalJwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { isJwtParsedUser } from 'src/utils/typeguard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { CreateAppVisitedDto } from './dto/create-app-visited.dto';
 
 @Controller('visit')
 export class AppVisitedController {
@@ -12,7 +13,7 @@ export class AppVisitedController {
 
   @UseGuards(OptionalJwtAuthGuard)
   @Post()
-  async visit(@Req() req: Request, @Body() body: { url: string }) {
+  async visit(@Req() req: Request, @Body() body: CreateAppVisitedDto) {
     const ip =
       (req.headers['x-forwarded-for'] as string) ??
       req.socket.remoteAddress ??
@@ -26,7 +27,7 @@ export class AppVisitedController {
       return null;
     })();
 
-    await this.appVisitedService.logVisit(userId, ip, body.url);
+    await this.appVisitedService.logVisit(userId, ip, body);
   }
 
   @Roles('owner')
