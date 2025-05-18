@@ -21,7 +21,7 @@ interface AngularEdgeMarkersProps {
 }
 
 // ✅ 교차점 계산 함수
-function projectToScreenEdge(targetX: number, targetY: number, centerX: number, centerY: number, padding = 5) {
+function projectToScreenEdge(targetX: number, targetY: number, centerX: number, centerY: number, padding = 8) {
   const dx = targetX - centerX;
   const dy = targetY - centerY;
 
@@ -43,7 +43,7 @@ function projectToScreenEdge(targetX: number, targetY: number, centerX: number, 
   return { x, y };
 }
 
-export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'crag' }: AngularEdgeMarkersProps) {
+export function AngularEdgeMarkers({ crags, indicatorColor = 'white', type = 'crag' }: AngularEdgeMarkersProps) {
   const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
 
   const { exp } = useExp();
@@ -146,30 +146,18 @@ export function AngularEdgeMarkers({ crags, indicatorColor = 'black', type = 'cr
             left: item.x,
           }}
         >
-          {/**
-           * 중심 잡아주는 역할을 함.
-           */}
           <Box
             sx={{
+              width: 6,
+              aspectRatio: '1/1',
+              borderRadius: '50%',
+              background: indicatorColor,
+              boxShadow: 1,
               position: 'absolute',
-              transformOrigin: 'center center',
+              top: -3,
+              left: -3,
             }}
-            style={{
-              transform: `rotate(${item.angle}deg)`,
-            }}
-          >
-            <Box
-              sx={{
-                width: 6,
-                aspectRatio: '1/1',
-                borderRadius: '50%',
-                background: indicatorColor,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-              }}
-            />
-          </Box>
+          />
         </Box>
       ))}
     </>
