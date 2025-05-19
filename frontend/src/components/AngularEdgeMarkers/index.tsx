@@ -126,7 +126,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = '#00000065', type =
   }, [map, crags, getCragStats, exp, type, searchKeyword]);
 
   return (
-    <>
+    <Box>
       {indicators.map((item, i) => (
         <Box
           key={i}
@@ -136,10 +136,9 @@ export function AngularEdgeMarkers({ crags, indicatorColor = '#00000065', type =
           sx={{
             position: 'fixed',
             zIndex: zIndex.edgeMarker,
-            pointerEvents: 'none',
             width: 'max-content',
             height: 'max-content',
-            cursor: 'pointer',
+            userSelect: 'none',
           }}
           style={{
             top: item.y,
@@ -159,6 +158,6 @@ export function AngularEdgeMarkers({ crags, indicatorColor = '#00000065', type =
           />
         </Box>
       ))}
-    </>
+    </Box>
   );
 }
