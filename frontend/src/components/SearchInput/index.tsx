@@ -54,7 +54,16 @@ export function SearchInput() {
       sx={{ py: 1.5, px: 2, display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
       onClick={() => updateIsSearchOpen(true)}
     >
-      <Box sx={{ width: 20, height: 20, position: 'relative' }}>
+      <Box
+        sx={{
+          width: 20,
+          height: 20,
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <AnimatePresence>
           {isMarkerLoading ? (
             <motion.div
@@ -62,7 +71,7 @@ export function SearchInput() {
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4 }}
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -76,7 +85,7 @@ export function SearchInput() {
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4 }}
               style={{
                 position: 'absolute',
                 inset: 0,
