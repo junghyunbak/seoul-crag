@@ -4,8 +4,8 @@ type CafeSliceType = {
   cafes: Cafe[];
   setCafes: (cafes: Cafe[]) => void;
 
-  selectCafeId: string;
-  setSelectCafeId: (cafeId: string) => void;
+  selectCafeId: string | null;
+  setSelectCafeId: (cafeId: string | null) => void;
 };
 
 export const createCafeSlice: StateCreator<CafeSliceType> = (set): CafeSliceType => ({
@@ -14,7 +14,7 @@ export const createCafeSlice: StateCreator<CafeSliceType> = (set): CafeSliceType
     set(() => ({ cafes }));
   },
 
-  selectCafeId: '',
+  selectCafeId: null,
   setSelectCafeId(cafeId) {
     set(() => ({ selectCafeId: cafeId }));
   },

@@ -39,6 +39,7 @@ export const useStore = create<StoreState>()(
           selectTagId,
           readNoticeIds,
           cafes,
+          selectCafeId,
         } = state;
 
         return {
@@ -55,6 +56,7 @@ export const useStore = create<StoreState>()(
           selectTagId,
           readNoticeIds,
           cafes,
+          selectCafeId,
         };
       },
     }

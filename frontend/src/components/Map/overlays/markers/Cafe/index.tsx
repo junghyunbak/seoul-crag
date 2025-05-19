@@ -1,9 +1,11 @@
 import { mapContext } from '@/components/Map/index.context';
 import { SIZE } from '@/constants';
 import { Box, Typography } from '@mui/material';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { MarkerIcon } from '../_assets/MarkerIcon';
-import { useZoom } from '@/hooks';
+import { useCafe, useModifyCafe, useZoom } from '@/hooks';
+import { CafeInfo } from './CafeInfo';
+import { zIndex } from '@/styles';
 
 interface CafeProps {
   cafe: Cafe;
@@ -15,11 +17,16 @@ interface CafeProps {
 export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
   const { map } = useContext(mapContext);
   const { zoomLevel } = useZoom();
+  const { selectCafeId } = useCafe();
+
+  const { updateSelectCafeId } = useModifyCafe();
+
+  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
   const markerRef = useRef<HTMLDivElement>(null);
 
   const markerWidth = SIZE.CAFE_MARKER_WIDTH;
-  const isSelect = false;
+  const isSelect = selectCafeId === cafe.id;
 
   const isTitleShown = (() => {
     if (isSelect) {
@@ -28,6 +35,10 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
 
     return zoomLevel > 14;
   })();
+
+  useEffect(() => {
+    marker?.setZIndex(isSelect ? zIndex.cafeMarkerActive : 0);
+  }, [marker, isSelect]);
 
   useEffect(() => {
     if (!map || !markerRef.current) {
@@ -41,6 +52,8 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
         content: markerRef.current,
       },
     });
+
+    setMarker(marker);
 
     onCreate?.(marker, idx);
 
@@ -63,15 +76,21 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
           transform: `translate(-50%, -100%)`,
         }}
       >
-        <Box onClick={() => {}}>
+        <Box
+          onClick={() => {
+            updateSelectCafeId(cafe.id);
+          }}
+        >
           <Box
             sx={{
-              transform: `translate(0, ${isSelect ? '0' : '50%'})`,
+              transform: `translate(0, 50%)`,
             }}
           >
             <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
           </Box>
         </Box>
+
+        {isSelect && <CafeInfo cafe={cafe} referenceRef={markerRef} />}
 
         {isTitleShown && (
           <Box
@@ -80,9 +99,7 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
                * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
                */
               position: 'absolute',
-              transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${
-                isSelect ? 0 : '50%'
-              })`,
+              transform: `translate(calc(-50% + ${(markerWidth * 0.6) / 2}px), 50%)`,
             }}
           >
             <Typography

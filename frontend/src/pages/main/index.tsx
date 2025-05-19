@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 
-import { useCafe, useFetchCrags, useModifyZoom, useSetupExp } from '@/hooks';
+import { useCafe, useFetchCrags, useModifyCafe, useModifyZoom, useSetupExp } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
@@ -38,6 +38,7 @@ export default function Main() {
 
   const { updateMap } = useModifyMap();
   const { updateZoomLevel } = useModifyZoom();
+  const { updateSelectCafeId } = useModifyCafe();
 
   useSetupExp();
 
@@ -99,6 +100,7 @@ export default function Main() {
 
     const mapClickListener = map.addListener('click', () => {
       setSelectCragId(null);
+      updateSelectCafeId(null);
     });
 
     const centerChangeListener = map.addListener('center_changed', () => {
@@ -118,7 +120,7 @@ export default function Main() {
       map.removeListener(mapClickListener);
       map.removeListener(centerChangeListener);
     };
-  }, [map, setSelectCragId]);
+  }, [map, setSelectCragId, updateSelectCafeId]);
 
   /**
    * 맵 줌 레벨 변경 시 반영

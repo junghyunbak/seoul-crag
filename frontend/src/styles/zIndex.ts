@@ -6,7 +6,9 @@ export const splash = 1;
 export const cragMarkerOff = 0;
 export const cragMarkerUnactive = 1;
 export const cragMarkerFiltered = 2;
-export const cragMarkerAcive = 3;
+export const cragMarkerAcive = 4;
+
+export const cafeMarkerActive = 3;
 
 export const topbar = 100;
 export const footer = 101;

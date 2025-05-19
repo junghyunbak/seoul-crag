@@ -14,7 +14,7 @@ export function useModifyCafe() {
   );
 
   const updateSelectCafeId = useCallback(
-    (cafeId: string) => {
+    (cafeId: string | null) => {
       setSelectCafeId(cafeId);
     },
     [setSelectCafeId]
