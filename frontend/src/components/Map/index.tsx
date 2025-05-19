@@ -4,54 +4,58 @@ import { Box } from '@mui/material';
 
 import { Marker, Polygon } from '@/components/Map/overlays';
 
-const mockCrag: Crag = {
-  id: '',
-  name: '',
-  short_name: '',
-  description: '',
-  latitude: 0,
-  longitude: 0,
-  created_at: new Date(),
-  updated_at: new Date(),
-  website_url: '',
-  is_outer_wall: false,
-  shower_url: '',
-};
-
-// [ ]: 타입 제거. Children.type 으로 대체 가능.
-const CragMarkerType = (<Marker.Crag crag={mockCrag} />).type;
-const DefaultMarkerType = (<Marker.Default />).type;
-const BoundaryPolygonType = (<Polygon.Boundary />).type;
-const ClusterMarkerType = (<Marker.Cluster markers={[]} />).type;
-const GpsMarkerType = (<Marker.Gps />).type;
-
 import { mapContext } from '@/components/Map/index.context';
-
-function getElementsFromChildren(children: React.ReactNode, type: unknown) {
-  return React.Children.toArray(children).filter((child) => React.isValidElement(child) && child.type === type);
-}
 
 interface MapProps extends React.PropsWithChildren {
   map: naver.maps.Map | null;
   mapRef: React.RefObject<HTMLDivElement | null>;
 }
 
-function MapImpl({ map, mapRef, children }: MapProps) {
-  const CragMarkers = getElementsFromChildren(children, CragMarkerType);
-  const DefaultMarkers = getElementsFromChildren(children, DefaultMarkerType);
-  const BoundaryPolygons = getElementsFromChildren(children, BoundaryPolygonType);
-  const [GpsMarker] = getElementsFromChildren(children, GpsMarkerType);
+export function Map({ map, mapRef, children }: MapProps) {
+  const cragMarkers: React.ReactNode[] = [];
+  const defaultMarkers: React.ReactNode[] = [];
+  const cafeMarkers: React.ReactNode[] = [];
+  const boundaryPolygons: React.ReactNode[] = [];
+  const clusterMarkers: React.ReactNode[] = [];
 
-  const ClusterMarkers = getElementsFromChildren(children, ClusterMarkerType);
+  let GpsMarker: React.ReactNode | null = null;
+
+  React.Children.forEach(children, (child) => {
+    if (!React.isValidElement(child)) {
+      return;
+    }
+
+    if (child.type === Map.Marker.Crag) {
+      cragMarkers.push(child);
+    }
+
+    if (child.type === Map.Marker.Default) {
+      defaultMarkers.push(child);
+    }
+
+    if (child.type === Map.Marker.Cafe) {
+      cafeMarkers.push(child);
+    }
+
+    if (child.type === Map.Polygon.Boundary) {
+      boundaryPolygons.push(child);
+    }
+
+    if (child.type === Map.Marker.Gps) {
+      GpsMarker = child;
+    }
+
+    if (child.type === Map.Marker.Cluster) {
+      clusterMarkers.push(child);
+    }
+  });
 
   return (
     <mapContext.Provider value={{ map }}>
       <Box ref={mapRef} sx={{ width: '100%', height: '100%', userSelect: 'none' }}>
         <Box sx={{ display: 'none' }}>
-          {CragMarkers.map((CragMarker) => CragMarker)}
-          {DefaultMarkers.map((DefaultMarker) => DefaultMarker)}
-          {BoundaryPolygons.map((BoundayPolygon) => BoundayPolygon)}
-          {ClusterMarkers.map((ClusterMarker) => ClusterMarker)}
+          {[...cragMarkers, ...cafeMarkers, ...defaultMarkers, ...clusterMarkers].map((marker) => marker)}
+          {[...boundaryPolygons].map((polygon) => polygon)}
           {GpsMarker}
         </Box>
       </Box>
@@ -59,7 +63,5 @@ function MapImpl({ map, mapRef, children }: MapProps) {
   );
 }
 
-export const Map = Object.assign(MapImpl, {
-  Marker,
-  Polygon,
-});
+Map.Marker = Marker;
+Map.Polygon = Polygon;

@@ -5,15 +5,18 @@ import { createFilterSlice } from '@/store/slices/filter';
 import { createSearchSlice } from '@/store/slices/search';
 import { createMapSlice } from '@/store/slices/map';
 import { createNoticeSlice } from '@/store/slices/notice';
+import { createCafeSlice } from '@/store/slices/cafe';
 
 type StoreState = ReturnType<typeof createMapSlice> &
   ReturnType<typeof createFilterSlice> &
   ReturnType<typeof createSearchSlice> &
-  ReturnType<typeof createNoticeSlice>;
+  ReturnType<typeof createNoticeSlice> &
+  ReturnType<typeof createCafeSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get, store) => ({
+      ...createCafeSlice(set, get, store),
       ...createNoticeSlice(set, get, store),
       ...createFilterSlice(set, get, store),
       ...createSearchSlice(set, get, store),
@@ -35,6 +38,7 @@ export const useStore = create<StoreState>()(
           enabledGpsIndicator,
           selectTagId,
           readNoticeIds,
+          cafes,
         } = state;
 
         return {
@@ -50,6 +54,7 @@ export const useStore = create<StoreState>()(
           enabledGpsIndicator,
           selectTagId,
           readNoticeIds,
+          cafes,
         };
       },
     }

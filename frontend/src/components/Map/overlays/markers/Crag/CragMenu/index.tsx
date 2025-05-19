@@ -6,6 +6,7 @@ import ShowerIcon from '@mui/icons-material/Shower';
 import InfoIcon from '@mui/icons-material/Info';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -13,9 +14,12 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFilter } from '@/hooks';
+import { useFilter, useModifyCafe } from '@/hooks';
+import { api } from '@/api/axios';
+import { cafesSchema } from '@/schemas/cafe';
+import { z } from 'zod';
 
-const BASE_ANGLE = -135;
+const BASE_ANGLE = -180;
 const RADIUS = 70;
 
 type Feature = {
@@ -39,9 +43,26 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
 
   const { hasShower } = useFilter(crag);
 
+  const { updateCafes } = useModifyCafe();
+
   // TODO: 일정 존재여부, 운영 시간 존재 여부에 따라 disabled 설정하기.
   const features: Feature[] = (() => {
     return [
+      {
+        icon: <LocalCafeIcon sx={{ color: '#b13f0e' }} />,
+        callback: async () => {
+          const { data } = await api.get(`/kakao-place/cafe?lat=${crag.latitude}&lng=${crag.longitude}&radius=500`);
+
+          const res = z
+            .object({
+              documents: cafesSchema,
+            })
+            .parse(data);
+
+          updateCafes(res.documents);
+        },
+        disabled: false,
+      },
       {
         icon: <CalendarMonthIcon />,
         callback: () => {

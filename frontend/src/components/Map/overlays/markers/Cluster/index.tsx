@@ -6,23 +6,26 @@ import { mapContext } from '@/components/Map/index.context';
 
 import { Box } from '@mui/material';
 
-import { CragIcon } from '@/components/CragIcon';
-
 import { SIZE } from '@/constants';
+
+import { MarkerIcon } from '../_assets/MarkerIcon';
 
 interface ClusterProps {
   markers: naver.maps.Marker[];
+  clusterMarkerBgColor?: string;
+  maxZoom?: number;
+  gridSize?: number;
 }
 
-export function Cluster({ markers }: ClusterProps) {
+export function Cluster({ markers, clusterMarkerBgColor, maxZoom = 11, gridSize = 100 }: ClusterProps) {
   const { map } = useContext(mapContext);
 
   useEffect(() => {
     const markerCluster = new MarkerClustering({
       map,
       markers,
-      maxZoom: 11,
-      gridSize: 100,
+      maxZoom,
+      gridSize,
       disableClickZoom: false,
       icons: [
         {
@@ -32,7 +35,7 @@ export function Cluster({ markers }: ClusterProps) {
                 position: 'absolute',
               }}
             >
-              <CragIcon width={SIZE.CRAG_MARKER_WIDTH} />
+              <MarkerIcon.Inactive.Circle backgroundColor={clusterMarkerBgColor} width={SIZE.CRAG_MARKER_WIDTH} />
               <div
                 className="count"
                 style={{
@@ -66,7 +69,7 @@ export function Cluster({ markers }: ClusterProps) {
     return function cleanup() {
       markerCluster.setMap(null);
     };
-  }, [map, markers]);
+  }, [clusterMarkerBgColor, gridSize, map, markers, maxZoom]);
 
   return <Box />;
 }

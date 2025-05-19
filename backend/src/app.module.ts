@@ -25,6 +25,7 @@ import { AppVisitedModule } from 'src/app-visited/app-visited.module';
 import { GymTagsModule } from 'src/gym-tags/gym-tags.module';
 import { TagsModule } from 'src/tags/tags.module';
 import { NoticeModule } from './notices/notice.module';
+import { KakaoModule } from './kakao/kakao.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { NoticeModule } from './notices/notice.module';
     CommentsModule,
     AppVisitedModule,
     NoticeModule,
+    KakaoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

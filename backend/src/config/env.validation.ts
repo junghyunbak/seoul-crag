@@ -10,6 +10,8 @@ export type AppConfig = {
   KAKAO_CLIENT_ID: string;
   KAKAO_REDIRECT_URI: string;
 
+  KAKAO_REST_API_KEY: string;
+
   DATABASE_URL: string;
 
   JWT_SECRET: string;
@@ -22,6 +24,8 @@ export const envValidationSchema = Joi.object<AppConfig, true>({
 
   KAKAO_CLIENT_ID: Joi.string().required(),
   KAKAO_REDIRECT_URI: Joi.string().uri().required(),
+
+  KAKAO_REST_API_KEY: Joi.string().required(),
 
   DATABASE_URL: Joi.string().uri().required(),
 

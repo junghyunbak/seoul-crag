@@ -10,6 +10,7 @@ export * from './useExp';
 export * from './useFetchTag';
 export * from './useTag';
 export * from './useNotice';
+export * from './useCafe';
 
 export * from './useCrag';
 
@@ -22,6 +23,7 @@ export * from './useModifySearch';
 export * from './useModifyZoom';
 export * from './useModifyExp';
 export * from './useModifyNotice';
+export * from './useModifyCafe';
 
 /**
  * fetch

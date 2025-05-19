@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 
-import { useFetchCrags, useModifyZoom, useSetupExp } from '@/hooks';
+import { useCafe, useFetchCrags, useModifyZoom, useSetupExp } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
@@ -29,10 +29,12 @@ export default function Main() {
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const { crags } = useFetchCrags();
+  const { cafes } = useCafe();
   const { mapRef, boundary, lastLat, lastLng } = useMap();
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<(naver.maps.Marker | null)[]>([]);
+  const [cafeMarkers, setCafeMarkers] = useState<(naver.maps.Marker | null)[]>([]);
 
   const { updateMap } = useModifyMap();
   const { updateZoomLevel } = useModifyZoom();
@@ -149,7 +151,18 @@ export default function Main() {
     });
   }, []);
 
+  const handleCafeMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number) => {
+    setCafeMarkers((prev) => {
+      const next = [...prev];
+
+      next[idx] = marker;
+
+      return next;
+    });
+  }, []);
+
   const filteredMarkers = markers.filter((marker) => marker !== null);
+  const filteredCafeMarkers = cafeMarkers.filter((cafeMarker) => cafeMarker !== null);
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -159,7 +172,11 @@ export default function Main() {
         {crags?.map((crag, i) => (
           <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}
+        {cafes?.map((cafe, i) => (
+          <Map.Marker.Cafe key={cafe.id} cafe={cafe} idx={i} onCreate={handleCafeMarkerCreate} forCluster />
+        ))}
         <Map.Marker.Cluster markers={filteredMarkers} />
+        <Map.Marker.Cluster markers={filteredCafeMarkers} clusterMarkerBgColor="#b13f0e" maxZoom={14} />
         <Map.Marker.Gps />
       </Map>
       <Footer />
