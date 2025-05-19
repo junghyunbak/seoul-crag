@@ -6,7 +6,7 @@ import { useExp, useFetchTags, useFilter, useModifyExp, useModifyFilter } from '
 
 import { DateService } from '@/utils/time';
 
-import { Chip, FilterChip, InputFilterChip } from './FilterChip';
+import { Chip, InputFilterChip } from './FilterChip';
 
 import { ko } from 'date-fns/locale';
 
@@ -107,30 +107,29 @@ export function Filter() {
         </KeenElementWrapper>
 
         <KeenElementWrapper>
-          <FilterChip
-            isSelect={filter.isShower}
-            label="샤워실"
-            emoji="🚿"
-            onClick={() => updateFilter({ isShower: !filter.isShower })}
-          />
+          <Chip label="샤워실" isSelect={filter.isShower} onClick={() => updateFilter({ isShower: !filter.isShower })}>
+            <Chip.Icon>🚿</Chip.Icon>
+          </Chip>
         </KeenElementWrapper>
 
         <KeenElementWrapper>
-          <FilterChip
+          <Chip
             isSelect={filter.isTodayRemove}
             label="탈거 임박"
-            emoji="🍂"
             onClick={() => updateFilter({ isTodayRemove: !filter.isTodayRemove })}
-          />
+          >
+            <Chip.Icon>🍂</Chip.Icon>
+          </Chip>
         </KeenElementWrapper>
 
         <KeenElementWrapper>
-          <FilterChip
+          <Chip
             isSelect={filter.isNewSetting}
             label="최근 세팅"
-            emoji="🔩"
             onClick={() => updateFilter({ isNewSetting: !filter.isNewSetting })}
-          />
+          >
+            <Chip.Icon>🔩</Chip.Icon>
+          </Chip>
         </KeenElementWrapper>
 
         {tagTypes
@@ -142,21 +141,19 @@ export function Filter() {
           })}
 
         <KeenElementWrapper>
-          <FilterChip
-            isSelect={filter.isOpen}
-            label="영업중"
-            emoji="🟢"
-            onClick={() => updateFilter({ isOpen: !filter.isOpen })}
-          />
+          <Chip isSelect={filter.isOpen} label="영업중" onClick={() => updateFilter({ isOpen: !filter.isOpen })}>
+            <Chip.Icon>🟢</Chip.Icon>
+          </Chip>
         </KeenElementWrapper>
 
         <KeenElementWrapper>
-          <FilterChip
+          <Chip
             isSelect={filter.isNonSetting}
             label="세팅 중 제외"
-            emoji="🚧"
             onClick={() => updateFilter({ isNonSetting: !filter.isNonSetting })}
-          />
+          >
+            <Chip.Icon>🚧</Chip.Icon>
+          </Chip>
         </KeenElementWrapper>
       </Box>
     </Box>

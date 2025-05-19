@@ -2,55 +2,6 @@ import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { Box, styled, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface FilterChipProps {
-  isSelect: boolean;
-  onClick: () => void;
-  label: string;
-  emoji: string;
-}
-
-export function FilterChip({ isSelect, onClick, label, emoji }: FilterChipProps) {
-  const theme = useTheme();
-
-  return (
-    <Box
-      className=""
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 0.5,
-        cursor: 'pointer',
-        width: 'fit-content',
-        py: 1,
-        px: 1.5,
-        borderRadius: 3,
-        background: isSelect ? theme.palette.primary.light : theme.palette.common.white,
-        boxShadow: 1,
-      }}
-      onClick={onClick}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-
-          width: 21,
-          height: 21,
-
-          fontSize: '1rem',
-        }}
-      >
-        {emoji}
-      </Box>
-
-      <Typography fontSize={'1rem'} color={isSelect ? 'white' : theme.palette.text.primary}>
-        {label}
-      </Typography>
-    </Box>
-  );
-}
-
 interface InputFilterChipProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isSelect: boolean;
   emoji: string;
