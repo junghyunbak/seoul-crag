@@ -11,10 +11,12 @@ import '@/assets/fonts/index.css';
 
 import * as Sentry from '@sentry/react';
 
-Sentry.init({
-  dsn: 'https://673026ed1c9b3da95c831f91524722e1@o4509263823241216.ingest.de.sentry.io/4509263825666128',
-  sendDefaultPii: true,
-});
+if (import.meta.env.MODE !== 'development') {
+  Sentry.init({
+    dsn: 'https://673026ed1c9b3da95c831f91524722e1@o4509263823241216.ingest.de.sentry.io/4509263825666128',
+    sendDefaultPii: true,
+  });
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
