@@ -40,39 +40,46 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
   const isSelect = false;
 
   return (
-    <Box
-      ref={markerRef}
-      sx={{
-        position: 'absolute',
-        transform: `translate(-50%, -100%)`,
-      }}
-    >
-      <Box onClick={() => {}}>
-        <Box
-          sx={{
-            transform: `translate(0, ${isSelect ? '0' : '50%'})`,
-          }}
-        >
-          <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
-        </Box>
-      </Box>
-
+    <Box>
+      {/**
+       * !!! 동적으로 요소를 관리 할 경우, markerRef 참조 요소 위에 또 다른 jsx dom을 하나 감싸야 함 !!!
+       *
+       * 루트 요소가 곧 markerRef가 되면, map과 react-dom이 같은 요소를 제거하려 하면서 오류가 발생하기 때문.
+       */}
       <Box
+        ref={markerRef}
         sx={{
-          /**
-           * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
-           */
           position: 'absolute',
-          transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${isSelect ? 0 : '50%'})`,
+          transform: `translate(-50%, -100%)`,
         }}
       >
-        <Typography
+        <Box onClick={() => {}}>
+          <Box
+            sx={{
+              transform: `translate(0, ${isSelect ? '0' : '50%'})`,
+            }}
+          >
+            <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
+          </Box>
+        </Box>
+
+        <Box
           sx={{
-            textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+            /**
+             * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
+             */
+            position: 'absolute',
+            transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${isSelect ? 0 : '50%'})`,
           }}
         >
-          {cafe.place_name}
-        </Typography>
+          <Typography
+            sx={{
+              textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+            }}
+          >
+            {cafe.place_name}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
