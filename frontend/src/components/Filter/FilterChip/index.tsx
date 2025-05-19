@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 
 import { Box, styled, Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 
 type ChipContextType = {
   buttonRef: React.RefObject<HTMLDivElement | null>;
@@ -31,16 +31,16 @@ const ChipContent = styled(Box, {
 
   borderRadius: theme.shape.borderRadius * 3,
 
-  background: isSelect ? theme.palette.primary.light : theme.palette.common.white,
+  background: isSelect ? theme.palette.grey['200'] : theme.palette.common.white,
+
+  border: `1px solid ${!isSelect ? theme.palette.grey['300'] : theme.palette.grey['200']}`,
 
   boxShadow: theme.shadows[1],
 }));
 
-const ChipLabel = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isSelect',
-})<{ isSelect: boolean }>(({ isSelect, theme }) => ({
+const ChipLabel = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
-  color: isSelect ? 'white' : theme.palette.text.primary,
+  color: theme.palette.common.black,
 }));
 
 interface ChipProps extends React.PropsWithChildren {
@@ -75,7 +75,7 @@ export function Chip({ label, isSelect, onClick, children }: ChipProps) {
       <ChipLayout>
         <ChipContent onClick={onClick} isSelect={isSelect} ref={buttonRef}>
           {icon}
-          <ChipLabel isSelect={isSelect}>{label}</ChipLabel>
+          <ChipLabel>{label}</ChipLabel>
           {deleteButton}
         </ChipContent>
 
@@ -144,7 +144,7 @@ Chip.SubChip = function SubChip({ isSelect, onClick, label }: SubChipProps) {
   return (
     <ChipLayout>
       <ChipContent isSelect={isSelect} onClick={onClick}>
-        <ChipLabel isSelect={isSelect}>{label}</ChipLabel>
+        <ChipLabel>{label}</ChipLabel>
       </ChipContent>
     </ChipLayout>
   );
@@ -178,13 +178,22 @@ Chip.DeleteButton = function DeleteButton({ onDelete }: DeleteButtonProps) {
   }
 
   return (
-    <DeleteIcon
+    <CloseIcon
       sx={(theme) => ({
+        borderRadius: '50%',
+        background: theme.palette.grey[400],
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 20,
+        height: 20,
+        p: '3px',
+        ml: '2px',
+        mr: '-4px',
         color: theme.palette.common.white,
       })}
       onClick={(e) => {
         e.stopPropagation();
-
         onDelete();
       }}
     />

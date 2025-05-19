@@ -97,7 +97,6 @@ export function Filter() {
             customInput={
               <InputFilterChip
                 isSelect={isExpSelect}
-                emoji="🚀"
                 onDelete={() => {
                   updateExpDateTimeStr(null);
                 }}
@@ -198,7 +197,7 @@ function TagChip({ tags, tagType }: TagChipProps) {
               height: 0,
               borderLeft: '5px solid transparent',
               borderRight: '5px solid transparent',
-              borderTop: `6px solid ${isTypeSelect ? 'white' : theme.palette.text.secondary}`,
+              borderTop: `6px solid ${theme.palette.text.secondary}`,
               transform: `rotate(${isOpen ? '-180' : '0'}deg)`,
             })}
           />
@@ -232,16 +231,14 @@ function TagChip({ tags, tagType }: TagChipProps) {
 
 interface InputFilterChipProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isSelect: boolean;
-  emoji: string;
   onDelete?: () => void;
 }
 
 export const InputFilterChip = React.forwardRef<HTMLInputElement, InputFilterChipProps>(
-  ({ value, onClick, isSelect, emoji, onDelete, ...rest }, ref) => {
+  ({ value, onClick, isSelect, onDelete, ...rest }, ref) => {
     return (
       <>
         <Chip isSelect={isSelect} onClick={onClick as () => void} label={value as string}>
-          <Chip.Icon>{emoji}</Chip.Icon>
           <Chip.DeleteButton onDelete={onDelete || (() => {})} />
         </Chip>
 
