@@ -162,7 +162,7 @@ export default function Main() {
   }, []);
 
   const filteredMarkers = markers.filter((marker) => marker !== null);
-  const filteredCafeMarkers = cafeMarkers.filter((cafeMarker) => cafeMarker !== null);
+  const filteredCafeMarkers = cafeMarkers.slice(0, cafes.length).filter((cafeMarker) => cafeMarker !== null);
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>

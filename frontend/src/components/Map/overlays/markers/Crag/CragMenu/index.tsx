@@ -51,7 +51,7 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
       {
         icon: <LocalCafeIcon sx={{ color: '#b13f0e' }} />,
         callback: async () => {
-          const { data } = await api.get(`/kakao-place/cafe?lat=${crag.latitude}&lng=${crag.longitude}&radius=500`);
+          const { data } = await api.get(`/kakao-place/cafe?lat=${crag.latitude}&lng=${crag.longitude}&radius=300`);
 
           const res = z
             .object({

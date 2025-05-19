@@ -3,6 +3,7 @@ import { SIZE } from '@/constants';
 import { Box, Typography } from '@mui/material';
 import { useContext, useEffect, useRef } from 'react';
 import { MarkerIcon } from '../_assets/MarkerIcon';
+import { useZoom } from '@/hooks';
 
 interface CafeProps {
   cafe: Cafe;
@@ -13,8 +14,20 @@ interface CafeProps {
 
 export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
   const { map } = useContext(mapContext);
+  const { zoomLevel } = useZoom();
 
   const markerRef = useRef<HTMLDivElement>(null);
+
+  const markerWidth = SIZE.CAFE_MARKER_WIDTH;
+  const isSelect = false;
+
+  const isTitleShown = (() => {
+    if (isSelect) {
+      return true;
+    }
+
+    return zoomLevel > 14;
+  })();
 
   useEffect(() => {
     if (!map || !markerRef.current) {
@@ -35,9 +48,6 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
       marker.setMap(null);
     };
   }, [map, cafe, onCreate, idx, forCluster]);
-
-  const markerWidth = SIZE.CAFE_MARKER_WIDTH;
-  const isSelect = false;
 
   return (
     <Box>
@@ -63,23 +73,27 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            /**
-             * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
-             */
-            position: 'absolute',
-            transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${isSelect ? 0 : '50%'})`,
-          }}
-        >
-          <Typography
+        {isTitleShown && (
+          <Box
             sx={{
-              textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+              /**
+               * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
+               */
+              position: 'absolute',
+              transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${
+                isSelect ? 0 : '50%'
+              })`,
             }}
           >
-            {cafe.place_name}
-          </Typography>
-        </Box>
+            <Typography
+              sx={{
+                textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+              }}
+            >
+              {cafe.place_name}
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Box>
   );
