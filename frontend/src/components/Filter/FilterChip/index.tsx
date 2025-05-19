@@ -33,8 +33,6 @@ const ChipContent = styled(Box, {
 
   background: isSelect ? theme.palette.grey['200'] : theme.palette.common.white,
 
-  border: `1px solid ${!isSelect ? theme.palette.grey['300'] : theme.palette.grey['200']}`,
-
   boxShadow: theme.shadows[1],
 }));
 
