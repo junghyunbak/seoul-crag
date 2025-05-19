@@ -108,6 +108,7 @@ function Splash() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        background: '#fcf8ed',
       }}
     >
       <Box
@@ -115,14 +116,11 @@ function Splash() {
         src="/splash.png"
         sx={{
           position: 'absolute',
-          width: '100%',
-          height: '100%',
+          height: { xs: 'auto', sm: '100%' },
+          width: { xs: '100%', sm: 'auto' },
           objectFit: 'cover',
-          filter: 'blur(20px)',
-          transform: 'scale(1.05)',
         }}
       />
-      <Box component="img" src="/splash.png" sx={{ position: 'absolute', height: '100%', objectFit: 'cover' }} />
     </Box>
   );
 }
@@ -138,7 +136,7 @@ function LoadNaverMap({ children }: React.PropsWithChildren) {
       await loadScript('/markerClustering.js');
 
       if (process.env.NODE_ENV === 'production') {
-        await time.sleep(1000);
+        await time.sleep(500);
       }
 
       return null;
