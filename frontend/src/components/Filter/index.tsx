@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 import { useExp, useFetchTags, useFilter, useModifyExp, useModifyFilter } from '@/hooks';
 
 import { DateService } from '@/utils/time';
 
-import { Chip, InputFilterChip } from './FilterChip';
+import { Chip } from './FilterChip';
 
 import { ko } from 'date-fns/locale';
 
@@ -229,3 +229,35 @@ function TagChip({ tags, tagType }: TagChipProps) {
     </KeenElementWrapper>
   );
 }
+
+interface InputFilterChipProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  isSelect: boolean;
+  emoji: string;
+  onDelete?: () => void;
+}
+
+export const InputFilterChip = React.forwardRef<HTMLInputElement, InputFilterChipProps>(
+  ({ value, onClick, isSelect, emoji, onDelete, ...rest }, ref) => {
+    return (
+      <>
+        <Chip isSelect={isSelect} onClick={onClick as () => void} label={value as string}>
+          <Chip.Icon>{emoji}</Chip.Icon>
+          <Chip.DeleteButton onDelete={onDelete || (() => {})} />
+        </Chip>
+
+        <input
+          ref={ref}
+          value={value}
+          readOnly
+          style={{
+            position: 'absolute',
+            opacity: 0,
+            width: '100%',
+            pointerEvents: 'none',
+          }}
+          {...rest}
+        />
+      </>
+    );
+  }
+);

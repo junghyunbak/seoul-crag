@@ -1,85 +1,16 @@
 import React, { createContext, useContext, useEffect, useRef } from 'react';
-import { Box, styled, Typography, useTheme } from '@mui/material';
+
+import { Box, styled, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-interface InputFilterChipProps extends React.InputHTMLAttributes<HTMLInputElement> {
+type ChipContextType = {
+  buttonRef: React.RefObject<HTMLDivElement | null>;
   isSelect: boolean;
-  emoji: string;
-  onDelete?: () => void;
-}
+};
 
-export const InputFilterChip = React.forwardRef<HTMLInputElement, InputFilterChipProps>(
-  ({ value, onClick, isSelect, emoji, onDelete, ...rest }, ref) => {
-    const theme = useTheme();
-
-    return (
-      <Box
-        className=""
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.5,
-          cursor: 'pointer',
-          width: 'fit-content',
-          py: 1,
-          px: 1.5,
-          borderRadius: 3,
-          background: isSelect ? theme.palette.primary.light : theme.palette.common.white,
-          boxShadow: 1,
-        }}
-        onClick={onClick}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-
-            width: 21,
-            height: 21,
-
-            fontSize: '1rem',
-          }}
-        >
-          {emoji}
-        </Box>
-
-        <Typography fontSize={'1rem'} color={isSelect ? 'white' : theme.palette.text.primary}>
-          {value}
-        </Typography>
-
-        {isSelect && (
-          <DeleteIcon
-            sx={{
-              color: isSelect ? 'white' : 'text.secondary',
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-
-              onDelete?.();
-            }}
-          />
-        )}
-
-        <input
-          ref={ref}
-          value={value}
-          readOnly
-          style={{
-            position: 'absolute',
-            opacity: 0,
-            width: '100%',
-            pointerEvents: 'none',
-          }}
-          {...rest}
-        />
-      </Box>
-    );
-  }
-);
-
-const ChipContext = createContext<{ buttonRef: React.RefObject<HTMLDivElement | null> }>({
+const ChipContext = createContext<ChipContextType>({
   buttonRef: { current: null },
+  isSelect: false,
 });
 
 const ChipLayout = styled(Box)(() => ({
@@ -123,6 +54,7 @@ export function Chip({ label, isSelect, onClick, children }: ChipProps) {
 
   let icon: React.ReactNode = null;
   let subMenu: React.ReactNode = null;
+  let deleteButton: React.ReactNode = null;
 
   React.Children.forEach(children, (child) => {
     if (!React.isValidElement(child)) {
@@ -133,15 +65,18 @@ export function Chip({ label, isSelect, onClick, children }: ChipProps) {
       icon = child;
     } else if (child.type === Chip.SubMenu) {
       subMenu = child;
+    } else if (child.type === Chip.DeleteButton) {
+      deleteButton = child;
     }
   });
 
   return (
-    <ChipContext.Provider value={{ buttonRef }}>
+    <ChipContext.Provider value={{ buttonRef, isSelect }}>
       <ChipLayout>
         <ChipContent onClick={onClick} isSelect={isSelect} ref={buttonRef}>
           {icon}
           <ChipLabel isSelect={isSelect}>{label}</ChipLabel>
+          {deleteButton}
         </ChipContent>
 
         {subMenu}
@@ -228,6 +163,31 @@ Chip.Icon = function Icon({ children }: React.PropsWithChildren) {
     >
       {children}
     </Box>
+  );
+};
+
+interface DeleteButtonProps {
+  onDelete: () => void;
+}
+
+Chip.DeleteButton = function DeleteButton({ onDelete }: DeleteButtonProps) {
+  const { isSelect } = useContext(ChipContext);
+
+  if (!isSelect) {
+    return null;
+  }
+
+  return (
+    <DeleteIcon
+      sx={(theme) => ({
+        color: theme.palette.common.white,
+      })}
+      onClick={(e) => {
+        e.stopPropagation();
+
+        onDelete();
+      }}
+    />
   );
 };
 
