@@ -10,7 +10,7 @@ import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { useQueryParam, StringParam } from 'use-query-params';
+import { useQueryParam, StringParam, BooleanParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
@@ -18,6 +18,7 @@ import { useFilter, useModifyCafe } from '@/hooks';
 import { api } from '@/api/axios';
 import { cafesSchema } from '@/schemas/cafe';
 import { z } from 'zod';
+import { AxiosError } from 'axios';
 
 const BASE_ANGLE = -180;
 const RADIUS = 70;
@@ -38,6 +39,7 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
   const [, setShowerStory] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
   const [, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
   const [, setOperationStory] = useQueryParam(QUERY_STRING.STORY_OPERATION, StringParam);
+  const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
   const theme = useTheme();
 
@@ -51,15 +53,26 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
       {
         icon: <LocalCafeIcon sx={{ color: '#b13f0e' }} />,
         callback: async () => {
-          const { data } = await api.get(`/kakao-place/cafe?lat=${crag.latitude}&lng=${crag.longitude}&radius=300`);
+          try {
+            const { data } = await api.get(`/kakao-place/cafe?lat=${crag.latitude}&lng=${crag.longitude}&radius=300`);
 
-          const res = z
-            .object({
-              documents: cafesSchema,
-            })
-            .parse(data);
+            const res = z
+              .object({
+                documents: cafesSchema,
+              })
+              .parse(data);
 
-          updateCafes(res.documents);
+            updateCafes(res.documents);
+          } catch (e) {
+            if (e instanceof AxiosError) {
+              if (e.status === 401) {
+                alert('로그인 후 사용할 수 있는 기능입니다.');
+                setIsMenuOpen(true);
+              } else {
+                alert('서버에 문제가 발생했습니다.');
+              }
+            }
+          }
         },
         disabled: false,
       },
