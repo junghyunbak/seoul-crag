@@ -41,7 +41,7 @@ export function CragDetailLocation({ crag }: CragDetailLocationProps) {
       <Box
         sx={{
           width: '100%',
-          aspectRatio: '1/1',
+          aspectRatio: '1.75/1',
           position: 'relative',
           borderRadius: 1,
           overflow: 'hidden',
