@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/shallow';
 
 export function useModifyCafe() {
   const [setCafes] = useStore(useShallow((s) => [s.setCafes]));
+  const [setSelectCafeId] = useStore(useShallow((s) => [s.setSelectCafeId]));
 
   const updateCafes = useCallback(
     (cafes: Cafe[]) => {
@@ -12,5 +13,12 @@ export function useModifyCafe() {
     [setCafes]
   );
 
-  return { updateCafes };
+  const updateSelectCafeId = useCallback(
+    (cafeId: string) => {
+      setSelectCafeId(cafeId);
+    },
+    [setSelectCafeId]
+  );
+
+  return { updateCafes, updateSelectCafeId };
 }
