@@ -54,9 +54,12 @@ export function Map({ map, mapRef, children }: MapProps) {
     <mapContext.Provider value={{ map }}>
       <Box ref={mapRef} sx={{ width: '100%', height: '100%', userSelect: 'none' }}>
         <Box sx={{ display: 'none' }}>
-          {[...cragMarkers, ...cafeMarkers, ...defaultMarkers, ...clusterMarkers].map((marker) => marker)}
-          {[...boundaryPolygons].map((polygon) => polygon)}
-          {GpsMarker}
+          <Box>{cragMarkers.map((marker) => marker)}</Box>
+          <Box>{cafeMarkers.map((marker) => marker)}</Box>
+          <Box>{defaultMarkers.map((marker) => marker)}</Box>
+          <Box>{clusterMarkers.map((marker) => marker)}</Box>
+          <Box>{boundaryPolygons.map((polygon) => polygon)}</Box>
+          <Box>{GpsMarker}</Box>
         </Box>
       </Box>
     </mapContext.Provider>
