@@ -107,7 +107,7 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
                 textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
               }}
             >
-              {cafe.place_name}
+              {cafe.place_name.split(' ')[0]}
             </Typography>
           </Box>
         )}
