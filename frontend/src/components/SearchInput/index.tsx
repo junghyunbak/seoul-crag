@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { Box, Paper, Typography, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useMap, useSearch } from '@/hooks';
+import { useLoading, useMap, useModifyLoading, useSearch } from '@/hooks';
 
 import { useModifySearch } from '@/hooks';
 
@@ -14,7 +14,9 @@ export function SearchInput() {
 
   const { map } = useMap();
 
-  const [isMarkerLoading, setIsMarkerLoading] = useState(false);
+  const { isMarkerLoading } = useLoading();
+
+  const { updateIsMarkerLoading } = useModifyLoading();
 
   useEffect(() => {
     if (!map) {
@@ -22,19 +24,19 @@ export function SearchInput() {
     }
 
     const dragStartListener = map.addListener('dragstart', () => {
-      setIsMarkerLoading(true);
+      updateIsMarkerLoading(true);
     });
 
     const dragEndListener = map.addListener('dragend', () => {
-      setIsMarkerLoading(false);
+      updateIsMarkerLoading(false);
     });
 
     const zoomStartListener = map.addListener('zoomstart', () => {
-      setIsMarkerLoading(true);
+      updateIsMarkerLoading(true);
     });
 
     const zoomEndListener = map.addListener('zoomend', () => {
-      setIsMarkerLoading(false);
+      updateIsMarkerLoading(false);
     });
 
     return function cleanup() {
@@ -43,7 +45,7 @@ export function SearchInput() {
       map.removeListener(zoomStartListener);
       map.removeListener(zoomEndListener);
     };
-  }, [map]);
+  }, [map, updateIsMarkerLoading]);
 
   return (
     <Paper

@@ -14,7 +14,7 @@ import { useQueryParam, StringParam, BooleanParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFilter, useModifyCafe } from '@/hooks';
+import { useFilter, useModifyCafe, useModifyLoading } from '@/hooks';
 import { api } from '@/api/axios';
 import { cafesSchema } from '@/schemas/cafe';
 import { z } from 'zod';
@@ -45,6 +45,7 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
 
   const { hasShower } = useFilter(crag);
 
+  const { updateIsMarkerLoading } = useModifyLoading();
   const { updateCafes } = useModifyCafe();
 
   // TODO: 일정 존재여부, 운영 시간 존재 여부에 따라 disabled 설정하기.
@@ -54,6 +55,8 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
         icon: <LocalCafeIcon sx={{ color: '#b13f0e' }} />,
         callback: async () => {
           try {
+            updateIsMarkerLoading(true);
+
             const { data } = await api.get(`/kakao-place/cafe?lat=${crag.latitude}&lng=${crag.longitude}&radius=300`);
 
             const res = z
@@ -73,6 +76,8 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
               }
             }
           }
+
+          updateIsMarkerLoading(false);
         },
         disabled: false,
       },

@@ -6,16 +6,19 @@ import { createSearchSlice } from '@/store/slices/search';
 import { createMapSlice } from '@/store/slices/map';
 import { createNoticeSlice } from '@/store/slices/notice';
 import { createCafeSlice } from '@/store/slices/cafe';
+import { createLoadingSlice } from '@/store/slices/loading';
 
 type StoreState = ReturnType<typeof createMapSlice> &
   ReturnType<typeof createFilterSlice> &
   ReturnType<typeof createSearchSlice> &
   ReturnType<typeof createNoticeSlice> &
-  ReturnType<typeof createCafeSlice>;
+  ReturnType<typeof createCafeSlice> &
+  ReturnType<typeof createLoadingSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get, store) => ({
+      ...createLoadingSlice(set, get, store),
       ...createCafeSlice(set, get, store),
       ...createNoticeSlice(set, get, store),
       ...createFilterSlice(set, get, store),
