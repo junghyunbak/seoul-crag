@@ -7,6 +7,8 @@ import { useLoading, useMap, useModifyLoading, useSearch } from '@/hooks';
 
 import { useModifySearch } from '@/hooks';
 
+import { AnimatePresence, motion } from 'framer-motion';
+
 export function SearchInput() {
   const { updateIsSearchOpen } = useModifySearch();
 
@@ -52,12 +54,38 @@ export function SearchInput() {
       sx={{ py: 1.5, px: 2, display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
       onClick={() => updateIsSearchOpen(true)}
     >
-      <Box sx={{ width: 20, height: 20 }}>
-        {isMarkerLoading ? (
-          <CircularProgress size={'100%'} sx={{ color: 'text.secondary' }} />
-        ) : (
-          <SearchIcon sx={{ width: '100%', height: '100%', color: 'text.secondary' }} />
-        )}
+      <Box sx={{ width: 20, height: 20, position: 'relative' }}>
+        <AnimatePresence>
+          {isMarkerLoading ? (
+            <motion.div
+              key="A"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+              }}
+            >
+              <CircularProgress size={'100%'} sx={{ color: 'text.secondary' }} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="B"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+              }}
+            >
+              <SearchIcon sx={{ width: '100%', height: '100%', color: 'text.secondary' }} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Box>
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <Typography color="text.secondary">{searchKeyword || '클라이밍장 검색'}</Typography>
