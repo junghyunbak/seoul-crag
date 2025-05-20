@@ -31,7 +31,7 @@ const ChipContent = styled(Box, {
 
   borderRadius: theme.shape.borderRadius * 3,
 
-  background: isSelect ? theme.palette.grey['200'] : theme.palette.common.white,
+  background: isSelect ? theme.palette.grey['300'] : theme.palette.common.white,
 
   boxShadow: theme.shadows[1],
 }));
@@ -179,7 +179,7 @@ Chip.DeleteButton = function DeleteButton({ onDelete }: DeleteButtonProps) {
     <CloseIcon
       sx={(theme) => ({
         borderRadius: '50%',
-        background: theme.palette.grey[400],
+        background: theme.palette.grey[500],
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
