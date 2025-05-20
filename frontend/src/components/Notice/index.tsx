@@ -105,9 +105,13 @@ export function Notice() {
           <Box sx={{ p: 2 }}>
             {(notices || [])
               .sort((a, b) => {
-                if (a.isPinned && !b.isPinned) return -1;
-
-                return isAfter(a.createdAt, b.createdAt) ? -1 : 1;
+                if (a.isPinned && !b.isPinned) {
+                  return -1;
+                } else if (!a.isPinned && b.isPinned) {
+                  return 1;
+                } else {
+                  return isAfter(a.createdAt, b.createdAt) ? -1 : 1;
+                }
               })
               .map((notice) => {
                 const initialExpanded = (() => {
