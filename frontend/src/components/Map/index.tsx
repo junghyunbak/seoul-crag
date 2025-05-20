@@ -20,6 +20,9 @@ export function Map({ map, mapRef, children }: MapProps) {
 
   let GpsMarker: React.ReactNode | null = null;
 
+  /**
+   * pwa 환경에서 화면 비율이 변경되었을 경우, gl canvas의 크기가 업데이트 되지 않는 문제를 수정하기 위한 resize 이벤트.
+   */
   useEffect(() => {
     const windowResizeEventListener = () => {
       if (!map) {
