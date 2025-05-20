@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -19,6 +19,28 @@ export function Map({ map, mapRef, children }: MapProps) {
   const clusterMarkers: React.ReactNode[] = [];
 
   let GpsMarker: React.ReactNode | null = null;
+
+  useEffect(() => {
+    const windowResizeEventListener = () => {
+      if (!map) {
+        return;
+      }
+
+      setTimeout(() => {
+        const center = map.getCenter();
+
+        naver.maps.Event.trigger(map, 'resize');
+
+        map.setCenter(center);
+      }, 500);
+    };
+
+    window.addEventListener('resize', windowResizeEventListener);
+
+    return function cleanup() {
+      window.removeEventListener('resize', windowResizeEventListener);
+    };
+  }, [map]);
 
   React.Children.forEach(children, (child) => {
     if (!React.isValidElement(child)) {
