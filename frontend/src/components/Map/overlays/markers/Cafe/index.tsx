@@ -24,6 +24,7 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
   const [marker, setMarker] = useState<MyMarker | null>(null);
 
   const markerRef = useRef<HTMLDivElement>(null);
+  const markerIconRef = useRef<HTMLDivElement>(null);
 
   const { map } = useContext(mapContext);
   const { selectCafeId } = useCafe();
@@ -68,28 +69,31 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
        *
        * 루트 요소가 곧 markerRef가 되면, map과 react-dom이 같은 요소를 제거하려 하면서 오류가 발생하기 때문.
        */}
-      <Box
-        ref={markerRef}
-        sx={{
-          position: 'absolute',
-          transform: `translate(-50%, -100%)`,
-        }}
-      >
+      <Box ref={markerRef}>
         <Box
           onClick={() => {
             updateSelectCafeId(cafe.id);
           }}
+          sx={{ position: 'absolute', bottom: 0, left: '-50%', display: 'flex' }}
         >
           <Box
             sx={{
-              transform: `translate(0, 50%)`,
+              position: 'absolute',
+              left: 0,
+              bottom: 0,
+              transform: isSelect ? `translate(-50%, 0)` : `translate(-50%, 50%)`,
             }}
+            ref={markerIconRef}
           >
-            <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
+            {isSelect ? (
+              <MarkerIcon.Active bgColor="#b13f0e" bottomMountainColor="#E26E3B" width={markerWidth} />
+            ) : (
+              <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
+            )}
           </Box>
         </Box>
 
-        {isSelect && <CafeInfo cafe={cafe} referenceRef={markerRef} />}
+        {isSelect && <CafeInfo cafe={cafe} referenceRef={markerIconRef} />}
 
         <MarkerTitle marker={marker} isSelect={isSelect}>
           {cafe.place_name.split(' ')[0]}
