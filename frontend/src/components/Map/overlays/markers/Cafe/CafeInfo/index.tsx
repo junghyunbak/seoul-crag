@@ -10,6 +10,7 @@ interface CafeInfoProps {
   referenceRef: React.RefObject<HTMLDivElement | null>;
 }
 
+// TODO: useFloating을 사용하면서도, cafe 아이콘에 종속되게 스타일 수정
 export function CafeInfo({ cafe, referenceRef }: CafeInfoProps) {
   const arrowRef = useRef(null);
 
@@ -40,7 +41,7 @@ export function CafeInfo({ cafe, referenceRef }: CafeInfoProps) {
 
   return (
     <Box
-      style={floatingStyles}
+      style={{ ...floatingStyles, bottom: 0, top: 'auto' }}
       ref={refs.setFloating}
       onClick={() => {
         window.open(cafe.place_url, '_blank');

@@ -90,10 +90,10 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
             ) : (
               <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
             )}
+
+            {isSelect && <CafeInfo cafe={cafe} referenceRef={markerIconRef} />}
           </Box>
         </Box>
-
-        {isSelect && <CafeInfo cafe={cafe} referenceRef={markerIconRef} />}
 
         <MarkerTitle marker={marker} isSelect={isSelect}>
           {cafe.place_name.split(' ')[0]}
