@@ -67,29 +67,34 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   }, [crag, map, onCreate, idx, forCluster, isFiltered]);
 
   return (
-    <Box
-      ref={markerRef}
-      sx={{
-        position: 'absolute',
-        transform: `translate(-50%, -100%)`,
-      }}
-    >
-      <Box onClick={() => setSelectCragId(crag.id)} sx={{ position: 'relative', display: 'flex' }}>
-        <CragMenu crag={crag} isSelect={isSelect} />
+    <Box>
+      {/**
+       * react-dom과 naver.maps.Marker의 충돌 방지를 위해 빈 Wrapper 필요
+       */}
+      <Box ref={markerRef}>
         <Box
-          sx={{
-            transform: `translate(0, ${isSelect ? '0' : '50%'})`,
-          }}
+          onClick={() => setSelectCragId(crag.id)}
+          sx={{ position: 'absolute', bottom: 0, left: '-50%', display: 'flex' }}
         >
-          <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} isRect={crag.is_outer_wall} />
+          <Box
+            sx={{
+              position: 'absolute',
+              left: 0,
+              bottom: 0,
+              transform: isSelect ? `translate(-50%, 0)` : `translate(-50%, 50%)`,
+            }}
+          >
+            <CragMenu crag={crag} isSelect={isSelect} />
+            <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} isRect={crag.is_outer_wall} />
+          </Box>
         </Box>
+
+        <MarkerTitle marker={marker} isSelect={isSelect} fontWeight="bold">
+          {crag.short_name || crag.name}
+        </MarkerTitle>
+
+        <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>
-
-      <MarkerTitle marker={marker} isSelect={isSelect} markerWidth={markerWidth}>
-        {crag.short_name || crag.name}
-      </MarkerTitle>
-
-      <MarkerZIndex marker={marker} isSelect={isSelect} />
     </Box>
   );
 }
