@@ -51,6 +51,7 @@ declare class MarkerClustering extends naver.maps.OverlayView {
 interface MarkerOverlapRecognizerOptions {
   tolerance: number;
   intersectNotice: boolean;
+  intersectList: boolean;
   highlightRect: boolean;
 }
 

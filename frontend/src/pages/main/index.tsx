@@ -150,6 +150,7 @@ export default function Main() {
     const newRecognizer = new MarkerOverlapRecognizer({
       tolerance: SIZE.CRAG_MARKER_WIDTH / 2,
       intersectNotice: false,
+      intersectList: false,
       highlightRect: false,
     });
 
