@@ -29,23 +29,18 @@ export function SearchInput() {
       updateIsMarkerLoading(true);
     });
 
-    const dragEndListener = map.addListener('dragend', () => {
-      updateIsMarkerLoading(false);
-    });
-
     const zoomStartListener = map.addListener('zoomstart', () => {
       updateIsMarkerLoading(true);
     });
 
-    const zoomEndListener = map.addListener('zoomend', () => {
+    const idleListener = map.addListener('idle', () => {
       updateIsMarkerLoading(false);
     });
 
     return function cleanup() {
       map.removeListener(dragStartListener);
-      map.removeListener(dragEndListener);
       map.removeListener(zoomStartListener);
-      map.removeListener(zoomEndListener);
+      map.removeListener(idleListener);
     };
   }, [map, updateIsMarkerLoading]);
 
