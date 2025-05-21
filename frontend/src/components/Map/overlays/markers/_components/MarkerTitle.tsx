@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useMarkerState } from '../_hooks/useMarkerState';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
