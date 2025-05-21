@@ -1,11 +1,19 @@
-import { mapContext } from '@/components/Map/index.context';
-import { SIZE } from '@/constants';
-import { Box, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { MarkerIcon } from '../_assets/MarkerIcon';
-import { useCafe, useModifyCafe, useZoom } from '@/hooks';
+
+import { Box, Typography } from '@mui/material';
+
+import { SIZE } from '@/constants';
+
+import { mapContext } from '@/components/Map/index.context';
+
 import { CafeInfo } from './CafeInfo';
-import { zIndex } from '@/styles';
+import { MarkerIcon } from '../_assets/MarkerIcon';
+
+import { useStore } from '@/store';
+import { useShallow } from 'zustand/shallow';
+
+import { useCafe, useModifyCafe, useZoom } from '@/hooks';
+import { useMarkerState } from '../_hooks/useMarkerState';
 
 interface CafeProps {
   cafe: Cafe;
@@ -15,30 +23,28 @@ interface CafeProps {
 }
 
 export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
-  const { map } = useContext(mapContext);
-  const { zoomLevel } = useZoom();
-  const { selectCafeId } = useCafe();
-
-  const { updateSelectCafeId } = useModifyCafe();
-
   const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
 
   const markerRef = useRef<HTMLDivElement>(null);
 
+  const { map } = useContext(mapContext);
+  const { zoomLevel } = useZoom();
+  const { selectCafeId } = useCafe();
+  const [recognizer] = useStore(useShallow((s) => [s.recognizer]));
+
+  const { updateSelectCafeId } = useModifyCafe();
+
   const markerWidth = SIZE.CAFE_MARKER_WIDTH;
   const isSelect = selectCafeId === cafe.id;
-
-  const isTitleShown = (() => {
-    if (isSelect) {
-      return true;
-    }
-
-    return zoomLevel > 14;
-  })();
+  const { isTitleShown, zIndex } = useMarkerState({ marker, recognizer, zoomLevel, isSelect });
 
   useEffect(() => {
-    marker?.setZIndex(isSelect ? zIndex.cafeMarkerActive : 0);
-  }, [marker, isSelect]);
+    if (!marker) {
+      return;
+    }
+
+    marker.setZIndex(zIndex);
+  }, [marker, zIndex]);
 
   useEffect(() => {
     if (!map || !markerRef.current) {

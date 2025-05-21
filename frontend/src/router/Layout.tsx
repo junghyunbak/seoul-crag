@@ -134,6 +134,7 @@ function LoadNaverMap({ children }: React.PropsWithChildren) {
       await loadScript(`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NCP_CLIENT_ID}`);
       await loadScript('https://oapi.map.naver.com/openapi/v3/maps-gl.js');
       await loadScript('/markerClustering.js');
+      await loadScript('/markerOverlapRecognizer.js');
 
       if (process.env.NODE_ENV === 'production') {
         await time.sleep(500);

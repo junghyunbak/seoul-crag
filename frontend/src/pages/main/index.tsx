@@ -10,7 +10,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { useStore } from '@/store';
 
-import { QUERY_STRING } from '@/constants';
+import { QUERY_STRING, SIZE } from '@/constants';
 
 import { Map } from '@/components/Map';
 import { Menu } from '@/components/Menu';
@@ -20,6 +20,7 @@ import { Footer } from './_components/Footer';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
+import { useShallow } from 'zustand/shallow';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -138,6 +139,32 @@ export default function Main() {
       map.removeListener(zoomChangedListener);
     };
   }, [map, updateZoomLevel]);
+
+  const [setRecognizer] = useStore(useShallow((s) => [s.setRecognizer]));
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const newRecognizer = new MarkerOverlapRecognizer({
+      tolerance: SIZE.CRAG_MARKER_WIDTH / 2,
+      intersectNotice: false,
+      highlightRect: false,
+    });
+
+    newRecognizer.setMap(map);
+
+    [...markers, ...cafeMarkers].map((marker) => {
+      if (!marker) {
+        return;
+      }
+
+      newRecognizer.add(marker);
+    });
+
+    setRecognizer(newRecognizer);
+  }, [cafeMarkers, map, markers, setRecognizer]);
 
   const handleMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number, isFilter: boolean) => {
     if (idx === -1) {

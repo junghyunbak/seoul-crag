@@ -47,3 +47,23 @@ declare class MarkerClustering extends naver.maps.OverlayView {
 
   destroy(): void;
 }
+
+interface MarkerOverlapRecognizerOptions {
+  tolerance: number;
+  intersectNotice: boolean;
+  highlightRect: boolean;
+}
+
+declare class MarkerOverlapRecognizer {
+  constructor(options?: Partial<MarkerOverlapRecognizerOptions>);
+
+  setMap(map: naver.maps.Map);
+
+  getMap(): naver.maps.Map;
+
+  getOverlapedMarkers(
+    marker: naver.maps.Marker
+  ): { marker: naver.maps.Marker; rect: ReturnType<naver.maps.PointBounds.bounds> }[];
+
+  add(marker: naver.maps.Marker);
+}

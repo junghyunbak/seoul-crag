@@ -23,6 +23,9 @@ type MapSliceType = {
 
   enabledGpsIndicator: boolean;
   setEnabledGpsIndicator: (enabled: boolean) => void;
+
+  recognizer: MarkerOverlapRecognizer | null;
+  setRecognizer: (recognizer: MarkerOverlapRecognizer) => void;
 };
 
 export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType => ({
@@ -64,5 +67,10 @@ export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType =>
   enabledGpsIndicator: true,
   setEnabledGpsIndicator(enabled) {
     set(() => ({ enabledGpsIndicator: enabled }));
+  },
+
+  recognizer: null,
+  setRecognizer(recognizer) {
+    set(() => ({ recognizer }));
   },
 });

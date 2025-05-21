@@ -12,9 +12,10 @@ import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
 
-import { zIndex } from '@/styles';
-
 import { useZoom } from '@/hooks';
+import { useMarkerState } from '../_hooks/useMarkerState';
+import { useStore } from '@/store';
+import { useShallow } from 'zustand/shallow';
 
 interface CragMarkerProps {
   crag: Crag;
@@ -31,19 +32,14 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
 
   const { zoomLevel } = useZoom();
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
+  const [recognizer] = useStore(useShallow((s) => [s.recognizer]));
 
   const { exp } = useExp();
   const { isFiltered, isOff } = useFilter(crag, exp.date);
 
   const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
-  const isTitleShown = (() => {
-    if (isSelect) {
-      return true;
-    }
-
-    return zoomLevel > 11;
-  })();
+  const { isTitleShown, zIndex } = useMarkerState({ marker, recognizer, zoomLevel, isSelect });
 
   /**
    * 마커 초기화
@@ -78,20 +74,8 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       return;
     }
 
-    const markerZIndex = (() => {
-      if (isSelect) {
-        return zIndex.cragMarkerAcive;
-      }
-
-      if (isOff) {
-        return zIndex.cragMarkerOff;
-      }
-
-      return zIndex.cragMarkerUnactive;
-    })();
-
-    marker.setZIndex(markerZIndex);
-  }, [marker, isSelect, isOff]);
+    marker.setZIndex(zIndex);
+  }, [marker, isSelect, isOff, zIndex]);
 
   return (
     <Box
