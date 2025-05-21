@@ -91,7 +91,7 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
 
         {isSelect && <CafeInfo cafe={cafe} referenceRef={markerRef} />}
 
-        <MarkerTitle marker={marker} isSelect={isSelect} markerWidth={markerWidth}>
+        <MarkerTitle marker={marker} isSelect={isSelect}>
           {cafe.place_name.split(' ')[0]}
         </MarkerTitle>
 
