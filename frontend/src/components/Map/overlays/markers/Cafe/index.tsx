@@ -23,7 +23,7 @@ interface CafeProps {
 }
 
 export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
-  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
+  const [marker, setMarker] = useState<MyMarker | null>(null);
 
   const markerRef = useRef<HTMLDivElement>(null);
 
@@ -51,13 +51,19 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
       return;
     }
 
-    const marker = new naver.maps.Marker({
+    const marker: MyMarker = new naver.maps.Marker({
       map: forCluster ? undefined : map,
       position: new naver.maps.LatLng(+cafe.y, +cafe.x),
       icon: {
         content: markerRef.current,
       },
     });
+
+    marker.meta = {
+      type: 'Cafe',
+      lat: +cafe.y,
+      lng: +cafe.x,
+    };
 
     setMarker(marker);
 

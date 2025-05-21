@@ -27,7 +27,7 @@ interface CragMarkerProps {
 
 export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProps) {
   const { map } = useContext(mapContext);
-  const [marker, setMarker] = useState<naver.maps.Marker | null>(null);
+  const [marker, setMarker] = useState<MyMarker | null>(null);
   const markerRef = useRef<HTMLDivElement>(null);
 
   const { zoomLevel } = useZoom();
@@ -49,13 +49,19 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       return function cleanup() {};
     }
 
-    const cragMarker = new naver.maps.Marker({
+    const cragMarker: MyMarker = new naver.maps.Marker({
       map: forCluster ? undefined : map,
       position: new naver.maps.LatLng(crag.latitude, crag.longitude),
       icon: {
         content: markerRef.current,
       },
     });
+
+    cragMarker.meta = {
+      type: 'Crag',
+      lat: crag.latitude,
+      lng: crag.longitude,
+    };
 
     setMarker(cragMarker);
 

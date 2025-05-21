@@ -8,7 +8,7 @@ export function useMarkerState({
   isSelect,
   recognizer,
 }: {
-  marker: naver.maps.Marker | null;
+  marker: MyMarker | null;
   zoomLevel: number;
   isSelect: boolean;
   recognizer: MarkerOverlapRecognizer | null;
@@ -37,10 +37,26 @@ export function useMarkerState({
     }
 
     if (recognizer) {
-      const isOverlap = recognizer.getOverlapedMarkers(marker).length > 1;
+      const overlapedMarkers: MyMarker[] = recognizer.getOverlapedMarkers(marker).map(({ marker }) => marker);
+
+      const isOverlap = overlapedMarkers.length > 1;
 
       if (isOverlap) {
-        setIsTitleShown(false);
+        overlapedMarkers.sort((a, b) => {
+          if (a.meta?.type === 'Crag' && b.meta?.type === 'Cafe') {
+            return -1;
+          } else if (a.meta?.type === 'Cafe' && b.meta?.type === 'Crag') {
+            return 1;
+          } else {
+            return (a.meta?.lat || Infinity) < (b.meta?.lat || Infinity) ? -1 : 1;
+          }
+        });
+
+        if (overlapedMarkers[0] === marker) {
+          setIsTitleShown(true);
+        } else {
+          setIsTitleShown(false);
+        }
       } else {
         setIsTitleShown(true);
       }

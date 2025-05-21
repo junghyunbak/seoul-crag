@@ -67,3 +67,13 @@ declare class MarkerOverlapRecognizer {
 
   add(marker: naver.maps.Marker);
 }
+
+type MarkerMeta = {
+  meta: {
+    type: 'Crag' | 'Cafe';
+    lat: number;
+    lng: number;
+  };
+};
+
+type MyMarker = naver.maps.Marker & Partial<MarkerMeta>;
