@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// TODO: zoomLevel이 1 단위가 아닌 더 세분화 필요.
-// TODO: 암장의 경우, 문 닫은 암장이 zIndex값이 더 낮아야 한다.
+// [ ]: cafe와 crag이 겹쳤을 때 cafe가 위로 올라오도록 구현
 export function useMarkerState({
   marker,
   zoomLevel,

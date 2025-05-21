@@ -40,6 +40,7 @@ export default function Main() {
   const { updateMap } = useModifyMap();
   const { updateZoomLevel } = useModifyZoom();
   const { updateSelectCafeId } = useModifyCafe();
+  const [setRecognizer] = useStore(useShallow((s) => [s.setRecognizer]));
 
   useSetupExp();
 
@@ -124,24 +125,33 @@ export default function Main() {
   }, [map, setSelectCragId, updateSelectCafeId]);
 
   /**
-   * 맵 줌 레벨 변경 시 반영
+   * bound가 변경될 때, zoom 레벨을 변경시켜 소수 단위까지 반영
    */
+  const zoomTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
   useEffect(() => {
     if (!map) {
       return;
     }
 
-    const zoomChangedListener = map.addListener('zoom_changed', (zoom: number) => {
-      updateZoomLevel(zoom);
+    const boundsChangedListener = map.addListener('bounds_changed', () => {
+      if (zoomTimerRef.current) {
+        clearTimeout(zoomTimerRef.current);
+      }
+
+      zoomTimerRef.current = setTimeout(() => {
+        updateZoomLevel(map.getZoom());
+      }, 30);
     });
 
     return function cleanup() {
-      map.removeListener(zoomChangedListener);
+      map.removeListener(boundsChangedListener);
     };
   }, [map, updateZoomLevel]);
 
-  const [setRecognizer] = useStore(useShallow((s) => [s.setRecognizer]));
-
+  /**
+   * 겹침 여부를 판단하기 위한 recognizer 초기화
+   */
   useEffect(() => {
     if (!map) {
       return;
@@ -206,7 +216,7 @@ export default function Main() {
           <Map.Marker.Cafe key={cafe.id} cafe={cafe} idx={i} onCreate={handleCafeMarkerCreate} forCluster />
         ))}
         <Map.Marker.Cluster markers={filteredMarkers} />
-        <Map.Marker.Cluster markers={filteredCafeMarkers} clusterMarkerBgColor="#b13f0e" maxZoom={14} />
+        <Map.Marker.Cluster markers={filteredCafeMarkers} clusterMarkerBgColor="#b13f0e" maxZoom={13.5} />
         <Map.Marker.Gps />
       </Map>
       <Footer />

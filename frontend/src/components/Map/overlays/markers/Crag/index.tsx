@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useExp, useFilter } from '@/hooks';
 
@@ -11,11 +11,8 @@ import { SIZE, QUERY_STRING } from '@/constants';
 import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
-
-import { useZoom } from '@/hooks';
-import { useMarkerState } from '../_hooks/useMarkerState';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
+import { MarkerTitle } from '../_components/MarkerTitle';
+import { MarkerZIndex } from '../_components/MarkerZIndex';
 
 interface CragMarkerProps {
   crag: Crag;
@@ -30,16 +27,13 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   const [marker, setMarker] = useState<MyMarker | null>(null);
   const markerRef = useRef<HTMLDivElement>(null);
 
-  const { zoomLevel } = useZoom();
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
-  const [recognizer] = useStore(useShallow((s) => [s.recognizer]));
 
   const { exp } = useExp();
   const { isFiltered, isOff } = useFilter(crag, exp.date);
 
   const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
-  const { isTitleShown, zIndex } = useMarkerState({ marker, recognizer, zoomLevel, isSelect });
 
   /**
    * 마커 초기화
@@ -72,17 +66,6 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     };
   }, [crag, map, onCreate, idx, forCluster, isFiltered]);
 
-  /**
-   * 선택 여부에 따라 z축 순서 변경
-   */
-  useEffect(() => {
-    if (!marker) {
-      return;
-    }
-
-    marker.setZIndex(zIndex);
-  }, [marker, isSelect, isOff, zIndex]);
-
   return (
     <Box
       ref={markerRef}
@@ -102,26 +85,11 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         </Box>
       </Box>
 
-      {isTitleShown && (
-        <Box
-          sx={{
-            /**
-             * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
-             */
-            position: 'absolute',
-            transform: `translate(calc(-50% + ${(markerWidth * (isSelect ? 1 : 0.6)) / 2}px), ${isSelect ? 0 : '50%'})`,
-          }}
-        >
-          <Typography
-            fontWeight={600}
-            sx={{
-              textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
-            }}
-          >
-            {crag.short_name || crag.name}
-          </Typography>
-        </Box>
-      )}
+      <MarkerTitle marker={marker} isSelect={isSelect} markerWidth={markerWidth}>
+        {crag.short_name || crag.name}
+      </MarkerTitle>
+
+      <MarkerZIndex marker={marker} isSelect={isSelect} />
     </Box>
   );
 }

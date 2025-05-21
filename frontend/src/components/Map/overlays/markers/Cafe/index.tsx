@@ -1,19 +1,17 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { SIZE } from '@/constants';
 
 import { mapContext } from '@/components/Map/index.context';
 
 import { CafeInfo } from './CafeInfo';
+import { MarkerTitle } from '../_components/MarkerTitle';
+import { MarkerZIndex } from '../_components/MarkerZIndex';
 import { MarkerIcon } from '../_assets/MarkerIcon';
 
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
-
-import { useCafe, useModifyCafe, useZoom } from '@/hooks';
-import { useMarkerState } from '../_hooks/useMarkerState';
+import { useCafe, useModifyCafe } from '@/hooks';
 
 interface CafeProps {
   cafe: Cafe;
@@ -28,23 +26,12 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
   const markerRef = useRef<HTMLDivElement>(null);
 
   const { map } = useContext(mapContext);
-  const { zoomLevel } = useZoom();
   const { selectCafeId } = useCafe();
-  const [recognizer] = useStore(useShallow((s) => [s.recognizer]));
 
   const { updateSelectCafeId } = useModifyCafe();
 
   const markerWidth = SIZE.CAFE_MARKER_WIDTH;
   const isSelect = selectCafeId === cafe.id;
-  const { isTitleShown, zIndex } = useMarkerState({ marker, recognizer, zoomLevel, isSelect });
-
-  useEffect(() => {
-    if (!marker) {
-      return;
-    }
-
-    marker.setZIndex(zIndex);
-  }, [marker, zIndex]);
 
   useEffect(() => {
     if (!map || !markerRef.current) {
@@ -104,25 +91,11 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
 
         {isSelect && <CafeInfo cafe={cafe} referenceRef={markerRef} />}
 
-        {isTitleShown && (
-          <Box
-            sx={{
-              /**
-               * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
-               */
-              position: 'absolute',
-              transform: `translate(calc(-50% + ${(markerWidth * 0.6) / 2}px), 50%)`,
-            }}
-          >
-            <Typography
-              sx={{
-                textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
-              }}
-            >
-              {cafe.place_name.split(' ')[0]}
-            </Typography>
-          </Box>
-        )}
+        <MarkerTitle marker={marker} isSelect={isSelect} markerWidth={markerWidth}>
+          {cafe.place_name.split(' ')[0]}
+        </MarkerTitle>
+
+        <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>
     </Box>
   );
