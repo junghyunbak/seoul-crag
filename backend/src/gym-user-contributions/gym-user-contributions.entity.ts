@@ -7,10 +7,8 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 
-@Unique(['gym', 'user', 'contribution'])
 @Entity('gym_user_contributions')
 export class GymUserContribution {
   @PrimaryGeneratedColumn('uuid')

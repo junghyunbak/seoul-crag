@@ -19,18 +19,6 @@ export class GymUserContributionService {
     const { userId, gymId, contributionId, description } =
       createGymUserContributionDto;
 
-    const existing = await this.gymUserContributionRepo.findOne({
-      where: {
-        user: { id: userId },
-        gym: { id: gymId },
-        contribution: { id: contributionId },
-      },
-    });
-
-    if (existing) {
-      return existing;
-    }
-
     const gymUserContribution = this.gymUserContributionRepo.create({
       gym: { id: gymId },
       user: { id: userId },
