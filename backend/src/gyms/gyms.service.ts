@@ -116,6 +116,7 @@ export class GymsService {
         schedules: raw.gym_schedules,
         openingHours: raw.gym_openingHours,
         gymTags: raw.gym_gymTags,
+        gymUserContributions: raw.gym_gymUserContributions,
 
         imageTypes: raw.imageTypes,
         futureSchedules: raw.futureSchedules,
@@ -161,6 +162,7 @@ export class GymsService {
       comments: rawGym.gym_comments,
       gymTags: rawGym.gym_gymTags,
       openingHours: rawGym.gym_openingHours,
+      gymUserContributions: rawGym.gym_gymUserContributions,
 
       imageTypes: rawGym.imageTypes,
       futureSchedules: rawGym.futureSchedules,

@@ -11,6 +11,7 @@ import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
 import { Comment } from 'src/comments/comments.entity';
 import { GymTag } from 'src/gym-tags/gym-tags.entity';
+import { GymUserContribution } from 'src/gym-user-contributions/gym-user-contributions.entity';
 
 @Entity('gyms')
 export class Gym {
@@ -70,4 +71,10 @@ export class Gym {
 
   @OneToMany(() => GymTag, (gymTag) => gymTag.gym)
   gymTags: GymTag[];
+
+  @OneToMany(
+    () => GymUserContribution,
+    (gymUserContribution) => gymUserContribution.gym,
+  )
+  gymUserContributions: GymUserContribution[];
 }
