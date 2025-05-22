@@ -26,15 +26,15 @@ export function CragContributesField() {
   const { contributions } = useFetchContributes();
 
   return (
-    <Box>
-      <Box>
-        {contributions?.map((contribution) => (
-          <>
-            <ContributionField key={contribution.id} contribution={contribution} />
-            <CreateContributionButton contribution={contribution} />
-          </>
-        ))}
-      </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Typography variant="h6">기여</Typography>
+
+      {contributions?.map((contribution) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <ContributionField key={contribution.id} contribution={contribution} />
+          <CreateContributionButton contribution={contribution} />
+        </Box>
+      ))}
     </Box>
   );
 }
@@ -48,7 +48,7 @@ function ContributionField({ contribution }: ContributionFieldProps) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-      <Typography variant="h6">{contribution.name}</Typography>
+      <Typography variant="h6">{`[${contribution.name}]`}</Typography>
 
       <Box
         key={contribution.id}
