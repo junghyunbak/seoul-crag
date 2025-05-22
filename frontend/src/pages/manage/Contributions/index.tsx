@@ -1,22 +1,13 @@
 import { api } from '@/api/axios';
 import { Box, Button, Chip, Paper, TextField } from '@mui/material';
-import { DefaultError, useMutation, useQuery } from '@tanstack/react-query';
+import { DefaultError, useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { contributionsScheme } from '@/schemas/contribute';
+import { useFetchContributes } from '@/hooks';
 
 export function Contributions() {
   const [name, setName] = useState('');
 
-  const { data: contributions, refetch } = useQuery({
-    queryKey: ['contributions'],
-    queryFn: async () => {
-      const { data } = await api.get('/contribution');
-
-      const contributions = contributionsScheme.parse(data);
-
-      return contributions;
-    },
-  });
+  const { contributions, refetch } = useFetchContributes();
 
   const createContributionMutation = useMutation<void, DefaultError, Pick<Contribution, 'name'>>({
     mutationFn: async ({ name }) => {

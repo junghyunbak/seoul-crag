@@ -13,6 +13,8 @@ import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
 import { GymTag } from 'src/gym-tags/gym-tags.entity';
 import { GymUserContribution } from 'src/gym-user-contributions/gym-user-contributions.entity';
+import { User } from 'src/user/user.entity';
+import { Contribution } from 'src/contributions/contribution.entity';
 
 type GymField = {
   [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
@@ -22,7 +24,14 @@ type ImageType = { imageTypes: string[] };
 type ScheduleType = { futureSchedules: GymSchedule[] };
 type OpeningHourType = { openingHourOfWeek: GymOpeningHour[] };
 type TagType = { tags: GymTag[] };
-type ContributionType = { contributes: GymUserContribution[] };
+type ContributionType = {
+  contributions: {
+    id: string;
+    user: Omit<User, 'roles'>;
+    contribution: Contribution;
+    description: string;
+  }[];
+};
 
 type JoinedType = ImageType &
   ScheduleType &
@@ -94,10 +103,23 @@ export class GymsService {
         (qb) =>
           qb
             .subQuery()
-            .select(`JSON_AGG(guc)`)
-            .from(GymUserContribution, 'guc')
-            .where('guc.gymId = gym.id'),
-        'contributes',
+            .select(
+              `
+              JSON_AGG(
+                JSON_BUILD_OBJECT(
+                  'id', uc.id,
+                  'user', TO_JSON(gym_user),
+                  'contribution', TO_JSON(gym_contribution),
+                  'description', uc.description
+                )
+              )
+            `,
+            )
+            .from(GymUserContribution, 'uc')
+            .leftJoin('uc.user', 'gym_user')
+            .leftJoin('uc.contribution', 'gym_contribution')
+            .where('uc.gymId = gym.id'),
+        'contributions',
       );
   }
 
@@ -137,7 +159,7 @@ export class GymsService {
         futureSchedules: raw.futureSchedules,
         openingHourOfWeek: raw.openingHourOfWeek,
         tags: raw.tags || [],
-        contributes: raw.contributes || [],
+        contributions: raw.contributions || [],
       };
 
       gymWithImages.push(gymWithImage);
@@ -184,7 +206,7 @@ export class GymsService {
       futureSchedules: rawGym.futureSchedules,
       openingHourOfWeek: rawGym.openingHourOfWeek,
       tags: rawGym.tags || [],
-      contributes: rawGym.contributes || [],
+      contributions: rawGym.contributions || [],
     };
 
     return gymWithImage;

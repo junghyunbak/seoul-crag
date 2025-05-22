@@ -25,6 +25,7 @@ import { CragTagsField } from '@/pages/manage/Crags/CragForm/CragTagsField';
 import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
+import { CragContributesField } from './CragContributesField';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -76,6 +77,10 @@ export function CragForm({ initialCrag }: CragFormProps) {
         <Box sx={{ p: 2 }}>
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', width: '100%' }}>
             <Grid container spacing={2}>
+              <Grid size={{ xs: 12 }}>
+                <CragContributesField />
+              </Grid>
+
               <Grid size={{ xs: 12, md: 8 }}>
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 12, sm: 8, md: 8 }}>
