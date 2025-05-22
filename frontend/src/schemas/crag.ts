@@ -4,6 +4,7 @@ import { openingHoursScheme } from '@/schemas/openingHour';
 import { schedulesScheme } from '@/schemas/schedule';
 import { TagsScheme } from '@/schemas/tag';
 import { z } from 'zod';
+import { contributionsScheme } from './contribute';
 
 // [ ]: 불필요한 optional 제거
 export const cragScheme = z.object({
@@ -24,6 +25,7 @@ export const cragScheme = z.object({
   futureSchedules: z.union([schedulesScheme, z.null()]).optional(),
   openingHourOfWeek: z.union([openingHoursScheme, z.null()]).optional(),
   tags: TagsScheme.optional(),
+  contributes: contributionsScheme,
 
   opened_at: z.union([dateScheme, z.null()]).optional(),
   created_at: z.coerce.date(),

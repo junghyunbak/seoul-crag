@@ -2,19 +2,7 @@ import { api } from '@/api/axios';
 import { Box, Button, Chip, Paper, TextField } from '@mui/material';
 import { DefaultError, useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { z } from 'zod';
-
-const contributionScheme = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  created_at: z.coerce.date(),
-});
-
-const contributionsScheme = z.array(contributionScheme);
-
-declare global {
-  type Contribution = z.infer<typeof contributionScheme>;
-}
+import { contributionsScheme } from '@/schemas/contribute';
 
 export function Contributions() {
   const [name, setName] = useState('');
