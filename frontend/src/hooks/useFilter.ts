@@ -176,7 +176,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
       }
 
       if (searchKeyword) {
-        isFiltered &&= crag?.name.includes(searchKeyword) || crag?.short_name?.includes(searchKeyword) || false;
+        isFiltered &&=
+          crag?.name.toLowerCase().includes(searchKeyword) ||
+          crag?.short_name?.toLocaleLowerCase().includes(searchKeyword) ||
+          false;
       }
 
       Object.entries(selectTagId).forEach(([, tagId]) => {
