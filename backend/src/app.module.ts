@@ -26,6 +26,7 @@ import { GymTagsModule } from 'src/gym-tags/gym-tags.module';
 import { TagsModule } from 'src/tags/tags.module';
 import { NoticeModule } from './notices/notice.module';
 import { KakaoModule } from './kakao/kakao.module';
+import { ContributionModule } from './contributions/contribution.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { KakaoModule } from './kakao/kakao.module';
     AppVisitedModule,
     NoticeModule,
     KakaoModule,
+    ContributionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
