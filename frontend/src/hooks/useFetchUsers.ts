@@ -21,6 +21,25 @@ export function useFetchUsers() {
   };
 }
 
+export function useFetchUser(userId: string | null) {
+  const { data: user } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: async () => {
+      if (!userId) {
+        return null;
+      }
+
+      const { data } = await api.get(`/users/${userId}`);
+
+      const user = userScheme.omit({ roles: true }).parse(data);
+
+      return user;
+    },
+  });
+
+  return { user };
+}
+
 export function useFetchMe() {
   const { data: user, refetch } = useQuery({
     queryKey: ['me'],

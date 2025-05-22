@@ -41,7 +41,7 @@
     "react-error-boundary": "^6.0.0",
     "react-fast-marquee": "^1.6.5",
     "react-markdown": "^10.1.0",
-    "react-modal-sheet": "^4.0.1",
+    "react-modal-sheet": "^4.4.0",
     "react-pro-sidebar": "^1.1.0",
     "react-router": "^7.5.0",
     "recharts": "^2.15.3",

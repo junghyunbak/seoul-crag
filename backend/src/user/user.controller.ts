@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
   Patch,
   Body,
+  Param,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -40,6 +41,13 @@ export class UserController {
     }
 
     return this.userService.getUserWithRoles(user.id);
+  }
+
+  @Get(':id')
+  async getUser(@Param('id') userId: string) {
+    const user = await this.userService.getUserWithContribution(userId);
+
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)

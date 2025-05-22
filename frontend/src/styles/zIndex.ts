@@ -22,3 +22,4 @@ export const cragList = 1002;
 export const story = 10000;
 export const cragDetail = 10001;
 export const menu = 10002;
+export const profile = 10003;

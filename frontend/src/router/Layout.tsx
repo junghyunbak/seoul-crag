@@ -18,6 +18,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { time } from '@/utils';
 
 import { zIndex } from '@/styles';
+import { ProfileBottomSheet } from '@/components/ProfileBottomSheet';
 
 const StoryShower = lazy(() => import('@/components/StoryShower'));
 const CragDetail = lazy(() => import('@/components/CragDetail'));
@@ -41,6 +42,7 @@ export function Layout() {
                 <StoryShower />
 
                 <CragDetail />
+                <ProfileBottomSheet />
               </LoadNaverMap>
             </Suspense>
           </QueryParamProvider>

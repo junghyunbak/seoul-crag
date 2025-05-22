@@ -1,22 +1,8 @@
 import React from 'react';
 
-import {
-  FormControlLabel,
-  Switch,
-  useMediaQuery,
-  Box,
-  Drawer,
-  Avatar,
-  Typography,
-  IconButton,
-  Button,
-  Divider,
-  useTheme,
-} from '@mui/material';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { FormControlLabel, Switch, useMediaQuery, Box, Drawer, Button, Divider, useTheme } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
-import Edit from '@mui/icons-material/Edit';
 
 import { useFetchMe, useMutateLogout, useMap, useModifyMap } from '@/hooks';
 
@@ -27,6 +13,8 @@ import { QUERY_STRING } from '@/constants';
 import { zIndex } from '@/styles';
 
 import { urlService } from '@/utils';
+import { useStore } from '@/store';
+import { useShallow } from 'zustand/shallow';
 
 interface SidebarMenuProps {
   open: boolean;
@@ -38,18 +26,12 @@ interface SidebarMenuProps {
   onNavigate: (path: string) => void;
 }
 
-export const SidebarMenu: React.FC<SidebarMenuProps> = ({
-  open,
-  onClose,
-  user,
-  onLogout,
-  onLogin,
-  onCopyId,
-  onNavigate,
-}) => {
+export const SidebarMenu: React.FC<SidebarMenuProps> = ({ open, onClose, user, onLogout, onLogin, onNavigate }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enabledEdgeIndicator, enabledGpsIndicator } = useMap();
+
+  const [setSelectUserId] = useStore(useShallow((s) => [s.setSelectUserId]));
 
   const { updateEnabledEdgeIndicator, updateEnabledGpsIndicator } = useModifyMap();
 
@@ -59,38 +41,9 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {user ? (
             <>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Avatar src={user.profile_image || ''}>{user.username}</Avatar>
-                <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
-                    >
-                      {user.username}
-                    </Typography>
-                    <IconButton size="small" onClick={() => onNavigate(urlService.getAbsolutePath('/manage'))}>
-                      <Edit fontSize="small" />
-                    </IconButton>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    >
-                      {user.id}
-                    </Typography>
-                    <IconButton size="small" onClick={onCopyId}>
-                      <ContentCopyIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Box>
+              <Button fullWidth variant="outlined" color="info" onClick={() => setSelectUserId(user.id)}>
+                프로필 확인
+              </Button>
 
               {user.roles.some(({ name }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin') && (
                 <Button

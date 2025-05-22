@@ -7,17 +7,20 @@ import { createMapSlice } from '@/store/slices/map';
 import { createNoticeSlice } from '@/store/slices/notice';
 import { createCafeSlice } from '@/store/slices/cafe';
 import { createLoadingSlice } from '@/store/slices/loading';
+import { createUserSlice } from './slices/user';
 
 type StoreState = ReturnType<typeof createMapSlice> &
   ReturnType<typeof createFilterSlice> &
   ReturnType<typeof createSearchSlice> &
   ReturnType<typeof createNoticeSlice> &
   ReturnType<typeof createCafeSlice> &
-  ReturnType<typeof createLoadingSlice>;
+  ReturnType<typeof createLoadingSlice> &
+  ReturnType<typeof createUserSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get, store) => ({
+      ...createUserSlice(set, get, store),
       ...createLoadingSlice(set, get, store),
       ...createCafeSlice(set, get, store),
       ...createNoticeSlice(set, get, store),
@@ -43,6 +46,7 @@ export const useStore = create<StoreState>()(
           readNoticeIds,
           cafes,
           selectCafeId,
+          selectUserId,
         } = state;
 
         return {
@@ -60,6 +64,7 @@ export const useStore = create<StoreState>()(
           readNoticeIds,
           cafes,
           selectCafeId,
+          selectUserId,
         };
       },
     }

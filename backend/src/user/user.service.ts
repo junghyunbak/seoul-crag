@@ -27,6 +27,24 @@ export class UserService {
     return user;
   }
 
+  async getUserWithContribution(userId: string): Promise<Partial<User> | null> {
+    const user = await this.userRepo.findOneBy({ id: userId });
+
+    if (!user) {
+      return user;
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      created_at: user.created_at,
+      profile_image: user.profile_image,
+
+      // TOOD: 기여정보 가져온 후 함께 반환
+    };
+  }
+
   async getUserWithRoles(userId: string) {
     const user = await this.userRepo.findOne({
       relations: ['userRoles', 'userRoles.role'],
