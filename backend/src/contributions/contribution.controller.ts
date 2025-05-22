@@ -18,7 +18,9 @@ export class ContributionController {
   constructor(private readonly contributionService: ContributionService) {}
 
   @Get()
-  findAll() {}
+  findAll() {
+    return this.contributionService.findAll();
+  }
 
   @Roles('owner')
   @UseGuards(JwtAuthGuard, RolesGuard)

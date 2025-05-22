@@ -14,6 +14,7 @@ import { Crags } from '@/pages/manage/Crags';
 import { Dashboard } from '@/pages/manage/Dashboard';
 import { NewCrag } from '@/pages/manage/NewCrag';
 import { Tags } from '@/pages/manage/Tags';
+import { Contributions } from '@/pages/manage/Contributions';
 
 const Main = lazy(() => import('@/pages/main'));
 const ManagePage = lazy(() => import('@/pages/manage'));
@@ -71,6 +72,10 @@ export const router = createBrowserRouter([
           {
             path: urlService.getRelativePath('/manage/notices'),
             element: <Notices />,
+          },
+          {
+            path: urlService.getRelativePath('/manage/contributions'),
+            element: <Contributions />,
           },
         ],
       },

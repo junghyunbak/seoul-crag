@@ -13,6 +13,7 @@ import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
 import Terrain from '@mui/icons-material/Terrain';
 import TagIcon from '@mui/icons-material/Tag';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 
 import { zIndex } from '@/styles';
 
@@ -78,6 +79,11 @@ const sidebarList: SidebarList = [
         icon: <NotificationsNoneIcon />,
         pathname: urlService.getAbsolutePath('/manage/notices'),
         title: '공지 관리',
+      },
+      {
+        icon: <VolunteerActivismIcon />,
+        pathname: urlService.getAbsolutePath('/manage/contributions'),
+        title: '기여 종목 관리',
       },
     ],
   },
