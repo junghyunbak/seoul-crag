@@ -71,11 +71,8 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       {/**
        * react-dom과 naver.maps.Marker의 충돌 방지를 위해 빈 Wrapper 필요
        */}
-      <Box ref={markerRef}>
-        <Box
-          onClick={() => setSelectCragId(crag.id)}
-          sx={{ position: 'absolute', bottom: 0, left: '-50%', display: 'flex' }}
-        >
+      <Box ref={markerRef} onClick={() => setSelectCragId(crag.id)}>
+        <Box sx={{ position: 'absolute', bottom: 0, left: '-50%', display: 'flex' }}>
           <Box
             sx={{
               position: 'absolute',

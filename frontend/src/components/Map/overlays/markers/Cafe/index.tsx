@@ -69,13 +69,13 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
        *
        * 루트 요소가 곧 markerRef가 되면, map과 react-dom이 같은 요소를 제거하려 하면서 오류가 발생하기 때문.
        */}
-      <Box ref={markerRef}>
-        <Box
-          onClick={() => {
-            updateSelectCafeId(cafe.id);
-          }}
-          sx={{ position: 'absolute', bottom: 0, left: '-50%', display: 'flex' }}
-        >
+      <Box
+        ref={markerRef}
+        onClick={() => {
+          updateSelectCafeId(cafe.id);
+        }}
+      >
+        <Box sx={{ position: 'absolute', bottom: 0, left: '-50%', display: 'flex' }}>
           <Box
             sx={{
               position: 'absolute',
