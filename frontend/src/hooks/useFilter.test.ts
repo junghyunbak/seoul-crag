@@ -16,6 +16,7 @@ const mockCrag: Crag = {
   updated_at: new Date(),
   is_outer_wall: false,
   shower_url: '',
+  contributions: [],
 };
 
 const dateStr = '2025-05-08';
