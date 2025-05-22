@@ -1,0 +1,81 @@
+import { Box, Typography } from '@mui/material';
+import { useContext } from 'react';
+import { CragDetailContext } from '../index.context';
+
+type ContributionUserCount = {
+  user: Crag['contributions'][number]['user'];
+  count: number;
+};
+
+export function CragDetailContribution() {
+  const { crag } = useContext(CragDetailContext);
+
+  const contributionNameToUserToCnt = (() => {
+    const nameToUser = new Map<string, Map<string, ContributionUserCount>>();
+
+    crag?.contributions.forEach(({ contribution, user }) => {
+      const userToCnt = nameToUser.get(contribution.name) || new Map<string, ContributionUserCount>();
+
+      const uniqueUsername = `${user.username}#${user.id.slice(0, 6)}`;
+
+      const tmp = userToCnt.get(uniqueUsername) || { user, count: 0 };
+
+      tmp.count += 1;
+
+      userToCnt.set(uniqueUsername, tmp);
+
+      nameToUser.set(contribution.name, userToCnt);
+    });
+
+    return nameToUser;
+  })();
+
+  return (
+    <Box>
+      <Typography variant="h6">기여자</Typography>
+
+      <ul>
+        {Array.from(contributionNameToUserToCnt.entries()).map(([contributionName, userToCnt]) => {
+          return (
+            <li>
+              <Box
+                sx={{
+                  display: 'flex',
+                  columnGap: 1,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <Typography variant="body1">{contributionName}: </Typography>
+
+                {Array.from(userToCnt.entries()).map(([_, value]) => (
+                  <Typography
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                    onClick={() => {
+                      alert(value.user.id);
+                    }}
+                  >
+                    {value.user.username}
+                    <Typography component="span" sx={(theme) => ({ color: theme.palette.text.secondary })}>
+                      {`#${value.user.id.slice(0, 6)}`}
+                    </Typography>
+                    {value.count > 1 && (
+                      <Typography
+                        component="span"
+                        sx={(theme) => ({ color: theme.palette.primary.main })}
+                      >{` x${value.count}`}</Typography>
+                    )}
+                  </Typography>
+                ))}
+              </Box>
+            </li>
+          );
+        })}
+      </ul>
+    </Box>
+  );
+}
