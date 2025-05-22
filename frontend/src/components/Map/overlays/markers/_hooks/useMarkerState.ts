@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-// [ ]: cafe와 crag이 겹쳤을 때 cafe가 위로 올라오도록 구현
 export function useMarkerState({
   marker,
   zoomLevel,
@@ -26,6 +25,26 @@ export function useMarkerState({
    *      2-1-2. 위도값이 가장 낮은 마커 표시
    */
   useEffect(() => {
+    const overlapedMarkers = (() => {
+      if (!recognizer || !marker) {
+        return [];
+      }
+
+      const overlapedMarkers: MyMarker[] = recognizer.getOverlapedMarkers(marker).map(({ marker }) => marker);
+
+      overlapedMarkers.sort((a, b) => {
+        if (a.meta?.type === 'Crag' && b.meta?.type === 'Cafe') {
+          return -1;
+        } else if (a.meta?.type === 'Cafe' && b.meta?.type === 'Crag') {
+          return 1;
+        } else {
+          return (a.meta?.lat || Infinity) < (b.meta?.lat || Infinity) ? -1 : 1;
+        }
+      });
+
+      return overlapedMarkers;
+    })();
+
     if (!marker) {
       return;
     }
@@ -35,52 +54,35 @@ export function useMarkerState({
       return;
     }
 
-    if (recognizer) {
-      const overlapedMarkers: MyMarker[] = recognizer.getOverlapedMarkers(marker).map(({ marker }) => marker);
-
-      const isOverlap = overlapedMarkers.length > 1;
-
-      if (isOverlap) {
-        overlapedMarkers.sort((a, b) => {
-          if (a.meta?.type === 'Crag' && b.meta?.type === 'Cafe') {
-            return -1;
-          } else if (a.meta?.type === 'Cafe' && b.meta?.type === 'Crag') {
-            return 1;
-          } else {
-            return (a.meta?.lat || Infinity) < (b.meta?.lat || Infinity) ? -1 : 1;
-          }
-        });
-
-        if (overlapedMarkers[0] === marker) {
-          setIsTitleShown(true);
-        } else {
-          setIsTitleShown(false);
-        }
-      } else {
-        setIsTitleShown(true);
-      }
-
+    if (overlapedMarkers.length <= 0) {
+      setIsTitleShown(true);
       return;
     }
 
-    setIsTitleShown(true);
-  }, [recognizer, marker, zoomLevel, isSelect]);
+    setIsTitleShown(overlapedMarkers[0] === marker);
+  }, [marker, isSelect, recognizer, zoomLevel]);
 
   /**
    * z-index
    *
+   * [우선순위]
    * 1. 선택된 것
    * 2. 암장마커
    * 3. 카페 마커
    */
   useEffect(() => {
     if (isSelect) {
+      setZIndex(2);
+      return;
+    }
+
+    if (marker?.meta?.type === 'Crag') {
       setZIndex(1);
       return;
     }
 
     setZIndex(0);
-  }, [isSelect]);
+  }, [isSelect, marker]);
 
   return {
     isTitleShown,
