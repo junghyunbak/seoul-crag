@@ -34,6 +34,7 @@ export const cragScheme = z.object({
       }),
       contribution: contributionScheme,
       description: z.string(),
+      created_at: z.coerce.date(),
     })
   ),
 

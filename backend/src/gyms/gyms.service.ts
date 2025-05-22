@@ -110,7 +110,8 @@ export class GymsService {
                   'id', uc.id,
                   'user', TO_JSON(gym_user),
                   'contribution', TO_JSON(gym_contribution),
-                  'description', uc.description
+                  'description', uc.description,
+                  'created_at', uc.created_at
                 )
               )
             `,

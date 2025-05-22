@@ -6,12 +6,14 @@ import {
   Delete,
   Body,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { CreateGymUserContributionDto } from './dto/create-gym-user-contributions.dto';
 import { GymUserContributionService } from './gym-user-contributions.service';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { UpdateGymUserContributionDto } from './dto/update-gym-user-contributions.dto';
 
 @Roles('owner')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -31,6 +33,17 @@ export class GymUserContributionController {
     @Body() createGymUserContributionDto: CreateGymUserContributionDto,
   ) {
     return this.gymUserContributionService.create(createGymUserContributionDto);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateGymUserContributionDto: UpdateGymUserContributionDto,
+  ) {
+    return this.gymUserContributionService.update(
+      id,
+      updateGymUserContributionDto.description,
+    );
   }
 
   @Delete(':id')
