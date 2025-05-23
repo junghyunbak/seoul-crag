@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { contributionsScheme } from '@/schemas/contribute';
+import { contributionsSchema } from '@/schemas/contribute';
 import { api } from '@/api/axios';
 
 export function useFetchContributes() {
@@ -8,7 +8,7 @@ export function useFetchContributes() {
     queryFn: async () => {
       const { data } = await api.get('/contribution');
 
-      const contributions = contributionsScheme.parse(data);
+      const contributions = contributionsSchema.parse(data);
 
       return contributions;
     },

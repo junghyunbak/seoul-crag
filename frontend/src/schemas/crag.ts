@@ -5,7 +5,7 @@ import { scheduleScheme } from '@/schemas/schedule';
 import { TagScheme } from '@/schemas/tag';
 import { z } from 'zod';
 import { InternalUserSchema } from './user';
-import { contributionScheme } from './contribute';
+import { contributionSchema } from './contribute';
 
 export const InternalCragSchema = z.object({
   id: z.string(),
@@ -35,7 +35,7 @@ export const InternalCragRelationSchema = z.object({
     z.object({
       id: z.string().uuid(),
       description: z.string(),
-      contribution: contributionScheme,
+      contribution: contributionSchema,
       created_at: z.coerce.date(),
       user: z.lazy(() => InternalUserSchema),
     })

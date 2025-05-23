@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { roleScheme } from '@/schemas/role';
 import { InternalCragSchema } from './crag';
+import { contributionSchema } from './contribute';
 
 export const InternalUserSchema = z.object({
   id: z.string(),
@@ -22,6 +23,7 @@ export const InternalUserRelationSchema = z.object({
       id: z.string().uuid(),
       description: z.string(),
       gym: InternalCragSchema,
+      contribution: contributionSchema,
       created_at: z.coerce.date(),
     })
   ),
@@ -42,6 +44,7 @@ declare global {
       id: string;
       description: string;
       gym: z.infer<typeof InternalCragSchema>;
+      contribution: z.infer<typeof contributionSchema>;
       created_at: Date;
     }[];
   };

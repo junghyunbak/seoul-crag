@@ -1,5 +1,5 @@
-import { contributionScheme } from '@/schemas/contribute';
+import { contributionSchema } from '@/schemas/contribute';
 
 declare global {
-  type Contribution = z.infer<typeof contributionScheme>;
+  type Contribution = z.infer<typeof contributionSchema>;
 }
