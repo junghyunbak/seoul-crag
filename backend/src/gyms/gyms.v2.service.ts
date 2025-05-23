@@ -23,4 +23,22 @@ export class GymsV2Service {
       ],
     });
   }
+
+  async findOne(gymId: string) {
+    return await this.gymRepo.findOne({
+      where: {
+        id: gymId,
+      },
+      relations: [
+        'images',
+        'schedules',
+        'openingHours',
+        'comments',
+        'gymTags.tag',
+        'gymUserContributions',
+        'gymUserContributions.contribution',
+        'gymUserContributions.user',
+      ],
+    });
+  }
 }
