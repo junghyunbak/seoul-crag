@@ -54,7 +54,7 @@ export function CragListItem({ crag }: CragListItemProps) {
                 resolve(true);
               }, 1000);
             }).then(() => {
-              map.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 13, { duration: 1000 });
+              map.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 13, { duration: 1750 });
               setSelectCragId(crag.id);
             });
           }
