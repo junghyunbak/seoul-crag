@@ -101,6 +101,7 @@ export function ProfileBottomSheet() {
                                   color: theme.palette.primary.main,
                                   textDecoration: 'underline',
                                   cursor: 'pointer',
+                                  whiteSpace: 'normal',
                                 })}
                                 onClick={() => {
                                   setSelectCragDetailId(gym.id);
