@@ -5,11 +5,14 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { urlService } from '@/utils';
 
 import * as Sentry from '@sentry/react';
+import { AxiosError } from 'axios';
 
 function throwOnError(error: DefaultError) {
   console.error(error);
 
-  Sentry.captureException(error);
+  if (!(error instanceof AxiosError && error.status === 401)) {
+    Sentry.captureException(error);
+  }
 
   if (window.location.pathname.startsWith(urlService.getAbsolutePath('/manage'))) {
     return true;
