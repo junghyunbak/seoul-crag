@@ -14,6 +14,17 @@ export class UserV2Service {
       where: {
         id: userId,
       },
+      relations: [
+        'gymUserContributions',
+        'gymUserContributions.gym',
+        'comments',
+        'userRoles',
+      ],
+    });
+  }
+
+  async getUsers(): Promise<User[] | null> {
+    return await this.userRepo.find({
       relations: ['gymUserContributions', 'comments', 'userRoles'],
     });
   }

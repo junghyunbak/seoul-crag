@@ -22,4 +22,11 @@ export class UserV2Controller {
       ...user,
     });
   }
+
+  @Get()
+  async getUsers() {
+    const users = await this.userService.getUsers();
+
+    return users?.map((user) => new UserResponseDto({ ...user }));
+  }
 }
