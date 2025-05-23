@@ -13,7 +13,7 @@ import { useStore } from '@/store';
 import { QUERY_STRING, SIZE } from '@/constants';
 
 import { Map } from '@/components/Map';
-import { Menu } from '@/components/Menu';
+import { Sidebar } from '@/components/Sidebar';
 import { Search } from '@/components/Search';
 import { Topbar } from './_components/Topbar';
 import { Footer } from './_components/Footer';
@@ -222,7 +222,7 @@ export default function Main() {
       <Footer />
       <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
-      <Menu />
+      <Sidebar />
       <Search />
       <Notice />
     </Box>

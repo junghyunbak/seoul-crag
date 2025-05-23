@@ -43,7 +43,11 @@ export function useFetchUser(userId: string | null) {
 }
 
 export function useFetchMe() {
-  const { data: user, refetch } = useQuery({
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ['me'],
     queryFn: async () => {
       const isPwa =
@@ -69,5 +73,6 @@ export function useFetchMe() {
   return {
     user,
     refetch,
+    isLoading,
   };
 }
