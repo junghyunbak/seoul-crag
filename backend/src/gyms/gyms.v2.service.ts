@@ -18,6 +18,8 @@ export class GymsV2Service {
         'comments',
         'gymTags.tag',
         'gymUserContributions',
+        'gymUserContributions.contribution',
+        'gymUserContributions.user',
       ],
     });
   }

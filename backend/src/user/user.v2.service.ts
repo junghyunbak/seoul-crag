@@ -25,7 +25,12 @@ export class UserV2Service {
 
   async getUsers(): Promise<User[] | null> {
     return await this.userRepo.find({
-      relations: ['gymUserContributions', 'comments', 'userRoles'],
+      relations: [
+        'gymUserContributions',
+        'gymUserContributions.gym',
+        'comments',
+        'userRoles',
+      ],
     });
   }
 }
