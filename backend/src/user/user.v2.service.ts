@@ -17,6 +17,7 @@ export class UserV2Service {
       relations: [
         'gymUserContributions',
         'gymUserContributions.gym',
+        'gymUserContributions.contribution',
         'comments',
         'userRoles',
       ],
@@ -28,6 +29,7 @@ export class UserV2Service {
       relations: [
         'gymUserContributions',
         'gymUserContributions.gym',
+        'gymUserContributions.contribution',
         'comments',
         'userRoles',
       ],
