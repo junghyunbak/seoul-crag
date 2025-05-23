@@ -85,7 +85,7 @@ export function ProfileBottomSheet() {
                   <Typography variant="h4">{user.gymUserContributions.length}</Typography>
                 </Box>
 
-                {user?.gymUserContributions.length > 1 && (
+                {user?.gymUserContributions.length > 0 && (
                   <>
                     <Divider />
                     <Box sx={{ py: 2, px: 3, display: 'flex', flexDirection: 'column', gap: 1 }}>
