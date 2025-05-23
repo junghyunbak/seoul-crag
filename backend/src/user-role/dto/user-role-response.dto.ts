@@ -1,13 +1,13 @@
 import { Expose, Type } from 'class-transformer';
-import { RoleResponseDto } from 'src/role/dto/role-response.dto';
+import { RoleResponseWithoutIdDto } from 'src/role/dto/role-response.dto';
 
 export class UserRoleResponseDto {
   @Expose()
   id: string;
 
   @Expose()
-  @Type(() => RoleResponseDto)
-  role: RoleResponseDto;
+  @Type(() => RoleResponseWithoutIdDto)
+  role: RoleResponseWithoutIdDto;
 
   constructor(userRole: Partial<UserRoleResponseDto>) {
     Object.assign(this, userRole);
