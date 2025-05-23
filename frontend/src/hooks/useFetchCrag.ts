@@ -2,15 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
 
-import { cragsScheme, cragScheme, openingHoursScheme } from '@/schemas';
+import { cragScheme, openingHoursScheme } from '@/schemas';
+
+import { z } from 'zod';
 
 export function useFetchCrags() {
   const { data: crags } = useQuery({
     queryKey: ['crags'],
     queryFn: async () => {
-      const { data } = await api.get('/gyms');
+      const { data } = await api.get('/v2/gyms');
 
-      const crags = cragsScheme.parse(data);
+      const crags = z.array(cragScheme).parse(data);
 
       return crags;
     },
@@ -35,7 +37,7 @@ export function useFetchCrag({
         return null;
       }
 
-      const { data } = await api.get(`/gyms/${cragId}`);
+      const { data } = await api.get(`/v2/gyms/${cragId}`);
 
       const crag = cragScheme.parse(data);
 

@@ -33,11 +33,7 @@ export function CragDetailCalendar() {
         onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}
       />
 
-      <Calendar
-        schedules={crag.futureSchedules || []}
-        onScheduleClick={() => {}}
-        targetMonth={format(currentMonth, 'yyyy-MM')}
-      />
+      <Calendar schedules={crag.schedules} onScheduleClick={() => {}} targetMonth={format(currentMonth, 'yyyy-MM')} />
     </Box>
   );
 }

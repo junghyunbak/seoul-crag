@@ -36,11 +36,7 @@ export default function StorySchedule() {
                 background: 'white',
               }}
             >
-              <Calendar
-                schedules={crag.futureSchedules || []}
-                onScheduleClick={() => {}}
-                targetMonth={format(date, 'yyyy-MM')}
-              />
+              <Calendar schedules={crag.schedules} onScheduleClick={() => {}} targetMonth={format(date, 'yyyy-MM')} />
             </Box>
           ))}
           onClose={() => setScheduleStory(null)}

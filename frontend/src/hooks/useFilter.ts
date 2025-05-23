@@ -43,8 +43,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
 
       let isOperate = false;
 
-      const schedules = (crag && crag.futureSchedules) || [];
-      const openingHourOfWeek = (crag && crag.openingHourOfWeek) || [];
+      const schedules = (crag && crag.schedules) || [];
+      const openingHourOfWeek = (crag && crag.openingHours) || [];
       const openingHour = openingHourOfWeek.find(({ day }) => DAY_STR_TO_INDEX[day] === date.getDay());
 
       if (openingHour?.is_closed) {
@@ -187,7 +187,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
           return;
         }
 
-        isFiltered &&= (crag.tags || []).some(({ id }) => {
+        isFiltered &&= (crag.gymTags || []).some(({ tag: { id } }) => {
           return tagId === id;
         });
       });

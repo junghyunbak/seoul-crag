@@ -5,7 +5,7 @@ import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
 type ContributionUserCount = {
-  user: Crag['contributions'][number]['user'];
+  user: Crag['gymUserContributions'][number]['user'];
   count: number;
 };
 
@@ -17,7 +17,7 @@ export function CragDetailContribution() {
   const contributionNameToUserToCnt = (() => {
     const nameToUser = new Map<string, Map<string, ContributionUserCount>>();
 
-    crag?.contributions.forEach(({ contribution, user }) => {
+    crag?.gymUserContributions.forEach(({ contribution, user }) => {
       const userToCnt = nameToUser.get(contribution.name) || new Map<string, ContributionUserCount>();
 
       const uniqueUsername = `${user.username}#${user.id.slice(0, 6)}`;

@@ -74,7 +74,7 @@ export function Users() {
                     <TableCell>{user.username}</TableCell>
                     <TableCell>{dayjs(user.created_at).format('YYYY년 MM월 DD일')}</TableCell>
                     <TableCell>
-                      <RoleController userId={user.id} initialRoles={user.roles} />
+                      <RoleController userId={user.id} initialRoles={user.userRoles.map(({ role }) => role)} />
                     </TableCell>
                     <TableCell />
                   </TableRow>

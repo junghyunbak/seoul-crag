@@ -141,14 +141,14 @@ export default function ManagePage() {
           </Box>
 
           {sidebarList.map((sidebarItem, i) => {
-            if (sidebarItem.title === '운영자 메뉴' && !user.roles.some((role) => role.name === 'owner')) {
+            if (sidebarItem.title === '운영자 메뉴' && !user.userRoles.some(({ role }) => role.name === 'owner')) {
               return null;
             }
 
             if (
               sidebarItem.title === '관리자 메뉴' &&
-              !user.roles.some(
-                (role) => role.name === 'gym_admin' || role.name === 'partner_admin' || role.name === 'owner'
+              !user.userRoles.some(
+                ({ role }) => role.name === 'gym_admin' || role.name === 'partner_admin' || role.name === 'owner'
               )
             ) {
               return null;

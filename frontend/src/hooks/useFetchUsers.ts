@@ -2,15 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
 
-import { userScheme, usersScheme } from '@/schemas';
+import { z } from 'zod';
+
+import { userSchema } from '@/schemas';
 
 export function useFetchUsers() {
   const { data: users } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const { data } = await api.get('/users');
+      const { data } = await api.get('/v2/users');
 
-      const users = usersScheme.parse(data);
+      const users = z.array(userSchema).parse(data);
 
       return users;
     },
@@ -29,9 +31,9 @@ export function useFetchUser(userId: string | null) {
         return null;
       }
 
-      const { data } = await api.get(`/users/${userId}`);
+      const { data } = await api.get(`/v2/users/${userId}`);
 
-      const user = userScheme.omit({ roles: true }).parse(data);
+      const user = userSchema.parse(data);
 
       return user;
     },
@@ -56,9 +58,9 @@ export function useFetchMe() {
         is_pwa: isPwa,
       });
 
-      const { data } = await api.get('/users/me');
+      const { data } = await api.get('/v2/users/me');
 
-      const user = userScheme.parse(data);
+      const user = userSchema.parse(data);
 
       return user;
     },

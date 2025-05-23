@@ -47,7 +47,7 @@ export function CragScheduleCalenderField() {
       />
 
       <Calendar
-        schedules={crag.futureSchedules || []}
+        schedules={crag.schedules}
         targetMonth={format(currentMonth, 'yyyy-MM')}
         onScheduleClick={(schedule) => setSelectedSchedule(schedule)}
       />

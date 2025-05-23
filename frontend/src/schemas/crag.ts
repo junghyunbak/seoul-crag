@@ -1,46 +1,45 @@
 import { dateScheme } from '@/schemas/common/date';
-import { imageTypeScheme } from '@/schemas/image';
-import { openingHoursScheme } from '@/schemas/openingHour';
-import { schedulesScheme } from '@/schemas/schedule';
-import { TagsScheme } from '@/schemas/tag';
+import { imageScheme } from '@/schemas/image';
+import { openingHourScheme } from '@/schemas/openingHour';
+import { scheduleScheme } from '@/schemas/schedule';
+import { TagScheme } from '@/schemas/tag';
 import { z } from 'zod';
-import { userScheme } from './user';
+import { InternalUserSchema } from './user';
 import { contributionScheme } from './contribute';
 
-// [ ]: 불필요한 optional 제거
-export const cragScheme = z.object({
+export const InternalCragSchema = z.object({
   id: z.string(),
   name: z.string(),
-  short_name: z.union([z.string(), z.null()]),
+  short_name: z.string().nullable(),
   description: z.string(),
   latitude: z.number(),
   longitude: z.number(),
 
-  thumbnail_url: z.union([z.string(), z.null()]).optional(),
-  website_url: z.union([z.string(), z.null()]),
-  shower_url: z.string(),
-  area: z.union([z.number(), z.null()]).optional(),
+  thumbnail_url: z.string().nullable(),
+  website_url: z.string().nullable(),
+  shower_url: z.string().nullable(),
+  area: z.number().nullable(),
   is_outer_wall: z.boolean(),
-
-  imageTypes: z.union([z.array(imageTypeScheme), z.null()]).optional(),
-  futureSchedules: z.union([schedulesScheme, z.null()]).optional(),
-  openingHourOfWeek: z.union([openingHoursScheme, z.null()]).optional(),
-  tags: TagsScheme.optional(),
-  contributions: z.array(
-    z.object({
-      id: z.string(),
-      user: userScheme.omit({
-        roles: true,
-      }),
-      contribution: contributionScheme,
-      description: z.string(),
-      created_at: z.coerce.date(),
-    })
-  ),
 
   opened_at: z.union([dateScheme, z.null()]).optional(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 });
 
-export const cragsScheme = z.array(cragScheme);
+export const InternalCragRelationSchema = z.object({
+  images: z.array(imageScheme),
+  schedules: z.array(scheduleScheme),
+  openingHours: z.array(openingHourScheme),
+  gymTags: z.array(z.object({ id: z.string().uuid(), tag: TagScheme, created_at: z.coerce.date() })),
+  gymUserContributions: z.array(
+    z.object({
+      id: z.string().uuid(),
+      description: z.string(),
+      contribution: contributionScheme,
+      created_at: z.coerce.date(),
+      user: z.lazy(() => InternalUserSchema),
+    })
+  ),
+});
+
+export const cragScheme = z.lazy(() => InternalCragSchema.merge(InternalCragRelationSchema));

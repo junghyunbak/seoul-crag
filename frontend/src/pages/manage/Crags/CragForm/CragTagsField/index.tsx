@@ -97,7 +97,7 @@ export function CragTagsField() {
           }}
           onClick={() => setIsMenuOpen(true)}
         >
-          <TagList tags={crag.tags || []} readonly />
+          <TagList tags={crag.gymTags.map(({ tag }) => tag) || []} readonly />
         </Paper>
       </Box>
 
@@ -113,7 +113,7 @@ export function CragTagsField() {
           style={{ ...floatingStyles, zIndex: 1000 }}
         >
           <TagList
-            tags={crag.tags || []}
+            tags={crag.gymTags.map(({ tag }) => tag) || []}
             onClick={(tag) => {
               removeCragTagMutation.mutate(tag);
             }}

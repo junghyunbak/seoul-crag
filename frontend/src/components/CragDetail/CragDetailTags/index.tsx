@@ -17,7 +17,7 @@ export function CragDetailTags() {
         gap: 0.5,
       }}
     >
-      <TagList tags={crag.tags || []} readonly removePadding />
+      <TagList tags={crag.gymTags.map(({ tag }) => tag)} readonly removePadding />
     </Box>
   );
 }

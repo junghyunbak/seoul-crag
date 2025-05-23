@@ -45,7 +45,9 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({ open, onClose, user, o
                 프로필 확인
               </Button>
 
-              {user.roles.some(({ name }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin') && (
+              {user.userRoles.some(
+                ({ role: { name } }) => name === 'owner' || name === 'gym_admin' || name === 'partner_admin'
+              ) && (
                 <Button
                   fullWidth
                   variant="outlined"

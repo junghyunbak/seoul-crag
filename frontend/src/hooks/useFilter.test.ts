@@ -16,7 +16,13 @@ const mockCrag: Crag = {
   updated_at: new Date(),
   is_outer_wall: false,
   shower_url: '',
-  contributions: [],
+  gymUserContributions: [],
+  thumbnail_url: null,
+  area: null,
+  images: [],
+  schedules: [],
+  openingHours: [],
+  gymTags: [],
 };
 
 const dateStr = '2025-05-08';
@@ -88,8 +94,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [closeOpeningHour],
-                futureSchedules: [reduceSchedule, closeSchedule],
+                openingHours: [closeOpeningHour],
+                schedules: [reduceSchedule, closeSchedule],
               },
               today.date
             )
@@ -105,8 +111,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [closeOpeningHour],
-                futureSchedules: [reduceSchedule],
+                openingHours: [closeOpeningHour],
+                schedules: [reduceSchedule],
               },
               today.date
             )
@@ -124,8 +130,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [],
-                futureSchedules: [reduceSchedule, closeSchedule],
+                openingHours: [],
+                schedules: [reduceSchedule, closeSchedule],
               },
               today.date
             )
@@ -141,8 +147,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [],
-                futureSchedules: [reduceSchedule],
+                openingHours: [],
+                schedules: [reduceSchedule],
               },
               today.date
             )
@@ -162,8 +168,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [closeOpeningHour],
-                futureSchedules: [closeSchedule],
+                openingHours: [closeOpeningHour],
+                schedules: [closeSchedule],
               },
               today.date
             )
@@ -179,8 +185,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [closeOpeningHour],
-                futureSchedules: [],
+                openingHours: [closeOpeningHour],
+                schedules: [],
               },
               today.date
             )
@@ -198,8 +204,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [],
-                futureSchedules: [closeSchedule],
+                openingHours: [],
+                schedules: [closeSchedule],
               },
               today.date
             )
@@ -215,8 +221,8 @@ describe('[운영 상태]', () => {
             useFilter(
               {
                 ...mockCrag,
-                openingHourOfWeek: [],
-                futureSchedules: [],
+                openingHours: [],
+                schedules: [],
               },
               today.date
             )
@@ -235,7 +241,7 @@ describe('[오픈 상태]', () => {
       useFilter(
         {
           ...mockCrag,
-          openingHourOfWeek: [
+          openingHours: [
             {
               ...openOpeningHour,
               open_time: '07:00:00',
@@ -255,7 +261,7 @@ describe('[오픈 상태]', () => {
       useFilter(
         {
           ...mockCrag,
-          openingHourOfWeek: [
+          openingHours: [
             {
               ...openOpeningHour,
               open_time: '07:00:00',
@@ -276,8 +282,8 @@ describe('[오픈 상태]', () => {
         const { isOff } = useFilter(
           {
             ...mockCrag,
-            openingHourOfWeek: [closeOpeningHour],
-            futureSchedules: [],
+            openingHours: [closeOpeningHour],
+            schedules: [],
           },
           today.date
         );
@@ -294,8 +300,8 @@ describe('[오픈 상태]', () => {
           const { isOff } = useFilter(
             {
               ...mockCrag,
-              openingHourOfWeek: [closeOpeningHour],
-              futureSchedules: [reduceSchedule],
+              openingHours: [closeOpeningHour],
+              schedules: [reduceSchedule],
             },
             today.date
           );
@@ -314,8 +320,8 @@ describe('[오픈 상태]', () => {
         const { isOff } = useFilter(
           {
             ...mockCrag,
-            openingHourOfWeek: [],
-            futureSchedules: [closeSchedule],
+            openingHours: [],
+            schedules: [closeSchedule],
           },
           today.date
         );
@@ -332,8 +338,8 @@ describe('[오픈 상태]', () => {
           const { isOff } = useFilter(
             {
               ...mockCrag,
-              openingHourOfWeek: [],
-              futureSchedules: [closeSchedule, reduceSchedule],
+              openingHours: [],
+              schedules: [closeSchedule, reduceSchedule],
             },
             today.date
           );
@@ -352,8 +358,8 @@ describe('[오픈 상태]', () => {
         const { isOff } = useFilter(
           {
             ...mockCrag,
-            openingHourOfWeek: [closeOpeningHour],
-            futureSchedules: [closeSchedule],
+            openingHours: [closeOpeningHour],
+            schedules: [closeSchedule],
           },
           today.date
         );
@@ -381,7 +387,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -403,7 +409,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -427,7 +433,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -449,7 +455,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -475,7 +481,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -497,7 +503,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -521,7 +527,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',
@@ -543,7 +549,7 @@ describe('[필터 상태]', () => {
           useFilter(
             {
               ...mockCrag,
-              futureSchedules: [
+              schedules: [
                 {
                   id: '',
                   type: 'setup',

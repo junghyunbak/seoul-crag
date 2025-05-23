@@ -27,7 +27,13 @@ export function GpsEdgeIndicator() {
           updated_at: new Date(),
           is_outer_wall: false,
           shower_url: '',
-          contributions: [],
+          gymUserContributions: [],
+          thumbnail_url: null,
+          area: null,
+          images: [],
+          schedules: [],
+          openingHours: [],
+          gymTags: [],
         },
       ]}
     />

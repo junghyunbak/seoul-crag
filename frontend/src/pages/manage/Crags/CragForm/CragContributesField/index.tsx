@@ -54,7 +54,7 @@ function ContributionField({ contribution }: ContributionFieldProps) {
         key={contribution.id}
         sx={{ minHeight: '40px', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 1 }}
       >
-        {crag.contributions
+        {crag.gymUserContributions
           .sort((a, b) => (isAfter(a.created_at, b.created_at) ? -1 : 1))
           .map((cragContribution) => {
             if (cragContribution.contribution.id !== contribution.id) {
@@ -69,7 +69,7 @@ function ContributionField({ contribution }: ContributionFieldProps) {
 }
 
 interface ContributionFieldItemProps {
-  cragContribution: Crag['contributions'][number];
+  cragContribution: Crag['gymUserContributions'][number];
 }
 
 function ContributionFieldItem({ cragContribution }: ContributionFieldItemProps) {
@@ -105,7 +105,7 @@ function ContributionFieldItem({ cragContribution }: ContributionFieldItemProps)
 interface EditContributionDialogProps {
   isOpen: boolean;
   onClose(): void;
-  cragContribution: Crag['contributions'][number];
+  cragContribution: Crag['gymUserContributions'][number];
 }
 
 function EditContributionDialog({ isOpen, onClose, cragContribution }: EditContributionDialogProps) {

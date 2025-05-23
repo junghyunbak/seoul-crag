@@ -14,7 +14,7 @@ export default function StoryShower() {
 
   return createPortal(
     <AnimatePresence>
-      {showerCragId && crag && crag.shower_url !== '' && (
+      {showerCragId && crag && typeof crag.shower_url === 'string' && (
         <StorySlider
           crag={crag}
           contents={[
@@ -50,7 +50,9 @@ export default function StoryShower() {
                   pointerEvents: 'auto',
                 }}
                 onClick={() => {
-                  window.open(crag.shower_url, '_blank');
+                  if (crag.shower_url) {
+                    window.open(crag.shower_url, '_blank');
+                  }
                 }}
               >
                 <InsertLinkIcon
