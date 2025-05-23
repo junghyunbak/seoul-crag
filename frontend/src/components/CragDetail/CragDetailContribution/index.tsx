@@ -45,8 +45,9 @@ export function CragDetailContribution() {
               <Box
                 sx={{
                   display: 'flex',
-                  columnGap: 1,
+                  alignItems: 'center',
                   flexWrap: 'wrap',
+                  columnGap: 1,
                 }}
               >
                 <Typography variant="body1">{contributionName}: </Typography>
