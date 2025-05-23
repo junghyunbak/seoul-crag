@@ -9,6 +9,7 @@ import {
   Typography,
   MenuItem,
   Divider,
+  TextField,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
@@ -29,9 +30,14 @@ export function CragList() {
   const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const [sortOption, setSortOption] = useState<SortOptions>('최근 생성순');
+  const [keyword, setKeyword] = useState('');
+
+  const filteredCrags = crags.filter(
+    (crag) => crag.name.toLowerCase().includes(keyword) || crag.short_name?.toLowerCase().includes(keyword)
+  );
 
   const sortedCrags = (() => {
-    return crags.sort((a, b) => {
+    return filteredCrags.sort((a, b) => {
       if (sortOption === '최근 생성순') {
         return isAfter(a.created_at, b.created_at) ? -1 : 1;
       }
@@ -52,7 +58,7 @@ export function CragList() {
       }}
     >
       <Box sx={(theme) => ({ position: 'sticky', top: 0, background: theme.palette.common.white, zIndex: 1 })}>
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, display: 'flex', gap: 2 }}>
           <Select value={sortOption} onChange={(e) => setSortOption(e.target.value as SortOptions)} label="정렬 옵션">
             {SORT_OPTIONS.map((opt, i) => {
               return (
@@ -62,6 +68,8 @@ export function CragList() {
               );
             })}
           </Select>
+
+          <TextField label="검색" sx={{ flex: 1 }} value={keyword} onChange={(e) => setKeyword(e.target.value)} />
         </Box>
 
         <Divider />
