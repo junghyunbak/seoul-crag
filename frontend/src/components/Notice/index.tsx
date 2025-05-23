@@ -37,6 +37,13 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
   },
   [`& .${accordionSummaryClasses.content}`]: {
     marginLeft: theme.spacing(1),
+    overflow: 'hidden',
+    ['& *']: {
+      width: '100%',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+    },
   },
   ...theme.applyStyles('dark', {
     backgroundColor: 'rgba(255, 255, 255, .05)',
