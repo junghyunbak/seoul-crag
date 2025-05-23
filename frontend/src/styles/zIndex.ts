@@ -1,5 +1,4 @@
 export const calendarChunk = 1;
-export const cragDetailTopBar = 2;
 
 export const splash = 1;
 
@@ -15,9 +14,10 @@ export const footer = 101;
 export const edgeMarker = 102;
 export const timer = 103;
 
-export const openMenu = 1000;
-export const filter = 1001;
-export const cragList = 1002;
+export const stickyHeader = 1001;
+export const openMenu = 1002;
+export const filter = 1003;
+export const cragList = 1004;
 
 export const story = 10000;
 export const cragDetail = 10001;

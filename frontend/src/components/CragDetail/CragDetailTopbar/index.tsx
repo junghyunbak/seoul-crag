@@ -27,7 +27,7 @@ export function CragDetailTopbar({ isScrolled }: CragDetailTopbarProps) {
         justifyContent: 'space-between',
         background: isScrolled ? 'white' : 'transparent',
         boxShadow: isScrolled ? 1 : 0,
-        zIndex: zIndex.cragDetailTopBar,
+        zIndex: zIndex.stickyHeader,
       }}
     >
       <Box

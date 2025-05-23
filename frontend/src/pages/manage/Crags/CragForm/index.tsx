@@ -26,6 +26,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 import { CragContributesField } from './CragContributesField';
+import { zIndex } from '@/styles';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -60,7 +61,17 @@ export function CragForm({ initialCrag }: CragFormProps) {
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            position: 'sticky',
+            top: 0,
+            background: theme.palette.common.white,
+            zIndex: zIndex.stickyHeader,
+          })}
+        >
           <Box sx={{ p: 2, display: 'flex', gap: 2 }}>
             <IconButton
               onClick={() => {
