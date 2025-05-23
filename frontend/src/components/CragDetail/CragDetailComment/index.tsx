@@ -32,7 +32,7 @@ export function CragDetailComment() {
 
   return (
     <Box sx={{ my: 4 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom fontWeight={600}>
         댓글
       </Typography>
 
