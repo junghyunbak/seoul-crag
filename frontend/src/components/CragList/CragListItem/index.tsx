@@ -44,9 +44,20 @@ export function CragListItem({ crag }: CragListItemProps) {
           cursor: 'pointer',
         }}
         onClick={() => {
-          map?.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 13);
           updateIsSearchOpen(false);
-          setSelectCragId(crag.id);
+
+          if (map) {
+            new Promise((resolve) => {
+              map.morph(map.getCenter(), 11, { duration: 1000 });
+
+              setTimeout(() => {
+                resolve(true);
+              }, 1000);
+            }).then(() => {
+              map.morph(new naver.maps.LatLng(crag.latitude, crag.longitude), 13, { duration: 1000 });
+              setSelectCragId(crag.id);
+            });
+          }
         }}
       >
         <Avatar variant="circular" src={crag.thumbnail_url ?? undefined} alt={crag.name} sx={{ width: 64, height: 64 }}>
