@@ -45,7 +45,7 @@ export function ImageWithSource({ image, className }: ImageWithSourceProps) {
       <Box
         sx={{
           position: 'absolute',
-          bottom: 0,
+          top: 0,
           width: '100%',
           p: 1,
         }}
