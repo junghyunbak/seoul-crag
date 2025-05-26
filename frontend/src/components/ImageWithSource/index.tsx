@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Box } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { Box, Typography } from '@mui/material';
 
 interface ImageWithSourceProps extends React.HTMLAttributes<HTMLDivElement> {
   image: Image;
@@ -64,18 +63,18 @@ export function ImageWithSource({ image, className, sourcePosition = 'leftBottom
               p: 1,
             }}
           >
-            <p
-              style={{
+            <Typography
+              variant="body2"
+              sx={(theme) => ({
                 margin: 0,
-                fontSize: '0.75rem',
-                lineHeight: '0.75rem',
-                color: grey[400],
+                color: theme.palette.grey[300],
                 whiteSpace: 'normal',
                 wordBreak: 'break-all',
-              }}
+                lineHeight: 1,
+              })}
             >
               {`출처: ${image.source}`}
-            </p>
+            </Typography>
           </Box>
         </>
       )}
