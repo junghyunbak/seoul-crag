@@ -109,8 +109,8 @@ function ShowerContentTypeImage({ image }: ShowerContentTypeImageProps) {
   const { source } = image;
 
   return (
-    <Box>
-      <ImageWithSource image={image} />
+    <Box sx={{ width: '100%' }}>
+      <ImageWithSource image={image} sourcePosition="leftTop" />
 
       {source && (
         <Box
