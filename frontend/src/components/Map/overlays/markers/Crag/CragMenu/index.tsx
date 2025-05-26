@@ -43,7 +43,7 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
 
   const theme = useTheme();
 
-  const { hasShower } = useFilter(crag);
+  const { hasShower, showerImages } = useFilter(crag);
 
   const { updateIsMarkerLoading } = useModifyLoading();
   const { updateCafes } = useModifyCafe();
@@ -89,7 +89,7 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
         disabled: false,
       },
       {
-        icon: <ShowerIcon />,
+        icon: <ShowerIcon sx={{ color: showerImages.length > 0 ? '#04c139' : undefined }} />,
         callback: () => {
           setShowerStory(crag.id);
         },
