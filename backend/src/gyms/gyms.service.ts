@@ -158,7 +158,7 @@ export class GymsService {
         openingHours: raw.openingHours || [],
         gymTags: raw.gymTags || [],
         gymUserContributions: raw.gymUserContributions || [],
-        feeds: raw.gym_feeds || [],
+        feeds: raw.feeds || [],
 
         comments: raw.gym_comments,
       };
