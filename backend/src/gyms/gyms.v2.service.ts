@@ -20,6 +20,7 @@ export class GymsV2Service {
         'gymUserContributions',
         'gymUserContributions.contribution',
         'gymUserContributions.user',
+        'feeds',
       ],
     });
   }
@@ -38,6 +39,7 @@ export class GymsV2Service {
         'gymUserContributions',
         'gymUserContributions.contribution',
         'gymUserContributions.user',
+        'feeds',
       ],
     });
   }
