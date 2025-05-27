@@ -24,6 +24,7 @@
     "🔽🔽🔽🔽🔽🔽serve🔽🔽🔽🔽🔽🔽": "🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽",
     "serve:pm2": "npm run build && pm2 delete seoul-crag-backend && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend -i 2",
     "serve:pm2:init": "npm run build && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend -i 2",
+    "serve:pm2:init:fork": "npm run build && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend",
     "serve:pm2:reload": "npm run build && cross-env NODE_ENV=prod pm2 reload seoul-crag-backend"
   },
   "dependencies": {
