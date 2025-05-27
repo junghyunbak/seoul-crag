@@ -19,11 +19,9 @@ export class GymsV2Controller {
 
   @Get()
   async findAll(@Query('feeds') feeds: boolean) {
-    const Dto = feeds ? GymResponseWithFeedsDto : GymResponseDto;
-
-    const gyms = await this.gymsService.findAll();
-
-    return gyms.map((gym) => new Dto(gym));
+    return feeds
+      ? await this.gymsService.findAllWithFeeds()
+      : await this.gymsService.findAll();
   }
 
   @Get(':id')

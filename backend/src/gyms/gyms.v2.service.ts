@@ -20,6 +20,21 @@ export class GymsV2Service {
         'gymUserContributions',
         'gymUserContributions.contribution',
         'gymUserContributions.user',
+      ],
+    });
+  }
+
+  async findAllWithFeeds() {
+    return await this.gymRepo.find({
+      relations: [
+        'images',
+        'schedules',
+        'openingHours',
+        'comments',
+        'gymTags.tag',
+        'gymUserContributions',
+        'gymUserContributions.contribution',
+        'gymUserContributions.user',
         'feeds',
       ],
     });
