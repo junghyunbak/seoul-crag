@@ -28,6 +28,7 @@ import { NoticeModule } from './notices/notice.module';
 import { KakaoModule } from './kakao/kakao.module';
 import { ContributionModule } from './contributions/contribution.module';
 import { GymUserContributionModule } from './gym-user-contributions/gym-user-contributions.module';
+import { FeedsModule } from './feeds/feeds.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { GymUserContributionModule } from './gym-user-contributions/gym-user-con
     KakaoModule,
     ContributionModule,
     GymUserContributionModule,
+    FeedsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
