@@ -10,7 +10,7 @@ export function useFetchCrags({ feeds = false }: { feeds?: boolean }) {
   const { data: crags } = useQuery({
     queryKey: ['crags', feeds],
     queryFn: async () => {
-      const { data } = await api.get(`/v2/gyms${feeds ? '?feeds=true' : ''}`);
+      const { data } = await api.get(`/gyms${feeds ? '?feeds=true' : ''}`);
 
       const crags = z.array(cragScheme).parse(data);
 
@@ -39,7 +39,7 @@ export function useFetchCrag({
         return null;
       }
 
-      const { data } = await api.get(`/v2/gyms/${cragId}${feeds ? '?feeds=true' : ''}`);
+      const { data } = await api.get(`/gyms/${cragId}${feeds ? '?feeds=true' : ''}`);
 
       const crag = cragScheme.parse(data);
 

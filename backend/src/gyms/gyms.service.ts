@@ -13,37 +13,27 @@ import { GymSchedule } from 'src/gym-schedules/gym-schedules.entity';
 import { GymOpeningHour } from 'src/gym-opening-hours/gym-opening-hours.entity';
 import { GymTag } from 'src/gym-tags/gym-tags.entity';
 import { GymUserContribution } from 'src/gym-user-contributions/gym-user-contributions.entity';
-import { User } from 'src/user/user.entity';
-import { Contribution } from 'src/contributions/contribution.entity';
+import { Tag } from 'src/tags/tags.entity';
+import { Feed } from 'src/feeds/feeds.entity';
 
-type GymField = {
+type GymColumn = {
   [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
 };
 
-type ImageType = { imageTypes: string[] };
-type ScheduleType = { futureSchedules: GymSchedule[] };
-type OpeningHourType = { openingHourOfWeek: GymOpeningHour[] };
-type TagType = { tags: GymTag[] };
-type ContributionType = {
-  contributions: {
-    id: string;
-    user: Omit<User, 'roles'>;
-    contribution: Contribution;
-    description: string;
-  }[];
+type QueriedGymColumn = {
+  [P in keyof Gym as `gym_${P}`]: Gym[P];
 };
 
-type JoinedType = ImageType &
-  ScheduleType &
-  OpeningHourType &
-  TagType &
-  ContributionType;
+type GymRelation = Partial<{
+  images: GymImage[];
+  schedules: GymSchedule[];
+  openingHours: GymOpeningHour[];
+  gymTags: GymTag[];
+  gymUserContributions: GymUserContribution[];
+  feeds: Feed[];
+}>;
 
-type GymJoinedTypes = (GymField & JoinedType)[];
-
-type JoinGymWithImageType = {
-  [P in keyof GymField as `gym_${P}`]: GymField[P];
-} & JoinedType;
+type GymJoined = GymColumn & Required<GymRelation>;
 
 @Injectable()
 export class GymsService {
@@ -62,10 +52,10 @@ export class GymsService {
         (qb) =>
           qb
             .subQuery()
-            .select(`ARRAY_AGG(DISTINCT i.type)`)
+            .select(`JSON_AGG(i)`)
             .from(GymImage, 'i')
             .where('i.gymId = gym.id'),
-        'imageTypes',
+        'images',
       )
       .addSelect(
         (qb) =>
@@ -74,21 +64,7 @@ export class GymsService {
             .select(`JSON_AGG(s)`)
             .from(GymSchedule, 's')
             .where('s.gymId = gym.id'),
-        /**
-         * 지난 모든 일정도 가져오도록 임시 수정
-         */
-        //.andWhere(`s.open_date >= date_trunc('month', CURRENT_DATE)`),
-        'futureSchedules',
-      )
-      .addSelect(
-        (qb) =>
-          qb
-            .subQuery()
-            .select(`JSON_AGG(tag)`)
-            .from(GymTag, 't')
-            .leftJoin('t.tag', 'tag')
-            .where('t.gymId = gym.id'),
-        'tags',
+        'schedules',
       )
       .addSelect(
         (qb) =>
@@ -97,7 +73,25 @@ export class GymsService {
             .select(`JSON_AGG(o)`)
             .from(GymOpeningHour, 'o')
             .where('o.gymId = gym.id'),
-        'openingHourOfWeek',
+        'openingHours',
+      )
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(
+              `JSON_AGG(
+                JSON_BUILD_OBJECT(
+                  'id', gt.id,
+                  'tag', TO_JSON(t),
+                  'created_at', gt.created_at
+                )
+              )`,
+            )
+            .from(GymTag, 'gt')
+            .leftJoin(Tag, 't', 't.id = gt.tagId')
+            .where('gt.gymId = gym.id'),
+        'gymTags',
       )
       .addSelect(
         (qb) =>
@@ -108,10 +102,10 @@ export class GymsService {
               JSON_AGG(
                 JSON_BUILD_OBJECT(
                   'id', uc.id,
-                  'user', TO_JSON(gym_user),
-                  'contribution', TO_JSON(gym_contribution),
                   'description', uc.description,
-                  'created_at', uc.created_at
+                  'created_at', uc.created_at,
+                  'user', TO_JSON(gym_user),
+                  'contribution', TO_JSON(gym_contribution)
                 )
               )
             `,
@@ -120,18 +114,28 @@ export class GymsService {
             .leftJoin('uc.user', 'gym_user')
             .leftJoin('uc.contribution', 'gym_contribution')
             .where('uc.gymId = gym.id'),
-        'contributions',
+        'gymUserContributions',
+      )
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(`JSON_AGG(f)`)
+            .from(Feed, 'f')
+            .where('f.gymId = gym.id'),
+        'feeds',
       );
   }
 
-  async findAll(): Promise<GymField[]> {
-    const gymWithImages: GymField[] = [];
+  async findAll(): Promise<GymJoined[]> {
+    const gymWithImages: GymJoined[] = [];
 
-    const rawGyms =
-      await this.getJoinedGymQueryBuilder().getRawMany<JoinGymWithImageType>();
+    const rawGyms = await this.getJoinedGymQueryBuilder().getRawMany<
+      QueriedGymColumn & GymRelation
+    >();
 
     rawGyms.forEach((raw) => {
-      const gymWithImage: GymJoinedTypes[number] = {
+      const gymWithImage: GymJoined = {
         id: raw.gym_id,
         name: raw.gym_name,
         description: raw.gym_description,
@@ -149,19 +153,14 @@ export class GymsService {
         created_at: raw.gym_created_at,
         updated_at: raw.gym_updated_at,
 
-        comments: raw.gym_comments,
-        images: raw.gym_images,
-        schedules: raw.gym_schedules,
-        openingHours: raw.gym_openingHours,
-        gymTags: raw.gym_gymTags,
-        gymUserContributions: raw.gym_gymUserContributions,
-        feeds: raw.gym_feeds,
+        images: raw.images || [],
+        schedules: raw.schedules || [],
+        openingHours: raw.openingHours || [],
+        gymTags: raw.gymTags || [],
+        gymUserContributions: raw.gymUserContributions || [],
+        feeds: raw.gym_feeds || [],
 
-        imageTypes: raw.imageTypes,
-        futureSchedules: raw.futureSchedules,
-        openingHourOfWeek: raw.openingHourOfWeek,
-        tags: raw.tags || [],
-        contributions: raw.contributions || [],
+        comments: raw.gym_comments,
       };
 
       gymWithImages.push(gymWithImage);
@@ -170,22 +169,21 @@ export class GymsService {
     return gymWithImages;
   }
 
-  async findOne(id: string): Promise<GymField> {
+  async findOne(id: string): Promise<GymJoined> {
     const rawGym = await this.getJoinedGymQueryBuilder()
       .where(`gym.id = :id`, { id })
-      .getRawOne<JoinGymWithImageType>();
+      .getRawOne<QueriedGymColumn & GymRelation>();
 
     if (!rawGym) {
       throw new NotFoundException('해당 암장을 찾을 수 없습니다.');
     }
 
-    const gymWithImage: GymJoinedTypes[number] = {
+    const gymWithImage: GymJoined = {
       id: rawGym.gym_id,
       name: rawGym.gym_name,
       description: rawGym.gym_description,
       latitude: rawGym.gym_latitude,
       longitude: rawGym.gym_longitude,
-
       thumbnail_url: rawGym.gym_thumbnail_url,
       website_url: rawGym.gym_website_url,
       shower_url: rawGym.gym_shower_url,
@@ -193,23 +191,17 @@ export class GymsService {
       opened_at: rawGym.gym_opened_at,
       short_name: rawGym.gym_short_name,
       is_outer_wall: rawGym.gym_is_outer_wall,
-
       created_at: rawGym.gym_created_at,
       updated_at: rawGym.gym_updated_at,
 
-      images: rawGym.gym_images,
-      schedules: rawGym.gym_schedules,
-      comments: rawGym.gym_comments,
-      gymTags: rawGym.gym_gymTags,
-      openingHours: rawGym.gym_openingHours,
-      gymUserContributions: rawGym.gym_gymUserContributions,
-      feeds: rawGym.gym_feeds,
+      images: rawGym.images || [],
+      schedules: rawGym.schedules || [],
+      gymTags: rawGym.gymTags || [],
+      openingHours: rawGym.openingHours || [],
+      gymUserContributions: rawGym.gymUserContributions || [],
+      feeds: rawGym.feeds || [],
 
-      imageTypes: rawGym.imageTypes,
-      futureSchedules: rawGym.futureSchedules,
-      openingHourOfWeek: rawGym.openingHourOfWeek,
-      tags: rawGym.tags || [],
-      contributions: rawGym.contributions || [],
+      comments: rawGym.gym_comments,
     };
 
     return gymWithImage;
