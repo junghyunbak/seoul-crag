@@ -1,7 +1,9 @@
+import { Gym } from 'src/gyms/gyms.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -21,4 +23,7 @@ export class Feed {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @ManyToOne(() => Gym, (gym) => gym.feeds, { onDelete: 'CASCADE' })
+  gym: Gym;
 }
