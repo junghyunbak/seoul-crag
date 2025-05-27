@@ -6,17 +6,11 @@ import { isAfter } from 'date-fns';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { DefaultError, useMutation, useQueryClient } from '@tanstack/react-query';
+import { DefaultError, useMutation } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 
 export function CragFeedField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
-
-  const queryClient = useQueryClient();
-
-  const clearCragsCache = () => {
-    queryClient.invalidateQueries({ queryKey: ['crags'] });
-  };
 
   const updateFeedReadStatus = useMutation<void, DefaultError, { feedId: string; isRead: boolean }>({
     mutationFn: async ({ feedId, isRead }) => {
@@ -86,7 +80,6 @@ export function CragFeedField() {
                       });
 
                       revalidateCrag();
-                      clearCragsCache();
                     }}
                   >
                     {feed.is_read ? <CheckBoxIcon sx={{ fill: 'green' }} /> : <CheckBoxOutlineBlankIcon />}
@@ -114,7 +107,6 @@ export function CragFeedField() {
                       window.open(feed.url, '_blank');
 
                       revalidateCrag();
-                      clearCragsCache();
                     }}
                   >
                     <OpenInNewIcon />
