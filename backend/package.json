@@ -21,6 +21,7 @@
     "start": "npm run start:dev",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:test": "cross-env NODE_ENV=test nest start --watch",
+    "start:prod": "cross-env NODE_ENV=prod nest start --watch",
     "🔽🔽🔽🔽🔽🔽serve🔽🔽🔽🔽🔽🔽": "🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽",
     "serve:pm2": "npm run build && pm2 delete seoul-crag-backend && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend -i 2",
     "serve:pm2:init": "npm run build && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend -i 2",
