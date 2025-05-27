@@ -6,6 +6,7 @@ import { TagScheme } from '@/schemas/tag';
 import { z } from 'zod';
 import { InternalUserSchema } from './user';
 import { contributionSchema } from './contribute';
+import { feedSchema } from './feed';
 
 export const InternalCragSchema = z.object({
   id: z.string(),
@@ -40,6 +41,7 @@ export const InternalCragRelationSchema = z.object({
       user: z.lazy(() => InternalUserSchema),
     })
   ),
+  feeds: z.array(feedSchema),
 });
 
 export const cragScheme = z.lazy(() => InternalCragSchema.merge(InternalCragRelationSchema));

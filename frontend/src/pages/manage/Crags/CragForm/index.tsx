@@ -27,6 +27,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
 import { CragContributesField } from './CragContributesField';
 import { zIndex } from '@/styles';
+import { CragFeedField } from './CragFeedField';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -143,6 +144,9 @@ export function CragForm({ initialCrag }: CragFormProps) {
               </Grid>
               <Grid size={{ xs: 12 }}>
                 <CragContributesField />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <CragFeedField />
               </Grid>
             </Grid>
           </Box>
