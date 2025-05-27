@@ -29,6 +29,7 @@ import { KakaoModule } from './kakao/kakao.module';
 import { ContributionModule } from './contributions/contribution.module';
 import { GymUserContributionModule } from './gym-user-contributions/gym-user-contributions.module';
 import { FeedsModule } from './feeds/feeds.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { FeedsModule } from './feeds/feeds.module';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     RoleModule,
