@@ -123,6 +123,7 @@ export function CragForm({ initialCrag }: CragFormProps) {
 
                   <Grid size={{ xs: 12, md: 8 }}>
                     <CragImagesField imageType="interior" />
+                    <CragImagesField imageType="shower" />
                   </Grid>
                   <Grid size={{ xs: 12, md: 4 }}>
                     <CragThumbnailField />

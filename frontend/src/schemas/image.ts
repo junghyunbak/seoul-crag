@@ -5,7 +5,7 @@ export const imageTypeScheme = z.union([z.literal('interior'), z.literal('shower
 export const imageScheme = z.object({
   id: z.string(),
   url: z.string(),
-  source: z.union([z.string(), z.null()]).optional(),
+  source: z.string().nullable(),
   type: imageTypeScheme,
   order: z.number(),
   created_at: z.coerce.date(),

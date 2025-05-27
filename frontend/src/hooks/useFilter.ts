@@ -46,12 +46,13 @@ export function useFilter(crag?: Crag, date = new Date()) {
       const schedules = (crag && crag.schedules) || [];
       const openingHourOfWeek = (crag && crag.openingHours) || [];
       const openingHour = openingHourOfWeek.find(({ day }) => DAY_STR_TO_INDEX[day] === date.getDay());
+      const showerImages = ((crag && crag.images) || []).filter((image) => image.type === 'shower');
 
       if (openingHour?.is_closed) {
         isRegularyClosed = true;
       }
 
-      const hasShower = crag?.shower_url !== '';
+      const hasShower = showerImages.length > 0 || crag?.shower_url !== '';
 
       const current = new DateService(date);
       let open = new DateService(DateService.timeStrToDate(openingHour?.open_time || '', date));
@@ -211,6 +212,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isRecentlySetting,
         remainSetupDay,
         elapseSetupDay,
+        showerImages,
       };
     },
     [filter, selectTagId]

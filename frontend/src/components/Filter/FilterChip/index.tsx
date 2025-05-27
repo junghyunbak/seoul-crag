@@ -176,25 +176,31 @@ Chip.DeleteButton = function DeleteButton({ onDelete }: DeleteButtonProps) {
   }
 
   return (
-    <CloseIcon
-      sx={(theme) => ({
-        borderRadius: '50%',
-        background: theme.palette.grey[500],
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 20,
-        height: 20,
-        p: '3px',
-        ml: '2px',
-        mr: '-4px',
-        color: theme.palette.common.white,
-      })}
+    <Box
       onClick={(e) => {
         e.stopPropagation();
         onDelete();
       }}
-    />
+      sx={(theme) => ({
+        width: 20,
+        height: 20,
+        borderRadius: '50%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: theme.palette.grey[500],
+        ml: '2px',
+        mr: '-4px',
+      })}
+    >
+      <CloseIcon
+        sx={(theme) => ({
+          color: theme.palette.common.white,
+          width: 14,
+          height: 14,
+        })}
+      />
+    </Box>
   );
 };
 
