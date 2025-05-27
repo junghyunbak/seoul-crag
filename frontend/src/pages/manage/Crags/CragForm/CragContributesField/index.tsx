@@ -30,8 +30,8 @@ export function CragContributesField() {
       <Typography variant="h6">기여</Typography>
 
       {contributions?.map((contribution) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <ContributionField key={contribution.id} contribution={contribution} />
+        <Box key={contribution.id} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <ContributionField contribution={contribution} />
           <CreateContributionButton contribution={contribution} />
         </Box>
       ))}
