@@ -6,11 +6,11 @@ import { cragScheme, openingHoursScheme } from '@/schemas';
 
 import { z } from 'zod';
 
-export function useFetchCrags() {
+export function useFetchCrags({ feeds = false }: { feeds?: boolean }) {
   const { data: crags } = useQuery({
-    queryKey: ['crags'],
+    queryKey: ['crags', feeds],
     queryFn: async () => {
-      const { data } = await api.get('/v2/gyms');
+      const { data } = await api.get(`/v2/gyms${feeds ? '?feeds=true' : ''}`);
 
       const crags = z.array(cragScheme).parse(data);
 
@@ -25,19 +25,21 @@ export function useFetchCrag({
   cragId,
   enabled = true,
   initialData,
+  feeds = false,
 }: {
   cragId: string | undefined | null;
   enabled?: boolean;
   initialData?: Crag;
+  feeds?: boolean;
 }) {
   const { data: crag, refetch } = useQuery({
-    queryKey: ['crag', cragId],
+    queryKey: ['crag', feeds, cragId],
     queryFn: async () => {
       if (!cragId) {
         return null;
       }
 
-      const { data } = await api.get(`/v2/gyms/${cragId}`);
+      const { data } = await api.get(`/v2/gyms/${cragId}${feeds ? '?feeds=true' : ''}`);
 
       const crag = cragScheme.parse(data);
 

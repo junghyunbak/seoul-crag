@@ -27,7 +27,7 @@ export function CragFeedField() {
         인스타 피드
       </Typography>
       <Grid container spacing={2}>
-        {crag.feeds
+        {(crag.feeds || [])
           .sort((a, b) => (isAfter(a.created_at, b.created_at) ? -1 : 1))
           .map((feed) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={feed.id}>

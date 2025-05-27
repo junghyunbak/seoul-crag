@@ -29,7 +29,7 @@ export default function Main() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
-  const { crags } = useFetchCrags();
+  const { crags } = useFetchCrags({});
   const { cafes } = useCafe();
   const { mapRef, boundary, lastLat, lastLng } = useMap();
 

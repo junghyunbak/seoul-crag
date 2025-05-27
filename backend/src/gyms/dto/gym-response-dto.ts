@@ -1,6 +1,7 @@
-import { Expose } from 'class-transformer';
+import { Expose, Exclude } from 'class-transformer';
+import { Feed } from 'src/feeds/feeds.entity';
 
-export class GymResponseDto {
+export class InternalGymResponseDto {
   @Expose()
   id: string;
 
@@ -42,4 +43,24 @@ export class GymResponseDto {
 
   @Expose()
   updated_at: Date;
+}
+
+export class GymResponseDto extends InternalGymResponseDto {
+  @Exclude()
+  feeds: Feed[];
+
+  constructor(gym: Partial<GymResponseDto>) {
+    super();
+    Object.assign(this, gym);
+  }
+}
+
+export class GymResponseWithFeedsDto extends InternalGymResponseDto {
+  @Expose()
+  feeds: Feed[];
+
+  constructor(gym: Partial<GymResponseWithFeedsDto>) {
+    super();
+    Object.assign(this, gym);
+  }
 }

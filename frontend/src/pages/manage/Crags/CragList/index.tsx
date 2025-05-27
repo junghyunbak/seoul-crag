@@ -88,7 +88,7 @@ export function CragList() {
                   }}
                 >
                   <CardMedia sx={{ p: 2 }}>
-                    <Badge badgeContent={crag.feeds.filter((feed) => !feed.is_read).length} color="error">
+                    <Badge badgeContent={crag.feeds?.filter((feed) => !feed.is_read).length || 0} color="error">
                       <Avatar sx={{ width: 100, height: 100 }} src={crag.thumbnail_url || ''}>
                         {crag.name[0]}
                       </Avatar>

@@ -13,7 +13,7 @@ import { cragsContext } from '@/pages/manage/Crags/index.context';
 import { CragList } from './CragList';
 
 export function Crags() {
-  const { crags } = useFetchCrags();
+  const { crags } = useFetchCrags({ feeds: true });
 
   const [selectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 

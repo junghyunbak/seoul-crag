@@ -13,7 +13,7 @@ import { Filter } from '@/components/Filter';
 export function Search() {
   const { isSearchOpen } = useSearch();
 
-  const { crags } = useFetchCrags();
+  const { crags } = useFetchCrags({});
   const { searchKeyword, searchSortOption } = useSearch();
 
   const { updateIsSearchOpen, updateSearchKeyword } = useModifySearch();

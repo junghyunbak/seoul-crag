@@ -41,7 +41,7 @@ export const InternalCragRelationSchema = z.object({
       user: z.lazy(() => InternalUserSchema),
     })
   ),
-  feeds: z.array(feedSchema),
+  feeds: z.array(feedSchema).optional(),
 });
 
 export const cragScheme = z.lazy(() => InternalCragSchema.merge(InternalCragRelationSchema));
