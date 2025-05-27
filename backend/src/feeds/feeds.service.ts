@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Feed } from './feeds.entity';
-import { Cron, CronExpression } from '@nestjs/schedule';
+//import { Cron, CronExpression } from '@nestjs/schedule';
 import { GymsV2Service } from 'src/gyms/gyms.v2.service';
 import puppeteer from 'puppeteer';
 import { ImageService } from 'src/image/image.service';
@@ -29,7 +29,7 @@ export class FeedsService {
     return this.feedRepo.save(feed);
   }
 
-  @Cron(CronExpression.EVERY_HOUR)
+  //@Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     const gyms = await this.gymsV2Service.findAll();
 
