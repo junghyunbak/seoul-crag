@@ -21,7 +21,7 @@ import { format, isAfter, isBefore } from 'date-fns';
 import { useContext, useState } from 'react';
 import { cragsContext } from '@/pages/manage/Crags/index.context';
 
-const SORT_OPTIONS = ['최근 생성순', '마지막 수정순'] as const;
+const SORT_OPTIONS = ['최근 생성순', '마지막 수정순', '최신 피드순'] as const;
 
 type SortOptions = (typeof SORT_OPTIONS)[number];
 
@@ -30,12 +30,15 @@ export function CragList() {
 
   const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
-  const [sortOption, setSortOption] = useState<SortOptions>('최근 생성순');
+  const [sortOption, setSortOption] = useState<SortOptions>('최신 피드순');
   const [keyword, setKeyword] = useState('');
 
-  const filteredCrags = crags.filter(
-    (crag) => crag.name.toLowerCase().includes(keyword) || crag.short_name?.toLowerCase().includes(keyword)
-  );
+  const filteredCrags = crags
+    .filter((crag) => crag.name.toLowerCase().includes(keyword) || crag.short_name?.toLowerCase().includes(keyword))
+    .map((crag) => ({
+      ...crag,
+      feeds: crag.feeds?.filter((feed) => !feed.is_read),
+    }));
 
   const sortedCrags = (() => {
     return filteredCrags.sort((a, b) => {
@@ -45,6 +48,10 @@ export function CragList() {
 
       if (sortOption === '마지막 수정순') {
         return isBefore(a.updated_at, b.updated_at) ? -1 : 1;
+      }
+
+      if (sortOption === '최신 피드순') {
+        return (a.feeds?.length || -Infinity) > (b.feeds?.length || -Infinity) ? -1 : 1;
       }
 
       return 0;
@@ -58,7 +65,7 @@ export function CragList() {
         flexDirection: 'column',
       }}
     >
-      <Box sx={(theme) => ({ position: 'sticky', top: 0, background: theme.palette.common.white, zIndex: 1 })}>
+      <Box sx={(theme) => ({ position: 'sticky', top: 0, background: theme.palette.common.white, zIndex: 2 })}>
         <Box sx={{ p: 3, display: 'flex', gap: 2 }}>
           <Select value={sortOption} onChange={(e) => setSortOption(e.target.value as SortOptions)} label="정렬 옵션">
             {SORT_OPTIONS.map((opt, i) => {
@@ -88,7 +95,7 @@ export function CragList() {
                   }}
                 >
                   <CardMedia sx={{ p: 2 }}>
-                    <Badge badgeContent={crag.feeds?.filter((feed) => !feed.is_read).length || 0} color="error">
+                    <Badge badgeContent={crag.feeds?.length || 0} color="error">
                       <Avatar sx={{ width: 100, height: 100 }} src={crag.thumbnail_url || ''}>
                         {crag.name[0]}
                       </Avatar>
