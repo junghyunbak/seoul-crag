@@ -42,6 +42,7 @@ export function CragForm({ initialCrag }: CragFormProps) {
     cragId: initialCrag.id,
     enabled: queryEnabled,
     initialData: initialCrag,
+    feeds: true,
   });
 
   if (!crag) {

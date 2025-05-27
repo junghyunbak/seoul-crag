@@ -31,7 +31,7 @@ export function CragFeedField() {
           .sort((a, b) => (isAfter(a.created_at, b.created_at) ? -1 : 1))
           .map((feed) => (
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={feed.id}>
-              <Box sx={{ width: '100%', aspectRatio: '1/1', position: 'relative' }}>
+              <Box sx={{ width: '100%', aspectRatio: '3/4', position: 'relative' }}>
                 <Box
                   component="img"
                   src={feed.thumbnail_url}
