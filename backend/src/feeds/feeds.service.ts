@@ -40,7 +40,7 @@ export class FeedsService {
 
     const page = await browser.newPage();
 
-    for (const gym of gyms.slice(0, 1)) {
+    for (const gym of gyms) {
       const url = gym.website_url;
 
       try {
