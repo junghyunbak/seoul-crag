@@ -216,6 +216,18 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
           const isToday = exp.dateStr === current.dateStr;
           const isSunday = i % 7 === 0;
 
+          const textColor = (() => {
+            if (isToday) {
+              return theme.palette.common.white;
+            }
+
+            if (isSunday || isHoliday) {
+              return theme.palette.error.main;
+            }
+
+            return '#555';
+          })();
+
           return (
             <Grid
               size={{ xs: 1 }}
@@ -229,15 +241,15 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
               }}
             >
               <Box
-                sx={{
+                sx={(theme) => ({
                   position: 'absolute',
                   top: 4,
                   left: 4,
                   fontSize: '0.75rem',
-                  color: isSunday || isHoliday ? theme.palette.error.main : '#555',
-                  textDecoration: isToday ? 'underline' : undefined,
-                  fontWeight: isToday ? 'bold' : 'normal',
-                }}
+                  color: textColor,
+                  background: isToday ? theme.palette.primary.light : undefined,
+                  borderRadius: 0.5,
+                })}
               >
                 {i === 0 || addDays(calendarStart, i - 1).getMonth() !== current.date.getMonth()
                   ? `${format(current.date, 'M/d')}`
