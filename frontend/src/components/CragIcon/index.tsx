@@ -1,4 +1,3 @@
-import React from 'react';
 import { MarkerIcon } from '../Map/overlays/markers/_assets/MarkerIcon';
 import { Box } from '@mui/material';
 
