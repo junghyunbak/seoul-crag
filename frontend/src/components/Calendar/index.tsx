@@ -95,7 +95,7 @@ function preprocessSchedules(schedules: Schedule[], calendarStart: Date): Schedu
         schedule: s,
       };
 
-      if (!s.is_all_day) {
+      if (s.type === 'setup') {
         if (isFirstChunk) {
           const minutes = open.getHours() * 60 + open.getMinutes();
           chunk.leftRatio = minutes / MINUTES_IN_DAY;
