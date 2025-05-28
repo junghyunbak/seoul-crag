@@ -250,7 +250,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
                   left: 4,
                   fontSize: '0.75rem',
                   color: textColor,
-                  background: isToday ? theme.palette.primary.light : undefined,
+                  background: isToday ? theme.palette.primary.main : undefined,
                   px: isToday ? 0.5 : undefined,
                   borderRadius: 0.5,
                 })}
