@@ -58,6 +58,9 @@ export function useFilter(crag?: Crag, date = new Date()) {
       let open = new DateService(DateService.timeStrToDate(openingHour?.open_time || '', date));
       let close = new DateService(DateService.timeStrToDate(openingHour?.close_time || '', date));
 
+      const originOpen = open;
+      const originClose = close;
+
       let remainSetupDay = Infinity;
       let elapseSetupDay = Infinity;
 
@@ -213,6 +216,8 @@ export function useFilter(crag?: Crag, date = new Date()) {
         remainSetupDay,
         elapseSetupDay,
         showerImages,
+        originOpen,
+        originClose,
       };
     },
     [filter, selectTagId]

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 
 import { useExp, useFilter } from '@/hooks';
 
@@ -35,29 +35,56 @@ export function CragDetailOpeningHours() {
   );
 }
 
+const TimeText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isToday',
+})<{ isToday?: boolean }>(({ isToday = false }) => ({
+  color: isToday ? 'black' : 'text.secondary',
+  fontWeight: isToday ? 'bold' : 'normal',
+}));
+
 interface OpeningInfoProps {
   crag: Crag;
   date: Date;
 }
 
 function OpeningInfo({ crag, date }: OpeningInfoProps) {
-  const { open, close, isReduced, isTemporaryClosed, current, isOperate } = useFilter(crag, date);
+  const { open, close, originOpen, originClose, isReduced, isTemporaryClosed, current, isOperate } = useFilter(
+    crag,
+    date
+  );
   const { exp } = useExp();
 
   const isToday = exp.dateStr === current.dateStr;
 
   const operateTime = (() => {
     const duration = ` ${format(open.date, 'HH:mm')} - ${format(close.date, 'HH:mm')}`;
+    const originDuration = ` ${format(originOpen.date, 'HH:mm')} - ${format(originClose.date, 'HH:mm')}`;
 
     if (isTemporaryClosed) {
-      return `(임시 휴무) ${duration}`;
+      return <TimeText variant="body2" isToday={isToday}>{`(임시 휴무) ${duration}`}</TimeText>;
     }
 
     if (isOperate) {
-      return `${isReduced ? '(단축 운영) ' : ''} ${duration}`;
+      if (isReduced) {
+        return (
+          <TimeText variant="body2" isToday={isToday}>
+            (단축 운영){originDuration} ← <del>{duration}</del>
+          </TimeText>
+        );
+      } else {
+        return (
+          <TimeText variant="body2" isToday={isToday}>
+            {duration}
+          </TimeText>
+        );
+      }
     }
 
-    return '정기 휴무';
+    return (
+      <TimeText variant="body2" isToday={isToday}>
+        정기 휴무
+      </TimeText>
+    );
   })();
 
   return (
@@ -67,25 +94,11 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
         justifyContent: 'space-between',
       }}
     >
-      <Typography
-        variant="body2"
-        sx={{
-          color: isToday ? 'black' : 'text.secondary',
-          fontWeight: isToday ? 'bold' : 'normal',
-        }}
-      >
+      <Typography variant="body2" sx={{}}>
         {DAYS_OF_KOR[date.getDay()]}
       </Typography>
 
-      <Typography
-        variant="body2"
-        sx={{
-          color: isToday ? 'black' : 'text.secondary',
-          fontWeight: isToday ? 'bold' : 'normal',
-        }}
-      >
-        {operateTime}
-      </Typography>
+      {operateTime}
     </Box>
   );
 }
