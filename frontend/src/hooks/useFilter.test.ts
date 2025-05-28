@@ -53,6 +53,7 @@ const closeSchedule: Schedule = {
   open_date: today.dateTimeStr,
   close_date: today.dateTimeStr,
   created_at: new Date(),
+  is_all_day: false,
 };
 
 const reduceSchedule: Schedule = {
@@ -61,6 +62,7 @@ const reduceSchedule: Schedule = {
   close_date: today.dateTimeStr,
   type: 'reduced',
   created_at: new Date(),
+  is_all_day: false,
 };
 
 describe('[이미지 상태]', () => {
@@ -394,6 +396,7 @@ describe('[필터 상태]', () => {
                   open_date: oneDaySoon.dateTimeStr,
                   close_date: oneHourLater.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -416,6 +419,7 @@ describe('[필터 상태]', () => {
                   open_date: oneDaySoon.dateTimeStr,
                   close_date: oneHourSoon.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -440,6 +444,7 @@ describe('[필터 상태]', () => {
                   open_date: oneDayLater.dateTimeStr,
                   close_date: twoDayLater.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -462,6 +467,7 @@ describe('[필터 상태]', () => {
                   open_date: twoDaySoon.dateTimeStr,
                   close_date: oneDaySoon.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -488,6 +494,7 @@ describe('[필터 상태]', () => {
                   open_date: oneHourSoon.dateTimeStr,
                   close_date: oneDayLater.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -510,6 +517,7 @@ describe('[필터 상태]', () => {
                   open_date: oneHourLater.dateTimeStr,
                   close_date: oneDayLater.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -534,6 +542,7 @@ describe('[필터 상태]', () => {
                   open_date: oneDayLater.dateTimeStr,
                   close_date: twoDayLater.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
@@ -556,6 +565,7 @@ describe('[필터 상태]', () => {
                   open_date: twoDaySoon.dateTimeStr,
                   close_date: oneDaySoon.dateTimeStr,
                   created_at: new Date(),
+                  is_all_day: false,
                 },
               ],
             },
