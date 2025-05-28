@@ -32,18 +32,7 @@ async function run() {
         waitUntil: 'networkidle2',
       });
 
-      try {
-        await page.waitForFunction(
-          () => {
-            const count = document.querySelectorAll('a[href*="/p/"]').length;
-
-            return count >= 12;
-          },
-          { timeout: 10000 },
-        );
-      } catch (e) {
-        console.log('12개 미만의 요소를 발견하였습니다.', e);
-      }
+      await page.waitForSelector('a[href*="/p/"]');
 
       const anchors = await page.$$eval('a[href*="/p/"]', (anchors) =>
         anchors.reverse().map((anchor) => ({
