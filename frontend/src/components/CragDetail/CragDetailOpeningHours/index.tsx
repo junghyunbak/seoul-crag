@@ -4,7 +4,7 @@ import { Box, styled, Typography } from '@mui/material';
 
 import { useExp, useFilter } from '@/hooks';
 
-import { addDays, format } from 'date-fns';
+import { addDays, format, startOfWeek } from 'date-fns';
 
 import { DAYS_OF_KOR } from '@/constants/time';
 
@@ -13,6 +13,8 @@ import { CragDetailContext } from '@/components/CragDetail/index.context';
 export function CragDetailOpeningHours() {
   const { crag } = useContext(CragDetailContext);
   const { exp } = useExp();
+
+  const weekStart = startOfWeek(exp.date, { weekStartsOn: 0 });
 
   if (!crag) {
     return null;
@@ -27,7 +29,7 @@ export function CragDetailOpeningHours() {
       {Array(7)
         .fill(null)
         .map((_, i) => {
-          const date = addDays(exp.date, i);
+          const date = addDays(weekStart, i);
 
           return <OpeningInfo key={i} crag={crag} date={date} />;
         })}
@@ -94,9 +96,9 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
         justifyContent: 'space-between',
       }}
     >
-      <Typography variant="body2" sx={{}}>
+      <TimeText variant="body2" isToday={isToday}>
         {DAYS_OF_KOR[date.getDay()]}
-      </Typography>
+      </TimeText>
 
       {operateTime}
     </Box>
