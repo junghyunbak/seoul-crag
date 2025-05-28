@@ -60,7 +60,7 @@ async function run() {
 
           fs.writeFileSync(filePath, buffer);
 
-          imagePath = filePath;
+          imagePath = `/uploads/${filename}`;
         }
 
         const feed = feedRepo.create({
