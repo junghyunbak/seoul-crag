@@ -63,11 +63,24 @@ export function CragScheduleCalenderField() {
         onDelete={async (scheduleId) => {
           deleteScheduleMutation.mutate({ cragId: crag.id, scheduleId });
         }}
-        onUpdate={async (scheduleId, openDate, closeDate, type) => {
-          updateScheduleMutation.mutate({ cragId: crag.id, scheduleId, openDate, closeDate, type });
+        onUpdate={async (schedule) => {
+          updateScheduleMutation.mutate({
+            cragId: crag.id,
+            scheduleId: schedule.id,
+            openDate: schedule.open_date,
+            closeDate: schedule.close_date,
+            type: schedule.type,
+            isAllDay: schedule.is_all_day,
+          });
         }}
-        onCreate={async (openDate, closeDate, type) => {
-          addScheduleMutation.mutate({ cragId: crag.id, openDate, closeDate, type });
+        onCreate={async (schedule) => {
+          addScheduleMutation.mutate({
+            cragId: crag.id,
+            openDate: schedule.open_date,
+            closeDate: schedule.close_date,
+            type: schedule.type,
+            isAllDay: schedule.is_all_day,
+          });
         }}
       />
     </Box>

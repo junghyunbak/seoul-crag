@@ -9,6 +9,7 @@ export const scheduleScheme = z.object({
   open_date: dateTimeScheme,
   close_date: dateTimeScheme,
   created_at: z.coerce.date(),
+  is_all_day: z.boolean(),
 });
 
 export const schedulesScheme = z.array(scheduleScheme);

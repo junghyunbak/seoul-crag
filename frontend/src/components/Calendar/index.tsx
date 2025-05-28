@@ -95,15 +95,18 @@ function preprocessSchedules(schedules: Schedule[], calendarStart: Date): Schedu
         schedule: s,
       };
 
-      if (isFirstChunk) {
-        const minutes = open.getHours() * 60 + open.getMinutes();
-        chunk.leftRatio = minutes / MINUTES_IN_DAY;
-      }
+      if (!s.is_all_day) {
+        if (isFirstChunk) {
+          const minutes = open.getHours() * 60 + open.getMinutes();
+          chunk.leftRatio = minutes / MINUTES_IN_DAY;
+        }
 
-      const isLastChunk = differenceInCalendarDays(close, chunkEnd) === 0;
-      if (isLastChunk) {
-        const minutes = close.getHours() * 60 + close.getMinutes();
-        chunk.rightRatio = minutes / MINUTES_IN_DAY;
+        const isLastChunk = differenceInCalendarDays(close, chunkEnd) === 0;
+
+        if (isLastChunk) {
+          const minutes = close.getHours() * 60 + close.getMinutes();
+          chunk.rightRatio = minutes / MINUTES_IN_DAY;
+        }
       }
 
       chunks.push(chunk);

@@ -11,6 +11,8 @@ import {
   MenuItem,
   Select,
   Stack,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 
 import { SCHEDULE_TYPES, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
@@ -37,8 +39,8 @@ interface ScheduleEditModalProps {
   onClick: () => void;
   onClose: () => void;
   onDelete: (scheduleId: string) => void;
-  onCreate?: (openDate: string, closeDate: string, type: ScheduleType) => void;
-  onUpdate?: (scheduleId: string, openDate: string, closeDate: string, type: ScheduleType) => void;
+  onCreate?: (schedule: MyOmit<Schedule, 'id' | 'created_at'>) => void;
+  onUpdate?: (Schedule: MyOmit<Schedule, 'created_at'>) => void;
 }
 
 export function ScheduleEditModal({
@@ -54,13 +56,14 @@ export function ScheduleEditModal({
   const [scheduleType, setScheduleType] = useState<ScheduleType>('closed');
   const [openDate, setOpenDate] = useState(initOpenDate);
   const [closeDate, setCloseDate] = useState(initCloseDate);
+  const [isAllDay, setIsAllDay] = useState(false);
 
   useEffect(() => {
     if (!schedule) {
       return;
     }
 
-    const { type, open_date, close_date } = schedule;
+    const { type, open_date, close_date, is_all_day } = schedule;
 
     const open = new DateService(open_date);
     const close = new DateService(close_date);
@@ -68,6 +71,7 @@ export function ScheduleEditModal({
     setScheduleType(type);
     setOpenDate(open.date);
     setCloseDate(close.date);
+    setIsAllDay(is_all_day);
   }, [schedule]);
 
   return (
@@ -160,6 +164,11 @@ export function ScheduleEditModal({
                 }
               />
             </Box>
+
+            <FormControlLabel
+              label="하루 종일"
+              control={<Checkbox checked={isAllDay} onChange={(e) => setIsAllDay(e.target.checked)} />}
+            />
           </Stack>
         </DialogContent>
 
@@ -187,12 +196,13 @@ export function ScheduleEditModal({
                   return;
                 }
 
-                onUpdate(
-                  schedule.id,
-                  DateService.dateToDateTimeStr(openDate),
-                  DateService.dateToDateTimeStr(closeDate),
-                  scheduleType
-                );
+                onUpdate({
+                  id: schedule.id,
+                  open_date: DateService.dateToDateTimeStr(openDate),
+                  close_date: DateService.dateToDateTimeStr(closeDate),
+                  type: scheduleType,
+                  is_all_day: isAllDay,
+                });
                 onClose();
               }}
             >
@@ -207,11 +217,12 @@ export function ScheduleEditModal({
                   return;
                 }
 
-                onCreate(
-                  DateService.dateToDateTimeStr(openDate),
-                  DateService.dateToDateTimeStr(closeDate),
-                  scheduleType
-                );
+                onCreate({
+                  open_date: DateService.dateToDateTimeStr(openDate),
+                  close_date: DateService.dateToDateTimeStr(closeDate),
+                  type: scheduleType,
+                  is_all_day: isAllDay,
+                });
                 onClose();
               }}
             >
