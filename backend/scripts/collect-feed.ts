@@ -14,7 +14,7 @@ async function run() {
   const gyms = await gymRepo.find();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     userDataDir: './puppeteer_session',
   });
 
