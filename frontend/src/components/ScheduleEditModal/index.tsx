@@ -95,7 +95,14 @@ export function ScheduleEditModal({
         <DialogTitle>{schedule ? '일정 편집' : '일정 추가'}</DialogTitle>
 
         <DialogContent>
-          <Stack spacing={2} mt={1} className="schedule-edit-modal">
+          <Stack
+            spacing={2}
+            mt={1}
+            className="schedule-edit-modal"
+            sx={{
+              alignItems: 'flex-start',
+            }}
+          >
             <Select
               fullWidth
               value={scheduleType}
@@ -122,7 +129,13 @@ export function ScheduleEditModal({
             >
               <DatePicker
                 selected={openDate}
-                onChange={(date) => setOpenDate(date || new Date())}
+                onChange={(date) => {
+                  if (isAllDay) {
+                    setCloseDate(date || new Date());
+                  }
+
+                  setOpenDate(date || new Date());
+                }}
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={30}
@@ -142,27 +155,34 @@ export function ScheduleEditModal({
                 }
               />
 
-              <DatePicker
-                selected={closeDate}
-                onChange={(date) => setCloseDate(date || new Date())}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={30}
-                locale={ko}
-                dateFormat="yyyy.MM.dd  h:mm a"
-                open
-                customInput={
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    slotProps={{
-                      htmlInput: {
-                        readOnly: true,
-                      },
-                    }}
-                  />
-                }
-              />
+              <Box
+                sx={{
+                  filter: isAllDay ? 'brightness(0.7)' : undefined,
+                  pointerEvents: isAllDay ? 'none' : undefined,
+                }}
+              >
+                <DatePicker
+                  selected={isAllDay ? openDate : closeDate}
+                  onChange={(date) => setCloseDate(date || new Date())}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={30}
+                  locale={ko}
+                  dateFormat="yyyy.MM.dd  h:mm a"
+                  open
+                  customInput={
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      slotProps={{
+                        htmlInput: {
+                          readOnly: true,
+                        },
+                      }}
+                    />
+                  }
+                />
+              </Box>
             </Box>
 
             <FormControlLabel
