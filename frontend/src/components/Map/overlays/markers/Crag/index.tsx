@@ -30,7 +30,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { exp } = useExp();
-  const { isFiltered, isOff } = useFilter(crag, exp.date);
+  const { isFiltered, isOff, showerImages } = useFilter(crag, exp.date);
 
   const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
@@ -82,7 +82,13 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
             }}
           >
             <CragMenu crag={crag} isSelect={isSelect} />
-            <CragIcon width={markerWidth} isSelect={isSelect} isClose={isOff} isRect={crag.is_outer_wall} />
+            <CragIcon
+              width={markerWidth}
+              isSelect={isSelect}
+              isClose={isOff}
+              isRect={crag.is_outer_wall}
+              isUnique={showerImages.length > 0}
+            />
           </Box>
         </Box>
 
