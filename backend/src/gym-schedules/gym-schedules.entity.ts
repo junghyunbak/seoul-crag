@@ -44,6 +44,9 @@ export class GymSchedule {
   @CreateDateColumn()
   created_at: Date;
 
+  @Column({ type: 'boolean', default: false })
+  is_all_day: boolean;
+
   @ManyToOne(() => Gym, (gym) => gym.schedules, { onDelete: 'CASCADE' })
   gym: Gym;
 }
