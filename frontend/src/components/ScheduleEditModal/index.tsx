@@ -74,6 +74,25 @@ export function ScheduleEditModal({
     setIsAllDay(is_all_day);
   }, [schedule]);
 
+  const _openDate = openDate;
+  const _closeDate = isAllDay ? openDate : closeDate;
+
+  const handleOpenDateChange = (date: Date | null) => {
+    const _date = date || new Date();
+
+    if (isAllDay) {
+      setCloseDate(_date);
+    }
+
+    setOpenDate(_date);
+  };
+
+  const handleCloseDateChange = (date: Date | null) => {
+    const _date = date || new Date();
+
+    setCloseDate(_date);
+  };
+
   return (
     <>
       <Button variant="contained" onClick={onClick}>
@@ -128,14 +147,8 @@ export function ScheduleEditModal({
               }}
             >
               <DatePicker
-                selected={openDate}
-                onChange={(date) => {
-                  if (isAllDay) {
-                    setCloseDate(date || new Date());
-                  }
-
-                  setOpenDate(date || new Date());
-                }}
+                selected={_openDate}
+                onChange={handleOpenDateChange}
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={30}
@@ -162,8 +175,8 @@ export function ScheduleEditModal({
                 }}
               >
                 <DatePicker
-                  selected={isAllDay ? openDate : closeDate}
-                  onChange={(date) => setCloseDate(date || new Date())}
+                  selected={_closeDate}
+                  onChange={handleCloseDateChange}
                   showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={30}
@@ -211,15 +224,15 @@ export function ScheduleEditModal({
             <Button
               variant="contained"
               onClick={() => {
-                if (!(isBefore(openDate, closeDate) || isEqual(openDate, closeDate))) {
+                if (!(isBefore(_openDate, _closeDate) || isEqual(_openDate, _closeDate))) {
                   alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
                   return;
                 }
 
                 onUpdate({
                   id: schedule.id,
-                  open_date: DateService.dateToDateTimeStr(openDate),
-                  close_date: DateService.dateToDateTimeStr(closeDate),
+                  open_date: DateService.dateToDateTimeStr(_openDate),
+                  close_date: DateService.dateToDateTimeStr(_closeDate),
                   type: scheduleType,
                   is_all_day: isAllDay,
                 });
@@ -232,14 +245,14 @@ export function ScheduleEditModal({
             <Button
               variant="contained"
               onClick={() => {
-                if (!(isBefore(openDate, closeDate) || isEqual(openDate, closeDate))) {
+                if (!(isBefore(_openDate, _closeDate) || isEqual(_openDate, _closeDate))) {
                   alert('마감 시간이 오픈 시간보다 먼저일 수 없습니다.');
                   return;
                 }
 
                 onCreate({
-                  open_date: DateService.dateToDateTimeStr(openDate),
-                  close_date: DateService.dateToDateTimeStr(closeDate),
+                  open_date: DateService.dateToDateTimeStr(_openDate),
+                  close_date: DateService.dateToDateTimeStr(_closeDate),
                   type: scheduleType,
                   is_all_day: isAllDay,
                 });
