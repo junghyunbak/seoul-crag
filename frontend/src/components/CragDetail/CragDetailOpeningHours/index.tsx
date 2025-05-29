@@ -70,7 +70,7 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
       if (isReduced) {
         return (
           <TimeText variant="body2" isToday={isToday}>
-            (단축 운영){originDuration} ← <del>{duration}</del>
+            (단축 운영){duration} ← <del>{originDuration}</del>
           </TimeText>
         );
       } else {
