@@ -89,7 +89,7 @@ export function CragMenu({ crag, isSelect }: CragMenuProps) {
         disabled: false,
       },
       {
-        icon: <ShowerIcon sx={{ color: showerImages.length > 0 ? '#04c139' : undefined }} />,
+        icon: <ShowerIcon sx={{ color: showerImages.length > 0 ? theme.palette.info.main : undefined }} />,
         callback: () => {
           setShowerStory(crag.id);
         },
