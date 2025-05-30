@@ -8,7 +8,9 @@ import { useSearch } from '@/hooks/useSearch';
 
 import { SORT_OPTIONS } from '@/constants/crag';
 import { CragList } from '@/components/CragList';
-import { Filter } from '@/components/Filter';
+import { FilterButton } from '../FilterButton';
+
+import { zIndex } from '@/styles';
 
 export function Search() {
   const { isSearchOpen } = useSearch();
@@ -24,7 +26,14 @@ export function Search() {
   };
 
   return (
-    <Modal open={isSearchOpen} onClose={handleClose} slots={{ backdrop: () => null }}>
+    <Modal
+      open={isSearchOpen}
+      onClose={handleClose}
+      slots={{ backdrop: () => null }}
+      sx={{
+        zIndex: zIndex.search,
+      }}
+    >
       <Grow in={isSearchOpen}>
         <Box
           sx={{
@@ -56,15 +65,11 @@ export function Search() {
             )}
           </Box>
 
-          <Divider />
-
-          <Box
-            sx={{
-              pt: 2,
-            }}
-          >
-            <Filter />
+          <Box sx={{ p: 0.5 }}>
+            <FilterButton />
           </Box>
+
+          <Divider />
 
           <Box sx={{ p: 2, width: '100%' }}>
             <Select

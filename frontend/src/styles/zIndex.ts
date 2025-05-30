@@ -16,8 +16,8 @@ export const timer = 103;
 
 export const stickyHeader = 1001;
 export const openMenu = 1002;
-export const filter = 1003;
-export const cragList = 1004;
+export const search = 1003;
+export const filter = 1004;
 
 export const story = 10000;
 export const cragDetail = 10001;
