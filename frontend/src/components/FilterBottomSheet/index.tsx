@@ -1,13 +1,20 @@
 import { useMemo } from 'react';
 
 import { Box, Chip, Divider, Typography } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 
 import { Sheet } from 'react-modal-sheet';
 
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import { useFilter, useModifyFilter, useFetchTags, useTag } from '@/hooks';
+import { useFilter, useModifyFilter, useFetchTags, useTag, useExp, useModifyExp } from '@/hooks';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
+import { zIndex } from '@/styles';
+import { DateService } from '@/utils/time';
 
 const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   climb: '스타일',
@@ -20,12 +27,14 @@ export function FilterButtonSheet() {
     useShallow((s) => [s.isFilterBottomSheetOpen, s.setIsFilterBottonSheetOpen])
   );
 
+  const { exp } = useExp();
   const { filter } = useFilter();
-  const { updateFilter } = useModifyFilter();
-
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
 
   const { tags } = useFetchTags();
+
+  const { updateFilter } = useModifyFilter();
+  const { updateExpDateTimeStr } = useModifyExp();
 
   const tagTypeToTags = useMemo(() => {
     const _tagTypeToTags = new Map<TagType, Tag[]>();
@@ -52,12 +61,28 @@ export function FilterButtonSheet() {
         setIsFilterBottonSheetOpen(false);
       }}
       detent="content-height"
+      style={{
+        zIndex: zIndex.filter,
+      }}
     >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>
-          <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', p: 2, gap: 1 }}>
             <Typography variant="h6">출발 시간</Typography>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+              <DateTimePicker
+                value={dayjs(exp.date)}
+                onChange={(newValue) => {
+                  if (!newValue) {
+                    updateExpDateTimeStr(null);
+                  } else {
+                    updateExpDateTimeStr(DateService.dateToDateTimeStr(newValue.toDate()));
+                  }
+                }}
+              />
+            </LocalizationProvider>
           </Box>
 
           <Divider />
@@ -115,6 +140,7 @@ export function FilterButtonSheet() {
 
                     return (
                       <FilterChip
+                        key={tag.id}
                         isActive={isSelect}
                         onClick={() => {
                           if (isSelect) {
