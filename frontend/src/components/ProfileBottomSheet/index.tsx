@@ -16,7 +16,7 @@ export function ProfileBottomSheet() {
   const { user } = useFetchUser(selectUserId);
   const { user: me } = useFetchMe();
 
-  const isOpen = user !== null;
+  const isOpen = user !== undefined;
 
   return (
     <Sheet
