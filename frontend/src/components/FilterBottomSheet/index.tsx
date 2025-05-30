@@ -76,7 +76,7 @@ export function FilterButtonSheet() {
               <Box sx={{ flex: 1 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
                   <DateTimePicker
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', userSelect: 'none' }}
                     value={dayjs(exp.date)}
                     onChange={(newValue) => {
                       if (!newValue) {
