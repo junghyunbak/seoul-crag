@@ -5,10 +5,11 @@ import { Box, styled, Typography } from '@mui/material';
 import { useExp, useFilter } from '@/hooks';
 
 import { addDays, format, startOfWeek } from 'date-fns';
-
-import { DAYS_OF_KOR } from '@/constants/time';
+import { ko } from 'date-fns/locale';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
+
+import { DAY_LABELS } from '@/constants';
 
 export function CragDetailOpeningHours() {
   const { crag } = useContext(CragDetailContext);
@@ -26,22 +27,26 @@ export function CragDetailOpeningHours() {
         이용 시간
       </Typography>
 
-      {Array(7)
-        .fill(null)
-        .map((_, i) => {
-          const date = addDays(weekStart, i);
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        {Array(7)
+          .fill(null)
+          .map((_, i) => {
+            const date = addDays(weekStart, i);
 
-          return <OpeningInfo key={i} crag={crag} date={date} />;
-        })}
+            return <OpeningInfo key={i} crag={crag} date={date} />;
+          })}
+      </Box>
     </Box>
   );
 }
 
 const TimeText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== 'isToday',
-})<{ isToday?: boolean }>(({ isToday = false }) => ({
-  color: isToday ? 'black' : 'text.secondary',
+})<{ isToday?: boolean }>(({ theme, isToday = false }) => ({
+  color: isToday ? 'black' : theme.palette.text.secondary,
   fontWeight: isToday ? 'bold' : 'normal',
+  fontFamily: 'Roboto Mono, monospace',
+  textAlign: 'right',
 }));
 
 interface OpeningInfoProps {
@@ -59,8 +64,14 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
   const isToday = exp.dateStr === current.dateStr;
 
   const operateTime = (() => {
-    const duration = ` ${format(open.date, 'HH:mm')} - ${format(close.date, 'HH:mm')}`;
-    const originDuration = ` ${format(originOpen.date, 'HH:mm')} - ${format(originClose.date, 'HH:mm')}`;
+    const duration = ` ${format(open.date, 'a hh:mm', { locale: ko })} ~ ${format(close.date, 'a hh:mm', {
+      locale: ko,
+    })}`;
+    const originDuration = ` ${format(originOpen.date, 'a hh:mm', { locale: ko })} ~ ${format(
+      originClose.date,
+      'a hh:mm',
+      { locale: ko }
+    )}`;
 
     if (isTemporaryClosed) {
       return <TimeText variant="body2" isToday={isToday}>{`(임시 휴무) ${duration}`}</TimeText>;
@@ -70,7 +81,9 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
       if (isReduced) {
         return (
           <TimeText variant="body2" isToday={isToday}>
-            (단축 운영){duration} ← <del>{originDuration}</del>
+            <del>{originDuration}</del>
+            <br />
+            (단축 운영){duration}
           </TimeText>
         );
       } else {
@@ -91,13 +104,19 @@ function OpeningInfo({ crag, date }: OpeningInfoProps) {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
-      }}
+        alignItems: 'center',
+        p: 0.5,
+        borderBottom: `1px dashed ${theme.palette.divider}`,
+        '&:last-of-type': {
+          borderBottom: 0,
+        },
+      })}
     >
       <TimeText variant="body2" isToday={isToday}>
-        {DAYS_OF_KOR[date.getDay()]}
+        {DAY_LABELS[date.getDay()]}
       </TimeText>
 
       {operateTime}
