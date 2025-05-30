@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
-import { Box, Chip, Divider, Typography } from '@mui/material';
+import { Box, Chip, Divider, IconButton, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -27,7 +28,7 @@ export function FilterButtonSheet() {
     useShallow((s) => [s.isFilterBottomSheetOpen, s.setIsFilterBottonSheetOpen])
   );
 
-  const { exp } = useExp();
+  const { exp, isExpSelect } = useExp();
   const { filter } = useFilter();
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
 
@@ -71,18 +72,39 @@ export function FilterButtonSheet() {
           <Box sx={{ display: 'flex', flexDirection: 'column', p: 2, gap: 1 }}>
             <Typography variant="h6">출발 시간</Typography>
 
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-              <DateTimePicker
-                value={dayjs(exp.date)}
-                onChange={(newValue) => {
-                  if (!newValue) {
-                    updateExpDateTimeStr(null);
-                  } else {
-                    updateExpDateTimeStr(DateService.dateToDateTimeStr(newValue.toDate()));
-                  }
-                }}
-              />
-            </LocalizationProvider>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ flex: 1 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+                  <DateTimePicker
+                    sx={{ width: '100%' }}
+                    value={dayjs(exp.date)}
+                    onChange={(newValue) => {
+                      if (!newValue) {
+                        updateExpDateTimeStr(null);
+                      } else {
+                        updateExpDateTimeStr(DateService.dateToDateTimeStr(newValue.toDate()));
+                      }
+                    }}
+                  />
+                </LocalizationProvider>
+              </Box>
+
+              {isExpSelect && (
+                <Box
+                  sx={{
+                    flexShrink: 0,
+                  }}
+                >
+                  <IconButton
+                    onClick={() => {
+                      updateExpDateTimeStr(null);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              )}
+            </Box>
           </Box>
 
           <Divider />

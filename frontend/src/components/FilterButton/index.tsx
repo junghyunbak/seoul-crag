@@ -7,6 +7,7 @@ import { useExp, useFilter, useTag } from '@/hooks';
 
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
+import { ko } from 'date-fns/locale';
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -18,8 +19,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 export function FilterButton() {
-  const { exp } = useExp();
-
+  const { exp, isExpSelect } = useExp();
   const { filter } = useFilter();
   const { selectTagId } = useTag();
 
@@ -29,6 +29,8 @@ export function FilterButton() {
     cnt += Array.from(Object.values(filter)).reduce((a, c) => a + (c ? 1 : 0), 0);
 
     cnt += Array.from(Object.values(selectTagId)).reduce((a, c) => a + (typeof c === 'string' ? 1 : 0), 0);
+
+    cnt += isExpSelect ? 1 : 0;
 
     return cnt;
   })();
@@ -45,7 +47,12 @@ export function FilterButton() {
       <StyledBadge badgeContent={appliedFilterCount} color="info">
         <TuneIcon />
       </StyledBadge>
-      <Typography>{format(exp.date, 'yyyy년 MM월 dd일 h:mm 출발')}</Typography>
+      <Typography>
+        <Typography component="span" sx={(theme) => ({ color: theme.palette.primary.main, fontWeight: 500 })}>
+          {format(exp.date, 'M월 dd일 a h:mm', { locale: ko })}
+        </Typography>{' '}
+        이용
+      </Typography>
     </Box>
   );
 }
