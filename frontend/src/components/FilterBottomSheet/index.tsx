@@ -77,7 +77,7 @@ export function FilterButtonSheet() {
         <Sheet.Header />
         <Sheet.Content>
           <Box sx={{ display: 'flex', flexDirection: 'column', p: 2, gap: 1 }}>
-            <Typography variant="h6">출발 시간</Typography>
+            <Typography variant="h6">센터 이용시간</Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Box sx={{ flex: 1 }}>
