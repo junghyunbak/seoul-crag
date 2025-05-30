@@ -43,7 +43,7 @@ export function CragDetailContribution() {
       </Typography>
 
       {contributionNameToUserToCnt.size === 0 ? (
-        <Typography>(´・ω・`) 아직 아무도 암장 정보를 남기지 않았어요.</Typography>
+        <Typography>아직 아무도 암장 정보를 남기지 않았어요.</Typography>
       ) : (
         <ul>
           {Array.from(contributionNameToUserToCnt.entries()).map(([contributionName, userToCnt]) => {
