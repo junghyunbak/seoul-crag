@@ -231,3 +231,9 @@ export function useFilter(crag?: Crag, date = new Date()) {
     getCragStats,
   };
 }
+
+export function useFilterSheet() {
+  const [isFilterBottomSheetOpen] = useStore(useShallow((s) => [s.isFilterBottomSheetOpen]));
+
+  return { isFilterBottomSheetOpen };
+}

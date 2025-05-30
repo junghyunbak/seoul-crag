@@ -4,18 +4,26 @@ import { Box, Chip, Divider, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ko';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
 
 import { Sheet } from 'react-modal-sheet';
 
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
+import {
+  useFilter,
+  useModifyFilter,
+  useFetchTags,
+  useTag,
+  useExp,
+  useModifyExp,
+  useFilterSheet,
+  useModifyFilterSheet,
+} from '@/hooks';
 
-import { useFilter, useModifyFilter, useFetchTags, useTag, useExp, useModifyExp } from '@/hooks';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
 import { zIndex } from '@/styles';
+
 import { DateService } from '@/utils/time';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 
 const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   climb: '스타일',
@@ -24,10 +32,7 @@ const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
 };
 
 export function FilterButtonSheet() {
-  const [isFilterBottomSheetOpen, setIsFilterBottonSheetOpen] = useStore(
-    useShallow((s) => [s.isFilterBottomSheetOpen, s.setIsFilterBottonSheetOpen])
-  );
-
+  const { isFilterBottomSheetOpen } = useFilterSheet();
   const { exp, isExpSelect } = useExp();
   const { filter } = useFilter();
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
@@ -36,6 +41,7 @@ export function FilterButtonSheet() {
 
   const { updateFilter } = useModifyFilter();
   const { updateExpDateTimeStr } = useModifyExp();
+  const { updateIsFilterBottomSheetOpen } = useModifyFilterSheet();
 
   const tagTypeToTags = useMemo(() => {
     const _tagTypeToTags = new Map<TagType, Tag[]>();
@@ -59,7 +65,7 @@ export function FilterButtonSheet() {
     <Sheet
       isOpen={isFilterBottomSheetOpen}
       onClose={() => {
-        setIsFilterBottonSheetOpen(false);
+        updateIsFilterBottomSheetOpen(false);
       }}
       snapPoints={[1, 0.6, 0]}
       initialSnap={1}

@@ -1,12 +1,9 @@
 import { Badge, Box, Typography, styled, BadgeProps } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 
+import { useExp, useFilter, useModifyFilterSheet, useTag } from '@/hooks';
+
 import { format } from 'date-fns';
-
-import { useExp, useFilter, useTag } from '@/hooks';
-
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
 import { ko } from 'date-fns/locale';
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
@@ -23,6 +20,8 @@ export function FilterButton() {
   const { filter } = useFilter();
   const { selectTagId } = useTag();
 
+  const { updateIsFilterBottomSheetOpen } = useModifyFilterSheet();
+
   const appliedFilterCount = (() => {
     let cnt = 0;
 
@@ -35,13 +34,11 @@ export function FilterButton() {
     return cnt;
   })();
 
-  const [setIsFilterBottonSheetOpen] = useStore(useShallow((s) => [s.setIsFilterBottonSheetOpen]));
-
   return (
     <Box
       sx={{ display: 'flex', p: 1.5, width: '100%', gap: 2, cursor: 'pointer' }}
       onClick={() => {
-        setIsFilterBottonSheetOpen(true);
+        updateIsFilterBottomSheetOpen(true);
       }}
     >
       <StyledBadge badgeContent={appliedFilterCount} color="info">

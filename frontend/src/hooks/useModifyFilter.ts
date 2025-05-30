@@ -20,3 +20,16 @@ export function useModifyFilter() {
     updateFilter,
   };
 }
+
+export function useModifyFilterSheet() {
+  const [setIsFilterBottonSheetOpen] = useStore(useShallow((s) => [s.setIsFilterBottonSheetOpen]));
+
+  const updateIsFilterBottomSheetOpen = useCallback(
+    (isOpen: boolean) => {
+      setIsFilterBottonSheetOpen(isOpen);
+    },
+    [setIsFilterBottonSheetOpen]
+  );
+
+  return { updateIsFilterBottomSheetOpen };
+}
