@@ -67,8 +67,7 @@ export function FilterButtonSheet() {
       onClose={() => {
         updateIsFilterBottomSheetOpen(false);
       }}
-      snapPoints={[1, 0.6, 0]}
-      initialSnap={1}
+      detent="content-height"
       style={{
         zIndex: zIndex.filter,
       }}
@@ -189,6 +188,8 @@ export function FilterButtonSheet() {
           })}
         </Sheet.Content>
       </Sheet.Container>
+
+      <Sheet.Backdrop />
     </Sheet>
   );
 }
