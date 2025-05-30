@@ -1,8 +1,10 @@
-import { Box, Typography } from '@mui/material';
 import { useContext } from 'react';
+
 import { CragDetailContext } from '../index.context';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
+
+import { Box, Typography } from '@mui/material';
+
+import { useModifyProfile } from '@/hooks';
 
 type ContributionUserCount = {
   user: Crag['gymUserContributions'][number]['user'];
@@ -12,7 +14,7 @@ type ContributionUserCount = {
 export function CragDetailContribution() {
   const { crag } = useContext(CragDetailContext);
 
-  const [setSelectUserId] = useStore(useShallow((s) => [s.setSelectUserId]));
+  const { updateSelectUserId } = useModifyProfile();
 
   const contributionNameToUserToCnt = (() => {
     const nameToUser = new Map<string, Map<string, ContributionUserCount>>();
@@ -66,7 +68,7 @@ export function CragDetailContribution() {
                         },
                       }}
                       onClick={() => {
-                        setSelectUserId(value.user.id);
+                        updateSelectUserId(value.user.id);
                       }}
                     >
                       {value.user.username}

@@ -18,7 +18,7 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 
-import { useFetchMe, useMutateLogout, useMap, useModifyMap } from '@/hooks';
+import { useFetchMe, useMutateLogout, useMap, useModifyMap, useModifyProfile } from '@/hooks';
 
 import { BooleanParam, useQueryParam } from 'use-query-params';
 
@@ -27,9 +27,6 @@ import { QUERY_STRING } from '@/constants';
 import { zIndex } from '@/styles';
 
 import { urlService } from '@/utils';
-
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
 
 export function Sidebar() {
   const theme = useTheme();
@@ -73,7 +70,7 @@ function Logo() {
 function Menu() {
   const { user, isLoading } = useFetchMe();
 
-  const [setSelectUserId] = useStore(useShallow((s) => [s.setSelectUserId]));
+  const { updateSelectUserId } = useModifyProfile();
 
   const { logoutMutation } = useMutateLogout();
 
@@ -90,7 +87,7 @@ function Menu() {
       {user ? (
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => setSelectUserId(user.id)}>
+            <ListItemButton onClick={() => updateSelectUserId(user.id)}>
               <ListItemIcon>
                 <PermIdentityIcon />
               </ListItemIcon>

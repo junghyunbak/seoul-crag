@@ -6,12 +6,12 @@ import { urlService } from '@/utils';
 import { zIndex } from '@/styles';
 
 import { Sheet } from 'react-modal-sheet';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
-import { useFetchMe, useFetchUser } from '@/hooks';
+
+import { useFetchMe, useFetchUser, useModifyProfile, useProfile } from '@/hooks';
 
 export function ProfileBottomSheet() {
-  const [selectUserId, setSelectUserId] = useStore(useShallow((s) => [s.selectUserId, s.setSelectUserId]));
+  const { selectUserId } = useProfile();
+  const { updateSelectUserId } = useModifyProfile();
 
   const { user } = useFetchUser(selectUserId);
   const { user: me } = useFetchMe();
@@ -32,7 +32,7 @@ export function ProfileBottomSheet() {
     <Sheet
       isOpen={isOpen}
       onClose={() => {
-        setSelectUserId(null);
+        updateSelectUserId(null);
       }}
       style={{ zIndex: zIndex.profile }}
       detent="content-height"
@@ -134,6 +134,8 @@ export function ProfileBottomSheet() {
           </Box>
         </Sheet.Content>
       </Sheet.Container>
+
+      <Sheet.Backdrop />
     </Sheet>
   );
 }
