@@ -7,6 +7,7 @@ export function useModifyMap() {
   const [setGpsLatLng] = useStore(useShallow((s) => [s.setGpsLatLng]));
   const [setEnabledEdgeIndicator] = useStore(useShallow((s) => [s.setEnabledEdgeIndicator]));
   const [setEnabledGpsIndicator] = useStore(useShallow((s) => [s.setEnabledGpsIndicator]));
+  const [setRecognizer] = useStore(useShallow((s) => [s.setRecognizer]));
 
   const updateMap = useCallback(
     (map: naver.maps.Map) => {
@@ -36,5 +37,12 @@ export function useModifyMap() {
     [setEnabledGpsIndicator]
   );
 
-  return { updateMap, updateGpsLatLng, updateEnabledEdgeIndicator, updateEnabledGpsIndicator };
+  const updateRecognizer = useCallback(
+    (recognizer: MarkerOverlapRecognizer) => {
+      setRecognizer(recognizer);
+    },
+    [setRecognizer]
+  );
+
+  return { updateMap, updateGpsLatLng, updateEnabledEdgeIndicator, updateEnabledGpsIndicator, updateRecognizer };
 }

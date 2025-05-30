@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
+
+import { useMap, useZoom } from '@/hooks';
 import { useMarkerState } from '../_hooks/useMarkerState';
-import { useZoom } from '@/hooks';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
 
 interface MarkerZIndexProps {
   marker: MyMarker | null;
@@ -15,7 +14,7 @@ interface MarkerZIndexProps {
  * zIndex값을 변경시키는 컴포넌트를 분리
  */
 export function MarkerZIndex({ marker, isSelect }: MarkerZIndexProps) {
-  const [recognizer] = useStore(useShallow((s) => [s.recognizer]));
+  const { recognizer } = useMap();
   const { zoomLevel } = useZoom();
   const { zIndex } = useMarkerState({
     marker,

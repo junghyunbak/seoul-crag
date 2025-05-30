@@ -1,9 +1,10 @@
-import { Typography } from '@mui/material';
-import { useMarkerState } from '../_hooks/useMarkerState';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/shallow';
-import { useZoom } from '@/hooks';
 import { CSSProperties } from 'react';
+
+import { Typography } from '@mui/material';
+
+import { useMap, useZoom } from '@/hooks';
+import { useMarkerState } from '../_hooks/useMarkerState';
+
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface MarkerTitleProps extends React.PropsWithChildren {
@@ -13,10 +14,8 @@ interface MarkerTitleProps extends React.PropsWithChildren {
 }
 
 export function MarkerTitle({ marker, isSelect, children, fontWeight = 'normal' }: MarkerTitleProps) {
-  const [recognizer] = useStore(useShallow((s) => [s.recognizer]));
-
+  const { recognizer } = useMap();
   const { zoomLevel } = useZoom();
-
   const { isTitleShown } = useMarkerState({ marker, recognizer, isSelect, zoomLevel });
 
   return (

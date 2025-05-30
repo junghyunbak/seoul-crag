@@ -20,7 +20,6 @@ import { Footer } from './_components/Footer';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
-import { useShallow } from 'zustand/shallow';
 import { FilterButtonSheet } from '@/components/FilterBottomSheet';
 
 const DEFAULT_LAT = 37.55296695234301;
@@ -38,10 +37,9 @@ export default function Main() {
   const [markers, setMarkers] = useState<(naver.maps.Marker | null)[]>([]);
   const [cafeMarkers, setCafeMarkers] = useState<(naver.maps.Marker | null)[]>([]);
 
-  const { updateMap } = useModifyMap();
+  const { updateMap, updateRecognizer } = useModifyMap();
   const { updateZoomLevel } = useModifyZoom();
   const { updateSelectCafeId } = useModifyCafe();
-  const [setRecognizer] = useStore(useShallow((s) => [s.setRecognizer]));
 
   useSetupExp();
 
@@ -175,8 +173,8 @@ export default function Main() {
       newRecognizer.add(marker);
     });
 
-    setRecognizer(newRecognizer);
-  }, [cafeMarkers, map, markers, setRecognizer]);
+    updateRecognizer(newRecognizer);
+  }, [cafeMarkers, map, markers, updateRecognizer]);
 
   const handleMarkerCreate = useCallback((marker: naver.maps.Marker, idx: number, isFilter: boolean) => {
     if (idx === -1) {
