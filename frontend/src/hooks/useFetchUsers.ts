@@ -28,7 +28,7 @@ export function useFetchUser(userId: string | null) {
     queryKey: ['user', userId],
     queryFn: async () => {
       if (!userId) {
-        return undefined;
+        return null;
       }
 
       const { data } = await api.get(`/v2/users/${userId}`);
