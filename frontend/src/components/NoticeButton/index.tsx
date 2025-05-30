@@ -1,4 +1,4 @@
-import { Badge, Button, IconButton } from '@mui/material';
+import { Badge, IconButton } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 import { useFetchNotices, useModifyNotice, useNotice } from '@/hooks';
