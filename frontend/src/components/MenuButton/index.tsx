@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useQueryParam, BooleanParam } from 'use-query-params';
 import { QUERY_STRING } from '@/constants';
@@ -7,18 +7,12 @@ export function MenuButton() {
   const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
   return (
-    <Button
-      variant="contained"
+    <IconButton
       onClick={() => {
         setIsMenuOpen((prev) => !prev);
       }}
-      sx={{
-        p: 1.5,
-        minWidth: 'auto',
-        aspectRatio: '1/1',
-      }}
     >
       <MenuIcon />
-    </Button>
+    </IconButton>
   );
 }

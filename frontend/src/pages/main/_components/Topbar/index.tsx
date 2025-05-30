@@ -1,9 +1,9 @@
 import { MenuButton } from '@/components/MenuButton';
 import { SearchInput } from '@/components/SearchInput';
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { zIndex } from '@/styles';
-import { Filter } from '@/components/Filter';
 import { NoticeButton } from '@/components/NoticeButton';
+import { FilterButton } from '@/components/FilterButton';
 
 export function Topbar() {
   return (
@@ -16,8 +16,8 @@ export function Topbar() {
         zIndex: zIndex.topbar,
         display: 'flex',
         justifyContent: 'center',
-        pointerEvents: 'none',
         userSelect: 'none',
+        pointerEvents: 'none',
       }}
     >
       <Box
@@ -27,27 +27,45 @@ export function Topbar() {
           display: 'flex',
           flexDirection: 'column',
           gap: 1,
-          pointerEvents: 'auto',
         }}
       >
         <Box
           sx={{
             width: '100%',
             display: 'flex',
-            alignItems: 'flex-start',
-            gap: 1,
+            flexDirection: 'column',
             p: 2,
-            pb: 0,
           }}
         >
-          <Box sx={{ flex: 1, overflow: 'hidden', pb: '2px' }}>
-            <SearchInput />
-          </Box>
-          <NoticeButton />
-          <MenuButton />
-        </Box>
+          <Paper
+            sx={{
+              pointerEvents: 'auto',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Box sx={{ flex: 1, overflow: 'hidden', pb: '2px' }}>
+                <SearchInput />
+              </Box>
 
-        <Filter />
+              <Box
+                sx={{
+                  flexShrink: 0,
+                  px: 0.5,
+                }}
+              >
+                <NoticeButton />
+                <MenuButton />
+              </Box>
+            </Box>
+
+            <FilterButton />
+          </Paper>
+        </Box>
       </Box>
     </Box>
   );

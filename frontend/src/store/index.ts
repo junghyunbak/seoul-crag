@@ -47,6 +47,7 @@ export const useStore = create<StoreState>()(
           cafes,
           selectCafeId,
           selectUserId,
+          isFilterBottomSheetOpen,
         } = state;
 
         return {
@@ -65,6 +66,7 @@ export const useStore = create<StoreState>()(
           cafes,
           selectCafeId,
           selectUserId,
+          isFilterBottomSheetOpen,
         };
       },
     }

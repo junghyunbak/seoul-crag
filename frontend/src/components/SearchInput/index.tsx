@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Box, Paper, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { useLoading, useMap, useModifyLoading, useSearch } from '@/hooks';
@@ -45,8 +45,8 @@ export function SearchInput() {
   }, [map, updateIsMarkerLoading]);
 
   return (
-    <Paper
-      sx={{ py: 1.5, px: 2, display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
+    <Box
+      sx={{ p: 1.5, display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
       onClick={() => updateIsSearchOpen(true)}
     >
       <Box
@@ -94,6 +94,6 @@ export function SearchInput() {
       <Box sx={{ flex: 1, overflow: 'hidden' }}>
         <Typography color="text.secondary">{searchKeyword || '클라이밍장 검색'}</Typography>
       </Box>
-    </Paper>
+    </Box>
   );
 }

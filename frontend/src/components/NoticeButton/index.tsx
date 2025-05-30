@@ -1,4 +1,4 @@
-import { Badge, Button } from '@mui/material';
+import { Badge, Button, IconButton } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 import { useFetchNotices, useModifyNotice, useNotice } from '@/hooks';
@@ -13,14 +13,7 @@ export function NoticeButton() {
   const noticeCount = (notices || []).filter((notice) => !readNoticeIds.includes(notice.id)).length;
 
   return (
-    <Button
-      sx={(theme) => ({
-        background: theme.palette.common.white,
-        p: 1.5,
-        minWidth: 'auto',
-        aspectRatio: '1/1',
-        boxShadow: 1,
-      })}
+    <IconButton
       onClick={() => {
         updateIsNoticeOpen(true);
       }}
@@ -28,6 +21,6 @@ export function NoticeButton() {
       <Badge badgeContent={noticeCount} color="error">
         <NotificationsNoneIcon />
       </Badge>
-    </Button>
+    </IconButton>
   );
 }

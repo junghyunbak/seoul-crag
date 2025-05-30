@@ -16,6 +16,9 @@ type FilterSliceType = {
 
   currentDate: Date;
   setCurrentDate: (date: Date) => void;
+
+  isFilterBottomSheetOpen: boolean;
+  setIsFilterBottonSheetOpen: (isOpen: boolean) => void;
 };
 
 export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): FilterSliceType => ({
@@ -65,5 +68,10 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): Filt
     set(() => ({
       selectTagId: nextSelectTag,
     }));
+  },
+
+  isFilterBottomSheetOpen: false,
+  setIsFilterBottonSheetOpen(isOpen) {
+    set(() => ({ isFilterBottomSheetOpen: isOpen }));
   },
 });

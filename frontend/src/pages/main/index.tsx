@@ -21,6 +21,7 @@ import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
 import { useShallow } from 'zustand/shallow';
+import { FilterButtonSheet } from '@/components/FilterBottomSheet';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -225,6 +226,7 @@ export default function Main() {
       <Sidebar />
       <Search />
       <Notice />
+      <FilterButtonSheet />
     </Box>
   );
 }
