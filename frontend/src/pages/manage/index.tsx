@@ -136,7 +136,7 @@ export default function ManagePage() {
               sx={{ color: 'black', textDecoration: 'none', cursor: 'pointer' }}
               onClick={() => (window.location.href = '/')}
             >
-              서울 암장
+              서울암장
             </Typography>
           </Box>
 

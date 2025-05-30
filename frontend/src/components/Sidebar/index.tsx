@@ -45,13 +45,18 @@ export function Sidebar() {
 
   return (
     <Drawer anchor="right" open={open} onClose={handleClose} sx={{ zIndex: zIndex.menu, userSelect: 'none' }}>
-      <Box sx={{ width: isMobile ? '80vw' : 360, display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
-        <Logo />
+      <Box sx={{ width: isMobile ? '80vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Box sx={{ p: 2 }}>
+          <Logo />
+        </Box>
+
         <Menu />
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Options />
+        <Box sx={{ p: 2 }}>
+          <Options />
+        </Box>
       </Box>
     </Drawer>
   );
