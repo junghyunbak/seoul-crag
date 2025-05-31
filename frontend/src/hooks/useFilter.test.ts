@@ -23,6 +23,7 @@ const mockCrag: Crag = {
   schedules: [],
   openingHours: [],
   gymTags: [],
+  price: 0,
 };
 
 const dateStr = '2025-05-08';

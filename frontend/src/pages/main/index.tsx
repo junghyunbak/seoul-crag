@@ -10,7 +10,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { useStore } from '@/store';
 
-import { QUERY_STRING, SIZE } from '@/constants';
+import { QUERY_STRING } from '@/constants';
 
 import { Map } from '@/components/Map';
 import { Sidebar } from '@/components/Sidebar';
