@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { useExp, useFilter } from '@/hooks';
 
@@ -94,6 +94,16 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
 
         <MarkerTitle marker={marker} isSelect={isSelect} fontWeight="bold">
           {crag.short_name || crag.name}
+          <br />
+          <Typography
+            component="span"
+            sx={(theme) => ({
+              color: theme.palette.info.main,
+              fontWeight: 'inherit',
+            })}
+          >
+            {'₩' + crag.price.toLocaleString()}
+          </Typography>
         </MarkerTitle>
 
         <MarkerZIndex marker={marker} isSelect={isSelect} />
