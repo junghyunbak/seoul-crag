@@ -29,6 +29,7 @@ import { KakaoModule } from './kakao/kakao.module';
 import { ContributionModule } from './contributions/contribution.module';
 import { GymUserContributionModule } from './gym-user-contributions/gym-user-contributions.module';
 import { FeedsModule } from './feeds/feeds.module';
+import { GymDiscountsModule } from 'src/gym-discounts/gym-discounts.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { FeedsModule } from './feeds/feeds.module';
     KakaoModule,
     ContributionModule,
     GymUserContributionModule,
+    GymDiscountsModule,
     FeedsModule,
   ],
   controllers: [AppController],

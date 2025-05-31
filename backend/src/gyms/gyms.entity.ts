@@ -13,6 +13,7 @@ import { Comment } from 'src/comments/comments.entity';
 import { GymTag } from 'src/gym-tags/gym-tags.entity';
 import { GymUserContribution } from 'src/gym-user-contributions/gym-user-contributions.entity';
 import { Feed } from 'src/feeds/feeds.entity';
+import { GymDiscount } from 'src/gym-discounts/gym-discounts.entity';
 
 @Entity('gyms')
 export class Gym {
@@ -84,4 +85,7 @@ export class Gym {
 
   @OneToMany(() => Feed, (feed) => feed.gym)
   feeds: Feed[];
+
+  @OneToMany(() => GymDiscount, (gymDiscount) => gymDiscount.gym)
+  discounts: GymDiscount[];
 }
