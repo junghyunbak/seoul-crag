@@ -67,7 +67,9 @@ export function CragDetailLocation() {
         >
           <IconButton
             onClick={() => {
-              map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+              if (crag) {
+                map?.panTo(new naver.maps.LatLng(crag.latitude, crag.longitude));
+              }
             }}
           >
             <FmdGoodIcon />
