@@ -141,7 +141,6 @@ export class GymsService {
         description: raw.gym_description,
         latitude: raw.gym_latitude,
         longitude: raw.gym_longitude,
-
         thumbnail_url: raw.gym_thumbnail_url,
         website_url: raw.gym_website_url,
         shower_url: raw.gym_shower_url,
@@ -149,6 +148,7 @@ export class GymsService {
         short_name: raw.gym_short_name,
         is_outer_wall: raw.gym_is_outer_wall,
         opened_at: raw.gym_opened_at,
+        price: raw.gym_price,
 
         created_at: raw.gym_created_at,
         updated_at: raw.gym_updated_at,
@@ -193,6 +193,7 @@ export class GymsService {
       is_outer_wall: rawGym.gym_is_outer_wall,
       created_at: rawGym.gym_created_at,
       updated_at: rawGym.gym_updated_at,
+      price: rawGym.gym_price,
 
       images: rawGym.images || [],
       schedules: rawGym.schedules || [],

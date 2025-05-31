@@ -52,6 +52,9 @@ export class Gym {
   @Column({ type: 'text', default: '' })
   shower_url: string;
 
+  @Column({ default: 0 })
+  price: number;
+
   @CreateDateColumn()
   created_at: Date;
 

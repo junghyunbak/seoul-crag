@@ -1,7 +1,28 @@
 import { useMutation, DefaultError, MutationOptions } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
+import { z } from 'zod';
+import { InternalCragSchema } from '@/schemas';
 
+export function useMutationCrag() {
+  const patchCragMutation = useMutation<
+    void,
+    DefaultError,
+    Partial<MyOmit<z.infer<typeof InternalCragSchema>, 'created_at' | 'updated_at'>>
+  >({
+    mutationFn: async (crag) => {
+      const { id, ...other } = crag;
+
+      await api.patch(`/gyms/${id}`, {
+        ...other,
+      });
+    },
+  });
+
+  return { patchCragMutation };
+}
+
+// useMutationCrag 훅 사용으로 대체 (삭제)
 export function useMutateCragOuterWall() {
   const changeCragOuterWallMutation = useMutation<void, DefaultError, { cragId: string; isOuterWall: boolean }>({
     mutationFn: async ({ cragId, isOuterWall }) => {

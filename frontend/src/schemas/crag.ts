@@ -15,14 +15,14 @@ export const InternalCragSchema = z.object({
   description: z.string(),
   latitude: z.number(),
   longitude: z.number(),
-
   thumbnail_url: z.string().nullable(),
   website_url: z.string().nullable(),
   shower_url: z.string().nullable(),
   area: z.number().nullable(),
   is_outer_wall: z.boolean(),
-
+  price: z.number(),
   opened_at: z.union([dateScheme, z.null()]).optional(),
+
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 });

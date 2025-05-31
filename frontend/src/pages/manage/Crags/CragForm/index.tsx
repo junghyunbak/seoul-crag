@@ -28,6 +28,7 @@ import { QUERY_STRING } from '@/constants';
 import { CragContributesField } from './CragContributesField';
 import { zIndex } from '@/styles';
 import { CragFeedField } from './CragFeedField';
+import { CragPriceField } from '@/pages/manage/Crags/CragForm/CragPriceField';
 
 interface CragFormProps {
   initialCrag: Crag;
@@ -111,6 +112,10 @@ export function CragForm({ initialCrag }: CragFormProps) {
 
                   <Grid size={{ xs: 12 }}>
                     <CragDescriptionField />
+                  </Grid>
+
+                  <Grid size={{ xs: 12 }}>
+                    <CragPriceField />
                   </Grid>
 
                   <Grid size={{ xs: 12, sm: 12, md: 6 }}>

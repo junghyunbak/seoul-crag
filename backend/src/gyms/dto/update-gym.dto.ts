@@ -1,5 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 
 export class UpdateGymDto extends PartialType(CreateGymDto) {
@@ -26,4 +32,8 @@ export class UpdateGymDto extends PartialType(CreateGymDto) {
   @IsOptional()
   @IsBoolean()
   is_outer_wall: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  price: number;
 }
