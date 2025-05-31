@@ -7,7 +7,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { QUERY_STRING } from '@/constants';
 
-import { useFetchCrag, useFetchImages } from '@/hooks';
+import { useFetchCrag } from '@/hooks';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -36,12 +36,11 @@ export default function CragDetail() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
 
   const { crag } = useFetchCrag({ cragId: selectCragDetailId });
-  const { images } = useFetchImages(selectCragDetailId, 'interior');
 
   return createPortal(
     <AnimatePresence>
       {typeof selectCragDetailId === 'string' && (
-        <CragDetailContext.Provider value={{ crag, images, onClose: () => setSelectCragDetailId(null) }}>
+        <CragDetailContext.Provider value={{ crag, onClose: () => setSelectCragDetailId(null) }}>
           <CragDetailContent />
         </CragDetailContext.Provider>
       )}

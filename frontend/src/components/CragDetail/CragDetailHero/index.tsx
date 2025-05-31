@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 
-import { Box, Stack, useTheme } from '@mui/material';
+import { Box, Skeleton, Stack, useTheme } from '@mui/material';
 
 import { ImageWithSource } from '@/components/ImageWithSource';
 
@@ -10,7 +10,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 
 export function CragDetailHero() {
-  const { images } = useContext(CragDetailContext);
+  const { crag } = useContext(CragDetailContext);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const theme = useTheme();
@@ -22,6 +22,12 @@ export function CragDetailHero() {
       setCurrentSlide(slider.track.details.rel);
     },
   });
+
+  if (!crag) {
+    return <Skeleton variant="rectangular" width={'100%'} height={'300px'} />;
+  }
+
+  const images = crag.images.filter((image) => image.type === 'interior');
 
   return (
     <Box sx={{ position: 'relative' }}>
