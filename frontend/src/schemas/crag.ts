@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { InternalUserSchema } from './user';
 import { contributionSchema } from './contribute';
 import { feedSchema } from './feed';
+import { GymDiscountSchema } from '@/schemas/discount';
 
 export const InternalCragSchema = z.object({
   id: z.string(),
@@ -41,6 +42,7 @@ export const InternalCragRelationSchema = z.object({
       user: z.lazy(() => InternalUserSchema),
     })
   ),
+  discounts: z.array(GymDiscountSchema),
   feeds: z.array(feedSchema).optional(),
 });
 
