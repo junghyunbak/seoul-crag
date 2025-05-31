@@ -46,7 +46,7 @@ export function FilterButton() {
       </StyledBadge>
       <Typography>
         <Typography component="span" sx={(theme) => ({ color: theme.palette.primary.main, fontWeight: 500 })}>
-          {format(exp.date, 'M월 dd일 a h:mm', { locale: ko })}
+          {format(exp.date, 'M월 dd일 (E) a h:mm', { locale: ko })}
         </Typography>{' '}
         이용
       </Typography>
