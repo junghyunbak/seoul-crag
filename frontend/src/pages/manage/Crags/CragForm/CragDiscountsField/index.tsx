@@ -12,28 +12,71 @@ import {
 } from '@mui/material';
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GymDiscountSchema } from '@/schemas/discount';
+import { GroupDiscountSchema, TimeDiscountSchema, EventDiscountSchema } from '@/schemas/discount';
 import { DefaultError, useMutation } from '@tanstack/react-query';
 import { api } from '@/api/axios';
-import { useContext } from 'react';
+import { useContext, useState, useMemo } from 'react';
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+import { DAYS_OF_KOR } from '@/constants/time';
+import { z } from 'zod';
+
+const discountTypeToKor: Record<GymDiscount['type'], string> = {
+  event: '[이벤트 할인]',
+  group: '[단체 할인]',
+  time: '[정기 할인]',
+};
+
+const discountTypes: GymDiscount['type'][] = ['event', 'group', 'time'];
 
 export function CragDiscountsField() {
+  const [discountType, setDiscountType] = useState<GymDiscount['type']>('group');
+
+  const schema = useMemo(() => {
+    switch (discountType) {
+      case 'group':
+        return GroupDiscountSchema.omit({ id: true });
+      case 'time':
+        return TimeDiscountSchema.omit({ id: true });
+      case 'event':
+        return EventDiscountSchema.omit({ id: true });
+    }
+  }, [discountType]);
+
+  return (
+    <CragDiscountsFieldWrapper
+      key={discountType}
+      schema={schema}
+      onTypeChange={(discountType) => {
+        setDiscountType(discountType);
+      }}
+      discountType={discountType}
+    />
+  );
+}
+
+interface CragDiscountsFieldWrapperProps {
+  discountType: GymDiscount['type'];
+  schema: z.ZodSchema;
+  onTypeChange: (discountType: GymDiscount['type']) => void;
+}
+
+export function CragDiscountsFieldWrapper({ discountType, schema, onTypeChange }: CragDiscountsFieldWrapperProps) {
   const { crag, revalidateCrag } = useContext(cragFormContext);
 
   const methods = useForm<GymDiscount>({
-    resolver: zodResolver(GymDiscountSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
-      type: 'group',
+      type: discountType,
     } as any,
   });
 
-  const { handleSubmit, watch } = methods;
+  const { handleSubmit, watch, reset } = methods;
+
   const type = watch('type');
 
   const createGymDiscountMutation = useMutation<void, DefaultError, Partial<GymDiscount>>({
     mutationFn: async (props) => {
-      api.post(`/gyms/${crag.id}/discounts`, {
+      await api.post(`/gyms/${crag.id}/discounts`, {
         ...props,
       });
     },
@@ -49,8 +92,34 @@ export function CragDiscountsField() {
     <FormProvider {...methods}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Typography variant="h6">할인 정보</Typography>
+
+        <DiscountList />
+
         <Paper>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <Box sx={{ p: 2 }}>
+              <FormControl>
+                <InputLabel>타입</InputLabel>
+                <Select
+                  onChange={(e) => {
+                    const newType = e.target.value as GymDiscount['type'];
+
+                    onTypeChange(newType);
+
+                    reset({ type: newType } as any);
+                  }}
+                  value={discountType}
+                  label="타입"
+                >
+                  {discountTypes.map((discountType) => (
+                    <MenuItem value={discountType}>{discountTypeToKor[discountType]}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Divider />
+
             <Box sx={{ p: 2 }}>
               <CommonFields />
             </Box>
@@ -80,14 +149,6 @@ function CommonFields() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <FormControl>
-        <InputLabel>타입</InputLabel>
-        <Select {...register('type')} defaultValue="group" label="타입">
-          <MenuItem value="group">단체 할인</MenuItem>
-          <MenuItem value="time">시간 할인</MenuItem>
-          <MenuItem value="event">이벤트 할인</MenuItem>
-        </Select>
-      </FormControl>
       <TextField label="할인 가격" type="number" {...register('price', { valueAsNumber: true })} fullWidth />
       <TextField label="설명" {...register('description')} fullWidth />
     </Box>
@@ -150,6 +211,48 @@ function EventFields() {
         {...register('time_end')}
         fullWidth
       />
+    </Box>
+  );
+}
+
+function DiscountList() {
+  const { crag } = useContext(cragFormContext);
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      {crag.gymDiscounts.map((gymDiscount) => {
+        return (
+          <Box key={gymDiscount.id} sx={{ display: 'flex' }}>
+            {(() => {
+              if (gymDiscount.type === 'group') {
+                return (
+                  <Typography>
+                    {`${discountTypeToKor[gymDiscount.type]} ${gymDiscount.min_group_size}명 이상일 때 ${
+                      gymDiscount.price
+                    }원`}
+                  </Typography>
+                );
+              }
+
+              if (gymDiscount.type === 'event') {
+                return (
+                  <Typography>
+                    {`${discountTypeToKor[gymDiscount.type]} ${gymDiscount.date} (${gymDiscount.time_start} ~ ${
+                      gymDiscount.time_end
+                    }) ${gymDiscount.price}원`}
+                  </Typography>
+                );
+              }
+
+              return (
+                <Typography>{`${discountTypeToKor[gymDiscount.type]} ${DAYS_OF_KOR[gymDiscount.weekday]} (${
+                  gymDiscount.time_start
+                } ~ ${gymDiscount.time_end}) ${gymDiscount.price}원`}</Typography>
+              );
+            })()}
+          </Box>
+        );
+      })}
     </Box>
   );
 }

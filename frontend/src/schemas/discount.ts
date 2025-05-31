@@ -1,14 +1,16 @@
 import { dateScheme, timeSchema } from '@/schemas/common/date';
 import { z } from 'zod';
 
-const GroupDiscountSchema = z.object({
+export const GroupDiscountSchema = z.object({
+  id: z.string().uuid(),
   type: z.literal('group'),
   price: z.number().int(),
   description: z.string(),
   min_group_size: z.number().int().min(1),
 });
 
-const TimeDiscountSchema = z.object({
+export const TimeDiscountSchema = z.object({
+  id: z.string().uuid(),
   type: z.literal('time'),
   price: z.number().int(),
   description: z.string(),
@@ -17,7 +19,8 @@ const TimeDiscountSchema = z.object({
   time_end: timeSchema,
 });
 
-const EventDiscountSchema = z.object({
+export const EventDiscountSchema = z.object({
+  id: z.string().uuid(),
   type: z.literal('event'),
   price: z.number().int(),
   description: z.string(),

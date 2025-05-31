@@ -42,7 +42,7 @@ export const InternalCragRelationSchema = z.object({
       user: z.lazy(() => InternalUserSchema),
     })
   ),
-  discounts: z.array(GymDiscountSchema),
+  gymDiscounts: z.array(GymDiscountSchema),
   feeds: z.array(feedSchema).optional(),
 });
 

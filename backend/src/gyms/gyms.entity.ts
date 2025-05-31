@@ -87,5 +87,5 @@ export class Gym {
   feeds: Feed[];
 
   @OneToMany(() => GymDiscount, (gymDiscount) => gymDiscount.gym)
-  discounts: GymDiscount[];
+  gymDiscounts: GymDiscount[];
 }

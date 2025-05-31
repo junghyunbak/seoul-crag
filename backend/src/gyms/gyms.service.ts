@@ -15,6 +15,7 @@ import { GymTag } from 'src/gym-tags/gym-tags.entity';
 import { GymUserContribution } from 'src/gym-user-contributions/gym-user-contributions.entity';
 import { Tag } from 'src/tags/tags.entity';
 import { Feed } from 'src/feeds/feeds.entity';
+import { GymDiscount } from 'src/gym-discounts/gym-discounts.entity';
 
 type GymColumn = {
   [P in keyof Gym as Gym[P] extends () => any ? never : P]: Gym[P];
@@ -30,6 +31,7 @@ type GymRelation = Partial<{
   openingHours: GymOpeningHour[];
   gymTags: GymTag[];
   gymUserContributions: GymUserContribution[];
+  gymDiscounts: GymDiscount[];
   feeds: Feed[];
 }>;
 
@@ -120,6 +122,15 @@ export class GymsService {
         (qb) =>
           qb
             .subQuery()
+            .select(`JSON_AGG(d)`)
+            .from(GymDiscount, 'd')
+            .where('d.gymId = gym.id'),
+        'gymDiscounts',
+      )
+      .addSelect(
+        (qb) =>
+          qb
+            .subQuery()
             .select(`JSON_AGG(f)`)
             .from(Feed, 'f')
             .where('f.gymId = gym.id'),
@@ -158,8 +169,8 @@ export class GymsService {
         openingHours: raw.openingHours || [],
         gymTags: raw.gymTags || [],
         gymUserContributions: raw.gymUserContributions || [],
+        gymDiscounts: raw.gymDiscounts || [],
         feeds: raw.feeds || [],
-        discounts: raw.gym_discounts || [],
 
         comments: raw.gym_comments,
       };
@@ -198,11 +209,11 @@ export class GymsService {
 
       images: rawGym.images || [],
       schedules: rawGym.schedules || [],
-      gymTags: rawGym.gymTags || [],
       openingHours: rawGym.openingHours || [],
+      gymTags: rawGym.gymTags || [],
       gymUserContributions: rawGym.gymUserContributions || [],
+      gymDiscounts: rawGym.gymDiscounts || [],
       feeds: rawGym.feeds || [],
-      discounts: rawGym.gym_discounts || [],
 
       comments: rawGym.gym_comments,
     };
