@@ -102,7 +102,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
               fontWeight: 'inherit',
             })}
           >
-            {'₩' + crag.price.toLocaleString()}
+            {crag.price === 0 ? '무료' : '₩' + crag.price.toLocaleString()}
           </Typography>
         </MarkerTitle>
 
