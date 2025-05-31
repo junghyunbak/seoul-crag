@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 
-import { IconButton } from '@mui/material';
+import { IconButton, Skeleton } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 
 import { urlService } from '@/utils';
@@ -13,7 +13,7 @@ export function CragDetailEditButton() {
   const { crag } = useContext(CragDetailContext);
 
   if (!crag) {
-    return null;
+    return <Skeleton variant="circular" width={37} height={37} />;
   }
 
   return (

@@ -1,19 +1,18 @@
 import { CragDetailContext } from '@/components/CragDetail/index.context';
-import { Typography } from '@mui/material';
+import { Skeleton, Typography } from '@mui/material';
 
-import { format } from 'date-fns';
 import { useContext } from 'react';
 
-export function CragDetailUpdateAt() {
+export function CragDetailArea() {
   const { crag } = useContext(CragDetailContext);
 
   if (!crag) {
-    return null;
+    return <Skeleton variant="text" sx={{ fontSize: '0.75rem' }} />;
   }
 
   return (
     <Typography variant="caption" color="text.secondary">
-      {`최근 정보 갱신일 · ${format(new Date(crag.updated_at), 'yyyy년 MM월 dd일')}`}
+      {`암장 크기 · ${crag.area ? `약 ${crag.area}평` : '(알려지지 않음)'}`}
     </Typography>
   );
 }

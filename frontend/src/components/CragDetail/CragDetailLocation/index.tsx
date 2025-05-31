@@ -3,15 +3,14 @@ import FmdGoodIcon from '@mui/icons-material/FmdGood';
 
 import { Map } from '@/components/Map';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { useNaverMap } from '@/hooks';
+import { CragDetailContext } from '@/components/CragDetail/index.context';
 
-interface CragDetailLocationProps {
-  crag: Crag;
-}
+export function CragDetailLocation() {
+  const { crag } = useContext(CragDetailContext);
 
-export function CragDetailLocation({ crag }: CragDetailLocationProps) {
   const { map, mapRef } = useNaverMap(
     () => ({
       zoom: 15,

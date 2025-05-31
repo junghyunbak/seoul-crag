@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
-import { Box, Stack, Divider } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -25,12 +25,12 @@ import { CragDetailSentinel } from '@/components/CragDetail/CragDetailSentinel';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 import { CragDetailTitle } from '@/components/CragDetail/CragDetailTitle';
-import { CragDetailUpdateAt } from '@/components/CragDetail/CragDetailUpdateAt';
 import { CragDetailDescription } from '@/components/CragDetail/CragDetailDescription';
 import { CragDetailFooter } from '@/components/CragDetail/CragDetailFooter';
 import { CragDetailCalendar } from '@/components/CragDetail/CragDetailCalendar';
 import { CragDetailTags } from '@/components/CragDetail/CragDetailTags';
 import { CragDetailContribution } from './CragDetailContribution';
+import { CragDetailArea } from '@/components/CragDetail/CragDetailArea';
 
 export default function CragDetail() {
   const [selectCragDetailId, setSelectCragDetailId] = useQueryParam(QUERY_STRING.SELECT_CRAGE_DETAIL, StringParam);
@@ -51,8 +51,6 @@ export default function CragDetail() {
 }
 
 function CragDetailContent() {
-  const { crag } = useContext(CragDetailContext);
-
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -107,32 +105,31 @@ function CragDetailContent() {
       >
         <CragDetailHero />
         <CragDetailSentinel ref={sentinelRef} />
-        {crag && (
-          <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap">
+        <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+            <Box sx={{ flex: 1 }}>
               <CragDetailTitle />
-              <Stack direction="row" spacing={1}>
-                <CragDetailShareButton />
-                <CragDetailEditButton />
-              </Stack>
-            </Stack>
-            <CragDetailUpdateAt />
-            <CragDetailTags />
-            <CragDetailDescription />
-            <CragDetailWebsiteUrl />
-            <Divider />
-            <CragDetailOpeningHours />
-            <Divider />
-            <CragDetailCalendar />
-            <Divider />
-            <CragDetailLocation crag={crag} />
-            <Divider />
-            <CragDetailComment />
-            <Divider />
-            <CragDetailContribution />
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <CragDetailShareButton />
+              <CragDetailEditButton />
+            </Box>
           </Box>
-        )}
-
+          <CragDetailArea />
+          <CragDetailTags />
+          <CragDetailDescription />
+          <CragDetailWebsiteUrl />
+          <Divider />
+          <CragDetailOpeningHours />
+          <Divider />
+          <CragDetailCalendar />
+          <Divider />
+          <CragDetailLocation />
+          <Divider />
+          <CragDetailComment />
+          <Divider />
+          <CragDetailContribution />
+        </Box>
         <CragDetailFooter />
       </Box>
     </motion.div>

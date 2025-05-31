@@ -1,23 +1,22 @@
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 import { TagList } from '@/components/TagList';
-import { Box } from '@mui/material';
+import { Box, Skeleton } from '@mui/material';
 import { useContext } from 'react';
 
 export function CragDetailTags() {
   const { crag } = useContext(CragDetailContext);
 
   if (!crag) {
-    return null;
+    return (
+      <Box sx={{ display: 'flex', gap: 1 }}>
+        {Array(3)
+          .fill(null)
+          .map(() => (
+            <Skeleton variant="rounded" width={72} height={24} />
+          ))}
+      </Box>
+    );
   }
 
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: 0.5,
-      }}
-    >
-      <TagList tags={crag.gymTags.map(({ tag }) => tag)} readonly removePadding />
-    </Box>
-  );
+  return <TagList tags={crag.gymTags.map(({ tag }) => tag)} readonly removePadding />;
 }

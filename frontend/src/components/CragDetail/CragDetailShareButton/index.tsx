@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { IconButton } from '@mui/material';
+import { IconButton, Skeleton } from '@mui/material';
 import Share from '@mui/icons-material/Share';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
@@ -11,7 +11,7 @@ export function CragDetailShareButton() {
   const { crag } = useContext(CragDetailContext);
 
   if (!crag) {
-    return null;
+    return <Skeleton variant="circular" width={37} height={37} />;
   }
 
   return (

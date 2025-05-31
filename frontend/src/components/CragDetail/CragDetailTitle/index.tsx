@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { Typography } from '@mui/material';
+import { Skeleton, Typography } from '@mui/material';
 
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 
@@ -8,7 +8,7 @@ export function CragDetailTitle() {
   const { crag } = useContext(CragDetailContext);
 
   if (!crag) {
-    return null;
+    return <Skeleton sx={{ fontSize: '1.5rem' }} />;
   }
 
   return (
