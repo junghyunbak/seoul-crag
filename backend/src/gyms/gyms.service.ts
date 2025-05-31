@@ -159,6 +159,7 @@ export class GymsService {
         gymTags: raw.gymTags || [],
         gymUserContributions: raw.gymUserContributions || [],
         feeds: raw.feeds || [],
+        discounts: raw.gym_discounts || [],
 
         comments: raw.gym_comments,
       };
@@ -201,6 +202,7 @@ export class GymsService {
       openingHours: rawGym.openingHours || [],
       gymUserContributions: rawGym.gymUserContributions || [],
       feeds: rawGym.feeds || [],
+      discounts: rawGym.gym_discounts || [],
 
       comments: rawGym.gym_comments,
     };
