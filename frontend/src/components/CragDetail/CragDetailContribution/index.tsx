@@ -46,9 +46,9 @@ export function CragDetailContribution() {
         <Typography>아직 아무도 암장 정보를 남기지 않았어요.</Typography>
       ) : (
         <ul>
-          {Array.from(contributionNameToUserToCnt.entries()).map(([contributionName, userToCnt]) => {
+          {Array.from(contributionNameToUserToCnt.entries()).map(([contributionName, userToCnt], i) => {
             return (
-              <li>
+              <li key={i}>
                 <Box
                   sx={{
                     display: 'flex',

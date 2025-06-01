@@ -11,8 +11,8 @@ export function CragDetailTags() {
       <Box sx={{ display: 'flex', gap: 1 }}>
         {Array(3)
           .fill(null)
-          .map(() => (
-            <Skeleton variant="rounded" width={72} height={24} />
+          .map((_, i) => (
+            <Skeleton variant="rounded" width={72} height={24} key={i} />
           ))}
       </Box>
     );
