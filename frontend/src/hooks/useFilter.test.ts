@@ -23,6 +23,7 @@ const mockCrag: Crag = {
   schedules: [],
   openingHours: [],
   gymTags: [],
+  gymDiscounts: [],
   price: 0,
 };
 

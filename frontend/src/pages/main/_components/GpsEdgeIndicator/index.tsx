@@ -34,6 +34,7 @@ export function GpsEdgeIndicator() {
           schedules: [],
           openingHours: [],
           gymTags: [],
+          gymDiscounts: [],
           price: 0,
         },
       ]}
