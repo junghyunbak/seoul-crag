@@ -1,3 +1,5 @@
+import { useContext, useState, useMemo } from 'react';
+
 import {
   Paper,
   Box,
@@ -9,16 +11,21 @@ import {
   Button,
   Typography,
   Divider,
+  IconButton,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GroupDiscountSchema, TimeDiscountSchema, EventDiscountSchema } from '@/schemas/discount';
+import { z } from 'zod';
+
 import { DefaultError, useMutation } from '@tanstack/react-query';
 import { api } from '@/api/axios';
-import { useContext, useState, useMemo } from 'react';
+
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+
 import { DAYS_OF_KOR } from '@/constants/time';
-import { z } from 'zod';
 
 const discountTypeToKor: Record<GymDiscount['type'], string> = {
   event: '[이벤트 할인]',
@@ -112,7 +119,9 @@ export function CragDiscountsFieldWrapper({ discountType, schema, onTypeChange }
                   label="타입"
                 >
                   {discountTypes.map((discountType) => (
-                    <MenuItem value={discountType}>{discountTypeToKor[discountType]}</MenuItem>
+                    <MenuItem key={discountType} value={discountType}>
+                      {discountTypeToKor[discountType]}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -216,40 +225,58 @@ function EventFields() {
 }
 
 function DiscountList() {
-  const { crag } = useContext(cragFormContext);
+  const { crag, revalidateCrag } = useContext(cragFormContext);
+
+  const removeGymDiscountMutation = useMutation({
+    mutationFn: async (gymDiscountId: string) => {
+      await api.delete(`/gyms/${crag.id}/discounts/${gymDiscountId}`);
+    },
+  });
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       {crag.gymDiscounts.map((gymDiscount) => {
         return (
-          <Box key={gymDiscount.id} sx={{ display: 'flex' }}>
-            {(() => {
-              if (gymDiscount.type === 'group') {
-                return (
-                  <Typography>
-                    {`${discountTypeToKor[gymDiscount.type]} ${gymDiscount.min_group_size}명 이상일 때 ${
-                      gymDiscount.price
-                    }원`}
-                  </Typography>
-                );
-              }
+          <Box key={gymDiscount.id} sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
+              {(() => {
+                if (gymDiscount.type === 'group') {
+                  return (
+                    <Typography>
+                      {`${discountTypeToKor[gymDiscount.type]} ${gymDiscount.min_group_size}명 이상일 때 ${
+                        gymDiscount.price
+                      }원`}
+                    </Typography>
+                  );
+                }
 
-              if (gymDiscount.type === 'event') {
-                return (
-                  <Typography>
-                    {`${discountTypeToKor[gymDiscount.type]} ${gymDiscount.date} (${gymDiscount.time_start} ~ ${
-                      gymDiscount.time_end
-                    }) ${gymDiscount.price}원`}
-                  </Typography>
-                );
-              }
+                if (gymDiscount.type === 'event') {
+                  return (
+                    <Typography>
+                      {`${discountTypeToKor[gymDiscount.type]} ${gymDiscount.date} (${gymDiscount.time_start} ~ ${
+                        gymDiscount.time_end
+                      }) ${gymDiscount.price}원`}
+                    </Typography>
+                  );
+                }
 
-              return (
-                <Typography>{`${discountTypeToKor[gymDiscount.type]} ${DAYS_OF_KOR[gymDiscount.weekday]} (${
-                  gymDiscount.time_start
-                } ~ ${gymDiscount.time_end}) ${gymDiscount.price}원`}</Typography>
-              );
-            })()}
+                return (
+                  <Typography>{`${discountTypeToKor[gymDiscount.type]} ${DAYS_OF_KOR[gymDiscount.weekday]} (${
+                    gymDiscount.time_start
+                  } ~ ${gymDiscount.time_end}) ${gymDiscount.price}원`}</Typography>
+                );
+              })()}
+            </Box>
+
+            <IconButton
+              onClick={async () => {
+                await removeGymDiscountMutation.mutateAsync(gymDiscount.id);
+
+                revalidateCrag();
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
           </Box>
         );
       })}

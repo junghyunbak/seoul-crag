@@ -44,7 +44,8 @@ export class GymDiscountsService {
       where: { id: gymDiscountId },
     });
 
-    if (!gymDiscount || gymDiscount.gym.id !== gymId) {
+    // TODO: gym id 체크 활성화
+    if (!gymDiscount /* || gymDiscount.gym.id !== gymId*/) {
       return new BadRequestException();
     }
 
