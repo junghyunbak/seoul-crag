@@ -165,6 +165,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
       detent="content-height"
       style={{
         zIndex: zIndex.filter,
+        userSelect: 'none',
       }}
     >
       <Sheet.Container>
