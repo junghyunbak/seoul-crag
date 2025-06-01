@@ -16,6 +16,7 @@ import {
   useModifyExp,
   useFilterSheet,
   useModifyFilterSheet,
+  useMap,
 } from '@/hooks';
 
 import { zIndex } from '@/styles';
@@ -47,6 +48,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
   const { exp, isExpSelect } = useExp();
   const { filter, getCragStats } = useFilter();
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
+  const { map } = useMap();
 
   const { tags } = useFetchTags();
 
@@ -54,7 +56,8 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
   const { updateExpDateTimeStr } = useModifyExp();
   const { updateIsFilterBottomSheetOpen } = useModifyFilterSheet();
 
-  const filteredCount = crags.reduce((a, c) => a + (getCragStats(c, exp.date).isFiltered ? 1 : 0), 0);
+  const filteredCrags = crags.filter((crag) => getCragStats(crag, exp.date).isFiltered);
+  const filteredCount = filteredCrags.length;
 
   const tagTypeToTags = useMemo(() => {
     const _tagTypeToTags = new Map<TagType, Tag[]>();
@@ -323,6 +326,12 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
               sx={{ width: '100%' }}
               onClick={() => {
                 updateIsFilterBottomSheetOpen(false);
+
+                if (filteredCrags.length > 0 && map) {
+                  const [filteredCrag] = filteredCrags;
+
+                  map.morph(new naver.maps.LatLng(filteredCrag.latitude, filteredCrag.longitude));
+                }
               }}
             >
               {`${filteredCount}개의 암장 보기`}
