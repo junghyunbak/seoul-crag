@@ -59,8 +59,9 @@ export function CragDetailContribution() {
                 >
                   <Typography variant="body1">{contributionName}: </Typography>
 
-                  {Array.from(userToCnt.entries()).map(([_, value]) => (
+                  {Array.from(userToCnt.values()).map((value, i) => (
                     <Typography
+                      key={i}
                       sx={{
                         cursor: 'pointer',
                         '&:hover': {
