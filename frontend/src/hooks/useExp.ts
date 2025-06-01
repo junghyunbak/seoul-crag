@@ -12,5 +12,5 @@ export function useExp() {
 
   const exp = useMemo(() => new DateService(expDateTimeStr || currentDate), [expDateTimeStr, currentDate]);
 
-  return { exp, isExpSelect };
+  return { exp, isExpSelect, currentDate };
 }

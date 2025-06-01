@@ -45,7 +45,7 @@ interface FilterButtonSheetProps {
 
 export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
   const { isFilterBottomSheetOpen } = useFilterSheet();
-  const { exp, isExpSelect } = useExp();
+  const { exp, isExpSelect, currentDate } = useExp();
   const { filter, getCragStats } = useFilter();
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
 
@@ -92,6 +92,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
     };
   };
 
+  // [ ]: 원정 시간이 설정되지 않은 경우, 현재 시간과 동기화
   const [pickerValue, setPickerValue] = useState<UseTimePickerValue>(createUseTimePickerDefaultValue(exp.date));
 
   const { year, month } = pickerValue;
@@ -228,7 +229,11 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
                 >
                   <IconButton
                     onClick={() => {
-                      updateExpDateTimeStr(null);
+                      setPickerValue(createUseTimePickerDefaultValue(currentDate));
+
+                      setTimeout(() => {
+                        updateExpDateTimeStr(null);
+                      }, 0);
                     }}
                   >
                     <DeleteIcon />
