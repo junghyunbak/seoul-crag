@@ -119,6 +119,57 @@ export function useFilter(crag?: Crag, date = new Date()) {
         }
       });
 
+      let appliedGroupDiscount: GymDiscount | null = null;
+      let appliedDailyDiscount: GymDiscount | null = null;
+
+      const gymDiscounts = (crag && crag?.gymDiscounts) || [];
+
+      for (const gymDiscount of gymDiscounts) {
+        switch (gymDiscount.type) {
+          case 'group': {
+            appliedGroupDiscount = gymDiscount;
+
+            break;
+          }
+          case 'time': {
+            const { weekday, time_start, time_end } = gymDiscount;
+
+            if (current.date.getDay() === weekday) {
+              const start = DateService.timeStrToDate(time_start, date);
+              const end = DateService.timeStrToDate(time_end, date);
+
+              if (
+                isWithinInterval(current.date, {
+                  start,
+                  end,
+                })
+              ) {
+                appliedDailyDiscount = gymDiscount;
+              }
+            }
+
+            break;
+          }
+          case 'event': {
+            const { date, time_start, time_end } = gymDiscount;
+
+            const start = DateService.dateTimeStrToDate(`${date}T${time_start}`);
+            const end = DateService.dateTimeStrToDate(`${date}T${time_end}`);
+
+            if (
+              isWithinInterval(current.date, {
+                start,
+                end,
+              })
+            ) {
+              appliedDailyDiscount = gymDiscount;
+            }
+
+            break;
+          }
+        }
+      }
+
       /**
        * 구한 암장 상태로부터
        *
@@ -179,6 +230,10 @@ export function useFilter(crag?: Crag, date = new Date()) {
         isFiltered &&= isSoonRemove;
       }
 
+      if (filter.isSale) {
+        isFiltered &&= appliedDailyDiscount !== null;
+      }
+
       if (searchKeyword) {
         isFiltered &&=
           crag?.name.toLowerCase().includes(searchKeyword) ||
@@ -195,57 +250,6 @@ export function useFilter(crag?: Crag, date = new Date()) {
           return tagId === id;
         });
       });
-
-      let appliedGroupDiscount: GymDiscount | null = null;
-      let appliedDailyDiscount: GymDiscount | null = null;
-
-      const gymDiscounts = (crag && crag?.gymDiscounts) || [];
-
-      for (const gymDiscount of gymDiscounts) {
-        switch (gymDiscount.type) {
-          case 'group': {
-            appliedGroupDiscount = gymDiscount;
-
-            break;
-          }
-          case 'time': {
-            const { weekday, time_start, time_end } = gymDiscount;
-
-            if (current.date.getDay() === weekday) {
-              const start = DateService.timeStrToDate(time_start, date);
-              const end = DateService.timeStrToDate(time_end, date);
-
-              if (
-                isWithinInterval(current.date, {
-                  start,
-                  end,
-                })
-              ) {
-                appliedDailyDiscount = gymDiscount;
-              }
-            }
-
-            break;
-          }
-          case 'event': {
-            const { date, time_start, time_end } = gymDiscount;
-
-            const start = DateService.dateTimeStrToDate(`${date}T${time_start}`);
-            const end = DateService.dateTimeStrToDate(`${date}T${time_end}`);
-
-            if (
-              isWithinInterval(current.date, {
-                start,
-                end,
-              })
-            ) {
-              appliedDailyDiscount = gymDiscount;
-            }
-
-            break;
-          }
-        }
-      }
 
       return {
         isRegularyClosed,

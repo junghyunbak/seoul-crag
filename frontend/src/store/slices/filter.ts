@@ -29,6 +29,7 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): Filt
     isTodayRemove: false,
     isOuterWall: false,
     isOpen: false,
+    isSale: false,
   },
   setFilter(fn) {
     set((state) => ({

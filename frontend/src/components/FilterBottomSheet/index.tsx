@@ -126,6 +126,14 @@ export function FilterButtonSheet() {
                 }}
               />
               <Chip
+                label="🔥 할인중"
+                color={filter.isSale ? 'primary' : 'default'}
+                variant={filter.isSale ? 'filled' : 'outlined'}
+                onClick={() => {
+                  updateFilter({ isSale: !filter.isSale });
+                }}
+              />
+              <Chip
                 label="🟢 영업중"
                 color={filter.isOpen ? 'primary' : 'default'}
                 variant={filter.isOpen ? 'filled' : 'outlined'}

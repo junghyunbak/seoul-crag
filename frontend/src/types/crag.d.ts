@@ -12,6 +12,7 @@ declare global {
     isTodayRemove: boolean;
     isOuterWall: boolean;
     isOpen: boolean;
+    isSale: boolean;
   };
 
   type Crag = z.infer<typeof cragScheme>;
