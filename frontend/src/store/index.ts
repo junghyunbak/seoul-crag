@@ -44,7 +44,6 @@ export const useStore = create<StoreState>()(
           enabledGpsIndicator,
           selectTagId,
           readNoticeIds,
-          cafes,
           selectCafeId,
           selectUserId,
         } = state;
@@ -62,7 +61,6 @@ export const useStore = create<StoreState>()(
           enabledGpsIndicator,
           selectTagId,
           readNoticeIds,
-          cafes,
           selectCafeId,
           selectUserId,
         };
