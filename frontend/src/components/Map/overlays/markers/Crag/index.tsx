@@ -15,6 +15,7 @@ import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
 import { DateService } from '@/utils/time';
 import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 interface CragMarkerProps {
   crag: Crag;
@@ -49,7 +50,12 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       return (
         <PriceText isSale>
           할인 {price.toLocaleString()}
-          <br />️{isSelect && <span>{`(${format(startDate, 'hh:mm')} ~ ${format(endDate, 'hh:mm')})`}</span>}
+          <br />️
+          {isSelect && (
+            <span>{`(${format(startDate, 'a hh:mm', { locale: ko })} ~ ${format(endDate, 'a hh:mm', {
+              locale: ko,
+            })})`}</span>
+          )}
         </PriceText>
       );
     }
