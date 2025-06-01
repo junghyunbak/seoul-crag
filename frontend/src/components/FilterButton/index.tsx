@@ -25,7 +25,7 @@ export function FilterButton() {
   const appliedFilterCount = (() => {
     let cnt = 0;
 
-    cnt += Array.from(Object.values(filter)).reduce((a, c) => a + (c ? 1 : 0), 0);
+    cnt += Array.from(Object.values(filter)).reduce((a, c) => a + (typeof c === 'boolean' && c ? 1 : 0), 0);
 
     cnt += Array.from(Object.values(selectTagId)).reduce((a, c) => a + (typeof c === 'string' ? 1 : 0), 0);
 
