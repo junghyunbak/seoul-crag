@@ -16,7 +16,7 @@ import {
   useModifyExp,
   useFilterSheet,
   useModifyFilterSheet,
-  useMap,
+  useModifySearch,
 } from '@/hooks';
 
 import { zIndex } from '@/styles';
@@ -48,13 +48,13 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
   const { exp, isExpSelect } = useExp();
   const { filter, getCragStats } = useFilter();
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
-  const { map } = useMap();
 
   const { tags } = useFetchTags();
 
   const { updateFilter } = useModifyFilter();
   const { updateExpDateTimeStr } = useModifyExp();
   const { updateIsFilterBottomSheetOpen } = useModifyFilterSheet();
+  const { updateIsSearchOpen } = useModifySearch();
 
   const filteredCrags = crags.filter((crag) => getCragStats(crag, exp.date).isFiltered);
   const filteredCount = filteredCrags.length;
@@ -326,12 +326,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
               sx={{ width: '100%' }}
               onClick={() => {
                 updateIsFilterBottomSheetOpen(false);
-
-                if (filteredCrags.length > 0 && map) {
-                  const [filteredCrag] = filteredCrags;
-
-                  map.morph(new naver.maps.LatLng(filteredCrag.latitude, filteredCrag.longitude));
-                }
+                updateIsSearchOpen(true);
               }}
             >
               {`${filteredCount}개의 암장 보기`}
