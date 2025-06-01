@@ -42,7 +42,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   // [ ]: 단체가 활성화되었을 땐, 단체 할인 가격 먼저 보여주기
   const price = (() => {
     if (appliedDailyDiscount) {
-      const { price, time_start, time_end } = appliedDailyDiscount;
+      const { price, time_start, time_end, description } = appliedDailyDiscount;
 
       const startDate = DateService.timeStrToDate(time_start, exp.date);
       const endDate = DateService.timeStrToDate(time_end, exp.date);
@@ -50,11 +50,55 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       return (
         <PriceText isSale>
           할인 {price.toLocaleString()}
-          <br />️
           {isSelect && (
-            <span>{`(${format(startDate, 'a hh:mm', { locale: ko })} ~ ${format(endDate, 'a hh:mm', {
-              locale: ko,
-            })})`}</span>
+            <Box
+              sx={(theme) => ({
+                px: 1,
+                py: 0.5,
+                mt: 1,
+                background: theme.palette.warning.main,
+                borderRadius: 1,
+                position: 'relative',
+                border: '1px solid white',
+              })}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: 0,
+                  transform: 'translate(-50%, -100%)',
+                  display: 'flex',
+                  color: 'white',
+                }}
+              >
+                <svg width="18" height="10" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                  <path d="M8 0L16 8H0L8 0Z" />
+                </svg>
+              </Box>
+
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: 0,
+                  transform: 'translate(-50%, -100%)',
+                  display: 'flex',
+                }}
+              >
+                <svg width="16" height="8" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                  <path d="M8 0L16 8H0L8 0Z" />
+                </svg>
+              </Box>
+
+              <Typography sx={(theme) => ({ color: theme.palette.common.white, textShadow: 'none' })}>
+                {description}
+                <br />
+                {`(${format(startDate, 'a hh:mm', { locale: ko })} ~ ${format(endDate, 'a hh:mm', {
+                  locale: ko,
+                })})`}
+              </Typography>
+            </Box>
           )}
         </PriceText>
       );
