@@ -5,11 +5,14 @@ import { Box, Typography } from '@mui/material';
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 import { DAYS_OF_KOR } from '@/constants/time';
 import { DateService } from '@/utils/time';
-import { format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { useExp } from '@/hooks';
 
 export function CragDetailDiscounts() {
   const { crag } = useContext(CragDetailContext);
+
+  const { exp } = useExp();
 
   if (!crag || crag.gymDiscounts.length === 0) {
     return null;
@@ -34,10 +37,14 @@ export function CragDetailDiscounts() {
           {crag.gymDiscounts
             .sort((a, b) => (a.type < b.type ? -1 : 1))
             .map((gymDiscount) => {
-              const { id, price } = gymDiscount;
+              const { id, price, type } = gymDiscount;
 
-              const tmp = (() => {
-                switch (gymDiscount.type) {
+              if (type === 'event' && isAfter(exp.date, new Date(`${gymDiscount.date}T${gymDiscount.time_end}`))) {
+                return null;
+              }
+
+              const discountTitle = (() => {
+                switch (type) {
                   case 'group': {
                     const { min_group_size } = gymDiscount;
 
@@ -49,7 +56,11 @@ export function CragDetailDiscounts() {
                     const start = DateService.timeStrToDate(time_start, new Date());
                     const end = DateService.timeStrToDate(time_end, new Date());
 
-                    return `${DAYS_OF_KOR[weekday]} ${format(start, 'hh:mm')} ~ ${format(end, 'hh:mm')}`;
+                    return `${DAYS_OF_KOR[weekday]} ${format(start, 'a hh:mm', { locale: ko })} ~ ${format(
+                      end,
+                      'a hh:mm',
+                      { locale: ko }
+                    )}`;
                   }
                   case 'event': {
                     const { date, time_start, time_end } = gymDiscount;
@@ -57,10 +68,9 @@ export function CragDetailDiscounts() {
                     const start = DateService.timeStrToDate(time_start, new Date());
                     const end = DateService.timeStrToDate(time_end, new Date());
 
-                    return `${format(new Date(date), 'M월 dd일 (E)', { locale: ko })} ${format(
-                      start,
-                      'hh:mm'
-                    )} ~ ${format(end, 'hh:mm')}`;
+                    return `${format(new Date(date), 'M월 d일 (E)', { locale: ko })} ${format(start, 'a hh:mm', {
+                      locale: ko,
+                    })} ~ ${format(end, 'a hh:mm', { locale: ko })}`;
                   }
                 }
               })();
@@ -81,11 +91,11 @@ export function CragDetailDiscounts() {
                     variant="body2"
                     sx={(theme) => ({ color: theme.palette.text.secondary, fontFamily: 'Roboto Mono, monospace' })}
                   >
-                    {tmp}
+                    {discountTitle}
                   </Typography>
 
                   <Typography variant="body2" sx={(theme) => ({ color: theme.palette.text.secondary })}>
-                    {price.toLocaleString()}원 ← <del>{crag.price.toLocaleString()}원</del>
+                    {price.toLocaleString()}원
                   </Typography>
                 </Box>
               );
