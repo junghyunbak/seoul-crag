@@ -224,7 +224,7 @@ export default function Main() {
       <Sidebar />
       <Search />
       <Notice />
-      <FilterButtonSheet />
+      <FilterButtonSheet crags={crags} />
     </Box>
   );
 }

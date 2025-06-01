@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { Box, Chip, IconButton, SxProps, Typography } from '@mui/material';
+import { Box, Button, Chip, IconButton, SxProps, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Sheet } from 'react-modal-sheet';
@@ -38,10 +38,14 @@ const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   location: '환경',
 };
 
-export function FilterButtonSheet() {
+interface FilterButtonSheetProps {
+  crags?: Crag[];
+}
+
+export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
   const { isFilterBottomSheetOpen } = useFilterSheet();
   const { exp, isExpSelect } = useExp();
-  const { filter } = useFilter();
+  const { filter, getCragStats } = useFilter();
   const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
 
   const { tags } = useFetchTags();
@@ -49,6 +53,8 @@ export function FilterButtonSheet() {
   const { updateFilter } = useModifyFilter();
   const { updateExpDateTimeStr } = useModifyExp();
   const { updateIsFilterBottomSheetOpen } = useModifyFilterSheet();
+
+  const filteredCount = crags.reduce((a, c) => a + (getCragStats(c, exp.date).isFiltered ? 1 : 0), 0);
 
   const tagTypeToTags = useMemo(() => {
     const _tagTypeToTags = new Map<TagType, Tag[]>();
@@ -159,7 +165,7 @@ export function FilterButtonSheet() {
     >
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content disableDrag={true} style={{ paddingBottom: '2rem' }}>
+        <Sheet.Content disableDrag={true}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ px: 2 }}>
               <Typography variant="body2">이용시간</Typography>
@@ -310,6 +316,18 @@ export function FilterButtonSheet() {
               </Box>
             );
           })}
+
+          <Box sx={{ p: 2, width: '100%' }}>
+            <Button
+              variant="contained"
+              sx={{ width: '100%' }}
+              onClick={() => {
+                updateIsFilterBottomSheetOpen(false);
+              }}
+            >
+              {`${filteredCount}개의 암장 보기`}
+            </Button>
+          </Box>
         </Sheet.Content>
       </Sheet.Container>
 
