@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, TypographyProps } from '@mui/material';
 
 import { useExp, useFilter } from '@/hooks';
 
@@ -13,6 +13,8 @@ import { CragIcon } from '@/components/CragIcon';
 import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
 import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
+import { DateService } from '@/utils/time';
+import { format } from 'date-fns';
 
 interface CragMarkerProps {
   crag: Crag;
@@ -30,10 +32,30 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { exp } = useExp();
-  const { isFiltered, isOff, showerImages } = useFilter(crag, exp.date);
+  const { isFiltered, isOff, showerImages, appliedDailyDiscount } = useFilter(crag, exp.date);
 
   const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
+
+  // 할인 적용 우선순위 없는 상태.
+  // [ ]: 단체가 활성화되었을 땐, 단체 할인 가격 먼저 보여주기
+  const price = (() => {
+    if (appliedDailyDiscount) {
+      const { price, time_start, time_end } = appliedDailyDiscount;
+
+      const startDate = DateService.timeStrToDate(time_start, exp.date);
+      const endDate = DateService.timeStrToDate(time_end, exp.date);
+
+      return (
+        <PriceText isSale>
+          할인 {price.toLocaleString()}
+          <br />️{isSelect && <span>{`(${format(startDate, 'hh:mm')} ~ ${format(endDate, 'hh:mm')})`}</span>}
+        </PriceText>
+      );
+    }
+
+    return <PriceText>{crag.price === 0 ? '무료' : crag.price.toLocaleString()}</PriceText>;
+  })();
 
   /**
    * 마커 초기화
@@ -95,19 +117,29 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         <MarkerTitle marker={marker} isSelect={isSelect} fontWeight="bold">
           {crag.short_name || crag.name}
           <br />
-          <Typography
-            component="span"
-            sx={(theme) => ({
-              color: theme.palette.info.main,
-              fontWeight: 'inherit',
-            })}
-          >
-            {crag.price === 0 ? '무료' : '₩' + crag.price.toLocaleString()}
-          </Typography>
+
+          {price}
         </MarkerTitle>
 
         <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>
     </Box>
+  );
+}
+
+interface PriceTextProps extends TypographyProps {
+  isSale?: boolean;
+}
+
+function PriceText({ sx, isSale = false, ...props }: PriceTextProps) {
+  return (
+    <Typography
+      component="span"
+      sx={(theme) => ({
+        color: isSale ? theme.palette.warning.main : theme.palette.info.main,
+        fontWeight: 'inherit',
+      })}
+      {...props}
+    />
   );
 }
