@@ -8,8 +8,8 @@ import { ko } from 'date-fns/locale';
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
-    right: -2,
-    top: 2,
+    right: 2,
+    top: 4,
     border: `2px solid ${theme.palette.background.paper}`,
     padding: '0 4px',
   },
