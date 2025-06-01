@@ -1,12 +1,11 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { Box, Chip, Divider, IconButton, Typography } from '@mui/material';
+import { Box, Chip, IconButton, SxProps, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
 
 import { Sheet } from 'react-modal-sheet';
+
+import Picker from 'react-mobile-picker';
 
 import {
   useFilter,
@@ -20,14 +19,22 @@ import {
 } from '@/hooks';
 
 import { zIndex } from '@/styles';
-
+import { endOfMonth } from 'date-fns';
 import { DateService } from '@/utils/time';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ko';
+import { DAY_LABELS } from '@/constants';
+
+type UseTimePickerValue = {
+  year: number;
+  month: number;
+  date: number;
+  hour: number;
+  minute: number;
+  meridiem: '오전' | '오후';
+};
 
 const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   climb: '스타일',
-  board: '트레이닝',
+  board: '트레이닝 보드',
   location: '환경',
 };
 
@@ -61,6 +68,84 @@ export function FilterButtonSheet() {
     return Array.from(tagTypeToTags.keys());
   }, [tagTypeToTags]);
 
+  const createUseTimePickerDefaultValue = (date: Date): UseTimePickerValue => {
+    const hour = date.getHours();
+    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+    const isAM = hour < 12;
+
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      date: date.getDate(),
+      hour: hour12,
+      minute: date.getMinutes(),
+      meridiem: isAM ? '오전' : '오후',
+    };
+  };
+
+  const [pickerValue, setPickerValue] = useState<UseTimePickerValue>(createUseTimePickerDefaultValue(exp.date));
+
+  const { year, month } = pickerValue;
+
+  const date = new Date(year, month - 1);
+
+  const endDate = endOfMonth(date);
+
+  const selections: { [P in keyof UseTimePickerValue]: UseTimePickerValue[P][] } = {
+    year: [],
+    month: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    date: Array(endDate.getDate())
+      .fill(null)
+      .map((_, i) => i + 1),
+    hour: Array(12)
+      .fill(null)
+      .map((_, i) => i + 1),
+    minute: Array(60)
+      .fill(null)
+      .map((_, i) => i),
+    meridiem: ['오전', '오후'],
+  };
+
+  const pickerKeys: (keyof UseTimePickerValue)[] = ['month', 'date', 'hour', 'minute', 'meridiem'];
+  const pickerKeyToSuffix: Record<keyof UseTimePickerValue, string> = {
+    year: '년',
+    month: '월',
+    date: '일',
+    hour: '시',
+    minute: '분',
+    meridiem: '',
+  };
+  const pickerKeyToSx: Record<keyof UseTimePickerValue, SxProps> = {
+    year: {},
+    month: {
+      justifyContent: 'flex-end',
+    },
+    date: {
+      justifyContent: 'flex-start',
+    },
+    hour: {
+      justifyContent: 'flex-end',
+    },
+    minute: {
+      justifyContent: 'flex-start',
+    },
+    meridiem: {},
+  };
+
+  useEffect(() => {
+    const { year, month, date, hour, minute, meridiem } = pickerValue;
+
+    let hour24 = hour % 12;
+
+    if (meridiem === '오후') {
+      hour24 += 12;
+    }
+
+    const createdDate = new Date(year, month - 1, date, hour24, minute);
+
+    updateExpDateTimeStr(new DateService(createdDate).dateTimeStr);
+  }, [pickerValue, updateExpDateTimeStr]);
+
   return (
     <Sheet
       isOpen={isFilterBottomSheetOpen}
@@ -74,25 +159,56 @@ export function FilterButtonSheet() {
     >
       <Sheet.Container>
         <Sheet.Header />
-        <Sheet.Content>
-          <Box sx={{ display: 'flex', flexDirection: 'column', p: 2, gap: 1 }}>
-            <Typography variant="h6">이용시간</Typography>
+        <Sheet.Content disableDrag={true} style={{ paddingBottom: '2rem' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ px: 2 }}>
+              <Typography variant="body2">이용시간</Typography>
+            </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Box sx={{ flex: 1 }}>
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-                  <DateTimePicker
-                    sx={{ width: '100%', '& input': { userSelect: 'none' } }}
-                    value={dayjs(exp.date)}
-                    onChange={(newValue) => {
-                      if (!newValue) {
-                        updateExpDateTimeStr(null);
-                      } else {
-                        updateExpDateTimeStr(DateService.dateToDateTimeStr(newValue.toDate()));
-                      }
-                    }}
-                  />
-                </LocalizationProvider>
+                <Picker
+                  value={pickerValue}
+                  onChange={(value) => {
+                    setPickerValue(value);
+                  }}
+                  height={100}
+                  wheelMode="natural"
+                >
+                  {pickerKeys.map((pickerKey) => (
+                    <Picker.Column key={pickerKey} name={pickerKey}>
+                      {selections[pickerKey].map((option) => {
+                        const day = (() => {
+                          if (pickerKey !== 'date' || typeof option !== 'number') {
+                            return '';
+                          }
+
+                          const { year, month } = pickerValue;
+
+                          return `(${DAY_LABELS[new Date(year, month - 1, option).getDay()]})`;
+                        })();
+
+                        return (
+                          <Picker.Item key={option} value={option}>
+                            {({ selected }) => {
+                              return (
+                                <Box sx={{ ...{ width: '100%', display: 'flex', px: 1 }, ...pickerKeyToSx[pickerKey] }}>
+                                  <Typography
+                                    sx={(theme) => ({
+                                      color: selected ? theme.palette.common.black : theme.palette.text.secondary,
+                                    })}
+                                  >
+                                    {`${option}${pickerKeyToSuffix[pickerKey]} ${day}`}
+                                  </Typography>
+                                </Box>
+                              );
+                            }}
+                          </Picker.Item>
+                        );
+                      })}
+                    </Picker.Column>
+                  ))}
+                </Picker>
               </Box>
 
               {isExpSelect && (
@@ -113,62 +229,62 @@ export function FilterButtonSheet() {
             </Box>
           </Box>
 
-          <Divider />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, p: 2, pb: 0 }}>
+            <Typography variant="body2">상태</Typography>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', p: 2 }}>
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              <Chip
-                label="🚿 샤워실"
-                color={filter.isShower ? 'primary' : 'default'}
-                variant={filter.isShower ? 'filled' : 'outlined'}
-                onClick={() => {
-                  updateFilter({ isShower: !filter.isShower });
-                }}
-              />
-              <Chip
-                label="🔥 할인중"
-                color={filter.isSale ? 'primary' : 'default'}
-                variant={filter.isSale ? 'filled' : 'outlined'}
-                onClick={() => {
-                  updateFilter({ isSale: !filter.isSale });
-                }}
-              />
-              <Chip
-                label="🟢 영업중"
-                color={filter.isOpen ? 'primary' : 'default'}
-                variant={filter.isOpen ? 'filled' : 'outlined'}
-                onClick={() => {
-                  updateFilter({ isOpen: !filter.isOpen });
-                }}
-              />
-              <FilterChip
-                isActive={filter.isTodayRemove}
-                onClick={() => {
-                  updateFilter({ isTodayRemove: !filter.isTodayRemove });
-                }}
-              >
-                🍂 탈거 임박
-              </FilterChip>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                <Chip
+                  label="🚿 샤워실"
+                  color={filter.isShower ? 'primary' : 'default'}
+                  variant={filter.isShower ? 'filled' : 'outlined'}
+                  onClick={() => {
+                    updateFilter({ isShower: !filter.isShower });
+                  }}
+                />
+                <Chip
+                  label="🔥 할인중"
+                  color={filter.isSale ? 'primary' : 'default'}
+                  variant={filter.isSale ? 'filled' : 'outlined'}
+                  onClick={() => {
+                    updateFilter({ isSale: !filter.isSale });
+                  }}
+                />
+                <Chip
+                  label="🟢 영업중"
+                  color={filter.isOpen ? 'primary' : 'default'}
+                  variant={filter.isOpen ? 'filled' : 'outlined'}
+                  onClick={() => {
+                    updateFilter({ isOpen: !filter.isOpen });
+                  }}
+                />
+                <FilterChip
+                  isActive={filter.isTodayRemove}
+                  onClick={() => {
+                    updateFilter({ isTodayRemove: !filter.isTodayRemove });
+                  }}
+                >
+                  🍂 탈거 임박
+                </FilterChip>
 
-              <FilterChip
-                isActive={filter.isNewSetting}
-                onClick={() => {
-                  updateFilter({ isNewSetting: !filter.isNewSetting });
-                }}
-              >
-                🔩 최근 세팅
-              </FilterChip>
+                <FilterChip
+                  isActive={filter.isNewSetting}
+                  onClick={() => {
+                    updateFilter({ isNewSetting: !filter.isNewSetting });
+                  }}
+                >
+                  🔩 최근 세팅
+                </FilterChip>
+              </Box>
             </Box>
           </Box>
-
-          <Divider />
 
           {tagTypes.map((tagType) => {
             const tags = tagTypeToTags.get(tagType) || [];
 
             return (
-              <Box key={tagType} sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="h6">{TAG_TYPE_TO_TITLE[tagType]}</Typography>
+              <Box key={tagType} sx={{ p: 2, pb: 0, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Typography variant="body2">{TAG_TYPE_TO_TITLE[tagType]}</Typography>
 
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   {tags.map((tag) => {
