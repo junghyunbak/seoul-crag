@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 
 import { Box, Button, Chip, IconButton, SxProps, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -92,8 +92,10 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
     };
   };
 
+  const useTimePickerDefaultValue = useRef(createUseTimePickerDefaultValue(exp.date)).current;
+
   // [ ]: 원정 시간이 설정되지 않은 경우, 현재 시간과 동기화
-  const [pickerValue, setPickerValue] = useState<UseTimePickerValue>(createUseTimePickerDefaultValue(exp.date));
+  const [pickerValue, setPickerValue] = useState<UseTimePickerValue>(useTimePickerDefaultValue);
 
   const { year, month } = pickerValue;
 
@@ -143,6 +145,10 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
   };
 
   useEffect(() => {
+    if (useTimePickerDefaultValue === pickerValue) {
+      return;
+    }
+
     const { year, month, date, hour, minute, meridiem } = pickerValue;
 
     let hour24 = hour % 12;
@@ -154,7 +160,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
     const createdDate = new Date(year, month - 1, date, hour24, minute);
 
     updateExpDateTimeStr(new DateService(createdDate).dateTimeStr);
-  }, [pickerValue, updateExpDateTimeStr]);
+  }, [pickerValue, updateExpDateTimeStr, useTimePickerDefaultValue]);
 
   return (
     <Sheet
