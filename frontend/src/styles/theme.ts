@@ -19,6 +19,7 @@ export const theme = createTheme({
     searchModal: 1003,
     filterSheet: 1004,
 
+    mapControlBar: 100,
     mapControlFooter: 101,
   },
 });
@@ -28,6 +29,7 @@ declare module '@mui/material/styles' {
     searchModal: number;
     filterSheet: number;
 
+    mapControlBar: number;
     mapControlFooter: number;
   }
 }

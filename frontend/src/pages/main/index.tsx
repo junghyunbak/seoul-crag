@@ -23,7 +23,6 @@ import { QUERY_STRING } from '@/constants';
 
 import { Map } from '@/components/Map';
 import { Sidebar } from '@/components/Sidebar';
-import { Topbar } from './_components/Topbar';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
@@ -215,7 +214,6 @@ export default function Main() {
 
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
-      <Topbar />
       <Map map={map} mapRef={mapRef}>
         <Map.Polygon.Boundary />
         {crags?.map((crag, i) => (
@@ -233,9 +231,11 @@ export default function Main() {
       <Sidebar />
       <Notice />
 
+      <Organisms.MapControlBar />
+      <Organisms.MapControlFooter />
+
       <Organisms.Search />
       <Organisms.FilterButtonSheet />
-      <Organisms.MapControlFooter />
     </Box>
   );
 }
