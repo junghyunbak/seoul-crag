@@ -187,7 +187,13 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
                 <Picker
                   value={pickerValue}
                   onChange={(value) => {
-                    setPickerValue(value);
+                    const next = { ...value };
+
+                    if (value.hour === 12 && pickerValue.hour !== value.hour) {
+                      next.meridiem = value.meridiem === '오전' ? '오후' : '오전';
+                    }
+
+                    setPickerValue(next);
                   }}
                   height={100}
                   wheelMode="natural"
