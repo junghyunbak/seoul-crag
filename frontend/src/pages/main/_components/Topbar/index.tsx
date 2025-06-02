@@ -1,9 +1,8 @@
-import { MenuButton } from '@/components/MenuButton';
-import { SearchInput } from '@/components/SearchInput';
-import { Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
+
 import { zIndex } from '@/styles';
-import { NoticeButton } from '@/components/NoticeButton';
-import { FilterButton } from '@/components/FilterButton';
+
+import { Organisms } from '@/components/organisms';
 
 export function Topbar() {
   return (
@@ -37,34 +36,9 @@ export function Topbar() {
             p: 2,
           }}
         >
-          <Paper
-            sx={{
-              pointerEvents: 'auto',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Box sx={{ flex: 1, overflow: 'hidden', pb: '2px' }}>
-                <SearchInput />
-              </Box>
-
-              <Box
-                sx={{
-                  flexShrink: 0,
-                  px: 0.5,
-                }}
-              >
-                <NoticeButton />
-                <MenuButton />
-              </Box>
-            </Box>
-
-            <FilterButton />
-          </Paper>
+          <Box sx={{ pointerEvents: 'auto' }}>
+            <Organisms.MapControlBar />
+          </Box>
         </Box>
       </Box>
     </Box>

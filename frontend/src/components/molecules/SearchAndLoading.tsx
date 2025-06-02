@@ -26,9 +26,12 @@ export function SearchAndLoading({ isLoading }: { isLoading: boolean }) {
             style={{
               position: 'absolute',
               inset: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <CircularProgress size={'100%'} sx={(theme) => ({ color: theme.palette.grey[600] })} />
+            <CircularProgress size={15} sx={(theme) => ({ color: theme.palette.grey[600] })} />
           </motion.div>
         ) : (
           <motion.div
@@ -42,7 +45,7 @@ export function SearchAndLoading({ isLoading }: { isLoading: boolean }) {
               inset: 0,
             }}
           >
-            <SearchIcon sx={(theme) => ({ width: '100%', height: '100%', color: theme.palette.grey[600] })} />
+            <SearchIcon sx={(theme) => ({ width: 20, height: 20, color: theme.palette.grey[600] })} />
           </motion.div>
         )}
       </AnimatePresence>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 
-import { useCafe, useFetchCrags, useModifyCafe, useModifyZoom, useSetupExp } from '@/hooks';
+import { useCafe, useFetchCrags, useModifyCafe, useModifyZoom, useSetupExp, useSetupMarkerLoading } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
@@ -42,6 +42,7 @@ export default function Main() {
   const { updateSelectCafeId } = useModifyCafe();
 
   useSetupExp();
+  useSetupMarkerLoading();
 
   const { map } = useNaverMap(
     () => {
