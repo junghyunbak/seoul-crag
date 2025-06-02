@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Box, Button } from '@mui/material';
+import { Box, Button, useTheme } from '@mui/material';
 
 import { Sheet } from 'react-modal-sheet';
 
@@ -16,8 +16,6 @@ import {
   useModifyTag,
   useCrag,
 } from '@/hooks';
-
-import { zIndex } from '@/styles';
 
 import { DateService } from '@/utils/time';
 
@@ -53,6 +51,7 @@ export function FilterButtonSheet() {
   const { selectTagId } = useTag();
   const { crags } = useCrag();
   const { tagTypeToTags, tagTypes } = useTag();
+  const theme = useTheme();
 
   const { updateFilter } = useModifyFilter();
   const { updateExpDateTimeStr } = useModifyExp();
@@ -90,7 +89,7 @@ export function FilterButtonSheet() {
       }}
       detent="content-height"
       style={{
-        zIndex: zIndex.filter,
+        zIndex: theme.zIndex.filterSheet,
         userSelect: 'none',
       }}
     >
