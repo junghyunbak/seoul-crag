@@ -49,9 +49,11 @@ export default function StoryImage({ imageType }: StoryImageProps) {
       {cragId && images && (
         <StorySlider
           crag={crag}
-          contents={images.map((image) => (
-            <ImageWithSource image={image} />
-          ))}
+          contents={images
+            .sort((a, b) => (a.order < b.order ? -1 : 1))
+            .map((image) => (
+              <ImageWithSource image={image} />
+            ))}
           onClose={() => setCragId(null)}
           onComplete={() => setCragId(null)}
         />
