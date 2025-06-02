@@ -29,7 +29,7 @@ export function SearchInputWithRemove({
       />
 
       {value && (
-        <IconButton onClick={onRemove}>
+        <IconButton onClick={onRemove} size="small">
           <CloseIcon />
         </IconButton>
       )}
