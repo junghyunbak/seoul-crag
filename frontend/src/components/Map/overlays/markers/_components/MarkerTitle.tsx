@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 
 import { Box, styled, Typography } from '@mui/material';
 
@@ -10,11 +10,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 interface MarkerTitleProps extends React.PropsWithChildren {
   marker: MyMarker | null;
   isSelect: boolean;
-  fontWeight?: CSSProperties['fontWeight'];
   label: string;
 }
 
-export function MarkerTitle({ marker, isSelect, children, fontWeight = 'normal', label }: MarkerTitleProps) {
+export function MarkerTitle({ marker, isSelect, children, label }: MarkerTitleProps) {
   const { recognizer } = useMap();
   const { zoomLevel } = useZoom();
   const { isTitleShown } = useMarkerState({ marker, recognizer, isSelect, zoomLevel });

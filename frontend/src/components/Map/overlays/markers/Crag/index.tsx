@@ -187,7 +187,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         </Box>
 
         <Box>
-          <MarkerTitle marker={marker} isSelect={isSelect} fontWeight="bold" label={crag.short_name || crag.name}>
+          <MarkerTitle marker={marker} isSelect={isSelect} label={crag.short_name || crag.name}>
             {price && <MarkerTitle.SaleInfo>{price}</MarkerTitle.SaleInfo>}
           </MarkerTitle>
         </Box>
