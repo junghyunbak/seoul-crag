@@ -11,11 +11,12 @@ import { SIZE, QUERY_STRING } from '@/constants';
 import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
-import { MarkerTitle, HaloText } from '../_components/MarkerTitle';
+import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
 import { DateService } from '@/utils/time';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { Atoms } from '@/components/atoms';
 
 interface CragMarkerProps {
   crag: Crag;
@@ -55,13 +56,13 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
             justifyContent: 'center',
           }}
         >
-          <HaloText
+          <Atoms.Text.Halo
             sx={(theme) => ({
               color: theme.palette.warning.main,
             })}
           >
             {price.toLocaleString()}
-          </HaloText>
+          </Atoms.Text.Halo>
 
           {isSelect && (
             <Box
@@ -123,9 +124,9 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     }
 
     return (
-      <HaloText sx={(theme) => ({ color: theme.palette.info.main })}>
+      <Atoms.Text.Halo sx={(theme) => ({ color: theme.palette.info.main })}>
         {crag.price === 0 ? '무료' : crag.price.toLocaleString()}
-      </HaloText>
+      </Atoms.Text.Halo>
     );
   })();
 

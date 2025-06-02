@@ -1,11 +1,12 @@
 import React from 'react';
 
-import { Box, styled, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useMap, useZoom } from '@/hooks';
 import { useMarkerState } from '../_hooks/useMarkerState';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { Atoms } from '@/components/atoms';
 
 interface MarkerTitleProps extends React.PropsWithChildren {
   marker: MyMarker | null;
@@ -54,7 +55,7 @@ export function MarkerTitle({ marker, isSelect, children, label }: MarkerTitlePr
               gap: 0.5,
             }}
           >
-            <HaloText>{label}</HaloText>
+            <Atoms.Text.Halo>{label}</Atoms.Text.Halo>
 
             {saleInfo}
           </Box>
@@ -67,10 +68,3 @@ export function MarkerTitle({ marker, isSelect, children, label }: MarkerTitlePr
 MarkerTitle.SaleInfo = function SaleInfo({ children }: { children: React.ReactNode }) {
   return <Box>{children}</Box>;
 };
-
-export const HaloText = styled(Typography)({
-  textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
-  lineHeight: 1,
-  textAlign: 'center',
-  fontWeight: 'bold',
-});
