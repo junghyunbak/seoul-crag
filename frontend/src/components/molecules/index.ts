@@ -4,6 +4,7 @@ import { DatePicker } from '@/components/molecules/DatePicker';
 import { ExpeditionDate } from '@/components/molecules/ExpeditionDate';
 import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
+import { GpsButton } from '@/components/molecules/GpsButton';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
 import { NoticeModalTrigger } from '@/components/molecules/NoticeModalTrigger';
 import { SearchAndLoading } from '@/components/molecules/SearchAndLoading';
@@ -22,4 +23,5 @@ export const Molecules = {
   CragList,
   CragListItem,
   DatePicker,
+  GpsButton,
 };

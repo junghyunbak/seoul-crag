@@ -24,11 +24,9 @@ import { QUERY_STRING } from '@/constants';
 import { Map } from '@/components/Map';
 import { Sidebar } from '@/components/Sidebar';
 import { Topbar } from './_components/Topbar';
-import { Footer } from './_components/Footer';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
-import { FilterButtonSheet } from '@/components/FilterBottomSheet';
 import { Organisms } from '@/components/organisms';
 
 const DEFAULT_LAT = 37.55296695234301;
@@ -230,7 +228,6 @@ export default function Main() {
         <Map.Marker.Cluster markers={filteredCafeMarkers} clusterMarkerBgColor="#b13f0e" maxZoom={13.5} />
         <Map.Marker.Gps />
       </Map>
-      <Footer />
       <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
       <Sidebar />
@@ -238,6 +235,7 @@ export default function Main() {
 
       <Organisms.Search />
       <Organisms.FilterButtonSheet />
+      <Organisms.MapControlFooter />
     </Box>
   );
 }

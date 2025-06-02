@@ -18,6 +18,8 @@ export const theme = createTheme({
   zIndex: {
     searchModal: 1003,
     filterSheet: 1004,
+
+    mapControlFooter: 101,
   },
 });
 
@@ -25,5 +27,7 @@ declare module '@mui/material/styles' {
   interface ZIndex {
     searchModal: number;
     filterSheet: number;
+
+    mapControlFooter: number;
   }
 }
