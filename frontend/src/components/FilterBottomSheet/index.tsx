@@ -1,37 +1,29 @@
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { Box, Button, Chip, IconButton, SxProps, Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Button, Chip, Typography } from '@mui/material';
 
 import { Sheet } from 'react-modal-sheet';
-
-import Picker from 'react-mobile-picker';
 
 import {
   useFilter,
   useModifyFilter,
-  useFetchTags,
   useTag,
   useExp,
   useModifyExp,
   useFilterSheet,
   useModifyFilterSheet,
   useModifySearch,
+  useCrag,
 } from '@/hooks';
 
 import { zIndex } from '@/styles';
-import { endOfMonth } from 'date-fns';
-import { DateService } from '@/utils/time';
-import { DAY_LABELS } from '@/constants';
 
-type UseTimePickerValue = {
-  year: number;
-  month: number;
-  date: number;
-  hour: number;
-  minute: number;
-  meridiem: '오전' | '오후';
-};
+import { DateService } from '@/utils/time';
+
+import { Molecules } from '@/components/molecules';
+
+import { type DatePickerValue } from '@/components/molecules/DatePicker';
+import { useModifyTag } from '@/hooks/useModifyTag';
 
 const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   climb: '스타일',
@@ -39,113 +31,41 @@ const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   location: '환경',
 };
 
-interface FilterButtonSheetProps {
-  crags?: Crag[];
-}
+const createDatePickerValue = (date: Date): DatePickerValue => {
+  const hour = date.getHours();
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+  const isAM = hour < 12;
 
-export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    date: date.getDate(),
+    hour: hour12,
+    minute: date.getMinutes(),
+    meridiem: isAM ? '오전' : '오후',
+  };
+};
+
+export function FilterButtonSheet() {
   const { isFilterBottomSheetOpen } = useFilterSheet();
   const { exp, isExpSelect, currentDate } = useExp();
-  const { filter, getCragStats } = useFilter();
-  const { selectTagId, updateSelectTag, removeSelectTag } = useTag();
-
-  const { tags } = useFetchTags();
+  const { filter } = useFilter();
+  const { selectTagId } = useTag();
+  const { crags } = useCrag();
+  const { tagTypeToTags, tagTypes } = useTag();
 
   const { updateFilter } = useModifyFilter();
   const { updateExpDateTimeStr } = useModifyExp();
   const { updateIsFilterBottomSheetOpen } = useModifyFilterSheet();
   const { updateIsSearchOpen } = useModifySearch();
+  const { updateSelectTag, removeSelectTag } = useModifyTag();
 
-  const filteredCrags = crags.filter((crag) => getCragStats(crag, exp.date).isFiltered);
-  const filteredCount = filteredCrags.length;
+  const defaultDatePickerValue = useRef(createDatePickerValue(exp.date)).current;
 
-  const tagTypeToTags = useMemo(() => {
-    const _tagTypeToTags = new Map<TagType, Tag[]>();
-
-    tags?.forEach((tag) => {
-      const tags = _tagTypeToTags.get(tag.type) || [];
-
-      tags.push(tag);
-
-      _tagTypeToTags.set(tag.type, tags);
-    });
-
-    return _tagTypeToTags;
-  }, [tags]);
-
-  const tagTypes = useMemo(() => {
-    return Array.from(tagTypeToTags.keys());
-  }, [tagTypeToTags]);
-
-  const createUseTimePickerDefaultValue = (date: Date): UseTimePickerValue => {
-    const hour = date.getHours();
-    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-    const isAM = hour < 12;
-
-    return {
-      year: date.getFullYear(),
-      month: date.getMonth() + 1,
-      date: date.getDate(),
-      hour: hour12,
-      minute: date.getMinutes(),
-      meridiem: isAM ? '오전' : '오후',
-    };
-  };
-
-  const useTimePickerDefaultValue = useRef(createUseTimePickerDefaultValue(exp.date)).current;
-
-  // [ ]: 원정 시간이 설정되지 않은 경우, 현재 시간과 동기화
-  const [pickerValue, setPickerValue] = useState<UseTimePickerValue>(useTimePickerDefaultValue);
-
-  const { year, month } = pickerValue;
-
-  const date = new Date(year, month - 1);
-
-  const endDate = endOfMonth(date);
-
-  const selections: { [P in keyof UseTimePickerValue]: UseTimePickerValue[P][] } = {
-    year: [],
-    month: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    date: Array(endDate.getDate())
-      .fill(null)
-      .map((_, i) => i + 1),
-    hour: Array(12)
-      .fill(null)
-      .map((_, i) => i + 1),
-    minute: Array(60)
-      .fill(null)
-      .map((_, i) => i),
-    meridiem: ['오전', '오후'],
-  };
-
-  const pickerKeys: (keyof UseTimePickerValue)[] = ['month', 'date', 'hour', 'minute', 'meridiem'];
-  const pickerKeyToSuffix: Record<keyof UseTimePickerValue, string> = {
-    year: '년',
-    month: '월',
-    date: '일',
-    hour: '시',
-    minute: '분',
-    meridiem: '',
-  };
-  const pickerKeyToSx: Record<keyof UseTimePickerValue, SxProps> = {
-    year: {},
-    month: {
-      justifyContent: 'flex-end',
-    },
-    date: {
-      justifyContent: 'flex-start',
-    },
-    hour: {
-      justifyContent: 'flex-end',
-    },
-    minute: {
-      justifyContent: 'flex-start',
-    },
-    meridiem: {},
-  };
+  const [pickerValue, setPickerValue] = useState<DatePickerValue>(defaultDatePickerValue);
 
   useEffect(() => {
-    if (useTimePickerDefaultValue === pickerValue) {
+    if (pickerValue === defaultDatePickerValue) {
       return;
     }
 
@@ -160,7 +80,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
     const createdDate = new Date(year, month - 1, date, hour24, minute);
 
     updateExpDateTimeStr(new DateService(createdDate).dateTimeStr);
-  }, [pickerValue, updateExpDateTimeStr, useTimePickerDefaultValue]);
+  }, [defaultDatePickerValue, pickerValue, updateExpDateTimeStr]);
 
   return (
     <Sheet
@@ -182,78 +102,20 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
               <Typography variant="body2">이용시간</Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ flex: 1 }}>
-                <Picker
-                  value={pickerValue}
-                  onChange={(value) => {
-                    const next = { ...value };
+            <Molecules.DatePicker
+              pickerValue={pickerValue}
+              onChange={(value) => {
+                setPickerValue(value);
+              }}
+              onRemove={() => {
+                setPickerValue(createDatePickerValue(currentDate));
 
-                    if (value.hour === 12 && pickerValue.hour !== value.hour) {
-                      next.meridiem = value.meridiem === '오전' ? '오후' : '오전';
-                    }
-
-                    setPickerValue(next);
-                  }}
-                  height={100}
-                  wheelMode="natural"
-                >
-                  {pickerKeys.map((pickerKey) => (
-                    <Picker.Column key={pickerKey} name={pickerKey}>
-                      {selections[pickerKey].map((option) => {
-                        const day = (() => {
-                          if (pickerKey !== 'date' || typeof option !== 'number') {
-                            return '';
-                          }
-
-                          const { year, month } = pickerValue;
-
-                          return `(${DAY_LABELS[new Date(year, month - 1, option).getDay()]})`;
-                        })();
-
-                        return (
-                          <Picker.Item key={option} value={option}>
-                            {({ selected }) => {
-                              return (
-                                <Box sx={{ ...{ width: '100%', display: 'flex', px: 1 }, ...pickerKeyToSx[pickerKey] }}>
-                                  <Typography
-                                    sx={(theme) => ({
-                                      color: selected ? theme.palette.common.black : theme.palette.text.secondary,
-                                    })}
-                                  >
-                                    {`${option}${pickerKeyToSuffix[pickerKey]} ${day}`}
-                                  </Typography>
-                                </Box>
-                              );
-                            }}
-                          </Picker.Item>
-                        );
-                      })}
-                    </Picker.Column>
-                  ))}
-                </Picker>
-              </Box>
-
-              {isExpSelect && (
-                <Box
-                  sx={{
-                    flexShrink: 0,
-                  }}
-                >
-                  <IconButton
-                    onClick={() => {
-                      setPickerValue(createUseTimePickerDefaultValue(currentDate));
-
-                      setTimeout(() => {
-                        updateExpDateTimeStr(null);
-                      }, 0);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              )}
-            </Box>
+                setTimeout(() => {
+                  updateExpDateTimeStr(null);
+                }, 0);
+              }}
+              isRemoveActive={isExpSelect}
+            />
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, p: 2, pb: 0 }}>
@@ -347,7 +209,7 @@ export function FilterButtonSheet({ crags = [] }: FilterButtonSheetProps) {
                 updateIsSearchOpen(true);
               }}
             >
-              {`${filteredCount}개의 암장 보기`}
+              {`${crags.length}개의 암장 보기`}
             </Button>
           </Box>
         </Sheet.Content>

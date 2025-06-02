@@ -1,11 +1,30 @@
+import { useMemo } from 'react';
+
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
 export function useTag() {
-  // TODO: modify 훅으로 분리
-  const [selectTagId, updateSelectTag, removeSelectTag] = useStore(
-    useShallow((s) => [s.selectTagId, s.updateSelectTag, s.removeSelectTag])
-  );
+  const [tags] = useStore(useShallow((s) => [s.tags]));
 
-  return { selectTagId, updateSelectTag, removeSelectTag };
+  const [selectTagId] = useStore(useShallow((s) => [s.selectTagId]));
+
+  const tagTypeToTags = useMemo(() => {
+    const _tagTypeToTags = new Map<TagType, Tag[]>();
+
+    tags?.forEach((tag) => {
+      const tags = _tagTypeToTags.get(tag.type) || [];
+
+      tags.push(tag);
+
+      _tagTypeToTags.set(tag.type, tags);
+    });
+
+    return _tagTypeToTags;
+  }, [tags]);
+
+  const tagTypes = useMemo(() => {
+    return Array.from(tagTypeToTags.keys());
+  }, [tagTypeToTags]);
+
+  return { selectTagId, tagTypes, tagTypeToTags };
 }

@@ -1,5 +1,6 @@
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
+import { DatePicker } from '@/components/molecules/DatePicker';
 import { ExpeditionDate } from '@/components/molecules/ExpeditionDate';
 import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
@@ -20,4 +21,5 @@ export const Molecules = {
   SortOptionSelector,
   CragList,
   CragListItem,
+  DatePicker,
 };

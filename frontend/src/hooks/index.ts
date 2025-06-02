@@ -56,3 +56,4 @@ export * from './useSetupCrag';
 export * from './useSetupExp';
 export * from './useSetupMarkerLoading';
 export * from './useSetupGps';
+export * from './useSetupTag';

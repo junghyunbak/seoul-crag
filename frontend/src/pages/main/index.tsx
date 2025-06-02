@@ -10,6 +10,7 @@ import {
   useSetupCrag,
   useSetupExp,
   useSetupMarkerLoading,
+  useSetupTag,
 } from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
@@ -52,6 +53,7 @@ export default function Main() {
   useSetupExp();
   useSetupMarkerLoading();
   useSetupCrag();
+  useSetupTag();
 
   const { map } = useNaverMap(
     () => {
@@ -234,7 +236,7 @@ export default function Main() {
       <Sidebar />
       <Organisms.Search />
       <Notice />
-      <FilterButtonSheet crags={crags} />
+      <FilterButtonSheet />
     </Box>
   );
 }
