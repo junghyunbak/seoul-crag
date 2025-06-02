@@ -16,7 +16,12 @@ export function ExpeditionDate() {
 
   if (isExpSelect) {
     return (
-      <Atoms.Text.Title onClick={handleFilterSheetOpen}>
+      <Atoms.Text.Title
+        onClick={handleFilterSheetOpen}
+        sx={{
+          cursor: 'pointer',
+        }}
+      >
         <Atoms.Text.Highlight
           fontWeight={{
             fontWeight: 600,

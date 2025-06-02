@@ -11,7 +11,7 @@ export function MapControlBar() {
     <Paper sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
         <Box
-          sx={{ p: 1.5, pr: 0, display: 'flex', gap: 1, flex: 1, overflow: 'hidden' }}
+          sx={{ p: 1.5, pr: 0, display: 'flex', gap: 1, flex: 1, overflow: 'hidden', cursor: 'pointer' }}
           onClick={() => updateIsSearchOpen(true)}
         >
           <Molecules.SearchAndLoading isLoading={isMarkerLoading} />

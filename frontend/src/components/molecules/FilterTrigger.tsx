@@ -27,6 +27,9 @@ export function FilterTrigger() {
         onClick={() => {
           updateIsFilterBottomSheetOpen(true);
         }}
+        sx={{
+          cursor: 'pointer',
+        }}
       />
     </Atoms.Badge.PaperBorder>
   );
