@@ -52,5 +52,7 @@ export * from './useMutateSchedule';
 /**
  * setup
  */
+export * from './useSetupCrag';
 export * from './useSetupExp';
 export * from './useSetupMarkerLoading';
+export * from './useSetupGps';

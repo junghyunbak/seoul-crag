@@ -6,15 +6,17 @@ export function FakeSearhInput() {
   const { searchKeyword } = useSearch();
 
   if (searchKeyword) {
-    <Atoms.Text.Title
-      sx={{
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-      }}
-    >
-      {searchKeyword}
-    </Atoms.Text.Title>;
+    return (
+      <Atoms.Text.Title
+        sx={{
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+        }}
+      >
+        {searchKeyword}
+      </Atoms.Text.Title>
+    );
   }
 
   return (

@@ -2,7 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mui/material';
 
-import { useCafe, useFetchCrags, useModifyCafe, useModifyZoom, useSetupExp, useSetupMarkerLoading } from '@/hooks';
+import {
+  useCafe,
+  useFetchCrags,
+  useModifyCafe,
+  useModifyZoom,
+  useSetupCrag,
+  useSetupExp,
+  useSetupMarkerLoading,
+} from '@/hooks';
 
 import { useMap, useModifyMap, useNaverMap } from '@/hooks';
 
@@ -14,13 +22,13 @@ import { QUERY_STRING } from '@/constants';
 
 import { Map } from '@/components/Map';
 import { Sidebar } from '@/components/Sidebar';
-import { Search } from '@/components/Search';
 import { Topbar } from './_components/Topbar';
 import { Footer } from './_components/Footer';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
 import { FilterButtonSheet } from '@/components/FilterBottomSheet';
+import { Organisms } from '@/components/organisms';
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;
@@ -43,6 +51,7 @@ export default function Main() {
 
   useSetupExp();
   useSetupMarkerLoading();
+  useSetupCrag();
 
   const { map } = useNaverMap(
     () => {
@@ -223,7 +232,7 @@ export default function Main() {
       <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
       <Sidebar />
-      <Search />
+      <Organisms.Search />
       <Notice />
       <FilterButtonSheet crags={crags} />
     </Box>

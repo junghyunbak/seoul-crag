@@ -15,4 +15,13 @@ export const theme = createTheme({
   shape: {
     borderRadius: 8,
   },
+  zIndex: {
+    searchModal: 1003,
+  },
 });
+
+declare module '@mui/material/styles' {
+  interface ZIndex {
+    searchModal: number;
+  }
+}

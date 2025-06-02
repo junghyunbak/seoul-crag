@@ -1,4 +1,12 @@
+import { useStore } from '@/store';
 import { useMemo } from 'react';
+import { useShallow } from 'zustand/shallow';
+
+export function useCrag() {
+  const [crags] = useStore(useShallow((s) => [s.crags]));
+
+  return { crags };
+}
 
 export function useCragArea(crags?: Crag[]) {
   const cragArea = useMemo(() => {
