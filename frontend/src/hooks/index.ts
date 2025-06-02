@@ -28,6 +28,7 @@ export * from './useModifyNotice';
 export * from './useModifyCafe';
 export * from './useModifyLoading';
 export * from './useModifyProfile';
+export * from './useModifyTag';
 
 /**
  * fetch

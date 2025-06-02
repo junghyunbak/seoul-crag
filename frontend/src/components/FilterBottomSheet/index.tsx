@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 
 import { Sheet } from 'react-modal-sheet';
 
@@ -13,6 +13,7 @@ import {
   useFilterSheet,
   useModifyFilterSheet,
   useModifySearch,
+  useModifyTag,
   useCrag,
 } from '@/hooks';
 
@@ -20,10 +21,9 @@ import { zIndex } from '@/styles';
 
 import { DateService } from '@/utils/time';
 
+import { Atoms } from '@/components/atoms';
 import { Molecules } from '@/components/molecules';
-
 import { type DatePickerValue } from '@/components/molecules/DatePicker';
-import { useModifyTag } from '@/hooks/useModifyTag';
 
 const TAG_TYPE_TO_TITLE: Record<TagType, string> = {
   climb: '스타일',
@@ -97,9 +97,9 @@ export function FilterButtonSheet() {
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content disableDrag={true}>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Box sx={{ px: 2 }}>
-              <Typography variant="body2">이용시간</Typography>
+              <Atoms.Text.Title variant="body2">이용시간</Atoms.Text.Title>
             </Box>
 
             <Molecules.DatePicker
@@ -119,51 +119,54 @@ export function FilterButtonSheet() {
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, p: 2, pb: 0 }}>
-            <Typography variant="body2">상태</Typography>
+            <Atoms.Text.Title variant="body2">상태</Atoms.Text.Title>
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                <Chip
-                  label="🚿 샤워실"
-                  color={filter.isShower ? 'primary' : 'default'}
-                  variant={filter.isShower ? 'filled' : 'outlined'}
+                <Atoms.Chip.Filter
+                  isActive={filter.isShower}
                   onClick={() => {
                     updateFilter({ isShower: !filter.isShower });
                   }}
-                />
-                <Chip
-                  label="🔥 할인중"
-                  color={filter.isSale ? 'primary' : 'default'}
-                  variant={filter.isSale ? 'filled' : 'outlined'}
+                >
+                  🚿 샤워실
+                </Atoms.Chip.Filter>
+
+                <Atoms.Chip.Filter
+                  isActive={filter.isSale}
                   onClick={() => {
                     updateFilter({ isSale: !filter.isSale });
                   }}
-                />
-                <Chip
-                  label="🟢 영업중"
-                  color={filter.isOpen ? 'primary' : 'default'}
-                  variant={filter.isOpen ? 'filled' : 'outlined'}
+                >
+                  🔥 할인중
+                </Atoms.Chip.Filter>
+
+                <Atoms.Chip.Filter
+                  isActive={filter.isOpen}
                   onClick={() => {
                     updateFilter({ isOpen: !filter.isOpen });
                   }}
-                />
-                <FilterChip
+                >
+                  🟢 영업중
+                </Atoms.Chip.Filter>
+
+                <Atoms.Chip.Filter
                   isActive={filter.isTodayRemove}
                   onClick={() => {
                     updateFilter({ isTodayRemove: !filter.isTodayRemove });
                   }}
                 >
                   🍂 탈거 임박
-                </FilterChip>
+                </Atoms.Chip.Filter>
 
-                <FilterChip
+                <Atoms.Chip.Filter
                   isActive={filter.isNewSetting}
                   onClick={() => {
                     updateFilter({ isNewSetting: !filter.isNewSetting });
                   }}
                 >
                   🔩 최근 세팅
-                </FilterChip>
+                </Atoms.Chip.Filter>
               </Box>
             </Box>
           </Box>
@@ -173,14 +176,14 @@ export function FilterButtonSheet() {
 
             return (
               <Box key={tagType} sx={{ p: 2, pb: 0, display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="body2">{TAG_TYPE_TO_TITLE[tagType]}</Typography>
+                <Atoms.Text.Title variant="body2">{TAG_TYPE_TO_TITLE[tagType]}</Atoms.Text.Title>
 
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   {tags.map((tag) => {
                     const isSelect = selectTagId[tagType] === tag.id;
 
                     return (
-                      <FilterChip
+                      <Atoms.Chip.Filter
                         key={tag.id}
                         isActive={isSelect}
                         onClick={() => {
@@ -192,7 +195,7 @@ export function FilterButtonSheet() {
                         }}
                       >
                         {tag.name}
-                      </FilterChip>
+                      </Atoms.Chip.Filter>
                     );
                   })}
                 </Box>
@@ -217,22 +220,5 @@ export function FilterButtonSheet() {
 
       <Sheet.Backdrop />
     </Sheet>
-  );
-}
-
-interface FilterChipProps {
-  isActive: boolean;
-  onClick: () => void;
-  children: string;
-}
-
-function FilterChip({ isActive, onClick, children }: FilterChipProps) {
-  return (
-    <Chip
-      label={children}
-      color={isActive ? 'primary' : 'default'}
-      variant={isActive ? 'filled' : 'outlined'}
-      onClick={onClick}
-    />
   );
 }
