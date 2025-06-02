@@ -1,6 +1,6 @@
-import { CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
 
-import { Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 
 import { useMap, useZoom } from '@/hooks';
 import { useMarkerState } from '../_hooks/useMarkerState';
@@ -11,12 +11,25 @@ interface MarkerTitleProps extends React.PropsWithChildren {
   marker: MyMarker | null;
   isSelect: boolean;
   fontWeight?: CSSProperties['fontWeight'];
+  label: string;
 }
 
-export function MarkerTitle({ marker, isSelect, children, fontWeight = 'normal' }: MarkerTitleProps) {
+export function MarkerTitle({ marker, isSelect, children, fontWeight = 'normal', label }: MarkerTitleProps) {
   const { recognizer } = useMap();
   const { zoomLevel } = useZoom();
   const { isTitleShown } = useMarkerState({ marker, recognizer, isSelect, zoomLevel });
+
+  let saleInfo: React.ReactNode | null = null;
+
+  React.Children.forEach(children, (child) => {
+    if (!React.isValidElement(child)) {
+      return;
+    }
+
+    if (child.type === MarkerTitle.SaleInfo) {
+      saleInfo = child;
+    }
+  });
 
   return (
     <AnimatePresence>
@@ -34,18 +47,31 @@ export function MarkerTitle({ marker, isSelect, children, fontWeight = 'normal' 
             transform: `translate(-50%, ${5 + (isSelect ? 0 : 10)}px)`,
           }}
         >
-          <Typography
+          <Box
             sx={{
-              textAlign: 'center',
-              textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
-              fontWeight,
-              lineHeight: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 0.5,
             }}
           >
-            {children}
-          </Typography>
+            <HaloText>{label}</HaloText>
+
+            {saleInfo}
+          </Box>
         </motion.div>
       )}
     </AnimatePresence>
   );
 }
+
+MarkerTitle.SaleInfo = function SaleInfo({ children }: { children: React.ReactNode }) {
+  return <Box>{children}</Box>;
+};
+
+export const HaloText = styled(Typography)({
+  textShadow: '-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white',
+  lineHeight: 1,
+  textAlign: 'center',
+  fontWeight: 'bold',
+});

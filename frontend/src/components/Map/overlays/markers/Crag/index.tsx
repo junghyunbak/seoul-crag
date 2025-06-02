@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box, Typography, TypographyProps } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { useExp, useFilter } from '@/hooks';
 
@@ -11,7 +11,7 @@ import { SIZE, QUERY_STRING } from '@/constants';
 import { mapContext } from '@/components/Map/index.context';
 import { CragIcon } from '@/components/CragIcon';
 import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
-import { MarkerTitle } from '../_components/MarkerTitle';
+import { MarkerTitle, HaloText } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
 import { DateService } from '@/utils/time';
 import { format } from 'date-fns';
@@ -48,17 +48,32 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
       const endDate = DateService.timeStrToDate(time_end, exp.date);
 
       return (
-        <PriceText isSale>
-          할인 {price.toLocaleString()}
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <HaloText
+            sx={(theme) => ({
+              color: theme.palette.warning.main,
+            })}
+          >
+            {price.toLocaleString()}
+          </HaloText>
+
           {isSelect && (
             <Box
               sx={(theme) => ({
+                position: 'absolute',
+                top: '100%',
                 px: 1,
                 py: 0.5,
                 mt: 1,
                 background: theme.palette.warning.main,
                 borderRadius: 1,
-                position: 'relative',
+
                 border: '1px solid white',
               })}
             >
@@ -78,20 +93,23 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
               </Box>
 
               <Box
-                sx={{
+                sx={(theme) => ({
                   position: 'absolute',
                   left: '50%',
                   top: 0,
                   transform: 'translate(-50%, -100%)',
                   display: 'flex',
-                }}
+                  color: theme.palette.warning.main,
+                })}
               >
                 <svg width="16" height="8" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                   <path d="M8 0L16 8H0L8 0Z" />
                 </svg>
               </Box>
 
-              <Typography sx={(theme) => ({ color: theme.palette.common.white, textShadow: 'none' })}>
+              <Typography
+                sx={(theme) => ({ color: theme.palette.common.white, textShadow: 'none', textAlign: 'center' })}
+              >
                 {description}
                 <br />
                 {`(${format(startDate, 'a hh:mm', { locale: ko })} ~ ${format(endDate, 'a hh:mm', {
@@ -100,11 +118,15 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
               </Typography>
             </Box>
           )}
-        </PriceText>
+        </Box>
       );
     }
 
-    return <PriceText>{crag.price === 0 ? '무료' : crag.price.toLocaleString()}</PriceText>;
+    return (
+      <HaloText sx={(theme) => ({ color: theme.palette.info.main })}>
+        {crag.price === 0 ? '무료' : crag.price.toLocaleString()}
+      </HaloText>
+    );
   })();
 
   /**
@@ -164,32 +186,14 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
           </Box>
         </Box>
 
-        <MarkerTitle marker={marker} isSelect={isSelect} fontWeight="bold">
-          {crag.short_name || crag.name}
-          <br />
-
-          {price}
-        </MarkerTitle>
+        <Box>
+          <MarkerTitle marker={marker} isSelect={isSelect} fontWeight="bold" label={crag.short_name || crag.name}>
+            {price && <MarkerTitle.SaleInfo>{price}</MarkerTitle.SaleInfo>}
+          </MarkerTitle>
+        </Box>
 
         <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>
     </Box>
-  );
-}
-
-interface PriceTextProps extends TypographyProps {
-  isSale?: boolean;
-}
-
-function PriceText({ sx, isSale = false, ...props }: PriceTextProps) {
-  return (
-    <Typography
-      component="span"
-      sx={(theme) => ({
-        color: isSale ? theme.palette.warning.main : theme.palette.info.main,
-        fontWeight: 'inherit',
-      })}
-      {...props}
-    />
   );
 }

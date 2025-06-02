@@ -95,9 +95,7 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
           </Box>
         </Box>
 
-        <MarkerTitle marker={marker} isSelect={isSelect}>
-          {cafe.place_name.split(' ')[0]}
-        </MarkerTitle>
+        <MarkerTitle marker={marker} isSelect={isSelect} label={cafe.place_name.split(' ')[0]} />
 
         <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>
