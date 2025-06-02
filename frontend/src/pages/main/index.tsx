@@ -234,9 +234,10 @@ export default function Main() {
       <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
       <Sidebar />
-      <Organisms.Search />
       <Notice />
-      <FilterButtonSheet />
+
+      <Organisms.Search />
+      <Organisms.FilterButtonSheet />
     </Box>
   );
 }
