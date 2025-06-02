@@ -1,5 +1,4 @@
 import { GpsButton } from '@/components/GpsButton';
-import { NoticeMarquee } from '@/components/NoticeMarquee';
 import { zIndex } from '@/styles';
 import { Box } from '@mui/material';
 import { CragThumbnailImages } from '@/components/CragThumbnailImages';
@@ -9,7 +8,7 @@ export function Footer() {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 20,
+        bottom: 0,
         left: 0,
         right: 0,
         zIndex: zIndex.footer,
@@ -22,7 +21,6 @@ export function Footer() {
         <GpsButton />
         <CragThumbnailImages />
       </Box>
-      <NoticeMarquee />
     </Box>
   );
 }
