@@ -11,7 +11,21 @@ function throwOnError(error: DefaultError) {
   console.error(error);
 
   if (!(error instanceof AxiosError && error.status === 401)) {
-    Sentry.captureException(error);
+    if (error instanceof AxiosError) {
+      Sentry.captureException(error, {
+        extra: {
+          url: error.config?.url,
+          method: error.config?.method,
+          headers: error.config?.headers,
+          data: error.config?.data,
+          status: error.response?.status,
+          responseData: error.response?.data,
+          code: error.code,
+        },
+      });
+    } else {
+      Sentry.captureException(error);
+    }
   }
 
   if (window.location.pathname.startsWith(urlService.getAbsolutePath('/manage'))) {
