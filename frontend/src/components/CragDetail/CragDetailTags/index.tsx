@@ -1,7 +1,9 @@
-import { CragDetailContext } from '@/components/CragDetail/index.context';
-import { TagList } from '@/components/TagList';
-import { Box, Skeleton } from '@mui/material';
 import { useContext } from 'react';
+
+import { Box, Skeleton } from '@mui/material';
+
+import { Molecules } from '@/components/molecules';
+import { CragDetailContext } from '@/components/CragDetail/index.context';
 
 export function CragDetailTags() {
   const { crag } = useContext(CragDetailContext);
@@ -18,5 +20,5 @@ export function CragDetailTags() {
     );
   }
 
-  return <TagList tags={crag.gymTags.map(({ tag }) => tag)} readonly removePadding />;
+  return <Molecules.TagList tags={crag.gymTags.map(({ tag }) => tag)} readonly removePadding />;
 }

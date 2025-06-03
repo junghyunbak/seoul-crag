@@ -1,10 +1,16 @@
-import { DefaultError, useMutation } from '@tanstack/react-query';
-import { api } from '@/api/axios';
 import { useEffect, useState } from 'react';
+
+import { api } from '@/api/axios';
+
 import { Box, TextField, Button, MenuItem, Select, SelectChangeEvent, Paper } from '@mui/material';
+
+import { DefaultError, useMutation } from '@tanstack/react-query';
+
 import { useFetchTags } from '@/hooks';
+
+import { Molecules } from '@/components/molecules';
+
 import { TAG_NAMES } from '@/constants/tag';
-import { TagList } from '@/components/TagList';
 
 export function Tags() {
   const { tags, refetch } = useFetchTags();
@@ -108,7 +114,7 @@ export function TagEditor({ initialTags = [], tagTypes, onRemove, onAdd }: TagEd
   return (
     <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Paper>
-        <TagList tags={tags} onClick={removeTag} />
+        <Molecules.TagList tags={tags} onClick={removeTag} />
       </Paper>
 
       {/* 입력 폼 */}

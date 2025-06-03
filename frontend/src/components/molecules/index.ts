@@ -10,6 +10,7 @@ import { NoticeModalTrigger } from '@/components/molecules/NoticeModalTrigger';
 import { SearchAndLoading } from '@/components/molecules/SearchAndLoading';
 import { SearchInputWithRemove } from '@/components/molecules/SearchInputWithRemove';
 import { SortOptionSelector } from '@/components/molecules/SortOptionSelector';
+import { TagList } from '@/components/molecules/TagList';
 
 export const Molecules = {
   SearchAndLoading,
@@ -24,4 +25,5 @@ export const Molecules = {
   CragListItem,
   DatePicker,
   GpsButton,
+  TagList,
 };

@@ -1,12 +1,18 @@
-import { useEffect } from 'react';
-import { api } from '@/api/axios';
-import { useFetchTags } from '@/hooks';
-import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+import { useEffect, useContext, useState } from 'react';
+
 import { Box, Chip, Divider, Paper, Typography } from '@mui/material';
+
+import { useFetchTags } from '@/hooks';
+
+import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+
 import { DefaultError, useMutation } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+
 import { autoUpdate, shift, useFloating } from '@floating-ui/react';
-import { TagList } from '@/components/TagList';
+
+import { Molecules } from '@/components/molecules';
+
+import { api } from '@/api/axios';
 
 export function CragTagsField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -97,7 +103,7 @@ export function CragTagsField() {
           }}
           onClick={() => setIsMenuOpen(true)}
         >
-          <TagList tags={crag.gymTags.map(({ tag }) => tag) || []} readonly />
+          <Molecules.TagList tags={crag.gymTags.map(({ tag }) => tag) || []} readonly />
         </Paper>
       </Box>
 
@@ -112,7 +118,7 @@ export function CragTagsField() {
           }}
           style={{ ...floatingStyles, zIndex: 1000 }}
         >
-          <TagList
+          <Molecules.TagList
             tags={crag.gymTags.map(({ tag }) => tag) || []}
             onClick={(tag) => {
               removeCragTagMutation.mutate(tag);
