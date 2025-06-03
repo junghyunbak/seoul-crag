@@ -5,12 +5,14 @@ import { ExpeditionDate } from '@/components/molecules/ExpeditionDate';
 import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
 import { GpsButton } from '@/components/molecules/GpsButton';
+import { MapOptions } from '@/components/molecules/MapOptions';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
 import { NoticeModalTrigger } from '@/components/molecules/NoticeModalTrigger';
 import { SearchAndLoading } from '@/components/molecules/SearchAndLoading';
 import { SearchInputWithRemove } from '@/components/molecules/SearchInputWithRemove';
 import { SortOptionSelector } from '@/components/molecules/SortOptionSelector';
 import { TagList } from '@/components/molecules/TagList';
+import { UserMenu } from '@/components/molecules/UserMenu';
 
 export const Molecules = {
   SearchAndLoading,
@@ -26,4 +28,6 @@ export const Molecules = {
   DatePicker,
   GpsButton,
   TagList,
+  UserMenu,
+  MapOptions,
 };

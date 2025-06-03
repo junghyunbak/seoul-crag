@@ -1,73 +1,14 @@
-import {
-  FormControlLabel,
-  Switch,
-  useMediaQuery,
-  Box,
-  Drawer,
-  useTheme,
-  Typography,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  CircularProgress,
-} from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemText, ListItemIcon, CircularProgress } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 
-import { useFetchMe, useMutateLogout, useMap, useModifyMap, useModifyProfile } from '@/hooks';
-
-import { BooleanParam, useQueryParam } from 'use-query-params';
-
-import { QUERY_STRING } from '@/constants';
-
-import { zIndex } from '@/styles';
-
 import { urlService } from '@/utils';
 
-export function Sidebar() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+import { useFetchMe, useModifyProfile, useMutateLogout } from '@/hooks';
 
-  const [isOpen, setIsOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
-
-  const open = Boolean(isOpen);
-
-  const handleClose = () => {
-    setIsOpen(null);
-  };
-
-  return (
-    <Drawer anchor="right" open={open} onClose={handleClose} sx={{ zIndex: zIndex.menu, userSelect: 'none' }}>
-      <Box sx={{ width: isMobile ? '80vw' : 360, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Box sx={{ p: 2 }}>
-          <Logo />
-        </Box>
-
-        <Menu />
-
-        <Box sx={{ flexGrow: 1 }} />
-
-        <Box sx={{ p: 2 }}>
-          <Options />
-        </Box>
-      </Box>
-    </Drawer>
-  );
-}
-
-function Logo() {
-  return (
-    <Typography variant="h3" gutterBottom>
-      서울암장
-    </Typography>
-  );
-}
-
-function Menu() {
+export function UserMenu() {
   const { user, isLoading } = useFetchMe();
 
   const { updateSelectUserId } = useModifyProfile();
@@ -135,44 +76,6 @@ function Menu() {
           </ListItem>
         </List>
       )}
-    </Box>
-  );
-}
-
-function Options() {
-  const { enabledEdgeIndicator, enabledGpsIndicator } = useMap();
-
-  const { updateEnabledEdgeIndicator, updateEnabledGpsIndicator } = useModifyMap();
-
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <FormControlLabel
-        control={
-          <Switch
-            checked={enabledEdgeIndicator}
-            onChange={() => {
-              updateEnabledEdgeIndicator(!enabledEdgeIndicator);
-            }}
-          />
-        }
-        label="화면 밖 암장 표시"
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            checked={enabledGpsIndicator}
-            onChange={() => {
-              updateEnabledGpsIndicator(!enabledGpsIndicator);
-            }}
-          />
-        }
-        label="화면 밖 내 위치 표시"
-      />
     </Box>
   );
 }

@@ -22,7 +22,6 @@ import { useStore } from '@/store';
 import { QUERY_STRING } from '@/constants';
 
 import { Map } from '@/components/Map';
-import { Sidebar } from '@/components/Sidebar';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Notice } from '@/components/Notice';
@@ -228,12 +227,12 @@ export default function Main() {
       </Map>
       <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
-      <Sidebar />
       <Notice />
 
       <Organisms.MapControlBar />
       <Organisms.MapControlFooter />
 
+      <Organisms.Sidebar />
       <Organisms.Search />
       <Organisms.FilterButtonSheet />
     </Box>

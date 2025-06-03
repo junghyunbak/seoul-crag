@@ -16,6 +16,8 @@ export const theme = createTheme({
     borderRadius: 8,
   },
   zIndex: {
+    sidebar: 10002,
+
     searchModal: 1003,
     filterSheet: 1004,
 
@@ -26,6 +28,8 @@ export const theme = createTheme({
 
 declare module '@mui/material/styles' {
   interface ZIndex {
+    sidebar: number;
+
     searchModal: number;
     filterSheet: number;
 
