@@ -9,14 +9,16 @@ import { useQueryParam, StringParam } from 'use-query-params';
 import { SIZE, QUERY_STRING } from '@/constants';
 
 import { mapContext } from '@/components/Map/index.context';
-import { CragIcon } from '@/components/CragIcon';
 import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
 import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
+import { Atoms } from '@/components/atoms';
+import { Molecules } from '@/components/molecules';
+
 import { DateService } from '@/utils/time';
+
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Atoms } from '@/components/atoms';
 
 interface CragMarkerProps {
   crag: Crag;
@@ -36,8 +38,15 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
   const { exp } = useExp();
   const { isFiltered, isOff, showerImages, appliedDailyDiscount } = useFilter(crag, exp.date);
 
-  const markerWidth = SIZE.CRAG_MARKER_WIDTH;
   const isSelect = crag.id === selectCragId;
+
+  const markerWidth = (() => {
+    if (isSelect) {
+      return SIZE.CRAG_MARKER_WIDTH;
+    }
+
+    return SIZE.CRAG_MARKER_WIDTH * 0.6;
+  })();
 
   // 할인 적용 우선순위 없는 상태.
   // [ ]: 단체가 활성화되었을 땐, 단체 할인 가격 먼저 보여주기
@@ -177,7 +186,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
             }}
           >
             <CragMenu crag={crag} isSelect={isSelect} />
-            <CragIcon
+            <Molecules.CragIcon
               width={markerWidth}
               isSelect={isSelect}
               isClose={isOff}

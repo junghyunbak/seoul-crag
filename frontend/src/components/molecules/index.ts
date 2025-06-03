@@ -1,5 +1,6 @@
 import { Calendar } from '@/components/molecules/Calendar';
 import { CalendarMonthController } from '@/components/molecules/CalendarMonthController';
+import { CragIcon } from '@/components/molecules/CragIcon';
 import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview';
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
@@ -37,6 +38,7 @@ export const Molecules = {
   CragList,
   CragListItem,
   CragInteriorPreview,
+  CragIcon,
 
   TagList,
 

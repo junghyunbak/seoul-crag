@@ -9,7 +9,7 @@ import { mapContext } from '@/components/Map/index.context';
 import { CafeInfo } from './CafeInfo';
 import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
-import { MarkerIcon } from '../_assets/MarkerIcon';
+import { Molecules } from '@/components/molecules';
 
 import { useCafe, useModifyCafe } from '@/hooks';
 
@@ -31,8 +31,15 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
 
   const { updateSelectCafeId } = useModifyCafe();
 
-  const markerWidth = SIZE.CAFE_MARKER_WIDTH;
   const isSelect = selectCafeId === cafe.id;
+
+  const markerWidth = (() => {
+    if (isSelect) {
+      return SIZE.CAFE_MARKER_WIDTH;
+    }
+
+    return SIZE.CAFE_MARKER_WIDTH * 0.6;
+  })();
 
   useEffect(() => {
     if (!map || !markerRef.current) {
@@ -85,11 +92,7 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
             }}
             ref={markerIconRef}
           >
-            {isSelect ? (
-              <MarkerIcon.Active bgColor="#b13f0e" bottomMountainColor="#E26E3B" width={markerWidth} />
-            ) : (
-              <MarkerIcon.Inactive.Circle backgroundColor="#b13f0e" width={markerWidth} />
-            )}
+            <Molecules.CragIcon width={markerWidth} isSelect={isSelect} varient="cafe" />
 
             {isSelect && <CafeInfo cafe={cafe} referenceRef={markerIconRef} />}
           </Box>

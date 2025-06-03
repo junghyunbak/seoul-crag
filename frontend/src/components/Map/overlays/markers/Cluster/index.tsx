@@ -8,16 +8,16 @@ import { Box } from '@mui/material';
 
 import { SIZE } from '@/constants';
 
-import { MarkerIcon } from '../_assets/MarkerIcon';
+import { Molecules } from '@/components/molecules';
 
 interface ClusterProps {
   markers: naver.maps.Marker[];
-  clusterMarkerBgColor?: string;
   maxZoom?: number;
   gridSize?: number;
+  varient?: 'crag' | 'cafe';
 }
 
-export function Cluster({ markers, clusterMarkerBgColor, maxZoom = 11, gridSize = 100 }: ClusterProps) {
+export function Cluster({ markers, varient = 'crag', maxZoom = 11, gridSize = 100 }: ClusterProps) {
   const { map } = useContext(mapContext);
 
   useEffect(() => {
@@ -35,7 +35,10 @@ export function Cluster({ markers, clusterMarkerBgColor, maxZoom = 11, gridSize 
                 position: 'absolute',
               }}
             >
-              <MarkerIcon.Inactive.Circle backgroundColor={clusterMarkerBgColor} width={SIZE.CRAG_MARKER_WIDTH} />
+              <Molecules.CragIcon
+                width={(varient === 'crag' ? SIZE.CRAG_MARKER_WIDTH : SIZE.CAFE_MARKER_WIDTH) * 0.8}
+                varient={varient}
+              />
               <div
                 className="count"
                 style={{
@@ -69,7 +72,7 @@ export function Cluster({ markers, clusterMarkerBgColor, maxZoom = 11, gridSize 
     return function cleanup() {
       markerCluster.setMap(null);
     };
-  }, [clusterMarkerBgColor, gridSize, map, markers, maxZoom]);
+  }, [gridSize, map, markers, maxZoom]);
 
   return <Box />;
 }

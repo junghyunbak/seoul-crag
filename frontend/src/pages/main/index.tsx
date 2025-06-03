@@ -221,7 +221,7 @@ export default function Main() {
           <Map.Marker.Cafe key={cafe.id} cafe={cafe} idx={i} onCreate={handleCafeMarkerCreate} forCluster />
         ))}
         <Map.Marker.Cluster markers={filteredMarkers} />
-        <Map.Marker.Cluster markers={filteredCafeMarkers} clusterMarkerBgColor="#b13f0e" maxZoom={13.5} />
+        <Map.Marker.Cluster markers={filteredCafeMarkers} varient="cafe" maxZoom={13.5} />
         <Map.Marker.Gps />
       </Map>
       <CragsEdgeIndicator crags={crags} />

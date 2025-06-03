@@ -1,9 +1,12 @@
 import { useContext, useEffect, useRef } from 'react';
 
-import { mapContext } from '@/components/Map/index.context';
 import { Box } from '@mui/material';
-import { CragIcon } from '@/components/CragIcon';
+
+import { mapContext } from '@/components/Map/index.context';
+
 import { SIZE } from '@/constants';
+
+import { Molecules } from '@/components/molecules';
 
 interface DefaultProps {
   onCreate?: (marker: naver.maps.Marker) => void;
@@ -43,7 +46,7 @@ export function Default({ onCreate }: DefaultProps) {
         display: 'flex',
       }}
     >
-      <CragIcon width={SIZE.CRAG_MARKER_WIDTH} isSelect />
+      <Molecules.CragIcon width={SIZE.CRAG_MARKER_WIDTH} isSelect />
     </Box>
   );
 }
