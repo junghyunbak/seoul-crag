@@ -24,7 +24,6 @@ import { QUERY_STRING } from '@/constants';
 import { Map } from '@/components/Map';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
-import { Notice } from '@/components/Notice';
 import { Organisms } from '@/components/organisms';
 
 const DEFAULT_LAT = 37.55296695234301;
@@ -227,11 +226,11 @@ export default function Main() {
       </Map>
       <CragsEdgeIndicator crags={crags} />
       <GpsEdgeIndicator />
-      <Notice />
 
       <Organisms.MapControlBar />
       <Organisms.MapControlFooter />
 
+      <Organisms.Notice />
       <Organisms.Sidebar />
       <Organisms.Search />
       <Organisms.FilterButtonSheet />

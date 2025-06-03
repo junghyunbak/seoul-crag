@@ -7,6 +7,8 @@ import { FilterTrigger } from '@/components/molecules/FilterTrigger';
 import { GpsButton } from '@/components/molecules/GpsButton';
 import { MapOptions } from '@/components/molecules/MapOptions';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
+import { NoticeList } from '@/components/molecules/NoticeList';
+import { NoticeListItem } from '@/components/molecules/NoticeListItem';
 import { NoticeModalTrigger } from '@/components/molecules/NoticeModalTrigger';
 import { SearchAndLoading } from '@/components/molecules/SearchAndLoading';
 import { SearchInputWithRemove } from '@/components/molecules/SearchInputWithRemove';
@@ -30,4 +32,6 @@ export const Molecules = {
   TagList,
   UserMenu,
   MapOptions,
+  NoticeList,
+  NoticeListItem,
 };

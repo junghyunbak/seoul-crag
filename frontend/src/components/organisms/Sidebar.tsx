@@ -2,9 +2,10 @@ import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
 
 import { useQueryParam, BooleanParam } from 'use-query-params';
 
-import { QUERY_STRING } from '@/constants';
 import { Atoms } from '@/components/atoms';
 import { Molecules } from '@/components/molecules';
+
+import { QUERY_STRING } from '@/constants';
 
 export function Sidebar() {
   const theme = useTheme();
