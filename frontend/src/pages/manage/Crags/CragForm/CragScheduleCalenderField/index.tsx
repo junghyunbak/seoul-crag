@@ -9,7 +9,6 @@ import { useMutateAddSchedule, useMutateDeleteSchedule, useMutateUpdateSchedule 
 import { subMonths, addMonths, format } from 'date-fns';
 
 import { ScheduleEditModal } from '@/components/ScheduleEditModal';
-import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 import { Molecules } from '@/components/molecules';
 
 export function CragScheduleCalenderField() {
@@ -40,7 +39,7 @@ export function CragScheduleCalenderField() {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <Typography variant="h6">운영 일정</Typography>
 
-      <ScheduleMonthNavigation
+      <Molecules.CalendarMonthController
         currentMonth={currentMonth}
         onPrev={() => setCurrentMonth((prev) => subMonths(prev, 1))}
         onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}

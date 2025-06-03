@@ -20,7 +20,7 @@ import { StringParam, useQueryParam } from 'use-query-params';
 const DimmedMotionDiv = styled(motion.div)``;
 const ContentMotionDiv = styled(motion.div)``;
 
-interface StorySliderProps {
+interface StoryProps {
   contents: React.ReactNode[];
   duration?: number;
   onComplete?: () => void;
@@ -143,14 +143,7 @@ const TranslateBar = React.memo(
   }
 );
 
-export const StorySlider: React.FC<StorySliderProps> = ({
-  contents,
-  duration = 5000,
-  onComplete,
-  onClose,
-  initPaused = false,
-  crag,
-}) => {
+export function Story({ contents, duration = 5000, onComplete, onClose, initPaused = false, crag }: StoryProps) {
   const [index, setIndex] = useState({ value: 0 });
   const [paused, setPaused] = useState(initPaused);
   const y = useMotionValue(0);
@@ -397,4 +390,4 @@ export const StorySlider: React.FC<StorySliderProps> = ({
       </ContentMotionDiv>
     </Box>
   );
-};
+}

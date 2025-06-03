@@ -1,4 +1,5 @@
 import { Calendar } from '@/components/molecules/Calendar';
+import { CalendarMonthController } from '@/components/molecules/CalendarMonthController';
 import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview';
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
@@ -7,6 +8,7 @@ import { ExpeditionDate } from '@/components/molecules/ExpeditionDate';
 import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
 import { GpsButton } from '@/components/molecules/GpsButton';
+import { ImageWithSource } from '@/components/molecules/ImageWithSource';
 import { MapOptions } from '@/components/molecules/MapOptions';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
 import { NoticeList } from '@/components/molecules/NoticeList';
@@ -16,8 +18,10 @@ import { NoticeModalTrigger } from '@/components/molecules/NoticeModalTrigger';
 import { SearchAndLoading } from '@/components/molecules/SearchAndLoading';
 import { SearchInputWithRemove } from '@/components/molecules/SearchInputWithRemove';
 import { SortOptionSelector } from '@/components/molecules/SortOptionSelector';
+import { Story } from '@/components/molecules/Story';
 import { TagList } from '@/components/molecules/TagList';
 import { UserMenu } from '@/components/molecules/UserMenu';
+import { UserProfile } from '@/components/molecules/UserProfile';
 
 export const Molecules = {
   MenuTrigger,
@@ -40,6 +44,7 @@ export const Molecules = {
   MapOptions,
 
   UserMenu,
+  UserProfile,
 
   NoticeModalTrigger,
   NoticeList,
@@ -47,4 +52,9 @@ export const Molecules = {
   NoticeMarquee,
 
   Calendar,
+  CalendarMonthController,
+
+  ImageWithSource,
+
+  Story,
 };

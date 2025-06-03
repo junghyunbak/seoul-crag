@@ -4,8 +4,7 @@ import { createPortal } from 'react-dom';
 
 import { StringParam, useQueryParam } from 'use-query-params';
 
-import { StorySlider } from '@/components/StorySlider';
-import { ImageWithSource } from '@/components/ImageWithSource';
+import { Molecules } from '@/components/molecules';
 
 import { QUERY_STRING } from '@/constants';
 
@@ -13,11 +12,7 @@ import { useFetchCrag } from '@/hooks';
 
 import { AnimatePresence } from 'framer-motion';
 
-interface StoryImageProps {
-  imageType: ImageType;
-}
-
-export default function StoryImage({ imageType }: StoryImageProps) {
+export function ImageStory({ imageType }: { imageType: ImageType }) {
   const queryString = useMemo(() => {
     switch (imageType) {
       case 'interior':
@@ -47,12 +42,12 @@ export default function StoryImage({ imageType }: StoryImageProps) {
   return createPortal(
     <AnimatePresence>
       {cragId && images && (
-        <StorySlider
+        <Molecules.Story
           crag={crag}
           contents={images
             .sort((a, b) => (a.order < b.order ? -1 : 1))
             .map((image) => (
-              <ImageWithSource image={image} />
+              <Molecules.ImageWithSource image={image} />
             ))}
           onClose={() => setCragId(null)}
           onComplete={() => setCragId(null)}

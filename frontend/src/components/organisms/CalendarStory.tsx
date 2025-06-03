@@ -8,14 +8,13 @@ import { QUERY_STRING } from '@/constants';
 
 import { useExp, useFetchCrag } from '@/hooks';
 
-import { StorySlider } from '@/components/StorySlider';
 import { Molecules } from '@/components/molecules';
 
 import { AnimatePresence } from 'framer-motion';
 
 import { addMonths, format } from 'date-fns';
 
-export default function StorySchedule() {
+export function CalendarStory() {
   const [scheduleStoryCragId, setScheduleStory] = useQueryParam(QUERY_STRING.STORY_SCHEDULE, StringParam);
 
   const { crag } = useFetchCrag({ cragId: scheduleStoryCragId });
@@ -25,7 +24,7 @@ export default function StorySchedule() {
   return createPortal(
     <AnimatePresence>
       {scheduleStoryCragId && crag && (
-        <StorySlider
+        <Molecules.Story
           crag={crag}
           contents={[exp.date, addMonths(exp.date, 1)].map((date) => (
             <Box

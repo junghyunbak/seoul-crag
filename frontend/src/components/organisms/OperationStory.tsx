@@ -1,10 +1,47 @@
+import { createPortal } from 'react-dom';
+
+import { useQueryParam, StringParam } from 'use-query-params';
+
 import { Box, Typography, styled } from '@mui/material';
 
-import { format } from 'date-fns';
+import { QUERY_STRING, TIME } from '@/constants';
 
-import { DAYS_OF_KOR } from '@/constants/time';
+import { useExp, useFetchCrag, useFilter } from '@/hooks';
 
-import { useFilter } from '@/hooks';
+import { AnimatePresence } from 'framer-motion';
+
+import { addDays, format } from 'date-fns';
+
+import { Molecules } from '@/components/molecules';
+
+export function OperationStory() {
+  const [operationStoryCragId, setOperationStory] = useQueryParam(QUERY_STRING.STORY_OPERATION, StringParam);
+
+  const { crag } = useFetchCrag({ cragId: operationStoryCragId });
+
+  const { exp } = useExp();
+
+  return createPortal(
+    <AnimatePresence>
+      {operationStoryCragId && crag && (
+        <Molecules.Story
+          crag={crag}
+          contents={Array(7)
+            .fill(null)
+            .map((_, i) => {
+              const date = addDays(exp.date, i);
+
+              return <StoryOperationPage key={i} crag={crag} date={date} />;
+            })}
+          onClose={() => setOperationStory(null)}
+          onComplete={() => setOperationStory(null)}
+          initPaused
+        />
+      )}
+    </AnimatePresence>,
+    document.body
+  );
+}
 
 const TextWithBg = styled(Typography)({
   fontWeight: 'bold',
@@ -53,7 +90,7 @@ export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
       >
         <Text variant="h2">{format(date, 'yyyy.MM.dd')}</Text>
 
-        <Text variant="h2">{DAYS_OF_KOR[date.getDay()]}</Text>
+        <Text variant="h2">{TIME.DAYS_OF_KOR[date.getDay()]}</Text>
 
         {isOperate ? (
           <>

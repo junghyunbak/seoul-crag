@@ -4,7 +4,6 @@ import { useExp } from '@/hooks';
 
 import { Box, Typography } from '@mui/material';
 
-import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 import { CragDetailContext } from '@/components/CragDetail/index.context';
 import { Molecules } from '@/components/molecules';
 
@@ -27,7 +26,7 @@ export function CragDetailCalendar() {
         일정표
       </Typography>
 
-      <ScheduleMonthNavigation
+      <Molecules.CalendarMonthController
         currentMonth={currentMonth}
         onPrev={() => setCurrentMonth((prev) => subMonths(prev, 1))}
         onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}

@@ -1,14 +1,19 @@
-import { Box, Typography } from '@mui/material';
-import { StorySlider } from '@/components/StorySlider';
-import { AnimatePresence } from 'framer-motion';
-import { useQueryParam, StringParam } from 'use-query-params';
-import { QUERY_STRING } from '@/constants';
 import { createPortal } from 'react-dom';
-import { useFetchCrag, useFilter } from '@/hooks';
-import InsertLinkIcon from '@mui/icons-material/InsertLink';
-import { ImageWithSource } from '@/components/ImageWithSource';
 
-export default function StoryShower() {
+import { Box, Typography } from '@mui/material';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+
+import { AnimatePresence } from 'framer-motion';
+
+import { useQueryParam, StringParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
+
+import { useFetchCrag, useFilter } from '@/hooks';
+
+import { Molecules } from '@/components/molecules';
+
+export function ShowerStory() {
   const [showerCragId, setShowerCragId] = useQueryParam(QUERY_STRING.STORY_SHOWER, StringParam);
 
   const { crag } = useFetchCrag({ cragId: showerCragId });
@@ -36,7 +41,7 @@ export default function StoryShower() {
   return createPortal(
     <AnimatePresence>
       {showerCragId && crag && typeof crag.shower_url === 'string' && (
-        <StorySlider
+        <Molecules.Story
           crag={crag}
           contents={storyContents}
           onClose={() => setShowerCragId(null)}
@@ -110,7 +115,7 @@ function ShowerContentTypeImage({ image }: ShowerContentTypeImageProps) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <ImageWithSource image={image} sourcePosition="leftTop" />
+      <Molecules.ImageWithSource image={image} sourcePosition="leftTop" />
 
       {source && (
         <Box

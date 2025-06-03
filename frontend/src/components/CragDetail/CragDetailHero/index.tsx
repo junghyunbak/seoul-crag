@@ -2,9 +2,8 @@ import { useContext, useState } from 'react';
 
 import { Box, Skeleton, Stack, useTheme } from '@mui/material';
 
-import { ImageWithSource } from '@/components/ImageWithSource';
-
 import { CragDetailContext } from '@/components/CragDetail/index.context';
+import { Molecules } from '@/components/molecules';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
@@ -34,7 +33,7 @@ export function CragDetailHero() {
       {images && images.length > 0 && (
         <Box ref={sliderRef} className="keen-slider" sx={{ height: 300 }}>
           {images.map((image, i) => (
-            <ImageWithSource className="keen-slider__slide" key={i} image={image} />
+            <Molecules.ImageWithSource className="keen-slider__slide" key={i} image={image} />
           ))}
         </Box>
       )}

@@ -18,13 +18,10 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { time } from '@/utils';
 
 import { zIndex } from '@/styles';
-import { ProfileBottomSheet } from '@/components/ProfileBottomSheet';
 
-const StoryShower = lazy(() => import('@/components/StoryShower'));
+import { Organisms } from '@/components/organisms';
+
 const CragDetail = lazy(() => import('@/components/CragDetail'));
-const StoryImage = lazy(() => import('@/components/StoryImage'));
-const StorySchedule = lazy(() => import('@/components/StorySchedule'));
-const StoryOperation = lazy(() => import('@/components/StoryOperation'));
 
 export function Layout() {
   return (
@@ -36,13 +33,13 @@ export function Layout() {
               <LoadNaverMap>
                 <Outlet />
 
-                <StoryImage imageType="interior" />
-                <StorySchedule />
-                <StoryOperation />
-                <StoryShower />
+                <Organisms.ImageStory imageType="interior" />
+                <Organisms.CalendarStory />
+                <Organisms.OperationStory />
+                <Organisms.ShowerStory />
+                <Organisms.ProfileBottomSheet />
 
                 <CragDetail />
-                <ProfileBottomSheet />
               </LoadNaverMap>
             </Suspense>
           </QueryParamProvider>
