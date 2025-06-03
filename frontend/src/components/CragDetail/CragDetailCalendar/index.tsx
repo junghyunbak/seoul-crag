@@ -6,7 +6,7 @@ import { Box, Typography } from '@mui/material';
 
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
 import { CragDetailContext } from '@/components/CragDetail/index.context';
-import { Calendar } from '@/components/Calendar';
+import { Molecules } from '@/components/molecules';
 
 import { format, subMonths, addMonths } from 'date-fns';
 
@@ -33,7 +33,11 @@ export function CragDetailCalendar() {
         onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}
       />
 
-      <Calendar schedules={crag.schedules} onScheduleClick={() => {}} targetMonth={format(currentMonth, 'yyyy-MM')} />
+      <Molecules.Calendar
+        schedules={crag.schedules}
+        onScheduleClick={() => {}}
+        targetMonth={format(currentMonth, 'yyyy-MM')}
+      />
     </Box>
   );
 }

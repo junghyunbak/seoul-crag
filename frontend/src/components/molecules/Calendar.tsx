@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Grid from '@mui/material/Grid';
 import { Box, useTheme } from '@mui/material';
 
@@ -18,9 +16,9 @@ import {
   format,
 } from 'date-fns';
 
-import { SCHEDULE_TYPE_TO_LABELS } from '@/constants';
+import { DAY_LABELS, SCHEDULE_TYPE_TO_LABELS } from '@/constants';
 
-import holidayData from './holidays.ko.json';
+import holidayData from '@/assets/jsons/holidays.ko.json';
 
 import { DateService } from '@/utils/time';
 
@@ -140,8 +138,6 @@ function preprocessSchedules(schedules: Schedule[], calendarStart: Date): Schedu
   return chunks;
 }
 
-const weekdayLabels = Object.freeze(['일', '월', '화', '수', '목', '금', '토']);
-
 const colorMap = {
   closed: '#d32f2f',
   setup: '#1976d2',
@@ -154,7 +150,7 @@ interface CalendarProps {
   onScheduleClick: (schedule: Schedule) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onScheduleClick }) => {
+export function Calendar({ schedules, targetMonth, onScheduleClick }: CalendarProps) {
   const { start: calendarStart, end: calendarEnd } = getCalendarRange(targetMonth);
   const chunks = preprocessSchedules(schedules, calendarStart);
   const totalDays = differenceInCalendarDays(calendarEnd, calendarStart) + 1;
@@ -184,7 +180,7 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
   return (
     <Box>
       <Grid container columns={DAYS_PER_WEEK}>
-        {weekdayLabels.map((label, idx) => (
+        {DAY_LABELS.map((label, idx) => (
           <Grid
             size={{ xs: 1 }}
             key={`weekday-${idx}`}
@@ -299,4 +295,4 @@ export const Calendar: React.FC<CalendarProps> = ({ schedules, targetMonth, onSc
       </Grid>
     </Box>
   );
-};
+}

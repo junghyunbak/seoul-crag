@@ -10,7 +10,7 @@ import { subMonths, addMonths, format } from 'date-fns';
 
 import { ScheduleEditModal } from '@/components/ScheduleEditModal';
 import { ScheduleMonthNavigation } from '@/components/ScheduleMonthNavigation';
-import { Calendar } from '@/components/Calendar';
+import { Molecules } from '@/components/molecules';
 
 export function CragScheduleCalenderField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -46,7 +46,7 @@ export function CragScheduleCalenderField() {
         onNext={() => setCurrentMonth((prev) => addMonths(prev, 1))}
       />
 
-      <Calendar
+      <Molecules.Calendar
         schedules={crag.schedules}
         targetMonth={format(currentMonth, 'yyyy-MM')}
         onScheduleClick={(schedule) => setSelectedSchedule(schedule)}

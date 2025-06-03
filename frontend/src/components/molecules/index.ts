@@ -1,3 +1,4 @@
+import { Calendar } from '@/components/molecules/Calendar';
 import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview';
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
@@ -44,4 +45,6 @@ export const Molecules = {
   NoticeList,
   NoticeListItem,
   NoticeMarquee,
+
+  Calendar,
 };

@@ -9,7 +9,7 @@ import { QUERY_STRING } from '@/constants';
 import { useExp, useFetchCrag } from '@/hooks';
 
 import { StorySlider } from '@/components/StorySlider';
-import { Calendar } from '@/components/Calendar';
+import { Molecules } from '@/components/molecules';
 
 import { AnimatePresence } from 'framer-motion';
 
@@ -36,7 +36,11 @@ export default function StorySchedule() {
                 background: 'white',
               }}
             >
-              <Calendar schedules={crag.schedules} onScheduleClick={() => {}} targetMonth={format(date, 'yyyy-MM')} />
+              <Molecules.Calendar
+                schedules={crag.schedules}
+                onScheduleClick={() => {}}
+                targetMonth={format(date, 'yyyy-MM')}
+              />
             </Box>
           ))}
           onClose={() => setScheduleStory(null)}
