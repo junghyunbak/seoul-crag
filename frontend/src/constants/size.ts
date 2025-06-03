@@ -1,5 +1,5 @@
 export const CRAG_MARKER_WIDTH = 40;
-export const CAFE_MARKER_WIDTH = 30;
+export const CAFE_MARKER_WIDTH = 35;
 
 export const MAX_DIMMED_OPACITY = 0.9;
 export const MIN_DIMMED_OPACITY = 0.3;

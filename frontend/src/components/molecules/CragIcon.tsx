@@ -45,6 +45,9 @@ export function CragIcon({
 
   return (
     <div
+      /**
+       * mui sx로 동적 스타일링 할 경우 renderToString이 동작하지 않기 때문에 style로 설정
+       */
       style={
         {
           position: 'relative',
