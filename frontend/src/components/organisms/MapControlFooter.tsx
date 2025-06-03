@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 
 import { Molecules } from '@/components/molecules';
-import { CragThumbnailImages } from '@/components/CragThumbnailImages';
 
 export function MapControlFooter() {
   return (
@@ -19,7 +18,7 @@ export function MapControlFooter() {
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', p: 2 }}>
         <Molecules.GpsButton />
-        <CragThumbnailImages />
+        <Molecules.CragInteriorPreview />
       </Box>
     </Box>
   );

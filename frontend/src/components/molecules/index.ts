@@ -1,3 +1,4 @@
+import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview';
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
 import { DatePicker } from '@/components/molecules/DatePicker';
@@ -18,21 +19,28 @@ import { TagList } from '@/components/molecules/TagList';
 import { UserMenu } from '@/components/molecules/UserMenu';
 
 export const Molecules = {
-  SearchAndLoading,
-  NoticeModalTrigger,
   MenuTrigger,
   FilterTrigger,
+
+  SearchAndLoading,
   ExpeditionDate,
   FakeSearhInput,
   SearchInputWithRemove,
   SortOptionSelector,
+  DatePicker,
+
   CragList,
   CragListItem,
-  DatePicker,
-  GpsButton,
+  CragInteriorPreview,
+
   TagList,
-  UserMenu,
+
+  GpsButton,
   MapOptions,
+
+  UserMenu,
+
+  NoticeModalTrigger,
   NoticeList,
   NoticeListItem,
   NoticeMarquee,
