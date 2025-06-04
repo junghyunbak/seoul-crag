@@ -19,7 +19,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { useStore } from '@/store';
 
-import { QUERY_STRING } from '@/constants';
+import { QUERY_STRING, SIZE } from '@/constants';
 
 import { Map } from '@/components/Map';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
@@ -164,7 +164,7 @@ export default function Main() {
     }
 
     const newRecognizer = new MarkerOverlapRecognizer({
-      tolerance: 24,
+      tolerance: SIZE.TOLERANCE,
       intersectNotice: false,
       intersectList: false,
       highlightRect: false,

@@ -40,12 +40,15 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
 
   const isSelect = crag.id === selectCragId;
 
+  const activeMarkerWidth = SIZE.CRAG_MARKER_WIDTH;
+  const unactiveMarkerWidth = SIZE.CRAG_MARKER_WIDTH * 0.6;
+
   const markerWidth = (() => {
     if (isSelect) {
-      return SIZE.CRAG_MARKER_WIDTH;
+      return activeMarkerWidth;
     }
 
-    return SIZE.CRAG_MARKER_WIDTH * 0.6;
+    return unactiveMarkerWidth;
   })();
 
   // 할인 적용 우선순위 없는 상태.
@@ -197,7 +200,12 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
         </Box>
 
         <Box>
-          <MarkerTitle marker={marker} isSelect={isSelect} label={crag.short_name || crag.name}>
+          <MarkerTitle
+            marker={marker}
+            isSelect={isSelect}
+            label={crag.short_name || crag.name}
+            markerWidth={unactiveMarkerWidth}
+          >
             {price && <MarkerTitle.SaleInfo>{price}</MarkerTitle.SaleInfo>}
           </MarkerTitle>
         </Box>

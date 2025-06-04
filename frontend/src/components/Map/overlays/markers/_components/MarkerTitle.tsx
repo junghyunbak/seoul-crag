@@ -6,20 +6,28 @@ import { useMap, useZoom } from '@/hooks';
 import { useMarkerState } from '../_hooks/useMarkerState';
 
 import { AnimatePresence, motion } from 'framer-motion';
+
 import { Atoms } from '@/components/atoms';
+
+import { SIZE } from '@/constants';
 
 interface MarkerTitleProps extends React.PropsWithChildren {
   marker: MyMarker | null;
   isSelect: boolean;
   label: string;
+  markerWidth: number;
 }
 
-export function MarkerTitle({ marker, isSelect, children, label }: MarkerTitleProps) {
+const tolerance = SIZE.TOLERANCE;
+
+export function MarkerTitle({ marker, isSelect, children, label, markerWidth }: MarkerTitleProps) {
   const { recognizer } = useMap();
   const { zoomLevel } = useZoom();
   const { isTitleShown } = useMarkerState({ marker, recognizer, isSelect, zoomLevel });
 
   let saleInfo: React.ReactNode | null = null;
+
+  const z = (markerWidth * 0.6) / 2;
 
   React.Children.forEach(children, (child) => {
     if (!React.isValidElement(child)) {
@@ -44,20 +52,42 @@ export function MarkerTitle({ marker, isSelect, children, label }: MarkerTitlePr
              * position: absolute가 아니면 전체 크기가 커져서 translate가 망가짐.
              */
             position: 'absolute',
-            transform: `translate(-50%, ${5 + (isSelect ? 0 : 10)}px)`,
+            zIndex: -1,
+            transform: `translate(-50%, -50%)`,
+            width: tolerance * 2,
+            height: tolerance * 2,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+
+            //background: 'red',
           }}
         >
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 0.5,
+              position: 'absolute',
+              top: `calc(50% - ${isSelect ? z : 0}px)`,
+              py: `${z}px`,
+              height: tolerance * 2,
             }}
           >
-            <Atoms.Text.Halo>{label}</Atoms.Text.Halo>
+            <Box
+              sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: 0.5,
 
-            {saleInfo}
+                //background: 'blue',
+                //opacity: 0.5,
+              }}
+            >
+              <Atoms.Text.Halo>{label}</Atoms.Text.Halo>
+
+              {saleInfo}
+            </Box>
           </Box>
         </motion.div>
       )}

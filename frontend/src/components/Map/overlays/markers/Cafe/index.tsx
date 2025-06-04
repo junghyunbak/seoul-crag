@@ -10,6 +10,7 @@ import { CafeInfo } from './CafeInfo';
 import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
 import { Molecules } from '@/components/molecules';
+import { Atoms } from '@/components/atoms';
 
 import { useCafe, useModifyCafe } from '@/hooks';
 
@@ -33,12 +34,15 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
 
   const isSelect = selectCafeId === cafe.id;
 
+  const activeMarkerWidth = SIZE.CAFE_MARKER_WIDTH;
+  const unactiveMarkerWidth = SIZE.CAFE_MARKER_WIDTH * 0.6;
+
   const markerWidth = (() => {
     if (isSelect) {
-      return SIZE.CAFE_MARKER_WIDTH;
+      return activeMarkerWidth;
     }
 
-    return SIZE.CAFE_MARKER_WIDTH * 0.6;
+    return unactiveMarkerWidth;
   })();
 
   useEffect(() => {
@@ -98,7 +102,16 @@ export function Cafe({ cafe, idx, onCreate, forCluster = false }: CafeProps) {
           </Box>
         </Box>
 
-        <MarkerTitle marker={marker} isSelect={isSelect} label={cafe.place_name.split(' ')[0]} />
+        <MarkerTitle
+          marker={marker}
+          isSelect={isSelect}
+          label={cafe.place_name.split(' ')[0]}
+          markerWidth={unactiveMarkerWidth}
+        >
+          <MarkerTitle.SaleInfo>
+            <Atoms.Text.Halo color="info">{cafe.distance}m</Atoms.Text.Halo>
+          </MarkerTitle.SaleInfo>
+        </MarkerTitle>
 
         <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>

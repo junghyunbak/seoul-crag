@@ -6,6 +6,7 @@ export const cafeSchema = z.object({
   place_url: z.string(),
   y: z.string(),
   x: z.string(),
+  distance: z.string(),
 });
 
 export const cafesSchema = z.array(cafeSchema);

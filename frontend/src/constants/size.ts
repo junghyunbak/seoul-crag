@@ -1,3 +1,5 @@
+export const TOLERANCE = 30;
+
 export const CRAG_MARKER_WIDTH = 40;
 export const CAFE_MARKER_WIDTH = 35;
 
