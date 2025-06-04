@@ -15,6 +15,8 @@ import TagIcon from '@mui/icons-material/Tag';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 
+import { Organisms } from '@/components/organisms';
+
 import { zIndex } from '@/styles';
 
 import { urlService } from '@/utils';
@@ -207,6 +209,13 @@ export default function ManagePage() {
 
         <Outlet />
       </Box>
+
+      <Organisms.ImageStory imageType="interior" />
+      <Organisms.CalendarStory />
+      <Organisms.OperationStory />
+      <Organisms.ShowerStory />
+      <Organisms.ProfileBottomSheet />
+      <Organisms.CragDetail />
     </Box>
   );
 }

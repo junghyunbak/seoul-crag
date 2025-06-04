@@ -19,8 +19,6 @@ import { time } from '@/utils';
 
 import { zIndex } from '@/styles';
 
-import { Organisms } from '@/components/organisms';
-
 export function Layout() {
   return (
     <Box sx={{ position: 'fixed', inset: 0 }}>
@@ -30,13 +28,6 @@ export function Layout() {
             <Suspense fallback={<Splash />}>
               <LoadNaverMap>
                 <Outlet />
-
-                <Organisms.ImageStory imageType="interior" />
-                <Organisms.CalendarStory />
-                <Organisms.OperationStory />
-                <Organisms.ShowerStory />
-                <Organisms.ProfileBottomSheet />
-                <Organisms.CragDetail />
               </LoadNaverMap>
             </Suspense>
           </QueryParamProvider>

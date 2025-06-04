@@ -236,6 +236,12 @@ export default function Main() {
       <Organisms.Sidebar />
       <Organisms.Search />
       <Organisms.FilterButtonSheet />
+      <Organisms.ImageStory imageType="interior" />
+      <Organisms.CalendarStory />
+      <Organisms.OperationStory />
+      <Organisms.ShowerStory />
+      <Organisms.ProfileBottomSheet />
+      <Organisms.CragDetail />
     </Box>
   );
 }
