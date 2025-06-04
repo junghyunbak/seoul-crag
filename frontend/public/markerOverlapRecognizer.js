@@ -118,6 +118,7 @@ class MarkerOverlapRecognizer {
   getOverlapRect(marker) {
     const proj = this.getMap().getProjection();
     const offset = proj.fromCoordToOffset(marker.getPosition());
+    // TODO: marker의 meta값에 좌우 tolerance값을 추가하여 사용하면 더 세밀한 영역 계산이 가능함.
     const t = this._options.tolerance;
     const lt = offset.clone().sub(t, t);
     const rb = offset.clone().add(t, t);
