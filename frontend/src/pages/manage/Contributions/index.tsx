@@ -4,7 +4,7 @@ import { DefaultError, useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useFetchContributes } from '@/hooks';
 
-export function Contributions() {
+export default function Contributions() {
   const [name, setName] = useState('');
 
   const { contributions, refetch } = useFetchContributes();

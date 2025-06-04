@@ -7,7 +7,7 @@ import { useMutateUserEmail, useMutateUserImage, useMutateUserNickname } from '@
 /**
  * 이미지 업로드 api를 분리, 링크를 받아서 추가. 암장 정보도 마찬가지.
  */
-export function User() {
+export default function User() {
   const { user, refetch } = useFetchMe();
 
   const inputRef = useRef<HTMLInputElement>(null);

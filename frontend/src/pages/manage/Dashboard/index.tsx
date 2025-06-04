@@ -4,7 +4,7 @@ import { api } from '@/api/axios';
 import { useQuery } from '@tanstack/react-query';
 import { parse } from 'date-fns';
 
-export function Dashboard() {
+export default function Dashboard() {
   return (
     <Box sx={{ width: '100%', height: '100%', overflowY: 'auto' }}>
       <VisitChart />

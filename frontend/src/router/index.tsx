@@ -8,18 +8,19 @@ import { Layout } from '@/router/Layout';
 
 import { urlService } from '@/utils';
 
-import { User } from '@/pages/manage/User';
-import { Users } from '@/pages/manage/Users';
-import { Crags } from '@/pages/manage/Crags';
-import { Dashboard } from '@/pages/manage/Dashboard';
-import { NewCrag } from '@/pages/manage/NewCrag';
-import { Tags } from '@/pages/manage/Tags';
-import { Contributions } from '@/pages/manage/Contributions';
-
 const Main = lazy(() => import('@/pages/main'));
-const ManagePage = lazy(() => import('@/pages/manage'));
+
 const NotFound = lazy(() => import('@/pages/not-found'));
+
+const ManagePage = lazy(() => import('@/pages/manage'));
 const Notices = lazy(() => import('@/pages/manage/Notices'));
+const User = lazy(() => import('@/pages/manage/User'));
+const Users = lazy(() => import('@/pages/manage/Users'));
+const Crags = lazy(() => import('@/pages/manage/Crags'));
+const Dashboard = lazy(() => import('@/pages/manage/Dashboard'));
+const NewCrag = lazy(() => import('@/pages/manage/NewCrag'));
+const Tags = lazy(() => import('@/pages/manage/Tags'));
+const Contributions = lazy(() => import('@/pages/manage/Contributions'));
 
 // https://github.com/pbeshai/use-query-params/issues/295
 export const ReactRouter7Adapter: QueryParamAdapterComponent = ({ children }) => {
