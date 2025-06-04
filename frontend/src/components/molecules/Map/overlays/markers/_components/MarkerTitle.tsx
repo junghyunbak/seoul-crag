@@ -59,6 +59,7 @@ export function MarkerTitle({ marker, isSelect, children, label, markerWidth }: 
             display: 'flex',
             alignItems: 'flex-end',
             justifyContent: 'center',
+            pointerEvents: 'none',
 
             //background: 'red',
           }}
@@ -79,6 +80,7 @@ export function MarkerTitle({ marker, isSelect, children, label, markerWidth }: 
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 gap: 0.5,
+                pointerEvents: 'auto',
 
                 //background: 'blue',
                 //opacity: 0.5,
