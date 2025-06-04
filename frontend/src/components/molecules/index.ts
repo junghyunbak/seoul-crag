@@ -10,6 +10,7 @@ import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
 import { GpsButton } from '@/components/molecules/GpsButton';
 import { ImageWithSource } from '@/components/molecules/ImageWithSource';
+import { Map } from '@/components/molecules/Map';
 import { MapOptions } from '@/components/molecules/MapOptions';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
 import { NoticeList } from '@/components/molecules/NoticeList';
@@ -59,4 +60,6 @@ export const Molecules = {
   ImageWithSource,
 
   Story,
+
+  Map,
 };

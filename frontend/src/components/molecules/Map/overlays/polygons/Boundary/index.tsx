@@ -1,9 +1,9 @@
 import { useMap } from '@/hooks';
 import { useContext, useEffect } from 'react';
 
-import seoulGeoData from '@/seoul-geo.json';
+import seoulGeoData from '@/assets/jsons/seoul-geo.json';
 
-import { mapContext } from '@/components/Map/index.context';
+import { mapContext } from '@/components/molecules/Map/index.context';
 
 export function Boundary() {
   const { map } = useContext(mapContext);

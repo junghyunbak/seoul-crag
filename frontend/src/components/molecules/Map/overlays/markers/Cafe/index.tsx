@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 import { SIZE } from '@/constants';
 
-import { mapContext } from '@/components/Map/index.context';
+import { mapContext } from '@/components/molecules/Map/index.context';
 
 import { CafeInfo } from './CafeInfo';
 import { MarkerTitle } from '../_components/MarkerTitle';

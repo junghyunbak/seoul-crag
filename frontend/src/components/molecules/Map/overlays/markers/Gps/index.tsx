@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from 'react';
 
-import { mapContext } from '@/components/Map/index.context';
+import { mapContext } from '@/components/molecules/Map/index.context';
 
 import { useMap } from '@/hooks';
 

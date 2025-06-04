@@ -1,12 +1,14 @@
+import { useContext, useEffect, useState } from 'react';
+
 import { Box, Typography, useTheme, Paper, IconButton } from '@mui/material';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 
-import { Map } from '@/components/Map';
-
-import { useContext, useEffect, useState } from 'react';
-
 import { useNaverMap } from '@/hooks';
+
 import { CragDetailContext } from '@/components/CragDetail/index.context';
+import { Molecules } from '@/components/molecules';
+
+const { Map } = Molecules;
 
 export function CragDetailLocation() {
   const { crag } = useContext(CragDetailContext);

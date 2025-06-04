@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import seoulGeoData from '@/seoul-geo.json';
+import seoulGeoData from '@/assets/jsons/seoul-geo.json';
 
 export function useMap() {
   const [map] = useStore(useShallow((s) => [s.map]));

@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 
 import { Box } from '@mui/material';
 
-import { Marker, Polygon } from '@/components/Map/overlays';
-
-import { mapContext } from '@/components/Map/index.context';
+import { Marker, Polygon } from './overlays';
+import { mapContext } from './index.context';
 
 interface MapProps extends React.PropsWithChildren {
   map: naver.maps.Map | null;

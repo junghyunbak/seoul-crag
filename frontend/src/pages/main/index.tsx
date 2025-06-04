@@ -21,10 +21,12 @@ import { useStore } from '@/store';
 
 import { QUERY_STRING, SIZE } from '@/constants';
 
-import { Map } from '@/components/Map';
 import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
 import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Organisms } from '@/components/organisms';
+import { Molecules } from '@/components/molecules';
+
+const { Map } = Molecules;
 
 const DEFAULT_LAT = 37.55296695234301;
 const DEFAULT_LNG = 126.97309961038195;

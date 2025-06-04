@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 
 import { renderToString } from 'react-dom/server';
 
-import { mapContext } from '@/components/Map/index.context';
+import { mapContext } from '@/components/molecules/Map/index.context';
 
 import { Box } from '@mui/material';
 
@@ -72,7 +72,7 @@ export function Cluster({ markers, varient = 'crag', maxZoom = 11, gridSize = 10
     return function cleanup() {
       markerCluster.setMap(null);
     };
-  }, [gridSize, map, markers, maxZoom]);
+  }, [gridSize, map, markers, maxZoom, varient]);
 
   return <Box />;
 }

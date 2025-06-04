@@ -7,8 +7,9 @@ import { useMap, useMutateCragLocation, useNaverMap } from '@/hooks';
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { cragsContext } from '@/pages/manage/Crags/index.context';
 
-import { Map } from '@/components/Map';
 import { Molecules } from '@/components/molecules';
+
+const { Map } = Molecules;
 
 export function CragPositionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);

@@ -8,8 +8,9 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { SIZE, QUERY_STRING } from '@/constants';
 
-import { mapContext } from '@/components/Map/index.context';
-import { CragMenu } from '@/components/Map/overlays/markers/Crag/CragMenu';
+import { mapContext } from '@/components/molecules/Map/index.context';
+
+import { CragMenu } from './CragMenu';
 import { MarkerTitle } from '../_components/MarkerTitle';
 import { MarkerZIndex } from '../_components/MarkerZIndex';
 import { Atoms } from '@/components/atoms';

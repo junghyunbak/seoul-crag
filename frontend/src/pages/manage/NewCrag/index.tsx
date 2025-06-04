@@ -6,11 +6,13 @@ import { useNaverMap, useMutateCreateCrag } from '@/hooks';
 
 import { urlService } from '@/utils';
 
-import { Map } from '@/components/Map';
-
 import { cragScheme } from '@/schemas';
 
 import { QUERY_STRING } from '@/constants';
+
+import { Molecules } from '@/components/molecules';
+
+const { Map } = Molecules;
 
 export function NewCrag() {
   const [name, setName] = useState('');
