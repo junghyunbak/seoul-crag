@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
@@ -21,8 +21,6 @@ import { zIndex } from '@/styles';
 
 import { Organisms } from '@/components/organisms';
 
-const CragDetail = lazy(() => import('@/components/CragDetail'));
-
 export function Layout() {
   return (
     <Box sx={{ position: 'fixed', inset: 0 }}>
@@ -38,8 +36,7 @@ export function Layout() {
                 <Organisms.OperationStory />
                 <Organisms.ShowerStory />
                 <Organisms.ProfileBottomSheet />
-
-                <CragDetail />
+                <Organisms.CragDetail />
               </LoadNaverMap>
             </Suspense>
           </QueryParamProvider>

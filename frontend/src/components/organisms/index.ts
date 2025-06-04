@@ -1,4 +1,5 @@
 import { CalendarStory } from '@/components/organisms/CalendarStory';
+import { CragDetail } from '@/components/organisms/CragDetail';
 import { FilterButtonSheet } from '@/components/organisms/FilterBottomSheet';
 import { ImageStory } from '@/components/organisms/ImageStory';
 import { MapControlBar } from '@/components/organisms/MapControlBar';
@@ -23,4 +24,6 @@ export const Organisms = {
   OperationStory,
   ShowerStory,
   ImageStory,
+
+  CragDetail,
 };
