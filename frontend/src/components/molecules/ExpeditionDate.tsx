@@ -34,5 +34,14 @@ export function ExpeditionDate() {
     );
   }
 
-  return <Atoms.Text.Title onClick={handleFilterSheetOpen}>{formattedDate} 이용</Atoms.Text.Title>;
+  return (
+    <Atoms.Text.Title
+      sx={{
+        cursor: 'pointer',
+      }}
+      onClick={handleFilterSheetOpen}
+    >
+      {formattedDate} 이용
+    </Atoms.Text.Title>
+  );
 }
