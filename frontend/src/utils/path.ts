@@ -2,7 +2,7 @@ type RootPage = '';
 
 type ManagePage = 'manage';
 
-type ManageDownPages = 'crags' | 'dashborad' | 'users' | 'new-crag' | 'tags' | 'notices' | 'contributions';
+type ManageDownPages = 'crags' | 'dashborad' | 'users' | 'user' | 'new-crag' | 'tags' | 'notices' | 'contributions';
 
 type ManageCragsPage = Extract<ManageDownPages, 'crags'>;
 

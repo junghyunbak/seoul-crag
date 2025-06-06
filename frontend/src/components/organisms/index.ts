@@ -14,6 +14,7 @@ import { CragEdgeIndicators } from '@/components/organisms/CragEdgeIndicators';
 import { GpsEdgeIndicators } from '@/components/organisms/GpsEdgeIndicators';
 import { ManageSidebar } from '@/components/organisms/ManageSidebar';
 import { ManageTopbar } from '@/components/organisms/ManageTopbar';
+import { CragForm } from '@/components/organisms/CragForm';
 
 export const Organisms = {
   MapControlBar,
@@ -39,4 +40,6 @@ export const Organisms = {
    */
   ManageSidebar,
   ManageTopbar,
+
+  CragForm,
 };

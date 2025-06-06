@@ -1,8 +1,27 @@
-import { Box } from '@mui/material';
 import { useParams } from 'react-router';
+
+import { Organisms } from '@/components/organisms';
+
+import { useFetchCrag } from '@/hooks';
 
 export default function ManageCrag() {
   const { id } = useParams<{ id: string }>();
 
-  return <Box>암장 하나 관리{id}</Box>;
+  const { crag, refetch } = useFetchCrag({
+    cragId: id,
+    feeds: true,
+  });
+
+  if (!crag) {
+    return;
+  }
+
+  return (
+    <Organisms.CragForm
+      crag={crag}
+      revalidateCrag={() => {
+        refetch();
+      }}
+    />
+  );
 }

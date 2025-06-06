@@ -32,7 +32,7 @@ const sidebarList: SidebarList = [
     items: [
       {
         icon: <ManageAccounts />,
-        pathname: urlService.getAbsolutePath('/manage'),
+        pathname: urlService.getAbsolutePath('/manage/user'),
         title: '내 정보 수정',
       },
     ],
@@ -151,7 +151,7 @@ export function ManageSidebar({ user, isOpen, onClose }: ManageSidebarProps) {
                     key={pathname}
                     icon={icon}
                     component={<Link to={pathname} />}
-                    active={location.pathname === pathname}
+                    active={location.pathname.startsWith(pathname)}
                   >
                     {title}
                   </MenuItem>

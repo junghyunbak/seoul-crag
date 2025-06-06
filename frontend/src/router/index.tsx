@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
         element: <Manage />,
         children: [
           {
-            index: true,
+            path: urlService.getRelativePath('/manage/user'),
             element: <ManageUser />,
           },
           {
