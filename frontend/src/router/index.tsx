@@ -9,18 +9,18 @@ import { Layout } from '@/router/Layout';
 import { urlService } from '@/utils';
 
 const Main = lazy(() => import('@/components/pages/Main'));
-
 const NotFound = lazy(() => import('@/components/pages/NotFound'));
+const Manage = lazy(() => import('@/components/pages/Manage'));
+const ManageCrags = lazy(() => import('@/components/pages/ManageCrags'));
+const ManageCrag = lazy(() => import('@/components/pages/ManageCrag'));
+const ManageDashboard = lazy(() => import('@/components/pages/ManageDashboard'));
+const ManageContributions = lazy(() => import('@/components/pages/ManageContributions'));
+const ManageTags = lazy(() => import('@/components/pages/ManageTags'));
+const ManageCreateCrag = lazy(() => import('@/components/pages/ManageCreateCrag'));
+const ManageUser = lazy(() => import('@/components/pages/ManageUser'));
+const ManageUsers = lazy(() => import('@/components/pages/ManageUsers'));
 
-const ManagePage = lazy(() => import('@/pages/manage'));
 const Notices = lazy(() => import('@/pages/manage/Notices'));
-const User = lazy(() => import('@/pages/manage/User'));
-const Users = lazy(() => import('@/pages/manage/Users'));
-const Crags = lazy(() => import('@/pages/manage/Crags'));
-const Dashboard = lazy(() => import('@/pages/manage/Dashboard'));
-const NewCrag = lazy(() => import('@/pages/manage/NewCrag'));
-const Tags = lazy(() => import('@/pages/manage/Tags'));
-const Contributions = lazy(() => import('@/pages/manage/Contributions'));
 
 // https://github.com/pbeshai/use-query-params/issues/295
 export const ReactRouter7Adapter: QueryParamAdapterComponent = ({ children }) => {
@@ -44,39 +44,45 @@ export const router = createBrowserRouter([
       },
       {
         path: urlService.getAbsolutePath('/manage'),
-        element: <ManagePage />,
+        element: <Manage />,
         children: [
           {
             index: true,
-            element: <User />,
+            element: <ManageUser />,
           },
           {
             path: urlService.getRelativePath('/manage/crags'),
-            element: <Crags />,
+            element: <ManageCrags />,
+            children: [
+              {
+                path: urlService.getRelativePath('/manage/crags/:id'),
+                element: <ManageCrag />,
+              },
+            ],
           },
           {
             path: urlService.getRelativePath('/manage/dashborad'),
-            element: <Dashboard />,
+            element: <ManageDashboard />,
           },
           {
-            path: urlService.getRelativePath('/manage/users'),
-            element: <Users />,
-          },
-          {
-            path: urlService.getRelativePath('/manage/new-crag'),
-            element: <NewCrag />,
+            path: urlService.getRelativePath('/manage/contributions'),
+            element: <ManageContributions />,
           },
           {
             path: urlService.getRelativePath('/manage/tags'),
-            element: <Tags />,
+            element: <ManageTags />,
+          },
+          {
+            path: urlService.getRelativePath('/manage/new-crag'),
+            element: <ManageCreateCrag />,
+          },
+          {
+            path: urlService.getRelativePath('/manage/users'),
+            element: <ManageUsers />,
           },
           {
             path: urlService.getRelativePath('/manage/notices'),
             element: <Notices />,
-          },
-          {
-            path: urlService.getRelativePath('/manage/contributions'),
-            element: <Contributions />,
           },
         ],
       },

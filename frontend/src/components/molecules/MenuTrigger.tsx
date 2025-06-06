@@ -1,19 +1,13 @@
 import { IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { useQueryParam, BooleanParam } from 'use-query-params';
+interface MenuTriggerProps {
+  onClick?: () => void;
+}
 
-import { QUERY_STRING } from '@/constants';
-
-export function MenuTrigger() {
-  const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
-
+export function MenuTrigger({ onClick }: MenuTriggerProps) {
   return (
-    <IconButton
-      onClick={() => {
-        setIsMenuOpen((prev) => !prev);
-      }}
-    >
+    <IconButton onClick={onClick}>
       <MenuIcon />
     </IconButton>
   );

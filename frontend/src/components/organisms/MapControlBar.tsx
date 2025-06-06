@@ -1,11 +1,19 @@
-import { Molecules } from '@/components/molecules';
 import { useLoading, useModifySearch } from '@/hooks';
+
 import { Paper, Box } from '@mui/material';
+
+import { Molecules } from '@/components/molecules';
+
+import { useQueryParam, BooleanParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
 
 export function MapControlBar() {
   const { isMarkerLoading } = useLoading();
 
   const { updateIsSearchOpen } = useModifySearch();
+
+  const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
   return (
     <Box
@@ -43,7 +51,11 @@ export function MapControlBar() {
 
               <Box sx={{ flexGrow: 0, px: 0.5 }}>
                 <Molecules.NoticeModalTrigger />
-                <Molecules.MenuTrigger />
+                <Molecules.MenuTrigger
+                  onClick={() => {
+                    setIsMenuOpen((prev) => !prev);
+                  }}
+                />
               </Box>
             </Box>
 

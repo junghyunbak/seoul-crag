@@ -1,10 +1,13 @@
-import { api } from '@/api/axios';
-import { Box, Button, Chip, Paper, TextField } from '@mui/material';
-import { DefaultError, useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+
+import { Box, Button, Chip, Paper, TextField } from '@mui/material';
+
+import { DefaultError, useMutation } from '@tanstack/react-query';
+import { api } from '@/api/axios';
+
 import { useFetchContributes } from '@/hooks';
 
-export default function Contributions() {
+export default function ManageContributions() {
   const [name, setName] = useState('');
 
   const { contributions, refetch } = useFetchContributes();

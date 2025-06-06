@@ -10,8 +10,10 @@ import { ProfileBottomSheet } from '@/components/organisms/ProfileBottomSheet';
 import { Search } from '@/components/organisms/Search';
 import { ShowerStory } from '@/components/organisms/ShowerStory';
 import { Sidebar } from '@/components/organisms/Sidebar';
-import { CragEdgeIndicators } from './CragEdgeIndicators';
-import { GpsEdgeIndicators } from './GpsEdgeIndicators';
+import { CragEdgeIndicators } from '@/components/organisms/CragEdgeIndicators';
+import { GpsEdgeIndicators } from '@/components/organisms/GpsEdgeIndicators';
+import { ManageSidebar } from '@/components/organisms/ManageSidebar';
+import { ManageTopbar } from '@/components/organisms/ManageTopbar';
 
 export const Organisms = {
   MapControlBar,
@@ -31,4 +33,10 @@ export const Organisms = {
   CragEdgeIndicators,
 
   GpsEdgeIndicators,
+
+  /**
+   * 관리 페이지 전용
+   */
+  ManageSidebar,
+  ManageTopbar,
 };

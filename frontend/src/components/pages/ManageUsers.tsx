@@ -28,7 +28,7 @@ import { roleToKor } from '@/utils';
 
 import dayjs from 'dayjs';
 
-export default function Users() {
+export default function ManageUsers() {
   const { users } = useFetchUsers();
 
   if (!users) {

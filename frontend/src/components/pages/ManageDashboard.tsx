@@ -1,10 +1,13 @@
 import { Box, Paper, Typography } from '@mui/material';
+
 import { ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { api } from '@/api/axios';
+
 import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api/axios';
+
 import { parse } from 'date-fns';
 
-export default function Dashboard() {
+export default function ManageDashboard() {
   return (
     <Box sx={{ width: '100%', height: '100%', overflowY: 'auto' }}>
       <VisitChart />

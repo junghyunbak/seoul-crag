@@ -14,7 +14,7 @@ import { Molecules } from '@/components/molecules';
 
 const { Map } = Molecules;
 
-export default function NewCrag() {
+export default function ManageCreateCrag() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 

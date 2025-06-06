@@ -71,7 +71,7 @@ export default function Notices() {
 
   return (
     <Box sx={{ width: '100%', height: '100%', overflowY: 'auto' }}>
-      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, mt: 4 }}>
+      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           공지사항 생성
         </Typography>

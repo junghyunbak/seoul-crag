@@ -12,6 +12,7 @@ import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
 import { GpsButton } from '@/components/molecules/GpsButton';
 import { ImageWithSource } from '@/components/molecules/ImageWithSource';
+import { LogoText } from '@/components/molecules/LogoText';
 import { Map } from '@/components/molecules/Map';
 import { MapOptions } from '@/components/molecules/MapOptions';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
@@ -66,6 +67,8 @@ export const Molecules = {
   Map,
 
   EdgeIndicators,
+
+  LogoText,
 
   /**
    * 백오피스 전용

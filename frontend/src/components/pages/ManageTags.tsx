@@ -12,7 +12,7 @@ import { Molecules } from '@/components/molecules';
 
 import { TAG_NAMES } from '@/constants/tag';
 
-export default function Tags() {
+export default function ManageTags() {
   const { tags, refetch } = useFetchTags();
 
   const createTagMutation = useMutation<void, DefaultError, Tag>({
