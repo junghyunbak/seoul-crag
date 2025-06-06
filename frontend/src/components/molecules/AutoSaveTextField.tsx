@@ -85,7 +85,6 @@ export function AutoSaveTextField({
       InputProps={{
         endAdornment: <InputAdornment position="end">{getEndAdornment()}</InputAdornment>,
       }}
-      sx={{ minWidth: 120 }}
     />
   );
 }
