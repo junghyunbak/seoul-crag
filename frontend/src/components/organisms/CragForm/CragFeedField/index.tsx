@@ -22,10 +22,10 @@ export function CragFeedField() {
 
   return (
     <Box>
-      <Divider />
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         인스타 피드
       </Typography>
+
       <Grid container spacing={2}>
         {(crag.feeds || [])
           .sort((a, b) => (isAfter(a.created_at, b.created_at) ? -1 : 1))

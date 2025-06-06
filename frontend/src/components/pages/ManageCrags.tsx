@@ -6,10 +6,19 @@ import { Avatar, Box, Typography, TextField } from '@mui/material';
 
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 
+import { zIndex } from '@/styles';
+
 import { useFetchCrags } from '@/hooks';
+
+import { useStore } from '@/store';
+import { useShallow } from 'zustand/shallow';
 
 export default function ManageCrags() {
   const { crags } = useFetchCrags({ feeds: true });
+
+  const [isCragsSidebarOpen, setIsCragsSidebarOpen] = useStore(
+    useShallow((s) => [s.isCragsSidebarOpen, s.setIsCragsSidebarOpen])
+  );
 
   const [keyword, setKeyword] = useState('');
 
@@ -26,7 +35,17 @@ export default function ManageCrags() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Sidebar breakPoint="lg">
+      <Sidebar
+        breakPoint="lg"
+        toggled={isCragsSidebarOpen}
+        backgroundColor="white"
+        onBackdropClick={() => {
+          setIsCragsSidebarOpen(false);
+        }}
+        style={{
+          zIndex: zIndex.menu,
+        }}
+      >
         <Box sx={{ p: 2 }}>
           <TextField
             label="검색"
