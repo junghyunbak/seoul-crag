@@ -1,7 +1,8 @@
 import { useMap } from '@/hooks';
-import { AngularEdgeMarkers } from '@/components/AngularEdgeMarkers';
 
-export function GpsEdgeIndicator() {
+import { EdgeIndicators } from '../molecules/EdgeIndicators';
+
+export function GpsEdgeIndicators() {
   const { gpsLatLng, enabledGpsIndicator } = useMap();
 
   const { lat, lng } = gpsLatLng;
@@ -11,7 +12,7 @@ export function GpsEdgeIndicator() {
   }
 
   return (
-    <AngularEdgeMarkers
+    <EdgeIndicators
       indicatorColor="#44a1f6"
       type="gps"
       crags={[

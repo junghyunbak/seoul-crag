@@ -5,6 +5,7 @@ import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview'
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
 import { DatePicker } from '@/components/molecules/DatePicker';
+import { EdgeIndicators } from '@/components/molecules/EdgeIndicators';
 import { ExpeditionDate } from '@/components/molecules/ExpeditionDate';
 import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
 import { FilterTrigger } from '@/components/molecules/FilterTrigger';
@@ -62,4 +63,6 @@ export const Molecules = {
   Story,
 
   Map,
+
+  EdgeIndicators,
 };

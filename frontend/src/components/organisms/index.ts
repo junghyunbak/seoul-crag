@@ -10,6 +10,8 @@ import { ProfileBottomSheet } from '@/components/organisms/ProfileBottomSheet';
 import { Search } from '@/components/organisms/Search';
 import { ShowerStory } from '@/components/organisms/ShowerStory';
 import { Sidebar } from '@/components/organisms/Sidebar';
+import { CragEdgeIndicators } from './CragEdgeIndicators';
+import { GpsEdgeIndicators } from './GpsEdgeIndicators';
 
 export const Organisms = {
   MapControlBar,
@@ -26,4 +28,7 @@ export const Organisms = {
   ImageStory,
 
   CragDetail,
+  CragEdgeIndicators,
+
+  GpsEdgeIndicators,
 };

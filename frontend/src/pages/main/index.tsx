@@ -21,8 +21,6 @@ import { useStore } from '@/store';
 
 import { QUERY_STRING, SIZE } from '@/constants';
 
-import { GpsEdgeIndicator } from '@/pages/main/_components/GpsEdgeIndicator';
-import { CragsEdgeIndicator } from '@/pages/main/_components/CragsEdgeIndicator';
 import { Organisms } from '@/components/organisms';
 import { Molecules } from '@/components/molecules';
 
@@ -226,8 +224,9 @@ export default function Main() {
         <Map.Marker.Cluster markers={filteredCafeMarkers} varient="cafe" maxZoom={13.5} />
         <Map.Marker.Gps />
       </Map>
-      <CragsEdgeIndicator crags={crags} />
-      <GpsEdgeIndicator />
+
+      <Organisms.CragEdgeIndicators crags={crags} />
+      <Organisms.GpsEdgeIndicators />
 
       <Organisms.MapControlBar />
       <Organisms.MapControlFooter />

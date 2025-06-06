@@ -6,7 +6,7 @@ import { zIndex } from '@/styles';
 
 import { Box } from '@mui/material';
 
-interface AngularIndicator {
+interface Indicator {
   x: number;
   y: number;
   angle: number;
@@ -14,37 +14,14 @@ interface AngularIndicator {
   latLng: naver.maps.Coord;
 }
 
-interface AngularEdgeMarkersProps {
+interface EdgeIndicatorsProps {
   crags: Crag[] | undefined | null;
   indicatorColor?: string;
   type?: 'gps' | 'crag';
 }
 
-// ✅ 교차점 계산 함수
-function projectToScreenEdge(targetX: number, targetY: number, centerX: number, centerY: number, padding = 8) {
-  const dx = targetX - centerX;
-  const dy = targetY - centerY;
-
-  const tX = dx !== 0 ? (dx > 0 ? window.innerWidth - centerX : -centerX) / dx : Infinity;
-  const tY = dy !== 0 ? (dy > 0 ? window.innerHeight - centerY : -centerY) / dy : Infinity;
-
-  const t = Math.min(tX, tY);
-  let x = centerX + dx * t;
-  let y = centerY + dy * t;
-
-  // ✅ 중심 방향으로 padding만큼 안쪽으로 이동
-  const dist = Math.sqrt(dx * dx + dy * dy);
-  const unitX = dx / dist;
-  const unitY = dy / dist;
-
-  x -= unitX * padding;
-  y -= unitY * padding;
-
-  return { x, y };
-}
-
-export function AngularEdgeMarkers({ crags, indicatorColor = '#00000065', type = 'crag' }: AngularEdgeMarkersProps) {
-  const [indicators, setIndicators] = useState<AngularIndicator[]>([]);
+export function EdgeIndicators({ crags, indicatorColor = '#00000065', type = 'crag' }: EdgeIndicatorsProps) {
+  const [indicators, setIndicators] = useState<Indicator[]>([]);
 
   const { exp } = useExp();
   const { map } = useMap();
@@ -63,7 +40,7 @@ export function AngularEdgeMarkers({ crags, indicatorColor = '#00000065', type =
       const center = map.getCenter();
       const centerOffset = projection.fromCoordToOffset(center);
 
-      const grouped: Record<number, AngularIndicator> = {};
+      const grouped: Record<number, Indicator> = {};
 
       crags.forEach((crag) => {
         const { isFiltered } = getCragStats(crag, exp.date, searchKeyword);
@@ -160,4 +137,26 @@ export function AngularEdgeMarkers({ crags, indicatorColor = '#00000065', type =
       ))}
     </Box>
   );
+}
+
+function projectToScreenEdge(targetX: number, targetY: number, centerX: number, centerY: number, padding = 8) {
+  const dx = targetX - centerX;
+  const dy = targetY - centerY;
+
+  const tX = dx !== 0 ? (dx > 0 ? window.innerWidth - centerX : -centerX) / dx : Infinity;
+  const tY = dy !== 0 ? (dy > 0 ? window.innerHeight - centerY : -centerY) / dy : Infinity;
+
+  const t = Math.min(tX, tY);
+  let x = centerX + dx * t;
+  let y = centerY + dy * t;
+
+  // ✅ 중심 방향으로 padding만큼 안쪽으로 이동
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const unitX = dx / dist;
+  const unitY = dy / dist;
+
+  x -= unitX * padding;
+  y -= unitY * padding;
+
+  return { x, y };
 }
