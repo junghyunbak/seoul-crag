@@ -1,7 +1,10 @@
-import { FormTextField } from '@/components/FormTextField';
-import { useMutateCragShowerUrl } from '@/hooks';
-import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 import { useContext } from 'react';
+
+import { useMutateCragShowerUrl } from '@/hooks';
+
+import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+
+import { Molecules } from '@/components/molecules';
 
 export function CragShowerUrlField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -9,7 +12,7 @@ export function CragShowerUrlField() {
   const { changeCragShowerUrlMutation } = useMutateCragShowerUrl();
 
   return (
-    <FormTextField
+    <Molecules.AutoSaveTextField
       value={crag.shower_url}
       onSave={async (newValue: string) => {
         changeCragShowerUrlMutation.mutate(

@@ -1,9 +1,10 @@
 import { useContext } from 'react';
 
-import { FormTextField } from '@/components/FormTextField';
-
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
+
 import { useMutationCrag } from '@/hooks';
+
+import { Molecules } from '@/components/molecules';
 
 export function CragPriceField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -22,5 +23,7 @@ export function CragPriceField() {
     revalidateCrag();
   };
 
-  return <FormTextField value={crag.price.toString()} label="1일권 가격" onSave={handleAreaFieldUpdate} />;
+  return (
+    <Molecules.AutoSaveTextField value={crag.price.toString()} label="1일권 가격" onSave={handleAreaFieldUpdate} />
+  );
 }

@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
-import { FormTextField } from '@/components/FormTextField';
-
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import { useMutateCragName } from '@/hooks';
+
+import { Molecules } from '@/components/molecules';
 
 export function CragNameField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -22,5 +22,5 @@ export function CragNameField() {
     });
   };
 
-  return <FormTextField value={crag.name} onSave={handleTextFieldUpdate} label="암장 이름" />;
+  return <Molecules.AutoSaveTextField value={crag.name} onSave={handleTextFieldUpdate} label="암장 이름" />;
 }

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { FormTextField } from '@/components/FormTextField';
+import { Molecules } from '@/components/molecules';
 
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
@@ -30,7 +30,7 @@ export function CragAreaField() {
   };
 
   return (
-    <FormTextField
+    <Molecules.AutoSaveTextField
       value={crag.area?.toString()}
       label="암장 크기 (단위: 평)"
       placeholder={`최소: ${MIN_AREA_VALUE}, 최대: ${MAX_AREA_VALUE}`}

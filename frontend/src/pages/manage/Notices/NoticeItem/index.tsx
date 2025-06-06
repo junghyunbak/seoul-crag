@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Box,
   Button,
@@ -9,15 +11,17 @@ import {
   Select,
   Typography,
 } from '@mui/material';
+
 import { DefaultError, useMutation, useQuery } from '@tanstack/react-query';
 
 import { api } from '@/api/axios';
-import { useState } from 'react';
-import { FormTextField } from '@/components/FormTextField';
+
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
 import { NoticeScheme } from '@/schemas/notice';
+
+import { Molecules } from '@/components/molecules';
 
 interface NoticeItemProps {
   initialNotice: Notice;
@@ -70,7 +74,7 @@ export function NoticeItem({ initialNotice, onDelete }: NoticeItemProps) {
     <Box
       sx={{ border: '1px solid #ccc', borderRadius: 2, p: 2, mb: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
     >
-      <FormTextField
+      <Molecules.AutoSaveTextField
         value={notice.title}
         label={'공지 제목'}
         onSave={async (value) => {
@@ -88,7 +92,7 @@ export function NoticeItem({ initialNotice, onDelete }: NoticeItemProps) {
         }}
       />
 
-      <FormTextField
+      <Molecules.AutoSaveTextField
         value={notice.content}
         label={'공지 내용'}
         onSave={async (value) => {

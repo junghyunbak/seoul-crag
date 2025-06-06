@@ -1,27 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { TextField, CircularProgress, InputAdornment } from '@mui/material';
-
 import Check from '@mui/icons-material/Check';
 import Error from '@mui/icons-material/Error';
 
-interface FormTextFieldProps {
+interface AutoSaveTextFieldProps {
   value: string | null | undefined;
+
   placeholder?: string;
+
   multilineCount?: number;
+
   label?: string;
+
   helperText?: string;
+
   onSave: (next: string) => Promise<void>;
 }
 
-export function FormTextField({
+export function AutoSaveTextField({
   value = '',
   onSave,
   placeholder,
   label,
   helperText,
   multilineCount,
-}: FormTextFieldProps) {
+}: AutoSaveTextFieldProps) {
   const [text, setText] = useState(value);
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);

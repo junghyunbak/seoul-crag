@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
-import { FormTextField } from '@/components/FormTextField';
-
 import { cragFormContext } from '@/pages/manage/Crags/CragForm/index.context';
 
 import { useMutateCragDescription } from '@/hooks';
+
+import { Molecules } from '@/components/molecules';
 
 export function CragDescriptionField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
@@ -22,5 +22,12 @@ export function CragDescriptionField() {
     });
   };
 
-  return <FormTextField value={crag.description} onSave={handleTextFieldUpdate} label="암장 소개" multilineCount={3} />;
+  return (
+    <Molecules.AutoSaveTextField
+      value={crag.description}
+      onSave={handleTextFieldUpdate}
+      label="암장 소개"
+      multilineCount={3}
+    />
+  );
 }

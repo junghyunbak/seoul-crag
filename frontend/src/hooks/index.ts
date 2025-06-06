@@ -49,6 +49,7 @@ export * from './useMutateLogout';
 export * from './useMutateCrag';
 export * from './useMutateImage';
 export * from './useMutateSchedule';
+export * from './useMutateUser';
 
 /**
  * setup

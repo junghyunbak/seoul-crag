@@ -1,3 +1,4 @@
+import { AutoSaveTextField } from '@/components/molecules/AutoSaveTextField';
 import { Calendar } from '@/components/molecules/Calendar';
 import { CalendarMonthController } from '@/components/molecules/CalendarMonthController';
 import { CragIcon } from '@/components/molecules/CragIcon';
@@ -65,4 +66,9 @@ export const Molecules = {
   Map,
 
   EdgeIndicators,
+
+  /**
+   * 백오피스 전용
+   */
+  AutoSaveTextField,
 };
