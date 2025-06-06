@@ -110,17 +110,17 @@ export function CragForm({ crag, revalidateCrag }: CragFormProps) {
             </Grid>
 
             {/**
-             * 기여 관리
-             */}
-            <Grid size={{ xs: 12 }}>
-              <CragContributesField />
-            </Grid>
-
-            {/**
              * 할인 정보
              */}
             <Grid size={{ xs: 12 }}>
               <CragDiscountsField />
+            </Grid>
+
+            {/**
+             * 기여 관리
+             */}
+            <Grid size={{ xs: 12 }}>
+              <CragContributesField />
             </Grid>
 
             {/**
