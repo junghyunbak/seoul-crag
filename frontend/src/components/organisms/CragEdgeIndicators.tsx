@@ -9,8 +9,6 @@ interface CragEdgeIndicatorsProps {
 export function CragEdgeIndicators({ crags }: CragEdgeIndicatorsProps) {
   const { enabledEdgeIndicator } = useMap();
 
-  console.log(crags?.length, enabledEdgeIndicator);
-
   if (!enabledEdgeIndicator) {
     return null;
   }

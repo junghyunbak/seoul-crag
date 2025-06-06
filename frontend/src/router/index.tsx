@@ -8,9 +8,9 @@ import { Layout } from '@/router/Layout';
 
 import { urlService } from '@/utils';
 
-const Main = lazy(() => import('@/pages/main'));
+const Main = lazy(() => import('@/components/pages/Main'));
 
-const NotFound = lazy(() => import('@/pages/not-found'));
+const NotFound = lazy(() => import('@/components/pages/NotFound'));
 
 const ManagePage = lazy(() => import('@/pages/manage'));
 const Notices = lazy(() => import('@/pages/manage/Notices'));
