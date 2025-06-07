@@ -26,6 +26,7 @@ import { SearchInputWithRemove } from '@/components/molecules/SearchInputWithRem
 import { SortOptionSelector } from '@/components/molecules/SortOptionSelector';
 import { Story } from '@/components/molecules/Story';
 import { TagList } from '@/components/molecules/TagList';
+import { TimeRangeSlider } from '@/components/molecules/TimeRangeSlider';
 import { UserMenu } from '@/components/molecules/UserMenu';
 import { UserProfile } from '@/components/molecules/UserProfile';
 
@@ -72,6 +73,8 @@ export const Molecules = {
   LogoText,
 
   NonModal,
+
+  TimeRangeSlider,
 
   /**
    * 백오피스 전용

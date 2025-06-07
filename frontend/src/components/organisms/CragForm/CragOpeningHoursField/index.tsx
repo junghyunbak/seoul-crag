@@ -1,16 +1,24 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography, Switch, FormControlLabel } from '@mui/material';
 
-import { WeeklyHoursSlider, WeeklyHours } from '@/components/WeeklyHoursSilder';
+import { DAY_STR_TO_KOR, DAYS_OF_WEEK } from '@/constants/time';
 
-import { DAYS_OF_WEEK } from '@/constants/time';
+import { Molecules } from '@/components/molecules';
 
 import { cragFormContext } from '@/components/organisms/CragForm/index.context';
 
 import { DateService } from '@/utils/time';
 
 import { useFetchOpeningHours, useMutateCragOpeningHour } from '@/hooks';
+
+export type DayRange = {
+  is_closed: boolean;
+  open: number;
+  close: number;
+};
+
+export type WeeklyHours = Record<OpeningHourDayType, DayRange>;
 
 const defaultOpen = 9 * 60;
 const defaultClose = 22 * 60;
@@ -31,6 +39,7 @@ export function CragOpeningHoursField() {
   const { crag } = useContext(cragFormContext);
 
   const [hours, setHours] = useState(initialWeeklyHours);
+  const [locked, setLocked] = useState(true);
 
   const timerRef = useRef<Record<OpeningHourDayType, ReturnType<typeof setTimeout> | null>>({
     sunday: null,
@@ -105,7 +114,74 @@ export function CragOpeningHoursField() {
   return (
     <Box sx={{ userSelect: 'none' }}>
       <Typography variant="h6">운영 시간</Typography>
-      <WeeklyHoursSlider hours={hours} onChange={handleWeeklyHoursChange} />
+
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+          {DAYS_OF_WEEK.map((day) => {
+            const { is_closed, open, close } = hours[day];
+
+            return (
+              <Box sx={{ width: '100%' }}>
+                <Typography variant="subtitle1" gutterBottom>
+                  {DAY_STR_TO_KOR[day]}
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={is_closed}
+                        onChange={(e) => {
+                          handleWeeklyHoursChange({
+                            ...hours,
+                            [day]: {
+                              ...hours[day],
+                              is_closed: e.target.checked,
+                            },
+                          });
+                        }}
+                        disabled={locked}
+                      />
+                    }
+                    label="휴무"
+                  />
+
+                  <Box
+                    sx={{
+                      flex: 1,
+                      px: 2,
+                    }}
+                  >
+                    <Molecules.TimeRangeSlider
+                      start={open}
+                      end={close}
+                      locked={locked}
+                      onChange={(start, end) => {
+                        handleWeeklyHoursChange({
+                          ...hours,
+                          [day]: {
+                            ...hours[day],
+                            open: start,
+                            close: end,
+                          },
+                        });
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+
+        <Button variant={locked ? 'outlined' : 'contained'} onClick={() => setLocked(!locked)}>
+          {locked ? '편집 잠금 해제' : '편집 잠금'}
+        </Button>
+      </Box>
     </Box>
   );
 }
