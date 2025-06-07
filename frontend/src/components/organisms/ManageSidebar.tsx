@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router';
 
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import SupervisorAccount from '@mui/icons-material/SupervisorAccount';
 import Terrain from '@mui/icons-material/Terrain';
 import TagIcon from '@mui/icons-material/Tag';
@@ -11,8 +11,6 @@ import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import Dashboard from '@mui/icons-material/Dashboard';
 import Foundation from '@mui/icons-material/Foundation';
 import ManageAccounts from '@mui/icons-material/ManageAccounts';
-
-import { zIndex } from '@/styles';
 
 import { urlService } from '@/utils';
 
@@ -94,6 +92,7 @@ interface ManageSidebarProps {
 
 export function ManageSidebar({ user, isOpen, onClose }: ManageSidebarProps) {
   const location = useLocation();
+  const theme = useTheme();
 
   if (!user) {
     return;
@@ -106,7 +105,7 @@ export function ManageSidebar({ user, isOpen, onClose }: ManageSidebarProps) {
       onBackdropClick={onClose}
       backgroundColor="white"
       style={{
-        zIndex: zIndex.menu,
+        zIndex: theme.zIndex.manageMenuSidebar,
       }}
     >
       <Menu

@@ -2,11 +2,9 @@ import { useState } from 'react';
 
 import { Outlet, Link } from 'react-router';
 
-import { Avatar, Box, Typography, TextField } from '@mui/material';
+import { Avatar, Box, Typography, TextField, useTheme } from '@mui/material';
 
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-
-import { zIndex } from '@/styles';
 
 import { useFetchCrags } from '@/hooks';
 
@@ -15,6 +13,8 @@ import { useShallow } from 'zustand/shallow';
 
 export default function ManageCrags() {
   const { crags } = useFetchCrags({ feeds: true });
+
+  const theme = useTheme();
 
   const [isCragsSidebarOpen, setIsCragsSidebarOpen] = useStore(
     useShallow((s) => [s.isCragsSidebarOpen, s.setIsCragsSidebarOpen])
@@ -34,7 +34,7 @@ export default function ManageCrags() {
   });
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', flex: 1 }}>
       <Sidebar
         breakPoint="lg"
         toggled={isCragsSidebarOpen}
@@ -43,7 +43,7 @@ export default function ManageCrags() {
           setIsCragsSidebarOpen(false);
         }}
         style={{
-          zIndex: zIndex.menu,
+          zIndex: theme.zIndex.manageCragsSidebar,
         }}
       >
         <Box sx={{ p: 2 }}>
@@ -68,7 +68,9 @@ export default function ManageCrags() {
                 }
                 component={<Link to={crag.id} />}
               >
-                <Typography>{`${crag.short_name} ${crag.feeds?.length ? `(${crag.feeds.length})` : ''}`}</Typography>
+                <Typography>{`${crag.short_name || crag.name} ${
+                  crag.feeds?.length ? `(${crag.feeds.length})` : ''
+                }`}</Typography>
               </MenuItem>
             );
           })}
