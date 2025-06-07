@@ -1,4 +1,4 @@
-import { useLoading, useModifySearch } from '@/hooks';
+import { useCrewCount, useLoading, useModifyCrewCount, useModifySearch } from '@/hooks';
 
 import { Paper, Box } from '@mui/material';
 
@@ -10,8 +10,10 @@ import { QUERY_STRING } from '@/constants';
 
 export function MapControlBar() {
   const { isMarkerLoading } = useLoading();
+  const { crewCount } = useCrewCount();
 
   const { updateIsSearchOpen } = useModifySearch();
+  const { updateCrewCount } = useModifyCrewCount();
 
   const [, setIsMenuOpen] = useQueryParam(QUERY_STRING.MENU, BooleanParam);
 
@@ -75,7 +77,12 @@ export function MapControlBar() {
             pointerEvents: 'auto',
           }}
         >
-          <Molecules.CrewCount />
+          <Molecules.CrewCount
+            defaultCount={crewCount}
+            onChange={(count) => {
+              updateCrewCount(count);
+            }}
+          />
         </Box>
       </Box>
     </Box>

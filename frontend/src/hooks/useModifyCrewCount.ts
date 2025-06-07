@@ -5,6 +5,13 @@ import { useShallow } from 'zustand/shallow';
 export function useModifyCrewCount() {
   const [setCrewCount] = useStore(useShallow((s) => [s.setCrewCount]));
 
+  const updateCrewCount = useCallback(
+    (crewCount: CrewCount) => {
+      setCrewCount(() => crewCount);
+    },
+    [setCrewCount]
+  );
+
   const rotateCrewCount = useCallback(() => {
     setCrewCount((prev) => {
       if (prev === 1) {
@@ -19,5 +26,6 @@ export function useModifyCrewCount() {
 
   return {
     rotateCrewCount,
+    updateCrewCount,
   };
 }
