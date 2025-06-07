@@ -56,7 +56,9 @@ export function CrewCount({ defaultCount, onChange }: { defaultCount: CrewCount;
           justifyContent: 'center',
           borderRadius: 0.5,
           width: '100%',
+          height: 18,
           overflow: 'hidden',
+          position: 'relative',
         })}
       >
         <AnimatePresence>
@@ -90,6 +92,8 @@ function CountText({ children }: React.PropsWithChildren) {
       transition={{ duration: 0.4, ease: 'easeIn' }}
       style={{
         width: '100%',
+        position: 'absolute',
+        inset: 0,
       }}
     >
       <Typography
