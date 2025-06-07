@@ -121,7 +121,7 @@ export function CragOpeningHoursField() {
             const { is_closed, open, close } = hours[day];
 
             return (
-              <Box sx={{ width: '100%' }}>
+              <Box sx={{ width: '100%' }} key={day}>
                 <Typography variant="subtitle1" gutterBottom>
                   {DAY_STR_TO_KOR[day]}
                 </Typography>

@@ -42,7 +42,7 @@ export default function ManageCrags() {
   });
 
   return (
-    <Box sx={{ display: 'flex', flex: 1 }}>
+    <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
       <Sidebar
         breakPoint="lg"
         toggled={isCragsSidebarOpen}

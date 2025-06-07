@@ -26,17 +26,20 @@ import { api } from '@/api/axios';
 import { cragFormContext } from '@/components/organisms/CragForm/index.context';
 
 import { DAYS_OF_KOR } from '@/constants/time';
+import { DAY_LABELS } from '@/constants';
+import { Molecules } from '@/components/molecules';
+import { DateService } from '@/utils/time';
 
 const discountTypeToKor: Record<GymDiscount['type'], string> = {
-  event: '[이벤트 할인]',
-  group: '[단체 할인]',
-  time: '[정기 할인]',
+  event: '이벤트 할인',
+  group: '단체 할인',
+  time: '정기 할인',
 };
 
 const discountTypes: GymDiscount['type'][] = ['event', 'group', 'time'];
 
 export function CragDiscountsField() {
-  const [discountType, setDiscountType] = useState<GymDiscount['type']>('group');
+  const [discountType, setDiscountType] = useState<GymDiscount['type']>('time');
 
   const schema = useMemo(() => {
     switch (discountType) {
@@ -174,52 +177,76 @@ function GroupFields() {
 }
 
 function TimeFields() {
-  const { register } = useFormContext<GymDiscount>();
+  const { watch, setValue } = useFormContext<GymDiscount>();
+
+  const weekday = watch('weekday');
+
+  const start = watch('time_start');
+  const end = watch('time_end');
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      <TextField
-        label="요일 (0=일요일 ~ 6=토요일)"
-        type="number"
-        {...register('weekday', { valueAsNumber: true })}
-        fullWidth
-      />
-      <TextField
-        label="시작 시간"
-        type="time"
-        slotProps={{ htmlInput: { step: 1 } }}
-        {...register('time_start')}
-        fullWidth
-      />
-      <TextField
-        label="종료 시간"
-        type="time"
-        slotProps={{ htmlInput: { step: 1 } }}
-        {...register('time_end')}
-        fullWidth
-      />
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+        }}
+      >
+        {Array(7)
+          .fill(null)
+          .map((_, i) => {
+            const isSelect = i === weekday;
+
+            return (
+              <Button
+                key={i}
+                disabled={isSelect}
+                variant={isSelect ? 'contained' : 'outlined'}
+                onClick={() => {
+                  setValue('weekday', i);
+                }}
+              >
+                {DAY_LABELS[i]}
+              </Button>
+            );
+          })}
+      </Box>
+
+      <Box sx={{ py: 2, px: 2.5 }}>
+        <Molecules.TimeRangeSlider
+          start={start ? DateService.timeStrToMinute(start) : 0}
+          end={end ? DateService.timeStrToMinute(end) : 1439}
+          onChange={(start, end) => {
+            setValue('time_start', DateService.minuteToTimeStr(start));
+            setValue('time_end', DateService.minuteToTimeStr(end));
+          }}
+        />
+      </Box>
     </Box>
   );
 }
 
 function EventFields() {
-  const { register } = useFormContext<GymDiscount>();
+  const { register, watch, setValue } = useFormContext<GymDiscount>();
+
+  const start = watch('time_start');
+  const end = watch('time_end');
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <TextField label="날짜" type="date" {...register('date')} fullWidth />
-      <TextField
-        label="시작 시간"
-        type="time"
-        slotProps={{ htmlInput: { step: 1 } }}
-        {...register('time_start')}
-        fullWidth
-      />
-      <TextField
-        label="종료 시간"
-        type="time"
-        slotProps={{ htmlInput: { step: 1 } }}
-        {...register('time_end')}
-        fullWidth
-      />
+
+      <Box sx={{ py: 2, px: 2.5 }}>
+        <Molecules.TimeRangeSlider
+          start={start ? DateService.timeStrToMinute(start) : 0}
+          end={end ? DateService.timeStrToMinute(end) : 1439}
+          onChange={(start, end) => {
+            setValue('time_start', DateService.minuteToTimeStr(start));
+            setValue('time_end', DateService.minuteToTimeStr(end));
+          }}
+        />
+      </Box>
     </Box>
   );
 }
