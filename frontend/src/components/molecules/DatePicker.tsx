@@ -126,20 +126,15 @@ export function DatePicker({
 
                 return (
                   <Picker.Item key={option} value={option}>
-                    {({ selected }) => {
-                      return (
-                        <Box sx={{ ...{ width: '100%', display: 'flex', px: 1 }, ...pickerKeyToSx[pickerKey] }}>
-                          <Typography
-                            sx={(theme) => ({
-                              color: isToday ? theme.palette.primary.main : theme.palette.text.primary,
-                              fontWeight: selected ? 'bold' : 'normal',
-                            })}
-                          >
-                            {`${option}${pickerKeyToSuffix[pickerKey]} ${day}`}
-                          </Typography>
-                        </Box>
-                      );
-                    }}
+                    <Box sx={{ ...{ width: '100%', display: 'flex', px: 1 }, ...pickerKeyToSx[pickerKey] }}>
+                      <Typography
+                        sx={(theme) => ({
+                          color: isToday ? theme.palette.primary.main : theme.palette.text.primary,
+                        })}
+                      >
+                        {`${option}${pickerKeyToSuffix[pickerKey]} ${day}`}
+                      </Typography>
+                    </Box>
                   </Picker.Item>
                 );
               })}
