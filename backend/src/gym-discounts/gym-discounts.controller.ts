@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -17,6 +18,11 @@ import { GymDiscountsService } from 'src/gym-discounts/gym-discounts.service';
 @Controller('gyms/:gymId/discounts')
 export class GymDiscountsController {
   constructor(private readonly gymDiscountsService: GymDiscountsService) {}
+
+  @Get()
+  async findAll(@Param('gymId') gymId: string) {
+    return await this.gymDiscountsService.findAll(gymId);
+  }
 
   @Roles('gym_admin', 'partner_admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -36,11 +42,7 @@ export class GymDiscountsController {
     @Param('gymDiscountId') gymDiscountId: string,
     @Body() dto: UpdateGymDiscountDto,
   ) {
-    return await this.gymDiscountsService.updateGymDiscount(
-      gymId,
-      gymDiscountId,
-      dto,
-    );
+    return await this.gymDiscountsService.updateGymDiscount(gymDiscountId, dto);
   }
 
   @Roles('gym_admin', 'partner_admin')

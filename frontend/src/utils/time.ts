@@ -50,6 +50,10 @@ export class DateService {
     return this._date.getHours() * 60 + this._date.getMinutes();
   }
 
+  static dateStrToDate(str: string) {
+    return parse(str, 'yyyy-MM-dd', new Date());
+  }
+
   static dateTimeStrToDate(str: string) {
     return parse(str, "yyyy-MM-dd'T'HH:mm:ss", new Date());
   }

@@ -6,6 +6,7 @@ import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview'
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
 import { DatePicker } from '@/components/molecules/DatePicker';
+import { DayPicker } from '@/components/molecules/DayPicker';
 import { EdgeIndicators } from '@/components/molecules/EdgeIndicators';
 import { ExpeditionDate } from '@/components/molecules/ExpeditionDate';
 import { FakeSearhInput } from '@/components/molecules/FakeSearhInput';
@@ -75,6 +76,8 @@ export const Molecules = {
   NonModal,
 
   TimeRangeSlider,
+
+  DayPicker,
 
   /**
    * 백오피스 전용

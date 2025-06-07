@@ -12,6 +12,10 @@ export class GymDiscountsService {
     private readonly gymDiscountRepo: Repository<GymDiscount>,
   ) {}
 
+  async findAll(gymId: string) {
+    return await this.gymDiscountRepo.find({ where: { gym: { id: gymId } } });
+  }
+
   async addGymDiscount(gymId: string, gymDiscountDto: CreateGymDiscountDto) {
     const gymDiscount = this.gymDiscountRepo.create({
       gym: { id: gymId },
@@ -22,7 +26,6 @@ export class GymDiscountsService {
   }
 
   async updateGymDiscount(
-    gymId: string,
     gymDiscountId: string,
     updateGymDiscountDto: UpdateGymDiscountDto,
   ) {
@@ -30,7 +33,7 @@ export class GymDiscountsService {
       where: { id: gymDiscountId },
     });
 
-    if (!gymDiscount || gymDiscount.gym.id !== gymId) {
+    if (!gymDiscount) {
       return new BadRequestException();
     }
 
