@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Outlet, Link } from 'react-router';
+import { Outlet, Link, useOutlet } from 'react-router';
 
 import { Avatar, Box, Typography, TextField, useTheme } from '@mui/material';
 
@@ -11,10 +11,14 @@ import { useFetchCrags } from '@/hooks';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
+import { Molecules } from '@/components/molecules';
+
 export default function ManageCrags() {
   const { crags } = useFetchCrags({ feeds: true });
 
   const theme = useTheme();
+
+  const outlet = useOutlet();
 
   const [isCragsSidebarOpen, setIsCragsSidebarOpen] = useStore(
     useShallow((s) => [s.isCragsSidebarOpen, s.setIsCragsSidebarOpen])
@@ -78,7 +82,17 @@ export default function ManageCrags() {
       </Sidebar>
 
       <Box sx={{ flex: 1, overflowY: 'scroll' }}>
-        <Outlet />
+        {outlet ? (
+          <Outlet />
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+            <Molecules.MenuTrigger
+              onClick={() => {
+                setIsCragsSidebarOpen(true);
+              }}
+            />
+          </Box>
+        )}
       </Box>
     </Box>
   );
