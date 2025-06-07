@@ -8,6 +8,10 @@ import { cragFormContext } from '@/components/organisms/CragForm/index.context';
 
 import { Molecules } from '@/components/molecules';
 
+import { useQueryParam, StringParam } from 'use-query-params';
+
+import { QUERY_STRING } from '@/constants';
+
 const { Map } = Molecules;
 
 export function CragPositionField() {
@@ -17,6 +21,8 @@ export function CragPositionField() {
 
   const [mapEnabled, setMapEnabled] = useState(false);
   const [locMarker, setLocMarker] = useState<naver.maps.Marker | null>(null);
+
+  const [, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
   const { changeCragLocationMutation } = useMutateCragLocation({
     onSettled() {
@@ -36,6 +42,9 @@ export function CragPositionField() {
     [boundary]
   );
 
+  /**
+   * 지도 위치 초기화
+   */
   useEffect(() => {
     if (!map) {
       return;
@@ -44,6 +53,9 @@ export function CragPositionField() {
     map.setCenter(new naver.maps.LatLng(crag.latitude, crag.longitude));
   }, [map, crag]);
 
+  /**
+   * 지도 활성/비활성화
+   */
   useEffect(() => {
     if (!map) {
       return;
@@ -61,10 +73,18 @@ export function CragPositionField() {
     });
   }, [map, mapEnabled]);
 
+  /**
+   * - 클릭 시 마커 선택 해제
+   * - 마커 위치 중앙 동기화
+   */
   useEffect(() => {
     if (!map) {
       return;
     }
+
+    const mapClickListener = map.addListener('click', () => {
+      setSelectCragId(null);
+    });
 
     const centerChangeListener = map.addListener('center_changed', () => {
       locMarker?.setPosition(map.getCenter());
@@ -72,8 +92,9 @@ export function CragPositionField() {
 
     return function cleanup() {
       map.removeListener(centerChangeListener);
+      map.removeListener(mapClickListener);
     };
-  }, [map, locMarker]);
+  }, [map, locMarker, setSelectCragId]);
 
   const handleMapLocChangeButtonClick = async () => {
     if (mapEnabled && map) {
