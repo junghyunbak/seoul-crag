@@ -24,4 +24,8 @@ export class FeedsService {
 
     return this.feedRepo.save(feed);
   }
+
+  async findAllByGym(gymId: string) {
+    return this.feedRepo.find({ where: { gym: { id: gymId } } });
+  }
 }

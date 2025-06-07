@@ -10,17 +10,21 @@ import Grid from '@mui/material/Grid';
 
 import { isAfter } from 'date-fns';
 
-import { DefaultError, useMutation } from '@tanstack/react-query';
+import { DefaultError, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 
 export function CragFeedField() {
   const { crag, revalidateCrag } = useContext(cragFormContext);
+
+  const queryClient = useQueryClient();
 
   const updateFeedReadStatus = useMutation<void, DefaultError, { feedId: string; isRead: boolean }>({
     mutationFn: async ({ feedId, isRead }) => {
       await api.patch(`/feeds/${feedId}`, {
         is_read: isRead,
       });
+
+      queryClient.invalidateQueries({ queryKey: ['crag', 'feed', crag.id] });
     },
   });
 

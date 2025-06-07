@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Outlet, Link, useOutlet } from 'react-router';
+import { Outlet, Link, useOutlet, useParams } from 'react-router';
 
 import { Avatar, Box, Typography, TextField, useTheme } from '@mui/material';
 
@@ -13,12 +13,16 @@ import { useShallow } from 'zustand/shallow';
 
 import { Molecules } from '@/components/molecules';
 
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api/axios';
+import { z } from 'zod';
+import { feedSchema } from '@/schemas/feed';
+
 export default function ManageCrags() {
   const { crags } = useFetchCrags({ feeds: true });
-
   const theme = useTheme();
-
   const outlet = useOutlet();
+  const { id } = useParams<{ id?: string }>();
 
   const [isCragsSidebarOpen, setIsCragsSidebarOpen] = useStore(
     useShallow((s) => [s.isCragsSidebarOpen, s.setIsCragsSidebarOpen])
@@ -60,7 +64,20 @@ export default function ManageCrags() {
           />
         </Box>
 
-        <Menu>
+        <Menu
+          menuItemStyles={{
+            button: ({ active }) => {
+              return {
+                color: '#b6c8d9',
+                backgroundColor: active ? '#13395e' : undefined,
+
+                '&:hover': {
+                  backgroundColor: '#13395e',
+                },
+              };
+            },
+          }}
+        >
           {sortedCrags.map((crag) => {
             return (
               <MenuItem
@@ -71,10 +88,11 @@ export default function ManageCrags() {
                   </Avatar>
                 }
                 component={<Link to={crag.id} />}
+                active={crag.id === id}
               >
-                <Typography>{`${crag.short_name || crag.name} ${
-                  crag.feeds?.length ? `(${crag.feeds.length})` : ''
-                }`}</Typography>
+                <Typography>
+                  {`${crag.short_name || crag.name}`} <CragFeedCount crag={crag} />
+                </Typography>
               </MenuItem>
             );
           })}
@@ -96,4 +114,27 @@ export default function ManageCrags() {
       </Box>
     </Box>
   );
+}
+
+// [ ]: 컴포넌트 분리
+function CragFeedCount({ crag }: { crag: Crag }) {
+  const { data: feeds } = useQuery({
+    queryKey: ['crag', 'feed', crag.id],
+    queryFn: async () => {
+      const { data } = await api.get(`/feeds/${crag.id}`);
+
+      const feeds = z.array(feedSchema).parse(data);
+
+      return feeds;
+    },
+    initialData: crag.feeds,
+  });
+
+  const feedCount = feeds?.filter((feed) => !feed.is_read)?.length || 0;
+
+  if (!feedCount) {
+    return null;
+  }
+
+  return <Typography component="span">{`(${feedCount})`}</Typography>;
 }
