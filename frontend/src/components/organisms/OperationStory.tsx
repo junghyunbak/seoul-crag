@@ -66,7 +66,7 @@ interface StoryOperationPageProps {
 }
 
 export function StoryOperationPage({ crag, date }: StoryOperationPageProps) {
-  const { open, close, isReduced, isTemporaryClosed, isOperate } = useFilter(crag, date);
+  const { open, close, isReduced, isTemporaryClosed, isOperate } = useFilter(crag, { date });
 
   return (
     <Box

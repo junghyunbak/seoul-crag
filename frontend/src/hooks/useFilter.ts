@@ -18,13 +18,15 @@ import { useTag, useSearch } from '@/hooks';
  * 요일별 운영 여부  (timeStr, HH:mm:ss)
  * 날짜           (date)
  */
-export function useFilter(crag?: Crag, date = new Date()) {
+export function useFilter(crag?: Crag, opts: { date?: Date; crewCount?: CrewCount } = {}) {
+  const { date = new Date(), crewCount = 1 } = opts;
+
   const [filter] = useStore(useShallow((s) => [s.filter]));
   const { selectTagId } = useTag();
   const { searchKeyword } = useSearch();
 
   const getCragStats = useCallback(
-    (crag: Crag | undefined, date: Date, searchKeyword = '') => {
+    (crag: Crag | undefined, date: Date, searchKeyword = '', crewCount: CrewCount = 1) => {
       let isOpen = true;
       let isFiltered = true;
 
@@ -127,7 +129,18 @@ export function useFilter(crag?: Crag, date = new Date()) {
       for (const gymDiscount of gymDiscounts) {
         switch (gymDiscount.type) {
           case 'group': {
-            appliedGroupDiscount = gymDiscount;
+            if (gymDiscount.min_group_size > crewCount) {
+              break;
+            }
+
+            if (!appliedGroupDiscount) {
+              appliedGroupDiscount = gymDiscount;
+              break;
+            }
+
+            if (appliedGroupDiscount.min_group_size < gymDiscount.min_group_size) {
+              appliedGroupDiscount = gymDiscount;
+            }
 
             break;
           }
@@ -231,7 +244,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
       }
 
       if (filter.isSale) {
-        isFiltered &&= appliedDailyDiscount !== null;
+        isFiltered &&= appliedDailyDiscount !== null || appliedGroupDiscount !== null;
       }
 
       if (searchKeyword) {
@@ -280,7 +293,7 @@ export function useFilter(crag?: Crag, date = new Date()) {
     [filter, selectTagId]
   );
 
-  const stats = getCragStats(crag, date, searchKeyword);
+  const stats = getCragStats(crag, date, searchKeyword, crewCount);
 
   return {
     filter,

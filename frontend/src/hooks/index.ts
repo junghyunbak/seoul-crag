@@ -13,6 +13,7 @@ export * from './useNotice';
 export * from './useCafe';
 export * from './useLoading';
 export * from './useProfile';
+export * from './useCrewCount';
 
 export * from './useCrag';
 
@@ -29,6 +30,7 @@ export * from './useModifyCafe';
 export * from './useModifyLoading';
 export * from './useModifyProfile';
 export * from './useModifyTag';
+export * from './useModifyCrewCount';
 
 /**
  * fetch

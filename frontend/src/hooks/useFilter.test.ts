@@ -101,7 +101,9 @@ describe('[운영 상태]', () => {
                 openingHours: [closeOpeningHour],
                 schedules: [reduceSchedule, closeSchedule],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -118,7 +120,9 @@ describe('[운영 상태]', () => {
                 openingHours: [closeOpeningHour],
                 schedules: [reduceSchedule],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -137,7 +141,9 @@ describe('[운영 상태]', () => {
                 openingHours: [],
                 schedules: [reduceSchedule, closeSchedule],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -154,7 +160,9 @@ describe('[운영 상태]', () => {
                 openingHours: [],
                 schedules: [reduceSchedule],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -175,7 +183,9 @@ describe('[운영 상태]', () => {
                 openingHours: [closeOpeningHour],
                 schedules: [closeSchedule],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -192,7 +202,9 @@ describe('[운영 상태]', () => {
                 openingHours: [closeOpeningHour],
                 schedules: [],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -211,7 +223,9 @@ describe('[운영 상태]', () => {
                 openingHours: [],
                 schedules: [closeSchedule],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -228,7 +242,9 @@ describe('[운영 상태]', () => {
                 openingHours: [],
                 schedules: [],
               },
-              today.date
+              {
+                date: today.date,
+              }
             )
           );
 
@@ -253,7 +269,9 @@ describe('[오픈 상태]', () => {
             },
           ],
         },
-        today.date
+        {
+          date: today.date,
+        }
       )
     );
 
@@ -273,7 +291,9 @@ describe('[오픈 상태]', () => {
             },
           ],
         },
-        today.date
+        {
+          date: today.date,
+        }
       )
     );
 
@@ -289,7 +309,9 @@ describe('[오픈 상태]', () => {
             openingHours: [closeOpeningHour],
             schedules: [],
           },
-          today.date
+          {
+            date: today.date,
+          }
         );
 
         return { isOff };
@@ -307,7 +329,9 @@ describe('[오픈 상태]', () => {
               openingHours: [closeOpeningHour],
               schedules: [reduceSchedule],
             },
-            today.date
+            {
+              date: today.date,
+            }
           );
 
           return { isOff };
@@ -327,7 +351,9 @@ describe('[오픈 상태]', () => {
             openingHours: [],
             schedules: [closeSchedule],
           },
-          today.date
+          {
+            date: today.date,
+          }
         );
 
         return { isOff };
@@ -345,7 +371,9 @@ describe('[오픈 상태]', () => {
               openingHours: [],
               schedules: [closeSchedule, reduceSchedule],
             },
-            today.date
+            {
+              date: today.date,
+            }
           );
 
           return { isOff };
@@ -365,7 +393,9 @@ describe('[오픈 상태]', () => {
             openingHours: [closeOpeningHour],
             schedules: [closeSchedule],
           },
-          today.date
+          {
+            date: today.date,
+          }
         );
 
         return { isOff };
@@ -402,7 +432,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -425,7 +457,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -450,7 +484,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -473,7 +509,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -500,7 +538,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -523,7 +563,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -548,7 +590,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 
@@ -571,7 +615,9 @@ describe('[필터 상태]', () => {
                 },
               ],
             },
-            today.date
+            {
+              date: today.date,
+            }
           )
         );
 

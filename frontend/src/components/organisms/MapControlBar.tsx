@@ -34,9 +34,13 @@ export function MapControlBar() {
           width: '100%',
           maxWidth: 'sm',
           p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: 2,
         }}
       >
-        <Box sx={{ pointerEvents: 'auto' }}>
+        <Box sx={{ pointerEvents: 'auto', width: '100%' }}>
           <Paper sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
               <Box
@@ -64,6 +68,14 @@ export function MapControlBar() {
               <Molecules.ExpeditionDate />
             </Box>
           </Paper>
+        </Box>
+
+        <Box
+          sx={{
+            pointerEvents: 'auto',
+          }}
+        >
+          <Molecules.CrewCount />
         </Box>
       </Box>
     </Box>

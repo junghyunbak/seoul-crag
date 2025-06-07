@@ -304,7 +304,23 @@ function DiscountListItem({ gymDiscount }: { gymDiscount: GymDiscount }) {
               {locked ? (
                 <Atoms.Text.Body>{`>= ${gymDiscount.min_group_size}명`}</Atoms.Text.Body>
               ) : (
-                <Molecules.AutoSaveTextField value={gymDiscount.min_group_size.toString()} onSave={async () => {}} />
+                <Molecules.AutoSaveTextField
+                  value={gymDiscount.min_group_size.toString()}
+                  onSave={async (value) => {
+                    const groupSize = +value;
+
+                    if (isNaN(groupSize)) {
+                      throw new Error('숫자만 입력 가능합니다.');
+                    }
+
+                    const nextDiscount: z.infer<typeof GroupDiscountSchema> = {
+                      ...gymDiscount,
+                      min_group_size: groupSize,
+                    };
+
+                    updateGymDiscountMutation.mutate(nextDiscount);
+                  }}
+                />
               )}
             </Box>
           );
@@ -431,9 +447,11 @@ function DiscountListItem({ gymDiscount }: { gymDiscount: GymDiscount }) {
             onSave={async (value) => {
               const price = +value;
 
-              if (!isNaN(price)) {
-                updateGymDiscountMutation.mutate({ ...gymDiscount, price });
+              if (isNaN(price)) {
+                throw new Error('숫자만 입력 가능합니다.');
               }
+
+              updateGymDiscountMutation.mutate({ ...gymDiscount, price });
             }}
           />
         )}

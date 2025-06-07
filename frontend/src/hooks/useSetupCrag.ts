@@ -1,3 +1,4 @@
+import { useCrewCount } from '@/hooks/useCrewCount';
 import { useExp } from '@/hooks/useExp';
 import { useFetchCrags } from '@/hooks/useFetchCrag';
 import { useFilter } from '@/hooks/useFilter';
@@ -9,6 +10,7 @@ import { useShallow } from 'zustand/shallow';
 export function useSetupCrag() {
   const { exp } = useExp();
   const { searchKeyword } = useSearch();
+  const { crewCount } = useCrewCount();
   const { getCragStats } = useFilter();
 
   const { crags } = useFetchCrags({});
@@ -21,11 +23,11 @@ export function useSetupCrag() {
     }
 
     const filteredCrags = crags.filter((crag) => {
-      const { isFiltered } = getCragStats(crag, exp.date, searchKeyword);
+      const { isFiltered } = getCragStats(crag, exp.date, searchKeyword, crewCount);
 
       return isFiltered;
     });
 
     setCrags(filteredCrags);
-  }, [crags, setCrags, exp, searchKeyword, getCragStats]);
+  }, [crags, setCrags, exp, searchKeyword, getCragStats, crewCount]);
 }

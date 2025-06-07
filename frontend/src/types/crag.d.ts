@@ -16,4 +16,6 @@ declare global {
   };
 
   type Crag = z.infer<typeof cragScheme>;
+
+  type CrewCount = 1 | 5 | 10;
 }

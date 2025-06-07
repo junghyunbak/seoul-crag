@@ -5,6 +5,7 @@ import { CragIcon } from '@/components/molecules/CragIcon';
 import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview';
 import { CragList } from '@/components/molecules/CragList';
 import { CragListItem } from '@/components/molecules/CragListItem';
+import { CrewCount } from '@/components/molecules/CrewCount';
 import { DatePicker } from '@/components/molecules/DatePicker';
 import { DayPicker } from '@/components/molecules/DayPicker';
 import { EdgeIndicators } from '@/components/molecules/EdgeIndicators';
@@ -78,6 +79,8 @@ export const Molecules = {
   TimeRangeSlider,
 
   DayPicker,
+
+  CrewCount,
 
   /**
    * 백오피스 전용

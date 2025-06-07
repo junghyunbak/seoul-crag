@@ -55,10 +55,9 @@ interface OpeningInfoProps {
 }
 
 function OpeningInfo({ crag, date }: OpeningInfoProps) {
-  const { open, close, originOpen, originClose, isReduced, isTemporaryClosed, current, isOperate } = useFilter(
-    crag,
-    date
-  );
+  const { open, close, originOpen, originClose, isReduced, isTemporaryClosed, current, isOperate } = useFilter(crag, {
+    date,
+  });
   const { exp } = useExp();
 
   const isToday = exp.dateStr === current.dateStr;

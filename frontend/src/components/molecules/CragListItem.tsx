@@ -14,7 +14,7 @@ interface CragListItemProps {
 
 export function CragListItem({ crag }: CragListItemProps) {
   const { exp } = useExp();
-  const { isOff, remainSetupDay, elapseSetupDay } = useFilter(crag, exp.date);
+  const { isOff, remainSetupDay, elapseSetupDay } = useFilter(crag, { date: exp.date });
   const { map, gpsLatLng } = useMap();
   const theme = useTheme();
 

@@ -8,6 +8,9 @@ type FilterSliceType = {
   updateSelectTag: (tag: Tag) => void;
   removeSelectTag: (tag: Tag) => void;
 
+  crewCount: CrewCount;
+  setCrewCount: (fn: (count: CrewCount) => CrewCount) => void;
+
   /**
    * dateTime
    */
@@ -74,5 +77,10 @@ export const createFilterSlice: StateCreator<FilterSliceType> = (set, get): Filt
   isFilterBottomSheetOpen: false,
   setIsFilterBottonSheetOpen(isOpen) {
     set(() => ({ isFilterBottomSheetOpen: isOpen }));
+  },
+
+  crewCount: 1,
+  setCrewCount(fn) {
+    set((s) => ({ crewCount: fn(s.crewCount) }));
   },
 });

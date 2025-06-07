@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-import { useExp, useFilter } from '@/hooks';
+import { useExp, useFilter, useCrewCount } from '@/hooks';
 
 import { useQueryParam, StringParam } from 'use-query-params';
 
@@ -31,13 +31,19 @@ interface CragMarkerProps {
 
 export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProps) {
   const { map } = useContext(mapContext);
+
   const [marker, setMarker] = useState<MyMarker | null>(null);
+
   const markerRef = useRef<HTMLDivElement>(null);
 
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
 
+  const { crewCount } = useCrewCount();
   const { exp } = useExp();
-  const { isFiltered, isOff, showerImages, appliedDailyDiscount } = useFilter(crag, exp.date);
+  const { isFiltered, isOff, showerImages, appliedDailyDiscount, appliedGroupDiscount } = useFilter(crag, {
+    date: exp.date,
+    crewCount,
+  });
 
   const isSelect = crag.id === selectCragId;
 
@@ -133,6 +139,20 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
             </Box>
           )}
         </Box>
+      );
+    }
+
+    if (appliedGroupDiscount) {
+      const { price } = appliedGroupDiscount;
+
+      return (
+        <Atoms.Text.Halo
+          sx={(theme) => ({
+            color: theme.palette.info.dark,
+          })}
+        >
+          {price.toLocaleString()}
+        </Atoms.Text.Halo>
       );
     }
 
