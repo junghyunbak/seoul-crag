@@ -5,8 +5,6 @@ import Edit from '@mui/icons-material/Edit';
 
 import { urlService } from '@/utils';
 
-import { QUERY_STRING } from '@/constants';
-
 import { CragDetailContext } from '../index.context';
 
 export function CragDetailEditButton() {
