@@ -16,6 +16,7 @@ import { LogoText } from '@/components/molecules/LogoText';
 import { Map } from '@/components/molecules/Map';
 import { MapOptions } from '@/components/molecules/MapOptions';
 import { MenuTrigger } from '@/components/molecules/MenuTrigger';
+import { NonModal } from '@/components/molecules/NonModal';
 import { NoticeList } from '@/components/molecules/NoticeList';
 import { NoticeListItem } from '@/components/molecules/NoticeListItem';
 import { NoticeMarquee } from '@/components/molecules/NoticeMarquee';
@@ -69,6 +70,8 @@ export const Molecules = {
   EdgeIndicators,
 
   LogoText,
+
+  NonModal,
 
   /**
    * 백오피스 전용

@@ -18,8 +18,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import { NonModal } from '@/components/NonModal';
-
 import { useFetchAllRoles, useFetchUserRoles, useFetchUsers, useMutateGrantRole, useMutateRevokeRole } from '@/hooks';
 
 import { SwitchBaseProps } from 'node_modules/@mui/material/esm/internal/SwitchBase';
@@ -27,6 +25,7 @@ import { SwitchBaseProps } from 'node_modules/@mui/material/esm/internal/SwitchB
 import { roleToKor } from '@/utils';
 
 import dayjs from 'dayjs';
+import { Molecules } from '@/components/molecules';
 
 export default function ManageUsers() {
   const { users } = useFetchUsers();
@@ -144,7 +143,7 @@ function RoleController({ initialRoles, userId }: RoleControllerProps) {
         </Stack>
       </Stack>
 
-      <NonModal
+      <Molecules.NonModal
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
@@ -165,7 +164,7 @@ function RoleController({ initialRoles, userId }: RoleControllerProps) {
               );
             })}
         </List>
-      </NonModal>
+      </Molecules.NonModal>
     </Box>
   );
 }
