@@ -103,6 +103,7 @@ export function FilterButtonSheet() {
 
             <Molecules.DatePicker
               pickerValue={pickerValue}
+              currentDate={currentDate}
               onChange={(value) => {
                 setPickerValue(value);
               }}

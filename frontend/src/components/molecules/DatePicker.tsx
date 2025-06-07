@@ -51,11 +51,13 @@ export function DatePicker({
   onChange,
   isRemoveActive = false,
   onRemove,
+  currentDate,
 }: {
   pickerValue: DatePickerValue;
   onChange(value: DatePickerValue): void;
   isRemoveActive?: boolean;
   onRemove(): void;
+  currentDate: Date;
 }) {
   const { year, month } = pickerValue;
 
@@ -110,6 +112,18 @@ export function DatePicker({
                   return `(${DAY_LABELS[new Date(year, month - 1, option).getDay()]})`;
                 })();
 
+                const isToday = (() => {
+                  if (pickerKey === 'month') {
+                    return option === currentDate.getMonth() + 1;
+                  }
+
+                  if (pickerKey === 'date') {
+                    return option === currentDate.getDate();
+                  }
+
+                  return false;
+                })();
+
                 return (
                   <Picker.Item key={option} value={option}>
                     {({ selected }) => {
@@ -117,7 +131,8 @@ export function DatePicker({
                         <Box sx={{ ...{ width: '100%', display: 'flex', px: 1 }, ...pickerKeyToSx[pickerKey] }}>
                           <Typography
                             sx={(theme) => ({
-                              color: selected ? theme.palette.text.primary : theme.palette.text.secondary,
+                              color: isToday ? theme.palette.primary.main : theme.palette.text.primary,
+                              fontWeight: selected ? 'bold' : 'normal',
                             })}
                           >
                             {`${option}${pickerKeyToSuffix[pickerKey]} ${day}`}
