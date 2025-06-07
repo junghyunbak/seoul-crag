@@ -66,9 +66,9 @@ export function CrewCount({ defaultCount, onChange }: { defaultCount: CrewCount;
             if (count === 1) {
               return <CountText key="A">개인</CountText>;
             } else if (count === 5) {
-              return <CountText key="B">{'≥' + count}</CountText>;
+              return <CountText key="B">{'≥ ' + count}</CountText>;
             } else if (count === 10) {
-              return <CountText key="c">{'≥' + count}</CountText>;
+              return <CountText key="c">{'≥ ' + count}</CountText>;
             }
           })()}
         </AnimatePresence>
@@ -94,6 +94,9 @@ function CountText({ children }: React.PropsWithChildren) {
         width: '100%',
         position: 'absolute',
         inset: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'centerl',
       }}
     >
       <Typography
