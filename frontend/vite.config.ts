@@ -35,6 +35,9 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2,woff,json}'],
+        skipWaiting: true, // 🔥 SW 설치되자마자 활성화
+        clientsClaim: true, // 🔥 모든 탭에서 바로 사용하게
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//, /^\/uploads\//],
       },
