@@ -37,6 +37,7 @@ export function GpsEdgeIndicators() {
           gymTags: [],
           gymDiscounts: [],
           price: 0,
+          is_shut_down: false,
         },
       ]}
     />

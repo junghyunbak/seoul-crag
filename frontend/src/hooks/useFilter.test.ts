@@ -25,6 +25,7 @@ const mockCrag: Crag = {
   gymTags: [],
   gymDiscounts: [],
   price: 0,
+  is_shut_down: false,
 };
 
 const dateStr = '2025-05-08';
