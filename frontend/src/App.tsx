@@ -15,9 +15,19 @@ function App() {
     const updateSW = registerSW({
       onNeedRefresh() {
         fireConfirm('새 버전이 배포되었습니다. 새로고침할까요?', () => {
-          updateSW(true); // skipWaiting() 실행 → 새 SW 활성화
+          let refreshing = false;
 
-          window.location.reload(); // 페이지 리로드
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) {
+              return;
+            }
+
+            refreshing = true;
+
+            window.location.reload();
+          });
+
+          updateSW(true);
         });
       },
       onOfflineReady() {
