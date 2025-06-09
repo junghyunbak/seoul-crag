@@ -20,6 +20,7 @@ import { CragContributesField } from './CragContributesField';
 import { CragFeedField } from './CragFeedField';
 import { CragPriceField } from '@/components/organisms/CragForm/CragPriceField';
 import { CragDiscountsField } from '@/components/organisms/CragForm/CragDiscountsField';
+import { CragShutDownField } from '@/components/organisms/CragForm/CragShutDownField';
 import { Molecules } from '@/components/molecules';
 
 import { useStore } from '@/store';
@@ -193,6 +194,14 @@ function CragFormDefaultInfo() {
          */}
         <Grid size={{ xs: 12, sm: 3 }}>
           <CragOuterWallField />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 9 }} />
+
+        {/**
+         * 폐업여부
+         */}
+        <Grid size={{ xs: 12, sm: 3 }}>
+          <CragShutDownField />
         </Grid>
         <Grid size={{ xs: 12, sm: 9 }} />
 

@@ -217,6 +217,10 @@ export function useFilter(crag?: Crag, opts: { date?: Date; crewCount?: CrewCoun
         isOpen &&= !isRegularyClosed;
       }
 
+      if (crag?.is_shut_down) {
+        isFiltered &&= !crag.is_shut_down;
+      }
+
       if (filter.isShower) {
         isFiltered &&= hasShower;
       }

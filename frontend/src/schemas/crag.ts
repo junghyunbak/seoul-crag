@@ -23,6 +23,7 @@ export const InternalCragSchema = z.object({
   is_outer_wall: z.boolean(),
   price: z.number(),
   opened_at: z.union([dateScheme, z.null()]).optional(),
+  is_shut_down: z.boolean(),
 
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),

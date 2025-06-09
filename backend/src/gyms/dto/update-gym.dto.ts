@@ -36,4 +36,8 @@ export class UpdateGymDto extends PartialType(CreateGymDto) {
   @IsOptional()
   @IsNumber()
   price: number;
+
+  @IsOptional()
+  @IsBoolean()
+  is_shut_down: boolean;
 }

@@ -8,7 +8,8 @@ export function useMutationCrag() {
   const patchCragMutation = useMutation<
     void,
     DefaultError,
-    Partial<MyOmit<z.infer<typeof InternalCragSchema>, 'created_at' | 'updated_at'>>
+    Pick<z.infer<typeof InternalCragSchema>, 'id'> &
+      Partial<MyOmit<z.infer<typeof InternalCragSchema>, 'created_at' | 'updated_at' | 'id'>>
   >({
     mutationFn: async (crag) => {
       const { id, ...other } = crag;

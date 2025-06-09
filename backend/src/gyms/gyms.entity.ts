@@ -50,6 +50,9 @@ export class Gym {
   @Column({ type: 'boolean', default: false })
   is_outer_wall: boolean;
 
+  @Column({ type: 'boolean', default: false })
+  is_shut_down: boolean;
+
   @Column({ type: 'text', default: '' })
   shower_url: string;
 

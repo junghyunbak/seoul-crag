@@ -160,6 +160,7 @@ export class GymsService {
         is_outer_wall: raw.gym_is_outer_wall,
         opened_at: raw.gym_opened_at,
         price: raw.gym_price,
+        is_shut_down: raw.gym_is_shut_down,
 
         created_at: raw.gym_created_at,
         updated_at: raw.gym_updated_at,
@@ -206,6 +207,7 @@ export class GymsService {
       created_at: rawGym.gym_created_at,
       updated_at: rawGym.gym_updated_at,
       price: rawGym.gym_price,
+      is_shut_down: rawGym.gym_is_shut_down,
 
       images: rawGym.images || [],
       schedules: rawGym.schedules || [],
