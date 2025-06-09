@@ -11,7 +11,6 @@ export default defineConfig({
     svgr(),
     visualizer({ open: true }),
     VitePWA({
-      registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'masked-icon.png'],
       manifest: {
         name: '서울암장',
@@ -33,13 +32,12 @@ export default defineConfig({
           },
         ],
       },
+      registerType: 'prompt',
       workbox: {
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2,woff,json}'],
-        skipWaiting: true, // 🔥 SW 설치되자마자 활성화
-        clientsClaim: true, // 🔥 모든 탭에서 바로 사용하게
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//, /^\/uploads\//],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2,woff,json}'],
       },
       devOptions: {
         enabled: true, // 개발 서버에서도 PWA 테스트 가능
