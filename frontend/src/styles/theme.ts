@@ -16,6 +16,8 @@ export const theme = createTheme({
     borderRadius: 8,
   },
   zIndex: {
+    updateToast: 100000,
+
     sidebar: 10002,
     manageCragsSidebar: 10003,
     manageMenuSidebar: 10004,
@@ -30,6 +32,8 @@ export const theme = createTheme({
 
 declare module '@mui/material/styles' {
   interface ZIndex {
+    updateToast: number;
+
     sidebar: number;
     manageMenuSidebar: number;
     manageCragsSidebar: number;

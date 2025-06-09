@@ -225,7 +225,7 @@ export default function Main() {
         <Map.Marker.Gps />
       </Map>
 
-      <Molecules.ConfirmModal />
+      <Molecules.ConfirmToast />
 
       <Organisms.CragEdgeIndicators crags={crags} />
       <Organisms.GpsEdgeIndicators />

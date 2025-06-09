@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import { useFetchMe } from '@/hooks';
 
 import { Organisms } from '@/components/organisms';
+import { Molecules } from '@/components/molecules';
 
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
@@ -50,6 +51,8 @@ export default function Manage() {
       <Organisms.ShowerStory />
       <Organisms.ProfileBottomSheet />
       <Organisms.CragDetail />
+
+      <Molecules.ConfirmToast />
     </Box>
   );
 }

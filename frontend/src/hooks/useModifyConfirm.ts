@@ -12,5 +12,9 @@ export function useModifyConfirm() {
     [setConfirmContext]
   );
 
-  return { fireConfirm };
+  const closeConfirm = useCallback(() => {
+    setConfirmContext(null);
+  }, [setConfirmContext]);
+
+  return { fireConfirm, closeConfirm };
 }
