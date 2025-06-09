@@ -10,6 +10,7 @@ import { createLoadingSlice } from '@/store/slices/loading';
 import { createUserSlice } from './slices/user';
 import { createCragSlice } from '@/store/slices/crag';
 import { createManageSlice } from '@/store/slices/manage';
+import { createConfirmSlice } from '@/store/slices/confirm';
 
 type StoreState = ReturnType<typeof createMapSlice> &
   ReturnType<typeof createFilterSlice> &
@@ -19,11 +20,13 @@ type StoreState = ReturnType<typeof createMapSlice> &
   ReturnType<typeof createLoadingSlice> &
   ReturnType<typeof createUserSlice> &
   ReturnType<typeof createCragSlice> &
-  ReturnType<typeof createManageSlice>;
+  ReturnType<typeof createManageSlice> &
+  ReturnType<typeof createConfirmSlice>;
 
 export const useStore = create<StoreState>()(
   persist(
     (set, get, store) => ({
+      ...createConfirmSlice(set, get, store),
       ...createManageSlice(set, get, store),
       ...createCragSlice(set, get, store),
       ...createUserSlice(set, get, store),

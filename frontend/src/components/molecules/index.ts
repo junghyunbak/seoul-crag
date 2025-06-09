@@ -1,6 +1,7 @@
 import { AutoSaveTextField } from '@/components/molecules/AutoSaveTextField';
 import { Calendar } from '@/components/molecules/Calendar';
 import { CalendarMonthController } from '@/components/molecules/CalendarMonthController';
+import { ConfirmModal } from '@/components/molecules/ConfirmModal';
 import { CragIcon } from '@/components/molecules/CragIcon';
 import { CragInteriorPreview } from '@/components/molecules/CragInteriorPreview';
 import { CragList } from '@/components/molecules/CragList';
@@ -81,6 +82,8 @@ export const Molecules = {
   DayPicker,
 
   CrewCount,
+
+  ConfirmModal,
 
   /**
    * 백오피스 전용
