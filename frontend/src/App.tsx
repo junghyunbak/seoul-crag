@@ -26,7 +26,7 @@ function App() {
     });
 
     return () => updateSW?.unregister?.();
-  }, []);
+  }, [fireConfirm]);
 
   return <RouterProvider router={router} />;
 }
