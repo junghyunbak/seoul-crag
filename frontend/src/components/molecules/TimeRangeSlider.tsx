@@ -1,7 +1,7 @@
 import { Slider } from '@mui/material';
 
 import { DateService } from '@/utils/time';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function TimeRangeSlider({
   start,
@@ -16,6 +16,11 @@ export function TimeRangeSlider({
 }) {
   const [timeStart, setTimeStart] = useState(start);
   const [timeEnd, setTimeEnd] = useState(end);
+
+  useEffect(() => {
+    setTimeStart(start);
+    setTimeEnd(end);
+  }, [start, end]);
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
