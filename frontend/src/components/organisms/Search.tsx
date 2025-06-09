@@ -1,16 +1,39 @@
-import { Box, Divider, Grow, Modal } from '@mui/material';
+import { useRef, useState } from 'react';
+
+import { Box, Divider, Grow, Modal, CircularProgress } from '@mui/material';
 
 import { useCrag, useModifySearch, useSearch } from '@/hooks';
+
 import { Atoms } from '@/components/atoms';
 import { Molecules } from '@/components/molecules';
 import { SortOptionSelector } from '@/components/molecules/SortOptionSelector';
 
 export function Search() {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const { searchKeyword, isSearchOpen } = useSearch();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [keyword, setKeyword] = useState(searchKeyword);
 
   const { crags } = useCrag();
 
   const { updateIsSearchOpen, updateSearchKeyword } = useModifySearch();
+
+  const handleSearchKeywordChange = (value: string) => {
+    setKeyword(value);
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    setIsLoading(true);
+
+    timerRef.current = setTimeout(() => {
+      updateSearchKeyword(value);
+      setIsLoading(false);
+    }, 500);
+  };
 
   const handleClose = () => {
     updateIsSearchOpen(false);
@@ -43,8 +66,8 @@ export function Search() {
             <Atoms.Button.Back onClick={handleClose} />
             <Box sx={{ flex: 1 }}>
               <Molecules.SearchInputWithRemove
-                value={searchKeyword}
-                onChange={(value) => updateSearchKeyword(value)}
+                value={keyword}
+                onChange={handleSearchKeywordChange}
                 onRemove={() => updateSearchKeyword('')}
                 placeholder="클라이밍장 검색"
               />
@@ -78,7 +101,13 @@ export function Search() {
           {/**
            * 암장 리스트
            */}
-          <Molecules.CragList />
+          {isLoading ? (
+            <Box sx={{ p: 2 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Molecules.CragList />
+          )}
         </Box>
       </Grow>
     </Modal>
