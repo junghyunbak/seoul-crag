@@ -39,11 +39,13 @@ export function ConfirmToast() {
                 display: 'flex',
                 flexDirection: 'column',
                 p: 2,
+                pb: 1,
+                gap: 1,
               }}
             >
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <InfoOutlineIcon color="primary" />
-                <Typography>업데이트가 있습니다. 새로고침 하시겠습니까?</Typography>
+                <Typography>{confirmContext.message}</Typography>
               </Box>
 
               <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
