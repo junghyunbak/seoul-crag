@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 import { useExp, useFilter, useCrewCount } from '@/hooks';
 
@@ -45,6 +45,8 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     crewCount,
   });
 
+  const theme = useTheme();
+
   const isSelect = crag.id === selectCragId;
 
   const activeMarkerWidth = SIZE.CRAG_MARKER_WIDTH;
@@ -84,49 +86,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
           </Atoms.Text.Halo>
 
           {isSelect && (
-            <Box
-              sx={(theme) => ({
-                position: 'absolute',
-                top: '100%',
-                px: 1,
-                py: 0.5,
-                mt: 1,
-                background: theme.palette.warning.main,
-                borderRadius: 1,
-
-                border: '1px solid white',
-              })}
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  left: '50%',
-                  top: 0,
-                  transform: 'translate(-50%, -100%)',
-                  display: 'flex',
-                  color: 'white',
-                }}
-              >
-                <svg width="18" height="10" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                  <path d="M8 0L16 8H0L8 0Z" />
-                </svg>
-              </Box>
-
-              <Box
-                sx={(theme) => ({
-                  position: 'absolute',
-                  left: '50%',
-                  top: 0,
-                  transform: 'translate(-50%, -100%)',
-                  display: 'flex',
-                  color: theme.palette.warning.main,
-                })}
-              >
-                <svg width="16" height="8" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                  <path d="M8 0L16 8H0L8 0Z" />
-                </svg>
-              </Box>
-
+            <Balloon bgColor={theme.palette.warning.main}>
               <Typography
                 sx={(theme) => ({ color: theme.palette.common.white, textShadow: 'none', textAlign: 'center' })}
               >
@@ -136,23 +96,40 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
                   locale: ko,
                 })})`}
               </Typography>
-            </Box>
+            </Balloon>
           )}
         </Box>
       );
     }
 
     if (appliedGroupDiscount) {
-      const { price } = appliedGroupDiscount;
+      const { price, min_group_size } = appliedGroupDiscount;
 
       return (
-        <Atoms.Text.Halo
-          sx={(theme) => ({
-            color: theme.palette.info.dark,
-          })}
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
         >
-          {price.toLocaleString()}
-        </Atoms.Text.Halo>
+          <Atoms.Text.Halo
+            sx={(theme) => ({
+              color: theme.palette.info.dark,
+            })}
+          >
+            {price.toLocaleString()}
+          </Atoms.Text.Halo>
+
+          <Balloon bgColor={theme.palette.info.dark}>
+            <Typography
+              sx={{
+                textAlign: 'center',
+                color: theme.palette.common.white,
+              }}
+            >{`${min_group_size}인 이상 단체 할인`}</Typography>
+          </Balloon>
+        </Box>
       );
     }
 
@@ -233,6 +210,56 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
 
         <MarkerZIndex marker={marker} isSelect={isSelect} />
       </Box>
+    </Box>
+  );
+}
+
+function Balloon({ children, bgColor }: React.PropsWithChildren & { bgColor: string }) {
+  return (
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '100%',
+        px: 1,
+        py: 0.5,
+        mt: 1,
+        background: bgColor,
+        borderRadius: 1,
+
+        border: '1px solid white',
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          left: '50%',
+          top: 0,
+          transform: 'translate(-50%, -100%)',
+          display: 'flex',
+          color: 'white',
+        }}
+      >
+        <svg width="18" height="10" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <path d="M8 0L16 8H0L8 0Z" />
+        </svg>
+      </Box>
+
+      <Box
+        sx={{
+          position: 'absolute',
+          left: '50%',
+          top: 0,
+          transform: 'translate(-50%, -100%)',
+          display: 'flex',
+          color: bgColor,
+        }}
+      >
+        <svg width="16" height="8" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <path d="M8 0L16 8H0L8 0Z" />
+        </svg>
+      </Box>
+
+      {children}
     </Box>
   );
 }
