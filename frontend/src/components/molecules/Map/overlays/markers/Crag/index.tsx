@@ -121,14 +121,16 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
             {price.toLocaleString()}
           </Atoms.Text.Halo>
 
-          <Balloon bgColor={theme.palette.info.dark}>
-            <Typography
-              sx={{
-                textAlign: 'center',
-                color: theme.palette.common.white,
-              }}
-            >{`${min_group_size}인 이상 단체 할인`}</Typography>
-          </Balloon>
+          {isSelect && (
+            <Balloon bgColor={theme.palette.info.dark}>
+              <Typography
+                sx={{
+                  textAlign: 'center',
+                  color: theme.palette.common.white,
+                }}
+              >{`${min_group_size}인 이상 단체 할인`}</Typography>
+            </Balloon>
+          )}
         </Box>
       );
     }
