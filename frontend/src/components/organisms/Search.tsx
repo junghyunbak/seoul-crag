@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Box, Divider, Grow, Modal, CircularProgress } from '@mui/material';
 
@@ -20,9 +20,7 @@ export function Search() {
 
   const { updateIsSearchOpen, updateSearchKeyword } = useModifySearch();
 
-  const handleSearchKeywordChange = (value: string) => {
-    setKeyword(value);
-
+  useEffect(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -30,10 +28,10 @@ export function Search() {
     setIsLoading(true);
 
     timerRef.current = setTimeout(() => {
-      updateSearchKeyword(value);
+      updateSearchKeyword(keyword);
       setIsLoading(false);
     }, 500);
-  };
+  }, [keyword, updateSearchKeyword]);
 
   const handleClose = () => {
     updateIsSearchOpen(false);
@@ -67,8 +65,8 @@ export function Search() {
             <Box sx={{ flex: 1 }}>
               <Molecules.SearchInputWithRemove
                 value={keyword}
-                onChange={handleSearchKeywordChange}
-                onRemove={() => updateSearchKeyword('')}
+                onChange={(value) => setKeyword(value)}
+                onRemove={() => setKeyword('')}
                 placeholder="클라이밍장 검색"
               />
             </Box>
