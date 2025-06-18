@@ -17,6 +17,7 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -452,6 +453,20 @@ function DiscountListItem({ gymDiscount }: { gymDiscount: GymDiscount }) {
               }
 
               updateGymDiscountMutation.mutate({ ...gymDiscount, price });
+            }}
+          />
+        )}
+      </Box>
+
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+        <DescriptionIcon />
+        {locked ? (
+          <Atoms.Text.Body>{gymDiscount.description || '설명이 없습니다.'}</Atoms.Text.Body>
+        ) : (
+          <Molecules.AutoSaveTextField
+            value={gymDiscount.description || ''}
+            onSave={async (value) => {
+              updateGymDiscountMutation.mutate({ ...gymDiscount, description: value });
             }}
           />
         )}
