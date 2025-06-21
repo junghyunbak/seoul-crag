@@ -10,5 +10,6 @@ import { ImageModule } from 'src/image/image-module';
   imports: [TypeOrmModule.forFeature([Feed]), GymsModule, ImageModule],
   controllers: [FeedController],
   providers: [FeedsService],
+  exports: [FeedsService],
 })
 export class FeedsModule {}

@@ -27,6 +27,7 @@
     "serve:pm2:init": "npm run build && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend -i 2",
     "serve:pm2:init:fork": "npm run build && cross-env NODE_ENV=prod pm2 start dist/main.js --name seoul-crag-backend",
     "serve:pm2:reload": "npm run build && cross-env NODE_ENV=prod pm2 reload seoul-crag-backend",
+    "serve:pm2:worker": "npm run build && cross-env NODE_ENV=prod pm2 start dist/worker.js --name seoul-crag-worker",
     "🔽🔽🔽🔽🔽script🔽🔽🔽🔽🔽🔽": "🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽",
     "collect": "ts-node -r tsconfig-paths/register ./scripts/collect-feed.ts",
     "🔽🔽🔽🔽🔽🔽worker🔽🔽🔽🔽🔽": "🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽🔽",
@@ -64,7 +65,7 @@
     "rxjs": "^7.8.1",
     "sharp": "^0.34.1",
     "typeorm": "^0.3.22",
-    "zod": "^3.24.2"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

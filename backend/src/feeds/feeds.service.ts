@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Feed } from './feeds.entity';
 import { GymsV2Service } from 'src/gyms/gyms.v2.service';
 import { ImageService } from 'src/image/image.service';
+import { Gym } from 'src/gyms/gyms.entity';
 
 @Injectable()
 export class FeedsService {
@@ -27,5 +28,22 @@ export class FeedsService {
 
   async findAllByGym(gymId: string) {
     return this.feedRepo.find({ where: { gym: { id: gymId } } });
+  }
+
+  async findOneByUrl(url: string) {
+    const feed = await this.feedRepo.findOne({ where: { url } });
+
+    return feed;
+  }
+
+  async createFeed(websiteUrl: string, thumbnailImageUrl: string, gym: Gym) {
+    const newFeed = this.feedRepo.create({
+      url: websiteUrl,
+      is_read: false,
+      thumbnail_url: thumbnailImageUrl,
+      gym,
+    });
+
+    await this.feedRepo.save(newFeed);
   }
 }

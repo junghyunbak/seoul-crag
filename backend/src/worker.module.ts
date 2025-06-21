@@ -1,21 +1,14 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { envValidationSchema } from 'src/config/env.validation';
+import { CommonModule } from 'src/common/common.module';
 import { redisConfig } from 'src/config/redis.config';
-import { TypeOrmConfig } from 'src/config/typeorm.config';
 import { CrawlModule } from 'src/crawl/crawl.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
-      validationSchema: envValidationSchema,
-    }),
-    TypeOrmModule.forRootAsync(TypeOrmConfig),
+    CommonModule,
+
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       redis: redisConfig,

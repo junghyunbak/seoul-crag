@@ -11,6 +11,6 @@ import { GymsV2Service } from './gyms.v2.service';
   imports: [TypeOrmModule.forFeature([Gym]), GymImagesModule],
   controllers: [GymsController, GymsV2Controller],
   providers: [GymsService, GymsV2Service],
-  exports: [GymsV2Service],
+  exports: [GymsService, GymsV2Service],
 })
 export class GymsModule {}
