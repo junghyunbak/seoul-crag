@@ -103,7 +103,7 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
     }
 
     if (appliedGroupDiscount) {
-      const { price, min_group_size } = appliedGroupDiscount;
+      const { price, min_group_size, description } = appliedGroupDiscount;
 
       return (
         <Box
@@ -128,7 +128,11 @@ export function Crag({ crag, onCreate, idx, forCluster = false }: CragMarkerProp
                   textAlign: 'center',
                   color: theme.palette.common.white,
                 }}
-              >{`${min_group_size}인 이상 단체 할인`}</Typography>
+              >
+                {`${min_group_size}인 이상 단체 할인`}
+                <br />
+                {description}
+              </Typography>
             </Balloon>
           )}
         </Box>
