@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { envValidationSchema } from 'src/config/env.validation';
 import { redisConfig } from 'src/config/redis.config';
 import { TypeOrmConfig } from 'src/config/typeorm.config';
+import { CrawlModule } from 'src/crawl/crawl.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TypeOrmConfig } from 'src/config/typeorm.config';
     BullModule.registerQueue({
       name: 'crawl',
     }),
+    CrawlModule,
   ],
   controllers: [],
   providers: [],
