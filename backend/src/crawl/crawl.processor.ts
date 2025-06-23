@@ -6,6 +6,7 @@ import { FeedsService } from 'src/feeds/feeds.service';
 import { GymsService } from 'src/gyms/gyms.service';
 
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { spawn } from 'child_process';
 
@@ -15,6 +16,7 @@ const crawlingResultSchema = z.array(
   z.object({
     href: z.string(),
     imgPath: z.string(),
+    imgLocalFilePath: z.string(),
   }),
 );
 
@@ -73,11 +75,24 @@ export class CrawlProcessor {
 
       const gymFeedUrls = gym.feeds.map((feed) => feed.url);
 
-      for (const { href, imgPath } of result) {
+      for (const { href, imgPath, imgLocalFilePath } of result) {
         const isExist = gymFeedUrls.includes(href);
 
         if (!isExist) {
           await this.feedsService.createFeed(href, imgPath, gym);
+        } else {
+          if (imgLocalFilePath) {
+            await new Promise((resolve, reject) => {
+              fs.unlink(imgLocalFilePath, (err) => {
+                if (err) {
+                  reject(new Error('파일 삭제 실패'));
+                } else {
+                  console.log('[미사용 파일 삭제 성공]', imgLocalFilePath);
+                  resolve(true);
+                }
+              });
+            });
+          }
         }
       }
     } catch (e) {

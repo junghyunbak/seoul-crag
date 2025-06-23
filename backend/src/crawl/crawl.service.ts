@@ -11,7 +11,11 @@ export class CrawlService {
     private readonly gymsService: GymsService,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  /**
+   * utc기준 오후 4시 ->
+   * kst기준 오전 1시
+   */
+  @Cron(CronExpression.EVERY_DAY_AT_4PM)
   async addCrawlJob() {
     const gyms = await this.gymsService.findAll();
 

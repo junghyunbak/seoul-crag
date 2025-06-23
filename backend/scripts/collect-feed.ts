@@ -46,14 +46,21 @@ async function crawling(url: string) {
     })),
   );
 
-  const result: { href: string; imgPath: string }[] = [];
+  const result: { href: string; imgPath: string; imgLocalFilePath: string }[] =
+    [];
 
   for (const { href, thumbnailSrc } of anchors) {
     const imgHandle = await page.$(`img[src^="${thumbnailSrc}"]`);
 
-    const imgPath = await (async () => {
+    const { imgPath, imgLocalFilePath } = await (async (): Promise<{
+      imgPath: string;
+      imgLocalFilePath: string;
+    }> => {
       if (!imgHandle) {
-        return '';
+        return {
+          imgPath: '',
+          imgLocalFilePath: '',
+        };
       }
 
       const uint8 = await imgHandle.screenshot();
@@ -61,16 +68,30 @@ async function crawling(url: string) {
       const filename = `thumbnail_${Date.now()}.png`;
       const filePath = path.join(__dirname, '..', 'uploads', filename);
 
+      await new Promise((resolve, reject) => {
+        fs.writeFile(filePath, uint8, (err) => {
+          if (err) {
+            reject(new Error('파일 저장 실패'));
+          } else {
+            resolve(true);
+          }
+        });
+      });
+
       fs.writeFileSync(filePath, uint8);
 
-      const imagePath = `/uploads/${filename}`;
+      const imgPath = `/uploads/${filename}`;
 
-      return imagePath;
+      return {
+        imgPath,
+        imgLocalFilePath: filePath,
+      };
     })();
 
     result.push({
       href,
       imgPath,
+      imgLocalFilePath,
     });
   }
 
