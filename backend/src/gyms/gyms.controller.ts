@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Body,
+  Query,
 } from '@nestjs/common';
 
 import { GymsService } from './gyms.service';
@@ -17,14 +18,23 @@ import { RolesGuard } from 'src/auth/roles/roles.guard';
 
 import { CreateGymDto } from 'src/gyms/dto/create-gym.dto';
 import { UpdateGymDto } from 'src/gyms/dto/update-gym.dto';
+import {
+  GymResponseDto,
+  GymResponseWithFeedsDto,
+} from 'src/gyms/dto/gym-response-dto';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('gyms')
 export class GymsController {
   constructor(private readonly gymsService: GymsService) {}
 
   @Get()
-  findAll() {
-    return this.gymsService.findAll();
+  async findAll(@Query('feeds') feeds: boolean) {
+    const ResponseDto = feeds ? GymResponseWithFeedsDto : GymResponseDto;
+
+    const gyms = await this.gymsService.findAll();
+
+    return plainToInstance(ResponseDto, gyms);
   }
 
   @Get(':id')
