@@ -161,6 +161,7 @@ export class GymsService {
         opened_at: raw.gym_opened_at,
         price: raw.gym_price,
         is_shut_down: raw.gym_is_shut_down,
+        region: raw.gym_region,
 
         created_at: raw.gym_created_at,
         updated_at: raw.gym_updated_at,
@@ -208,6 +209,7 @@ export class GymsService {
       updated_at: rawGym.gym_updated_at,
       price: rawGym.gym_price,
       is_shut_down: rawGym.gym_is_shut_down,
+      region: rawGym.gym_region,
 
       images: rawGym.images || [],
       schedules: rawGym.schedules || [],

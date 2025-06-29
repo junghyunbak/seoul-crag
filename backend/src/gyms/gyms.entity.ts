@@ -18,7 +18,8 @@ import { GymDiscount } from 'src/gym-discounts/gym-discounts.entity';
 export enum Region {
   SEOUL = 'seoul',
   GYEONGGI = 'gyeonggi',
-  CHUNGCHEONGNAM = 'Chungcheongnam',
+  CHUNGCHEONGNAM = 'chungcheongnam',
+  INCHEON = 'incheon',
 }
 
 @Entity('gyms')
