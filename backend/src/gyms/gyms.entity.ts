@@ -15,6 +15,12 @@ import { GymUserContribution } from 'src/gym-user-contributions/gym-user-contrib
 import { Feed } from 'src/feeds/feeds.entity';
 import { GymDiscount } from 'src/gym-discounts/gym-discounts.entity';
 
+export enum Region {
+  SEOUL = 'seoul',
+  GYEONGGI = 'gyeonggi',
+  CHUNGCHEONGNAM = 'Chungcheongnam',
+}
+
 @Entity('gyms')
 export class Gym {
   @PrimaryGeneratedColumn('uuid')
@@ -58,6 +64,9 @@ export class Gym {
 
   @Column({ default: 0 })
   price: number;
+
+  @Column({ type: 'enum', enum: Region, default: Region.SEOUL })
+  region: Region;
 
   @CreateDateColumn()
   created_at: Date;
