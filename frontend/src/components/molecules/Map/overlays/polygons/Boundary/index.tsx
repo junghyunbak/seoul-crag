@@ -1,13 +1,23 @@
-import { useMap } from '@/hooks';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
-import seoulGeoData from '@/assets/jsons/seoul-geo.json';
+import { useModifyMap } from '@/hooks';
 
 import { mapContext } from '@/components/molecules/Map/index.context';
 
-export function Boundary() {
+export function Boundary({
+  region,
+  paths,
+  index,
+}: {
+  region: Crag['region'];
+  paths: naver.maps.LatLng[][];
+  index?: number;
+}) {
   const { map } = useContext(mapContext);
-  const { boundary } = useMap();
+
+  const { updateRegion } = useModifyMap();
+
+  const [polygon, setPolygon] = useState<naver.maps.Polygon | null>(null);
 
   useEffect(() => {
     if (!map) {
@@ -16,31 +26,54 @@ export function Boundary() {
 
     const newPolygon = new naver.maps.Polygon({
       map,
-      paths: [
-        [
-          new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
-          new naver.maps.LatLng(boundary.rb.y, boundary.lt.x),
-          new naver.maps.LatLng(boundary.rb.y, boundary.rb.x),
-          new naver.maps.LatLng(boundary.lt.y, boundary.rb.x),
-          new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
-        ],
-        seoulGeoData.coordinates.map(([lng, lat]) => new naver.maps.LatLng(lat, lng)),
-      ],
+      paths: paths,
       fillColor: '#000000',
       fillOpacity: 0.1,
-      strokeColor: 'transparent',
-      strokeOpacity: 0,
+      strokeColor: '#000000',
+      strokeOpacity: 0.2,
       strokeWeight: 1,
+      clickable: true,
+    });
+
+    setTimeout(() => {
+      console.log('여전히 살아있음', index);
+    }, 3000);
+
+    setPolygon(newPolygon);
+
+    return function cleanup() {
+      console.log('죽음', index);
+
+      //if (map && 'getLayer' in map) {
+      newPolygon.setMap(null);
+      //}
+    };
+  }, [map, paths, index]);
+
+  useEffect(() => {
+    if (!polygon) {
+      return;
+    }
+
+    const handlePolygonClick = polygon.addListener('click', () => {
+      updateRegion(region);
+    });
+
+    const handlePolygonMouseOver = polygon.addListener('mouseover', () => {
+      console.log('디버깅', index);
+      polygon.setOptions('fillColor', '#ff0000');
+    });
+
+    const handlePolygonMouseOut = polygon.addListener('mouseout', () => {
+      polygon.setOptions('fillColor', '#000000');
     });
 
     return function cleanup() {
-      const map = newPolygon.getMap();
-
-      if (map && 'getLayer' in map) {
-        newPolygon.setMap(null);
-      }
+      polygon.removeListener(handlePolygonClick);
+      polygon.removeListener(handlePolygonMouseOver);
+      polygon.removeListener(handlePolygonMouseOut);
     };
-  }, [map, boundary]);
+  }, [index, polygon, region, updateRegion]);
 
   return <div />;
 }

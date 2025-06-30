@@ -11,3 +11,5 @@ export const SCHEDULE_TYPE_TO_INDEX: Record<ScheduleType, number> = {
   closed: 1,
   reduced: 2,
 };
+
+export const REGIONS: Crag['region'][] = ['incheon', 'seoul', 'gyeonggi'];

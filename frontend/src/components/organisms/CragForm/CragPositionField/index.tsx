@@ -131,7 +131,6 @@ export function CragPositionField() {
         })}
       >
         <Map map={map} mapRef={mapRef}>
-          <Map.Polygon.Boundary />
           <Map.Marker.Crag crag={crag} onCreate={setLocMarker} />
         </Map>
 

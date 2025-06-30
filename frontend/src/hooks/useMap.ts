@@ -3,8 +3,6 @@ import { useMemo, useRef } from 'react';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/shallow';
 
-import seoulGeoData from '@/assets/jsons/seoul-geo.json';
-
 export function useMap() {
   const [map] = useStore(useShallow((s) => [s.map]));
   const [mapRef] = useStore(useShallow((s) => [s.mapRef]));
@@ -16,31 +14,31 @@ export function useMap() {
   const lastLat = useRef(useStore.getState().lastLat).current;
   const lastLng = useRef(useStore.getState().lastLng).current;
 
+  const [region] = useStore(useShallow((s) => [s.region]));
+
   const boundary = useMemo(() => {
-    let minLat = Infinity;
-    let maxLat = -Infinity;
-    let minLng = Infinity;
-    let maxLng = -Infinity;
-
-    seoulGeoData.coordinates.forEach(([lng, lat]) => {
-      minLat = Math.min(minLat, lat - 0.1);
-      maxLat = Math.max(maxLat, lat + 0.1);
-
-      minLng = Math.min(minLng, lng - 0.2);
-      maxLng = Math.max(maxLng, lng + 0.2);
-    });
-
     return {
       lt: {
-        y: minLat,
-        x: minLng,
+        y: 38.612,
+        x: 124.6,
       },
       rb: {
-        y: maxLat,
-        x: maxLng,
+        y: 33.1,
+        x: 131.87,
       },
     };
   }, []);
 
-  return { map, mapRef, boundary, gpsLatLng, lastLat, lastLng, enabledEdgeIndicator, enabledGpsIndicator, recognizer };
+  return {
+    map,
+    mapRef,
+    boundary,
+    gpsLatLng,
+    lastLat,
+    lastLng,
+    enabledEdgeIndicator,
+    enabledGpsIndicator,
+    recognizer,
+    region,
+  };
 }

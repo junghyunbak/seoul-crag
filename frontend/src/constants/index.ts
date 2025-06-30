@@ -3,3 +3,4 @@ export * as TIME from './time';
 export * as SIZE from './size';
 export * from './schedule';
 export * from './crag';
+export * from './geoData';

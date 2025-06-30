@@ -19,7 +19,7 @@ import { useQueryParam, StringParam } from 'use-query-params';
 
 import { useStore } from '@/store';
 
-import { QUERY_STRING, SIZE } from '@/constants';
+import { QUERY_STRING, REGIONS, SIZE, GEO_DATA } from '@/constants';
 
 import { Organisms } from '@/components/organisms';
 import { Molecules } from '@/components/molecules';
@@ -35,7 +35,7 @@ export default function Main() {
   const [selectCragId, setSelectCragId] = useQueryParam(QUERY_STRING.SELECT_CRAG, StringParam);
   const { crags } = useFetchCrags({});
   const { cafes } = useCafe();
-  const { mapRef, boundary, lastLat, lastLng } = useMap();
+  const { mapRef, boundary, lastLat, lastLng, region: currentRegion } = useMap();
 
   const [initCragId] = useState(selectCragId);
   const [markers, setMarkers] = useState<(naver.maps.Marker | null)[]>([]);
@@ -56,7 +56,7 @@ export default function Main() {
         gl: true,
         customStyleId: '124f2743-c319-499f-8a76-feb862c54027',
         zoom: useStore.getState().zoomLevel,
-        minZoom: 10,
+        minZoom: 8,
         center: new naver.maps.LatLng(lastLat !== -1 ? lastLat : DEFAULT_LAT, lastLng !== -1 ? lastLng : DEFAULT_LNG),
         maxBounds: new naver.maps.LatLngBounds(
           new naver.maps.LatLng(boundary.lt.y, boundary.lt.x),
@@ -213,7 +213,22 @@ export default function Main() {
   return (
     <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
       <Map map={map} mapRef={mapRef}>
-        <Map.Polygon.Boundary />
+        {REGIONS.map((region) => (GEO_DATA[region] || []).map((paths) => ({ paths, region })))
+          .flat(1)
+          .map(({ paths, region }, i) => {
+            if (region === currentRegion) {
+              return null;
+            }
+
+            return (
+              <Map.Polygon.Boundary
+                key={[region, ...paths[0]].join('-')}
+                region={region}
+                paths={[paths.map(([lng, lat]) => new naver.maps.LatLng(lat, lng))]}
+                index={i}
+              />
+            );
+          })}
         {crags?.map((crag, i) => (
           <Map.Marker.Crag key={crag.id} crag={crag} crags={crags} onCreate={handleMarkerCreate} idx={i} forCluster />
         ))}

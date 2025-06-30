@@ -26,6 +26,9 @@ type MapSliceType = {
 
   recognizer: MarkerOverlapRecognizer | null;
   setRecognizer: (recognizer: MarkerOverlapRecognizer) => void;
+
+  region: Crag['region'];
+  setRegion: (region: Crag['region']) => void;
 };
 
 export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType => ({
@@ -72,5 +75,10 @@ export const createMapSlice: StateCreator<MapSliceType> = (set): MapSliceType =>
   recognizer: null,
   setRecognizer(recognizer) {
     set(() => ({ recognizer }));
+  },
+
+  region: 'incheon',
+  setRegion(region) {
+    set(() => ({ region }));
   },
 });

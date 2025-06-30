@@ -8,6 +8,7 @@ export function useModifyMap() {
   const [setEnabledEdgeIndicator] = useStore(useShallow((s) => [s.setEnabledEdgeIndicator]));
   const [setEnabledGpsIndicator] = useStore(useShallow((s) => [s.setEnabledGpsIndicator]));
   const [setRecognizer] = useStore(useShallow((s) => [s.setRecognizer]));
+  const [setRegion] = useStore(useShallow((s) => [s.setRegion]));
 
   const updateMap = useCallback(
     (map: naver.maps.Map) => {
@@ -44,5 +45,19 @@ export function useModifyMap() {
     [setRecognizer]
   );
 
-  return { updateMap, updateGpsLatLng, updateEnabledEdgeIndicator, updateEnabledGpsIndicator, updateRecognizer };
+  const updateRegion = useCallback(
+    (region: Crag['region']) => {
+      setRegion(region);
+    },
+    [setRegion]
+  );
+
+  return {
+    updateMap,
+    updateGpsLatLng,
+    updateEnabledEdgeIndicator,
+    updateEnabledGpsIndicator,
+    updateRecognizer,
+    updateRegion,
+  };
 }

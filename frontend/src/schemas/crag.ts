@@ -24,6 +24,7 @@ export const InternalCragSchema = z.object({
   price: z.number(),
   opened_at: z.union([dateScheme, z.null()]).optional(),
   is_shut_down: z.boolean(),
+  region: z.enum(['seoul', 'gyeonggi', 'chungcheongnam', 'incheon']),
 
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
